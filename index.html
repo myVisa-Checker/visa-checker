@@ -1,0 +1,727 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Visa Checker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: one narrow column, phone first. Situation chips on top, sticky progress strip, checklist grouped by purpose. FR / EN / AR (RTL). */
+:root{
+  --bg:#eef1f3; --surface:#ffffff; --ink:#14212b; --muted:#566772; --line:#d3dbe0;
+  --accent:#c8372d; --accent-soft:#f8e4e1; --ok:#1f7a4d; --ok-soft:#dff1e7; --on-accent:#ffffff;
+  --f-display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --f-ar:"IBM Plex Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e161c; --surface:#16222a; --ink:#e8eef2; --muted:#93a4af; --line:#2a3a44;
+  --accent:#ef6a5e; --accent-soft:#3a2120; --ok:#4fc08a; --ok-soft:#173326; --on-accent:#1a0f0e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e161c; --surface:#16222a; --ink:#e8eef2; --muted:#93a4af; --line:#2a3a44;
+  --accent:#ef6a5e; --accent-soft:#3a2120; --ok:#4fc08a; --ok-soft:#173326; --on-accent:#1a0f0e; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:680px;margin-inline:auto}
+header{padding-block:24px 8px;display:flex;flex-direction:column;gap:14px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.stamp{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
+  border:2px double var(--accent);padding:4px 8px;border-radius:4px;transform:rotate(-3deg);white-space:nowrap}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
+.lang button{border:0;background:transparent;color:var(--muted);font:500 13px var(--f-mono);padding:6px 12px;cursor:pointer;min-width:44px;min-height:32px}
+.lang button#l-ar{font-family:var(--f-ar);font-size:14px}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,8vw,2.9rem);line-height:1.05;margin:0;letter-spacing:-.02em;text-wrap:balance}
+.sub{margin:0;color:var(--muted);max-width:56ch}
+h2{font-family:var(--f-display);font-weight:600;font-size:1.15rem;margin:0;text-wrap:balance}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:16px;margin-top:16px}
+.q{display:flex;flex-direction:column;gap:8px;min-width:0}
+.q-label{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);font:500 14px var(--f-body);padding:8px 14px;border-radius:999px;cursor:pointer;min-height:40px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.progress{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px 10px;margin-top:8px;border-bottom:1px solid var(--line)}
+.p-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.p-num{font-family:var(--f-display);font-weight:800;font-size:1.6rem;font-variant-numeric:tabular-nums}
+.p-msg{font-size:14px;color:var(--muted);min-width:0}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.bar.done i{background:var(--ok)}
+section.group{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.g-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.g-count{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.item{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer}
+.item input{width:22px;height:22px;margin:2px 0 0;flex:none;accent-color:var(--ok);cursor:pointer}
+.item.on{background:var(--ok-soft);border-color:var(--ok)}
+.i-body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.i-title{font-weight:600;overflow-wrap:anywhere}
+.i-note{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
+.tag{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 6px;align-self:flex-start;margin-bottom:2px}
+.book{border:2px dashed var(--accent);background:var(--accent-soft);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.book b{font-family:var(--f-display);font-size:1.05rem}
+.book p{margin:0;font-size:14px}
+.book .slot{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+footer{margin-top:32px;display:flex;flex-direction:column;gap:12px;font-size:13px;color:var(--muted)}
+footer p{margin:0}
+.links{display:flex;flex-wrap:wrap;gap:8px 16px}
+.links a{color:var(--ink);font-weight:600}
+.reset{align-self:flex-start;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 13px var(--f-body);padding:8px 14px;border-radius:8px;cursor:pointer;min-height:40px}
+.sel{width:100%;min-height:44px;font:500 15px var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.agency{margin-top:32px;display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.ag-sub,.ag-note,.ag-none{margin:0;font-size:14px;color:var(--muted)}
+.partner{display:flex;flex-direction:column;gap:4px;border:1px solid var(--ok);background:var(--ok-soft);border-radius:10px;padding:12px 14px}
+.partner b{font-family:var(--f-display);font-size:1.05rem}
+.locked{display:flex;flex-direction:column;gap:8px;border:1px dashed var(--line);border-radius:10px;padding:12px 14px}
+.locked i{display:block;height:12px;border-radius:99px;background:var(--line)}
+.locked i:last-child{width:60%}
+.pay{align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 20px;border-radius:10px;background:var(--accent);color:var(--on-accent);font:600 16px var(--f-body);text-decoration:none;border:0;cursor:pointer}
+.pay.off{background:var(--line);color:var(--muted);cursor:not-allowed}
+.code-row{display:flex;gap:8px;flex-wrap:wrap}
+.code-row .sel{flex:1 1 140px;width:auto}
+.ag-err{font-size:13px;color:var(--accent);min-height:1em}
+.refus{margin-top:24px;display:flex;flex-direction:column;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.refus p{margin:0}
+.inc,.adv{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
+.price{font-family:var(--f-display);font-weight:800;font-size:1.25rem}
+.rf-sub{font-size:14px;color:var(--muted)}
+.lt{border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.lt summary{padding:12px 14px;font-weight:600;cursor:pointer;min-height:44px;display:flex;align-items:center}
+.lt-body{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
+pre.letter{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;direction:ltr;text-align:left;font:14px/1.55 var(--f-body);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;user-select:text}
+.cp{align-self:flex-start;border:0;background:var(--ink);color:var(--bg);font:600 14px var(--f-body);padding:10px 16px;border-radius:8px;cursor:pointer;min-height:44px}
+html[lang="ar"] .price,html[lang="ar"] .lt summary,html[lang="ar"] .cp,html[lang="ar"] .refus h2{font-family:var(--f-ar)}
+html[lang="ar"] .sel,html[lang="ar"] .pay,html[lang="ar"] .partner b{font-family:var(--f-ar)}
+/* Arabic: RTL, Arabic faces, no letter-spacing or uppercasing (both break letter joining) */
+html[lang="ar"] body,html[lang="ar"] .chip,html[lang="ar"] .reset{font-family:var(--f-ar);line-height:1.65}
+html[lang="ar"] h1,html[lang="ar"] h2,html[lang="ar"] .p-num,html[lang="ar"] .book b{font-family:var(--f-ar);font-weight:700;letter-spacing:0}
+html[lang="ar"] h1{line-height:1.3}
+html[lang="ar"] .stamp,html[lang="ar"] .q-label,html[lang="ar"] .tag,html[lang="ar"] .book .slot,html[lang="ar"] .g-count{font-family:var(--f-ar);letter-spacing:0;text-transform:none}
+html[lang="ar"] .stamp{font-size:13px}
+html[lang="ar"] .q-label,html[lang="ar"] .book .slot{font-size:13px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="top">
+      <span class="stamp" id="stamp"></span>
+      <div class="lang" role="group" aria-label="Langue / Language / اللغة">
+        <button type="button" id="l-fr" aria-pressed="true">FR</button>
+        <button type="button" id="l-en" aria-pressed="false">EN</button>
+        <button type="button" id="l-ar" aria-pressed="false">عربي</button>
+      </div>
+    </div>
+    <h1 id="h1"></h1>
+    <p class="sub" id="sub"></p>
+  </header>
+
+  <div class="panel" id="panel"></div>
+
+  <div class="progress" aria-live="polite">
+    <div class="p-row"><span class="p-num" id="pnum"></span><span class="p-msg" id="pmsg"></span></div>
+    <div class="bar" id="bar"><i id="barfill"></i></div>
+  </div>
+
+  <div id="list"></div>
+
+  <div class="agency" id="agency"></div>
+
+  <div class="refus" id="refus"></div>
+
+  <footer>
+    <div class="links" id="links"></div>
+    <p id="disc"></p>
+    <button type="button" class="reset" id="reset"></button>
+  </footer>
+</div>
+
+<script>
+(function(){
+var UI={
+fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destination, puis cochez chaque document au fur et à mesure.",
+ s_country:"Destination",cAvail:"Disponible",cSoon:"Bientôt",soonText:"La liste des pièces pour ce pays arrive bientôt. La France est disponible dès maintenant.",
+ agTitle:"Un coup de main d'une agence près de chez vous ?",agSub:"Choisissez votre gouvernorat. Voir les agences partenaires coûte 10 DT, en paiement unique.",
+ gov:"Gouvernorat",govPick:"Choisir un gouvernorat",agCount:function(n){return n+(n>1?" agences partenaires":" agence partenaire")},
+ agNone:"Pas encore d'agence partenaire dans ce gouvernorat.",payBtn:"Payer 10 DT",payWait:"Lien de paiement bientôt",
+ codeLabel:"Déjà payé ? Entrez le code reçu",unlock:"Débloquer",badCode:"Code incorrect.",contactSoon:"Coordonnées à venir",
+ agNote:"Les agences sont indépendantes. Visa Checker ne garantit pas l'obtention du visa.",
+ s_status:"Votre activité",s_party:"Vous voyagez",s_stay:"Hébergement",s_pay:"Qui finance le voyage",
+ status:{employee:"Salarié",self:"Indépendant / entrepreneur",student:"Étudiant",retired:"Retraité"},
+ party:{alone:"Seul(e)",family:"En famille"},stay:{hotel:"Hôtel / location",hosted:"Chez un hôte"},pay:{self:"Moi-même",sponsor:"Un garant"},
+ groups:{purpose:"Votre type de visa",steps:"Démarches et rendez-vous",core:"Documents de base",money:"Preuves financières",activity:"Votre situation professionnelle",stay:"Voyage et hébergement",family:"Famille"},
+ opt:"Conseillé",of:"sur",ready:"prêts",
+ msg0:"Commencez par la demande France-Visas.",msgN:function(n){return n+" document"+(n>1?"s":"")+" obligatoire"+(n>1?"s":"")+" à réunir."},msgDone:"Dossier complet. Vérifiez une dernière fois sur France-Visas.",
+ bookTitle:"Réservations hôtel et vol",bookSlot:"Agences partenaires · bientôt",
+ bookText:"Le consulat demande une réservation d'hôtel et de vol. Prenez uniquement des réservations réelles, de préférence annulables. Les agences partenaires seront proposées ici.",
+ linkFV:"France-Visas (officiel)",linkTLS:"TLScontact Tunisie",
+ disc:"Les pièces exigées peuvent évoluer. Confirmez toujours la liste sur France-Visas et auprès de TLScontact. Cet outil aide à préparer le dossier et ne garantit pas l'obtention du visa. Il n'est lié à aucune ambassade. Passez uniquement par le portail officiel et méfiez-vous des intermédiaires qui promettent des facilités.",
+ reset:"Tout décocher",
+ s_purpose:"Type de visa",purpose:{tourism:"Tourisme",family:"Visite familiale ou amicale",business:"Affaires",reunion:"Regroupement familial (long séjour)"},
+ reunTitle:"Visa de long séjour",reunText:"Procédure différente d'un voyage touristique : la personne qui vit en France dépose d'abord la demande de regroupement familial auprès de l'OFII. Cette liste est générale. Confirmez les pièces sur France-Visas et auprès du consulat, car elles varient selon votre cas.",
+ rfTitle:"Visa refusé ? Reprenez votre dossier",rfSub:"Un refus n'est pas définitif. Le pack contient ce qu'il faut pour contester ou redéposer.",
+ rfWarn:"Le délai pour contester est court, environ 30 jours après la notification. Lisez dès aujourd'hui le motif indiqué sur votre formulaire de refus.",
+ rfInc:["Lettre de recours à compléter","Conseils pour redéposer, étape par étape","4 lettres de motivation modèles : salarié, indépendant, étudiant, retraité"],
+ rfPrice:"Pack complet : 20 DT",rfPriceSub:"Payé à l'avance. Vous recevez tout de suite les textes à copier et à imprimer.",
+ rfPay:"Payer 20 DT",rfAdvTitle:"Conseils pour redéposer",rfLetTitle:"Lettres à copier",
+ rfNote:"Les lettres sont en français, car elles sont adressées aux autorités françaises. Remplacez tout ce qui est entre [crochets]. Collez le texte dans Word ou Google Docs, puis imprimez.",
+ rfNoGuar:"Ces modèles aident à présenter votre dossier. Ils ne garantissent pas le visa.",copy:"Copier le texte",copied:"Copié",selected:"Texte sélectionné, copiez-le",
+ adv:["Lisez le formulaire de refus. La case cochée indique le motif à corriger.","Choisissez : un recours (délai court, indiqué sur la notification) ou une nouvelle demande, qui entraîne de nouveaux frais.","Corrigez le motif avec des preuves nouvelles. Moyens financiers : relevés réguliers, sans gros dépôt soudain. Objet du séjour : programme clair et réservations réelles. Retour en Tunisie : preuves d'attaches (emploi, famille, logement).","Restez cohérent avec la première demande. Le consulat garde votre dossier : dates, emploi et revenus doivent être identiques.","Il n'existe pas de délai légal d'attente avant de redéposer, mais ne redéposez pas le même dossier sans changement.","Aucun intermédiaire ne peut promettre un visa. Un faux document peut entraîner de graves conséquences, dont une interdiction d'entrée."]},
+en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, then tick each document as you collect it.",
+ s_country:"Destination",cAvail:"Available",cSoon:"Coming soon",soonText:"The document list for this country is coming soon. France is available now.",
+ agTitle:"Want help from an agency near you?",agSub:"Pick your governorate. Seeing the partner agencies costs 10 TND, paid once.",
+ gov:"Governorate",govPick:"Choose a governorate",agCount:function(n){return n+(n>1?" partner agencies":" partner agency")},
+ agNone:"No partner agency in this governorate yet.",payBtn:"Pay 10 TND",payWait:"Payment link coming soon",
+ codeLabel:"Already paid? Enter the code you received",unlock:"Unlock",badCode:"Incorrect code.",contactSoon:"Contact details coming",
+ agNote:"Agencies are independent. Visa Checker does not guarantee a visa.",
+ s_status:"Your activity",s_party:"You travel",s_stay:"Accommodation",s_pay:"Who pays for the trip",
+ status:{employee:"Employee",self:"Self-employed / business owner",student:"Student",retired:"Retired"},
+ party:{alone:"Alone",family:"With family"},stay:{hotel:"Hotel / rental",hosted:"With a host"},pay:{self:"Myself",sponsor:"A sponsor"},
+ groups:{purpose:"Your visa type",steps:"Steps and appointment",core:"Core documents",money:"Proof of funds",activity:"Your work or study situation",stay:"Travel and accommodation",family:"Family"},
+ opt:"Advised",of:"of",ready:"ready",
+ msg0:"Start with the France-Visas application.",msgN:function(n){return n+" required document"+(n>1?"s":"")+" to gather."},msgDone:"File complete. Check once more on France-Visas.",
+ bookTitle:"Hotel and flight reservations",bookSlot:"Partner agencies · coming soon",
+ bookText:"The consulate asks for a hotel and flight reservation. Use real bookings only, preferably cancellable ones. Partner agencies will be listed here.",
+ linkFV:"France-Visas (official)",linkTLS:"TLScontact Tunisia",
+ disc:"Required documents can change. Always confirm the list on France-Visas and with TLScontact. This tool helps you prepare your file and does not guarantee a visa. It is not affiliated with any embassy. Use the official portal only, and be wary of intermediaries who promise shortcuts.",
+ reset:"Untick everything",
+ s_purpose:"Visa type",purpose:{tourism:"Tourism",family:"Family or friends visit",business:"Business",reunion:"Family reunification (long stay)"},
+ reunTitle:"Long-stay visa",reunText:"This is a different procedure from a tourist trip: the person living in France first files the family reunification request with the OFII. This list is general. Confirm the documents on France-Visas and with the consulate, because they vary by case.",
+ rfTitle:"Visa refused? Rebuild your file",rfSub:"A refusal is not final. The pack has what you need to appeal or apply again.",
+ rfWarn:"The time to appeal is short, about 30 days after you are notified. Read the reason on your refusal form today.",
+ rfInc:["Appeal letter to complete","Advice for applying again, step by step","4 sample motivation letters: employee, self-employed, student, retired"],
+ rfPrice:"Full pack: 20 TND",rfPriceSub:"Paid in advance. You get the texts at once, ready to copy and print.",
+ rfPay:"Pay 20 TND",rfAdvTitle:"Advice for applying again",rfLetTitle:"Letters to copy",
+ rfNote:"The letters are in French because they go to the French authorities. Replace everything in [brackets]. Paste the text into Word or Google Docs, then print.",
+ rfNoGuar:"These models help you present your file. They do not guarantee a visa.",copy:"Copy the text",copied:"Copied",selected:"Text selected, copy it",
+ adv:["Read the refusal form. The ticked box shows the reason to fix.","Choose: an appeal (short deadline, shown on the notification) or a new application, which means new fees.","Fix the reason with new evidence. Funds: regular statements, no sudden large deposit. Purpose of stay: a clear plan and real bookings. Return to Tunisia: proof of ties (job, family, home).","Stay consistent with your first application. The consulate keeps your file: dates, job and income must be identical.","There is no legal waiting period before you apply again, but do not resubmit the same file unchanged.","No intermediary can promise a visa. A false document can have serious consequences, including an entry ban."]},
+ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اختر وجهتك ثم علّم كل وثيقة بعد تجهيزها.",
+ s_country:"الوجهة",cAvail:"متاحة",cSoon:"قريبًا",soonText:"قائمة وثائق هذا البلد قادمة قريبًا. فرنسا متاحة الآن.",
+ agTitle:"هل تريد مساعدة من وكالة قريبة منك؟",agSub:"اختر ولايتك. مشاهدة الوكالات الشريكة تكلّف 10 دنانير، تُدفع مرة واحدة.",
+ gov:"الولاية",govPick:"اختر الولاية",agCount:function(n){return n===1?"وكالة شريكة واحدة":n+" وكالات شريكة"},
+ agNone:"لا توجد وكالة شريكة في هذه الولاية بعد.",payBtn:"ادفع 10 د.ت",payWait:"رابط الدفع قريبًا",
+ codeLabel:"دفعت؟ أدخل الرمز الذي وصلك",unlock:"فتح",badCode:"الرمز غير صحيح.",contactSoon:"بيانات الاتصال قريبًا",
+ agNote:"الوكالات مستقلة. Visa Checker لا يضمن الحصول على التأشيرة.",
+ s_status:"نشاطك",s_party:"تسافر",s_stay:"الإقامة",s_pay:"من يموّل السفر",
+ status:{employee:"موظف",self:"عمل حر / صاحب مشروع",student:"طالب",retired:"متقاعد"},
+ party:{alone:"بمفردي",family:"مع العائلة"},stay:{hotel:"فندق / كراء",hosted:"عند مضيف"},pay:{self:"أنا",sponsor:"كفيل"},
+ groups:{purpose:"نوع تأشيرتك",steps:"الإجراءات والموعد",core:"الوثائق الأساسية",money:"إثبات الموارد المالية",activity:"وضعك المهني أو الدراسي",stay:"السفر والإقامة",family:"العائلة"},
+ opt:"مُستحسن",of:"من",ready:"جاهزة",
+ msg0:"ابدأ بالطلب على موقع France-Visas.",msgN:function(n){return "بقيت "+n+" وثيقة إلزامية."},msgDone:"الملف مكتمل. تحقق مرة أخيرة على موقع France-Visas.",
+ bookTitle:"حجز الفندق والطائرة",bookSlot:"وكالات شريكة · قريبًا",
+ bookText:"تطلب القنصلية حجز فندق وطيران. استعمل حجوزات حقيقية فقط، ويُفضّل القابلة للإلغاء. ستظهر الوكالات الشريكة هنا.",
+ linkFV:"France-Visas (الموقع الرسمي)",linkTLS:"TLScontact تونس",
+ disc:"قد تتغير الوثائق المطلوبة. تأكد دائمًا من القائمة على موقع France-Visas ولدى TLScontact. هذه الأداة تساعدك على تحضير ملفك ولا تضمن الحصول على التأشيرة، وهي غير تابعة لأي سفارة. اعتمد البوابة الرسمية فقط واحذر من الوسطاء الذين يعدون بتسهيلات.",
+ reset:"إلغاء كل العلامات",
+ s_purpose:"نوع التأشيرة",purpose:{tourism:"سياحة",family:"زيارة عائلية أو للأصدقاء",business:"أعمال",reunion:"لمّ الشمل العائلي (إقامة طويلة)"},
+ reunTitle:"تأشيرة الإقامة الطويلة",reunText:"الإجراء يختلف عن السفر السياحي: يقدّم الشخص المقيم في فرنسا أولًا طلب لمّ الشمل لدى المكتب الفرنسي للهجرة والاندماج (OFII). هذه القائمة عامة. تأكد من الوثائق على موقع France-Visas ولدى القنصلية لأنها تختلف حسب حالتك.",
+ rfTitle:"رُفضت التأشيرة؟ أعد بناء ملفك",rfSub:"الرفض ليس نهائيًا. تجد في الحزمة ما تحتاجه للطعن أو لإعادة التقديم.",
+ rfWarn:"مهلة الطعن قصيرة، نحو 30 يومًا بعد التبليغ. اقرأ اليوم سبب الرفض المكتوب في استمارة الرفض.",
+ rfInc:["رسالة طعن جاهزة للتعبئة","نصائح لإعادة التقديم خطوة بخطوة","4 رسائل تحفيز نموذجية: موظف، عمل حر، طالب، متقاعد"],
+ rfPrice:"الحزمة الكاملة: 20 د.ت",rfPriceSub:"تُدفع مسبقًا. تحصل فورًا على النصوص لنسخها وطباعتها.",
+ rfPay:"ادفع 20 د.ت",rfAdvTitle:"نصائح لإعادة التقديم",rfLetTitle:"رسائل للنسخ",
+ rfNote:"الرسائل بالفرنسية لأنها موجهة إلى السلطات الفرنسية. عوّض كل ما بين [أقواس]. الصق النص في Word أو Google Docs ثم اطبعه.",
+ rfNoGuar:"هذه النماذج تساعدك على عرض ملفك ولا تضمن الحصول على التأشيرة.",copy:"نسخ النص",copied:"تم النسخ",selected:"تم تحديد النص، انسخه",
+ adv:["اقرأ استمارة الرفض. الخانة المعلّمة تبيّن السبب الذي يجب إصلاحه.","اختر: الطعن (مهلة قصيرة مذكورة في التبليغ) أو تقديم طلب جديد، وهو يتطلب رسومًا جديدة.","أصلح السبب بإثباتات جديدة. الموارد المالية: كشوف منتظمة دون إيداع كبير مفاجئ. غرض الإقامة: برنامج واضح وحجوزات حقيقية. العودة إلى تونس: إثباتات الارتباط (عمل، عائلة، سكن).","حافظ على الانسجام مع الطلب الأول. القنصلية تحتفظ بملفك: يجب أن تتطابق التواريخ والعمل والدخل.","لا توجد مدة انتظار قانونية قبل إعادة التقديم، لكن لا تقدّم الملف نفسه دون تغيير.","لا يستطيع أي وسيط أن يعد بتأشيرة. الوثيقة المزوّرة قد تؤدي إلى عواقب خطيرة منها المنع من الدخول."]}
+};
+var any=function(){return true};
+var ITEMS=[
+{id:"fv",g:"steps",w:any,
+ fr:["Demande en ligne sur France-Visas, imprimée et signée","Imprimez le récépissé. Le portail officiel est la seule voie pour déposer une demande."],
+ en:["Online application on France-Visas, printed and signed","Print the receipt. The official portal is the only route to apply."],
+ ar:["الطلب الإلكتروني على France-Visas، مطبوع وموقّع","اطبع وصل التسجيل. البوابة الرسمية هي الطريقة الوحيدة للتقديم."]},
+{id:"appt",g:"steps",w:any,
+ fr:["Rendez-vous TLScontact (Tunis ou Sfax) et lettre de confirmation imprimée","À réserver au moins 3 semaines avant le départ et jusqu'à 6 mois avant. Un rendez-vous par personne. Le numéro de passeport doit correspondre à la lettre."],
+ en:["TLScontact appointment (Tunis or Sfax) and printed confirmation letter","Book at least 3 weeks before departure and up to 6 months before. One appointment per person. The passport number must match the letter."],
+ ar:["موعد TLScontact (تونس أو صفاقس) ورسالة التأكيد مطبوعة","احجز قبل السفر بـ3 أسابيع على الأقل وحتى 6 أشهر. موعد لكل شخص. يجب أن يطابق رقم جواز السفر الرسالة."]},
+{id:"fee",g:"steps",w:any,
+ fr:["Frais de visa et frais de service TLScontact","Frais de visa fixés en euros, payés en dinars en espèces au centre (adulte 90 €, enfant de 6 à 11 ans 45 €, gratuit avant 6 ans). Frais de service TLScontact : 28 €, non remboursables."],
+ en:["Visa fee and TLScontact service fee","Visa fee is set in euros and paid in dinars, in cash, at the centre (adult €90, child 6 to 11 €45, free under 6). TLScontact service fee: €28, non-refundable."],
+ ar:["رسوم التأشيرة ورسوم خدمة TLScontact","رسوم التأشيرة بالأورو وتُدفع نقدًا بالدينار في المركز (بالغ 90 €، طفل من 6 إلى 11 سنة 45 €، مجانًا تحت 6 سنوات). رسوم خدمة TLScontact: 28 €، غير قابلة للاسترداد."]},
+{id:"passport",g:"core",w:any,
+ fr:["Passeport valable 3 mois après votre retour","Délivré depuis moins de 10 ans, avec au moins 2 pages vierges. Apportez aussi les anciens passeports avec visas."],
+ en:["Passport valid 3 months after you leave","Issued within the last 10 years, with at least 2 blank pages. Bring older passports that hold visas."],
+ ar:["جواز سفر صالح 3 أشهر بعد عودتك","صادر منذ أقل من 10 سنوات وبه صفحتان فارغتان على الأقل. أحضر أيضًا جوازات السفر القديمة التي بها تأشيرات."]},
+{id:"passcopy",g:"core",w:any,
+ fr:["Copie de la page d'identité du passeport et des anciens visas",""],
+ en:["Copy of the passport data page and previous visas",""],
+ ar:["نسخة من صفحة بيانات الجواز والتأشيرات السابقة",""]},
+{id:"photos",g:"core",w:any,
+ fr:["2 photos d'identité identiques et récentes","35 x 45 mm, en couleur, fond blanc ou très clair, tête nue. Les photos faites à la maison sont souvent refusées."],
+ en:["2 identical, recent passport photos","35 x 45 mm, colour, white or very light background, head uncovered. Home-printed photos are often refused."],
+ ar:["صورتا هوية متطابقتان وحديثتان","35 × 45 مم، ملوّنة، خلفية بيضاء أو فاتحة جدًا، دون غطاء للرأس. الصور المطبوعة في البيت تُرفض غالبًا."]},
+{id:"cin",g:"core",w:any,
+ fr:["Copie de la carte d'identité nationale (CIN)",""],
+ en:["Copy of the national ID card (CIN)",""],
+ ar:["نسخة من بطاقة التعريف الوطنية",""]},
+{id:"civil",g:"core",w:function(s){return s.purpose==="family"||s.party==="family"},
+ fr:["Extrait d'acte de naissance avec filiation","Souvent demandé, de moins de 3 mois."],
+ en:["Birth certificate extract with filiation","Often requested, less than 3 months old."],
+ ar:["مضمون ولادة مع الأصول","يُطلب غالبًا، وعمره أقل من 3 أشهر."]},
+{id:"resid",g:"core",w:any,
+ fr:["Justificatif de domicile en Tunisie","Souvent demandé : facture récente de moins de 3 mois ou attestation de résidence de la municipalité."],
+ en:["Proof of residence in Tunisia","Often requested: a utility bill under 3 months old or a residence certificate from the municipality."],
+ ar:["إثبات الإقامة في تونس","يُطلب غالبًا: فاتورة عمرها أقل من 3 أشهر أو شهادة إقامة من البلدية."]},
+{id:"insurance",g:"core",w:any,
+ fr:["Assurance voyage médicale, 30 000 € minimum","Valable dans tout l'espace Schengen, avec rapatriement médical, pour la durée complète du séjour."],
+ en:["Travel medical insurance, minimum €30,000","Valid across the Schengen area, with medical repatriation, for the whole stay."],
+ ar:["تأمين سفر طبي بـ30 000 € على الأقل","صالح في كامل فضاء شنغن، ويشمل الإعادة الطبية، ويغطي كامل مدة الإقامة."]},
+{id:"transl",g:"core",w:any,opt:1,
+ fr:["Traduction française assermentée des documents en arabe","Souvent exigée pour les pièces rédigées en arabe."],
+ en:["Sworn French translation of documents written in Arabic","Often required for documents written in Arabic."],
+ ar:["ترجمة فرنسية محلّفة للوثائق المكتوبة بالعربية","تُطلب غالبًا للوثائق المحرّرة بالعربية."]},
+{id:"prev",g:"core",w:any,opt:1,
+ fr:["Anciens visas et preuves de voyages passés","Des voyages passés avec retour dans les délais renforcent le dossier."],
+ en:["Previous visas and proof of past trips","Past trips returned on time strengthen your file."],
+ ar:["التأشيرات السابقة وإثباتات الرحلات السابقة","الرحلات السابقة مع العودة في الوقت المحدد تقوّي الملف."]},
+{id:"bank",g:"money",w:function(s){return s.pay==="self"},
+ fr:["Relevés bancaires des 3 derniers mois et RIB","Évitez les gros dépôts en espèces juste avant la demande. Le solde doit rester cohérent avec la durée du séjour."],
+ en:["Bank statements for the last 3 months and your RIB","Avoid large cash deposits just before applying. Your balance should fit the length of the stay."],
+ ar:["كشوف الحساب البنكي لآخر 3 أشهر وبيانات الحساب (RIB)","تجنّب الإيداعات النقدية الكبيرة قبل التقديم مباشرة. يجب أن يتناسب الرصيد مع مدة الإقامة."]},
+{id:"sp_letter",g:"money",w:function(s){return s.pay==="sponsor"},
+ fr:["Lettre de prise en charge du garant","Signée, avec la copie de sa pièce d'identité ou de son titre de séjour."],
+ en:["Sponsor's letter of financial support","Signed, with a copy of their ID or residence permit."],
+ ar:["رسالة تكفّل من الكفيل","موقّعة، مع نسخة من بطاقة هويته أو بطاقة إقامته."]},
+{id:"sp_bank",g:"money",w:function(s){return s.pay==="sponsor"},
+ fr:["Relevés bancaires et justificatifs de revenus du garant",""],
+ en:["Sponsor's bank statements and proof of income",""],
+ ar:["كشوف الحساب البنكي وإثباتات دخل الكفيل",""]},
+{id:"sp_rel",g:"money",w:function(s){return s.pay==="sponsor"},
+ fr:["Preuve du lien avec le garant","Livret de famille, acte de naissance ou autre document officiel."],
+ en:["Proof of relationship with the sponsor","Family record, birth certificate or other official document."],
+ ar:["إثبات صلة القرابة بالكفيل","دفتر عائلي أو مضمون ولادة أو وثيقة رسمية أخرى."]},
+{id:"emp_cert",g:"activity",w:function(s){return s.status==="employee"},
+ fr:["Attestation de travail","Poste, date d'embauche et salaire mensuel, sur papier à en-tête de l'employeur."],
+ en:["Employment certificate","Position, hire date and monthly salary, on the employer's letterhead."],
+ ar:["شهادة عمل","الوظيفة وتاريخ التوظيف والأجر الشهري، على ورقة المؤسسة الرسمية."]},
+{id:"emp_leave",g:"activity",w:function(s){return s.status==="employee"&&s.purpose!=="business"},
+ fr:["Autorisation de congé de l'employeur","Avec les dates exactes du voyage."],
+ en:["Leave authorisation from your employer","With the exact travel dates."],
+ ar:["ترخيص عطلة من المشغّل","يتضمن تواريخ السفر بالضبط."]},
+{id:"emp_pay",g:"activity",w:function(s){return s.status==="employee"},
+ fr:["3 derniers bulletins de paie",""],en:["Last 3 payslips",""],ar:["آخر 3 كشوف أجر",""]},
+{id:"emp_cnss",g:"activity",w:function(s){return s.status==="employee"},opt:1,
+ fr:["Relevé d'affiliation CNSS","Montre une activité déclarée et stable."],
+ en:["CNSS affiliation statement","Shows declared, stable employment."],
+ ar:["شهادة انتساب للضمان الاجتماعي (CNSS)","تُظهر نشاطًا مصرّحًا به ومستقرًا."]},
+{id:"self_reg",g:"activity",w:function(s){return s.status==="self"},
+ fr:["Registre de commerce, patente ou matricule fiscal","Selon votre activité."],
+ en:["Business registration, patente or tax ID","Depending on your activity."],
+ ar:["السجل التجاري أو الباتيندة أو المعرّف الجبائي","حسب نشاطك."]},
+{id:"self_tax",g:"activity",w:function(s){return s.status==="self"},
+ fr:["Attestation de situation fiscale et dernières déclarations",""],
+ en:["Tax situation certificate and recent tax filings",""],
+ ar:["شهادة الوضعية الجبائية وآخر التصاريح الجبائية",""]},
+{id:"self_bank",g:"activity",w:function(s){return s.status==="self"},
+ fr:["Relevés bancaires professionnels",""],en:["Business bank statements",""],ar:["كشوف الحساب البنكي المهني",""]},
+{id:"stu_cert",g:"activity",w:function(s){return s.status==="student"},
+ fr:["Attestation d'inscription ou de scolarité","Avec la carte d'étudiant."],
+ en:["Enrolment or school certificate","With your student card."],
+ ar:["شهادة تسجيل أو مدرسية","مع بطاقة الطالب."]},
+{id:"stu_auth",g:"activity",w:function(s){return s.status==="student"},
+ fr:["Autorisation d'absence de l'établissement","Avec les dates du voyage."],
+ en:["Absence authorisation from your school","With the travel dates."],
+ ar:["ترخيص غياب من المؤسسة التعليمية","مع تواريخ السفر."]},
+{id:"ret_pen",g:"activity",w:function(s){return s.status==="retired"},
+ fr:["Attestation de pension de retraite","Et les relevés montrant son versement."],
+ en:["Pension certificate","And statements showing it is paid."],
+ ar:["شهادة جراية التقاعد","وكشوف تُثبت صرفها."]},
+{id:"kin",g:"purpose",w:function(s){return s.purpose==="family"},
+ fr:["Preuve du lien avec la personne que vous visitez","Livret de famille, acte de naissance ou autre document officiel. Ajoutez la copie de sa pièce d'identité ou de son titre de séjour."],
+ en:["Proof of your relationship with the person you visit","Family record, birth certificate or other official document. Add a copy of their ID or residence permit."],
+ ar:["إثبات صلتك بالشخص الذي تزوره","دفتر عائلي أو مضمون ولادة أو وثيقة رسمية أخرى. أضف نسخة من بطاقة هويته أو بطاقة إقامته."]},
+{id:"inv_biz",g:"purpose",w:function(s){return s.purpose==="business"},
+ fr:["Lettre d'invitation de l'entreprise ou du salon en France","Elle précise l'objet, les dates et qui prend en charge les frais, avec les coordonnées de l'organisateur."],
+ en:["Invitation letter from the company or trade fair in France","It states the purpose, the dates and who covers the costs, with the organiser's contact details."],
+ ar:["رسالة دعوة من الشركة أو المعرض في فرنسا","تبيّن الغرض والتواريخ ومن يتحمل التكاليف، مع بيانات الاتصال بالمنظّم."]},
+{id:"mission",g:"purpose",w:function(s){return s.purpose==="business"&&s.status==="employee"},
+ fr:["Ordre de mission de votre employeur","Objet de la mission, dates et prise en charge des frais, sur papier à en-tête."],
+ en:["Mission order from your employer","Purpose of the mission, dates and who covers the costs, on letterhead."],
+ ar:["أمر مهمة من المشغّل","غرض المهمة والتواريخ وتحمّل التكاليف، على ورقة المؤسسة الرسمية."]},
+{id:"biz_proof",g:"purpose",w:function(s){return s.purpose==="business"&&s.status!=="employee"},
+ fr:["Preuves de votre activité et de vos relations d'affaires","Contrats, factures ou échanges avec le partenaire en France."],
+ en:["Proof of your activity and business relations","Contracts, invoices or exchanges with your partner in France."],
+ ar:["إثباتات نشاطك وعلاقاتك التجارية","عقود أو فواتير أو مراسلات مع الشريك في فرنسا."]},
+{id:"flight",g:"stay",w:any,
+ fr:["Réservation de vol aller-retour","Réservation non payée. N'achetez pas de billet non remboursable avant d'avoir le visa."],
+ en:["Round-trip flight reservation","Reserved but unpaid. Do not buy a non-refundable ticket before you have the visa."],
+ ar:["حجز طيران ذهاب وإياب","حجز غير مدفوع. لا تشترِ تذكرة غير قابلة للاسترداد قبل الحصول على التأشيرة."]},
+{id:"hotel",g:"stay",w:function(s){return s.stay==="hotel"},
+ fr:["Réservation d'hôtel ou de location pour toutes les nuits","Dates et noms des voyageurs conformes au dossier."],
+ en:["Hotel or rental reservation for every night","Dates and traveller names must match your file."],
+ ar:["حجز فندق أو كراء لكل الليالي","يجب أن تطابق التواريخ وأسماء المسافرين ملفك."]},
+{id:"invite",g:"stay",w:function(s){return s.stay==="hosted"},
+ fr:["Attestation d'accueil (CERFA) validée par la mairie de l'hôte","Datée de moins de 6 mois. Ajoutez la pièce d'identité de l'hôte, son justificatif de domicile en France, ses revenus et la preuve du lien de parenté."],
+ en:["Hosting certificate (CERFA) validated by the host's town hall","Dated within 6 months. Add the host's ID, proof of address in France, proof of income and proof of kinship."],
+ ar:["شهادة استضافة (CERFA) مصادَق عليها من بلدية المضيف","مؤرخة بأقل من 6 أشهر. أضف هوية المضيف وإثبات إقامته في فرنسا ودخله وإثبات صلة القرابة."]},
+{id:"itin",g:"stay",w:any,opt:1,
+ fr:["Programme du séjour jour par jour","Utile surtout si vous visitez plusieurs villes."],
+ en:["Day-by-day trip plan","Most useful if you visit several cities."],
+ ar:["برنامج الإقامة يومًا بيوم","مفيد خصوصًا إن زرت عدة مدن."]},
+{id:"fam_rec",g:"family",w:function(s){return s.party==="family"},
+ fr:["Livret de famille ou acte de naissance de chaque enfant","Chaque enfant doit avoir son propre passeport."],
+ en:["Family record or birth certificate of each child","Each child needs their own passport."],
+ ar:["دفتر عائلي أو مضمون ولادة لكل طفل","يجب أن يملك كل طفل جواز سفره الخاص."]},
+{id:"fam_auth",g:"family",w:function(s){return s.party==="family"},
+ fr:["Autorisation écrite de l'autre parent","Nécessaire si un enfant voyage avec un seul parent."],
+ en:["Written authorisation from the other parent","Needed if a child travels with one parent only."],
+ ar:["ترخيص كتابي من الوالد الآخر","ضروري إذا سافر الطفل مع أحد والديه فقط."]}
+];
+/* Family reunification (long-stay visa): general list, to confirm with France-Visas and the consulate. */
+var RITEMS=[
+{id:"r_ofii",g:"steps",w:any,
+ fr:["Décision ou preuve de la demande de regroupement familial déposée en France","La personne qui vit en France dépose d'abord la demande à l'OFII. En règle générale, elle doit résider légalement en France depuis au moins 18 mois."],
+ en:["Decision or proof of the family reunification request filed in France","The person living in France files the request with the OFII first. As a rule, they must have lived legally in France for at least 18 months."],
+ ar:["قرار أو إثبات طلب لمّ الشمل المقدَّم في فرنسا","يقدّم الشخص المقيم في فرنسا الطلب أولًا لدى OFII. كقاعدة عامة، يجب أن يقيم قانونيًا في فرنسا منذ 18 شهرًا على الأقل."]},
+{id:"r_form",g:"steps",w:any,
+ fr:["Demande de visa de long séjour sur France-Visas, imprimée et signée","Choisissez le motif famille. Seul le formulaire en vigueur est accepté."],
+ en:["Long-stay visa application on France-Visas, printed and signed","Choose the family reason. Only the current form is accepted."],
+ ar:["طلب تأشيرة الإقامة الطويلة على France-Visas، مطبوع وموقّع","اختر سبب العائلة. لا يُقبل إلا النموذج الساري."]},
+{id:"r_appt",g:"steps",w:any,
+ fr:["Rendez-vous de dépôt du dossier","Au centre indiqué par France-Visas. Gardez la confirmation imprimée."],
+ en:["Appointment to submit your file","At the centre shown on France-Visas. Keep the printed confirmation."],
+ ar:["موعد إيداع الملف","في المركز المحدد على France-Visas. احتفظ بالتأكيد مطبوعًا."]},
+{id:"r_fee",g:"steps",w:any,
+ fr:["Frais de visa de long séjour","Le montant dépend du type de visa. Confirmez-le sur France-Visas avant de payer."],
+ en:["Long-stay visa fee","The amount depends on the visa type. Confirm it on France-Visas before paying."],
+ ar:["رسوم تأشيرة الإقامة الطويلة","يختلف المبلغ حسب نوع التأشيرة. تأكد منه على France-Visas قبل الدفع."]},
+{id:"r_pass",g:"core",w:any,
+ fr:["Passeport valide, original et copie des pages utiles","Avec des pages vierges. Ajoutez les anciens visas et tampons français."],
+ en:["Valid passport, original and copy of the useful pages","With blank pages. Add previous visas and French stamps."],
+ ar:["جواز سفر صالح، الأصل ونسخة من الصفحات المفيدة","به صفحات فارغة. أضف التأشيرات السابقة والأختام الفرنسية."]},
+{id:"r_photos",g:"core",w:any,
+ fr:["2 photos d'identité récentes","35 x 45 mm, en couleur, fond blanc ou très clair."],
+ en:["2 recent passport photos","35 x 45 mm, colour, white or very light background."],
+ ar:["صورتا هوية حديثتان","35 × 45 مم، ملوّنة، خلفية بيضاء أو فاتحة جدًا."]},
+{id:"r_cin",g:"core",w:any,
+ fr:["Copie de la carte d'identité nationale (CIN)",""],
+ en:["Copy of the national ID card (CIN)",""],
+ ar:["نسخة من بطاقة التعريف الوطنية",""]},
+{id:"r_birth",g:"core",w:any,
+ fr:["Acte de naissance, copie intégrale","Récent, avec filiation."],
+ en:["Birth certificate, full copy","Recent, with filiation."],
+ ar:["مضمون ولادة، نسخة كاملة","حديث، مع الأصول."]},
+{id:"r_mar",g:"family",w:any,
+ fr:["Acte de mariage, copie intégrale, et livret de famille",""],
+ en:["Marriage certificate, full copy, and family record",""],
+ ar:["عقد زواج، نسخة كاملة، ودفتر عائلي",""]},
+{id:"r_child",g:"family",w:function(s){return s.party==="family"},
+ fr:["Acte de naissance de chaque enfant et livret de famille","Chaque enfant doit avoir son propre passeport."],
+ en:["Birth certificate of each child and family record","Each child needs their own passport."],
+ ar:["مضمون ولادة لكل طفل ودفتر عائلي","يجب أن يملك كل طفل جواز سفره الخاص."]},
+{id:"r_auth",g:"family",w:function(s){return s.party==="family"},
+ fr:["Autorisation de l'autre parent, signature légalisée","Nécessaire si l'enfant rejoint la France avec un seul parent."],
+ en:["Authorisation from the other parent, legalised signature","Needed if the child joins France with one parent only."],
+ ar:["ترخيص من الوالد الآخر، بإمضاء مصادَق عليه","ضروري إذا التحق الطفل بفرنسا مع أحد والديه فقط."]},
+{id:"r_transl",g:"core",w:any,opt:1,
+ fr:["Traduction française assermentée des actes en arabe","Souvent exigée pour les actes rédigés en arabe."],
+ en:["Sworn French translation of documents in Arabic","Often required for documents written in Arabic."],
+ ar:["ترجمة فرنسية محلّفة للوثائق بالعربية","تُطلب غالبًا للوثائق المحرّرة بالعربية."]}
+];
+var ORDER=["steps","core","purpose","money","activity","stay","family"];
+var KEY="dossier-schengen-v1";
+var S={lang:"fr",country:"fr",gov:"",paid:false,pack:false,purpose:"tourism",status:"employee",party:"alone",stay:"hotel",pay:"self",done:{}};
+try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);for(var k in o){S[k]=o[k]}}}catch(e){}
+if(!UI[S.lang])S.lang="fr";
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+var $=function(id){return document.getElementById(id)};
+function chips(q,label){
+  var t=UI[S.lang],h='<div class="q"><div class="q-label">'+label+'</div><div class="chips" role="group" aria-label="'+label+'">';
+  Object.keys(t[q]).forEach(function(v){h+='<button type="button" class="chip" data-q="'+q+'" data-v="'+v+'" aria-pressed="'+(S[q]===v)+'">'+t[q][v]+'</button>'});
+  return h+'</div></div>';
+}
+/* Config: put the Flouci or Paymee payment link in PAY_URL. CODES are unlock codes you give after payment (change TEST10 before sharing). */
+var PAY_URL="";
+var CODES=["TEST10"];
+/* Refusal pack (20 DT): put its Flouci or Paymee link in PAY_URL2. CODES2 are the unlock codes you give after payment (change TEST20 before sharing). */
+var PAY_URL2="";
+var CODES2=["TEST20"];
+var HEAD=`[Prénom NOM]
+[Adresse en Tunisie]
+[Téléphone] · [E-mail]
+Passeport n° : [numéro]
+
+[Ville], le [date]`;
+var PACK=[
+{id:"recours",t:{fr:"Lettre de recours",en:"Appeal letter",ar:"رسالة الطعن"},body:HEAD+`
+
+À l'attention de la Commission de recours contre les décisions de refus de visa d'entrée en France
+[adresse indiquée sur votre notification de refus]
+
+Objet : recours contre la décision de refus de visa du [date de la décision]
+Référence de la demande : [numéro France-Visas]
+
+Madame, Monsieur,
+
+Le [date de dépôt], j'ai déposé auprès de TLScontact [Tunis / Sfax] une demande de visa de court séjour pour [tourisme / visite familiale / affaires], du [date] au [date]. Elle a été refusée le [date de la décision] pour le motif suivant : [recopier le motif coché sur le formulaire de refus].
+
+Je conteste cette décision pour les raisons suivantes.
+
+1. [Répondre directement au motif. Exemple, moyens de subsistance : mes revenus mensuels sont de [montant] dinars, justifiés par mes trois derniers bulletins de paie et mes relevés bancaires (pièces n° 2 et 3). Le coût de mon séjour est estimé à [montant] euros.]
+
+2. [Attaches en Tunisie : emploi depuis [année], famille, logement, scolarité des enfants (pièces n° 4 à 6).]
+
+3. [Voyages passés : visas obtenus et retours dans les délais (pièce n° 7).]
+
+Je m'engage à quitter l'espace Schengen avant la fin de la validité du visa et à rentrer en Tunisie, où se trouvent ma vie professionnelle et ma famille.
+
+Je vous demande de bien vouloir réexaminer ma demande et de m'accorder le visa sollicité.
+
+Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.
+
+[Signature]
+
+Pièces jointes :
+1. Copie de la décision de refus
+2. [Bulletins de paie]
+3. [Relevés bancaires]
+4. [Attestation de travail]
+5. [Livret de famille]
+6. [Justificatif de domicile]
+7. [Anciens visas et preuves de voyages]`},
+{id:"m_employee",t:{fr:"Motivation : salarié",en:"Motivation: employee",ar:"رسالة تحفيز: موظف"},body:HEAD+`
+
+À l'attention du Consulat général de France à Tunis
+
+Objet : demande de visa de court séjour, lettre de motivation
+
+Madame, Monsieur,
+
+Je souhaite me rendre en France du [date] au [date] pour [tourisme / visite à ma sœur / ...]. Je vous remercie de l'attention portée à mon dossier.
+
+Je travaille comme [poste] chez [employeur], à [ville], depuis [année], avec un salaire mensuel de [montant] dinars. Mon employeur m'a accordé un congé du [date] au [date] (attestation jointe).
+
+Mon séjour est organisé ainsi : [villes visitées et programme en quelques lignes]. J'ai réservé [hôtel du ... au ... / un hébergement chez ...]. Je finance moi-même ce voyage, dont j'estime le budget à [montant] euros. Mes relevés bancaires des trois derniers mois sont joints.
+
+Mes attaches en Tunisie sont solides : mon emploi, [conjoint, enfants, parents] et mon logement à [ville]. Je reprendrai mon poste le [date] et je quitterai l'espace Schengen avant la fin du visa. [Si vous avez déjà voyagé : j'ai séjourné en [pays] en [année] et je suis rentré dans les délais.]
+
+Je reste à votre disposition pour tout document complémentaire.
+
+Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.
+
+[Signature]`},
+{id:"m_self",t:{fr:"Motivation : indépendant",en:"Motivation: self-employed",ar:"رسالة تحفيز: عمل حر"},body:HEAD+`
+
+À l'attention du Consulat général de France à Tunis
+
+Objet : demande de visa de court séjour, lettre de motivation
+
+Madame, Monsieur,
+
+Je souhaite me rendre en France du [date] au [date] pour [tourisme / visite familiale / salon professionnel]. Je vous remercie de l'attention portée à ma demande.
+
+Je suis [profession] et je dirige mon activité à [ville] depuis [année] (registre de commerce / patente / matricule fiscal n° [numéro], joint). Mon activité me procure un revenu mensuel moyen de [montant] dinars, comme le montrent mes déclarations fiscales et mes relevés bancaires professionnels joints.
+
+Pendant mon absence, [collaborateur / associé / famille] assurera la continuité de l'activité. Mon séjour : [programme en quelques lignes], avec [hébergement réservé du ... au ...]. Le budget prévu est de [montant] euros, financé par mes propres moyens.
+
+Mon entreprise, ma famille ([conjoint, enfants]) et mon logement sont en Tunisie. Je rentrerai le [date] et je quitterai l'espace Schengen avant l'expiration du visa.
+
+Je reste à votre disposition pour tout complément.
+
+Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.
+
+[Signature]`},
+{id:"m_student",t:{fr:"Motivation : étudiant",en:"Motivation: student",ar:"رسالة تحفيز: طالب"},body:HEAD+`
+
+À l'attention du Consulat général de France à Tunis
+
+Objet : demande de visa de court séjour, lettre de motivation
+
+Madame, Monsieur,
+
+Je suis étudiant(e) en [filière] à [établissement], à [ville], en [niveau / année]. Je souhaite me rendre en France du [date] au [date] pour [tourisme / visite à un proche / voyage d'étude], pendant [vacances universitaires / période autorisée par mon établissement].
+
+Mon établissement m'a délivré une attestation d'inscription et une autorisation d'absence pour ces dates (jointes). Mon voyage est financé par [mes parents / mon garant], dont la lettre de prise en charge, les relevés bancaires et les justificatifs de revenus sont joints. Budget estimé : [montant] euros.
+
+Programme du séjour : [programme en quelques lignes]. Hébergement : [réservation / attestation d'accueil de ...].
+
+Mes études, ma famille et mon logement sont en Tunisie. Je reprendrai les cours le [date] et je quitterai l'espace Schengen avant la fin du visa.
+
+Je reste à votre disposition pour tout complément.
+
+Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.
+
+[Signature]`},
+{id:"m_retired",t:{fr:"Motivation : retraité",en:"Motivation: retired",ar:"رسالة تحفيز: متقاعد"},body:HEAD+`
+
+À l'attention du Consulat général de France à Tunis
+
+Objet : demande de visa de court séjour, lettre de motivation
+
+Madame, Monsieur,
+
+Retraité(e) depuis [année], ancien(ne) [profession], je souhaite me rendre en France du [date] au [date] pour [tourisme / visite à mon fils, ma fille, un ami]. Je vous remercie de l'attention portée à ma demande.
+
+Je perçois une pension mensuelle de [montant] dinars (attestation de pension et relevés bancaires joints). Le budget de mon séjour est estimé à [montant] euros, que je finance moi-même. [Si vous êtes hébergé : mon hôte, [nom], m'accueille avec une attestation d'accueil validée, jointe.]
+
+Programme du séjour : [programme en quelques lignes]. J'ai souscrit une assurance voyage couvrant 30 000 euros, valable dans tout l'espace Schengen.
+
+Mon épouse / mon époux, mes enfants en Tunisie et mon logement à [ville] m'attendent à mon retour. Je rentrerai le [date] et je quitterai l'espace Schengen avant la fin du visa.
+
+Je reste à votre disposition pour tout complément.
+
+Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.
+
+[Signature]`}
+];
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function renderRefus(t){
+  var L=S.lang,h='<h2>'+t.rfTitle+'</h2><p class="rf-sub">'+t.rfSub+'</p>';
+  h+='<div class="book"><p>'+t.rfWarn+'</p></div>';
+  if(!S.pack){
+    h+='<ul class="inc">'+t.rfInc.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>';
+    h+='<div><div class="price">'+t.rfPrice+'</div><p class="rf-sub">'+t.rfPriceSub+'</p></div>';
+    h+=PAY_URL2?'<a class="pay" href="'+PAY_URL2+'" target="_blank" rel="noopener">'+t.rfPay+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
+    h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
+  }else{
+    h+='<h2>'+t.rfAdvTitle+'</h2><ol class="adv">'+t.adv.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ol>';
+    h+='<h2>'+t.rfLetTitle+'</h2><p class="rf-sub">'+t.rfNote+'</p>';
+    PACK.forEach(function(p){
+      h+='<details class="lt"><summary>'+p.t[L]+'</summary><div class="lt-body"><pre class="letter" id="pk-'+p.id+'">'+esc(p.body)+'</pre><button type="button" class="cp" data-copy="'+p.id+'">'+t.copy+'</button></div></details>';
+    });
+  }
+  h+='<p class="ag-note">'+t.rfNoGuar+'</p>';
+  $("refus").innerHTML=h;
+}
+function copyLetter(btn){
+  var t=UI[S.lang],pre=$("pk-"+btn.dataset.copy);
+  function pick(){var r=document.createRange();r.selectNodeContents(pre);var s=window.getSelection();s.removeAllRanges();s.addRange(r);btn.textContent=t.selected}
+  function ok(){btn.textContent=t.copied;setTimeout(function(){btn.textContent=t.copy},1800)}
+  try{navigator.clipboard.writeText(pre.textContent).then(ok,pick)}catch(e){pick()}
+}
+function C(id,fr,en,ar,ready){return {id:id,ready:!!ready,n:{fr:fr,en:en,ar:ar}}}
+var COUNTRIES=[
+ C("fr","France","France","فرنسا",true),
+ C("de","Allemagne","Germany","ألمانيا"),C("it","Italie","Italy","إيطاليا"),C("es","Espagne","Spain","إسبانيا"),
+ C("be","Belgique","Belgium","بلجيكا"),C("nl","Pays-Bas","Netherlands","هولندا"),C("ch","Suisse","Switzerland","سويسرا"),
+ C("ca","Canada","Canada","كندا"),C("us","États-Unis","United States","الولايات المتحدة"),C("gb","Royaume-Uni","United Kingdom","المملكة المتحدة"),
+ C("ae","Émirats arabes unis","United Arab Emirates","الإمارات العربية المتحدة"),C("sa","Arabie saoudite","Saudi Arabia","السعودية"),
+ C("jp","Japon","Japan","اليابان"),C("au","Australie","Australia","أستراليا"),C("nz","Nouvelle-Zélande","New Zealand","نيوزيلندا"),C("cn","Chine","China","الصين")
+];
+function G(id,fr,en,ar,h){return {id:id,n:{fr:fr,en:en,ar:ar},h:h||null}}
+var GOVS=[
+ G("tunis","Tunis","Tunis","تونس"),G("ariana","Ariana","Ariana","أريانة"),G("benarous","Ben Arous","Ben Arous","بن عروس"),G("manouba","Manouba","Manouba","منوبة"),
+ G("nabeul","Nabeul","Nabeul","نابل",{fr:"Hammamet, Nabeul, Kélibia",en:"Hammamet, Nabeul, Kelibia",ar:"الحمامات، نابل، قليبية"}),
+ G("zaghouan","Zaghouan","Zaghouan","زغوان"),G("bizerte","Bizerte","Bizerte","بنزرت"),G("beja","Béja","Beja","باجة"),G("jendouba","Jendouba","Jendouba","جندوبة"),
+ G("kef","Le Kef","Kef","الكاف"),G("siliana","Siliana","Siliana","سليانة"),
+ G("sousse","Sousse","Sousse","سوسة",{fr:"Sousse, Port El Kantaoui",en:"Sousse, Port El Kantaoui",ar:"سوسة، بورت القنطاوي"}),
+ G("monastir","Monastir","Monastir","المنستير"),G("mahdia","Mahdia","Mahdia","المهدية"),G("sfax","Sfax","Sfax","صفاقس"),G("kairouan","Kairouan","Kairouan","القيروان"),
+ G("kasserine","Kasserine","Kasserine","القصرين",{fr:"Kasserine, Feriana",en:"Kasserine, Feriana",ar:"القصرين، فريانة"}),
+ G("sidibouzid","Sidi Bouzid","Sidi Bouzid","سيدي بوزيد"),G("gabes","Gabès","Gabes","قابس"),
+ G("medenine","Médenine","Medenine","مدنين",{fr:"Djerba, Zarzis, Médenine",en:"Djerba, Zarzis, Medenine",ar:"جربة، جرجيس، مدنين"}),
+ G("tataouine","Tataouine","Tataouine","تطاوين"),G("gafsa","Gafsa","Gafsa","قفصة"),G("tozeur","Tozeur","Tozeur","توزر"),G("kebili","Kébili","Kebili","قبلي")
+];
+/* Main towns shown in brackets after each governorate: [Latin names, Arabic names]. */
+var TOWNS={
+ tunis:["La Marsa, Carthage, Le Bardo","المرسى، قرطاج، باردو"],ariana:["Raoued, La Soukra, Sidi Thabet","رواد، سكرة، سيدي ثابت"],
+ benarous:["Radès, Ezzahra, Hammam Lif","رادس، الزهراء، حمام الأنف"],manouba:["Den Den, Oued Ellil, Tebourba","دندان، وادي الليل، طبربة"],
+ nabeul:["Hammamet, Kélibia, Korba, Grombalia","الحمامات، قليبية، قربة، قرمبالية"],zaghouan:["Zriba, Bir Mcherga, El Fahs","الزريبة، بئر مشارقة، الفحص"],
+ bizerte:["Menzel Bourguiba, Mateur, Ras Jebel","منزل بورقيبة، ماطر، رأس الجبل"],beja:["Testour, Medjez el-Bab, Nefza","تستور، مجاز الباب، نفزة"],
+ jendouba:["Tabarka, Aïn Draham, Bou Salem","طبرقة، عين دراهم، بوسالم"],kef:["Dahmani, Tajerouine, Sakiet Sidi Youssef","الدهماني، تاجروين، ساقية سيدي يوسف"],
+ siliana:["Makthar, Bou Arada, Gaâfour","مكثر، بوعرادة، قعفور"],sousse:["Hammam Sousse, Msaken, Kalaa Kebira, Port El Kantaoui","حمام سوسة، مساكن، القلعة الكبرى، بورت القنطاوي"],
+ monastir:["Moknine, Ksar Hellal, Jemmal, Skanes","المكنين، قصر هلال، جمال، سكانس"],mahdia:["El Jem, Chebba, Ksour Essef","الجم، الشابة، قصور الساف"],
+ sfax:["Sakiet Ezzit, Mahres, Kerkennah","ساقية الزيت، المحرس، قرقنة"],kairouan:["Haffouz, Sbikha, Oueslatia","حفوز، سبيخة، الوسلاتية"],
+ kasserine:["Feriana, Sbeitla, Thala","فريانة، سبيطلة، تالة"],sidibouzid:["Regueb, Meknassy, Jelma","الرقاب، المكناسي، جلمة"],
+ gabes:["El Hamma, Mareth, Matmata","الحامة، مارث، مطماطة"],medenine:["Djerba, Zarzis, Ben Gardane","جربة، جرجيس، بن قردان"],
+ tataouine:["Ghomrassen, Remada, Bir Lahmar","غمراسن، الرميلة، بئر الأحمر"],gafsa:["Métlaoui, Redeyef, Mdhilla","المتلوي، الرديف، المظيلة"],
+ tozeur:["Nefta, Degache, Tamerza","نفطة، دقاش، تمغزة"],kebili:["Douz, Souk Lahad, Faouar","دوز، سوق الأحد، الفوار"]
+};
+GOVS.forEach(function(g){var x=TOWNS[g.id];g.h=x?{fr:x[0],en:x[0],ar:x[1]}:null});
+/* Partner agencies by governorate id. Despina Travel and Events is an example entry: edit or remove it. */
+var PARTNERS={
+ nabeul:[{name:"Despina Travel and Events",city:"Hammamet",what:{fr:"Réservations d'hôtel et de vol",en:"Hotel and flight reservations",ar:"حجوزات الفنادق والطيران"},contact:""}]
+};
+function nm(o){return o.n[S.lang]}
+function countrySelect(t){
+  var L=S.lang,cmp=function(a,b){return nm(a).localeCompare(nm(b),L)};
+  var ready=COUNTRIES.filter(function(c){return c.ready}).sort(cmp),soon=COUNTRIES.filter(function(c){return !c.ready}).sort(cmp);
+  function opts(a){return a.map(function(c){return '<option value="'+c.id+'"'+(S.country===c.id?' selected':'')+'>'+nm(c)+'</option>'}).join("")}
+  return '<div class="q"><label class="q-label" for="country">'+t.s_country+'</label><select class="sel" id="country"><optgroup label="'+t.cAvail+'">'+opts(ready)+'</optgroup><optgroup label="'+t.cSoon+'">'+opts(soon)+'</optgroup></select></div>';
+}
+function panelHtml(t){
+  var cur=COUNTRIES.filter(function(c){return c.id===S.country})[0]||COUNTRIES[0];
+  var h=countrySelect(t);
+  if(cur.ready&&S.purpose==="reunion"){return h+chips("purpose",t.s_purpose)+chips("party",t.s_party)+'<div class="book"><b>'+t.reunTitle+'</b><p>'+t.reunText+'</p></div>'}
+  if(cur.ready){return h+chips("purpose",t.s_purpose)+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay)}
+  return h+'<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+t.soonText+'</p></div>';
+}
+function renderAgency(t){
+  var L=S.lang,gl=GOVS.slice().sort(function(a,b){return a.n[L].localeCompare(b.n[L],L)});
+  var h='<h2>'+t.agTitle+'</h2><p class="ag-sub">'+t.agSub+'</p>';
+  h+='<div class="q"><label class="q-label" for="gov">'+t.gov+'</label><select class="sel" id="gov"><option value="">'+t.govPick+'</option>'+gl.map(function(g){return '<option value="'+g.id+'"'+(S.gov===g.id?' selected':'')+'>'+g.n[L]+(g.h?' ('+g.h[L]+')':'')+'</option>'}).join("")+'</select></div>';
+  if(S.gov){
+    var list=PARTNERS[S.gov]||[];
+    if(!list.length){h+='<p class="ag-none">'+t.agNone+'</p>'}
+    else if(S.paid){
+      list.forEach(function(p){h+='<div class="partner"><b>'+p.name+'</b><span class="tag">'+p.city+'</span><span class="i-note">'+p.what[L]+'</span><span class="i-note">'+(p.contact||t.contactSoon)+'</span></div>'});
+    }else{
+      h+='<div class="locked"><b>'+t.agCount(list.length)+'</b><i></i><i></i></div>';
+      h+=PAY_URL?'<a class="pay" href="'+PAY_URL+'" target="_blank" rel="noopener">'+t.payBtn+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
+      h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>';
+    }
+  }
+  h+='<p class="ag-note">'+t.agNote+'</p>';
+  $("agency").innerHTML=h;
+}
+function render(){
+  var t=UI[S.lang],ready=S.country==="fr";
+  document.documentElement.lang=S.lang;
+  document.documentElement.dir=S.lang==="ar"?"rtl":"ltr";
+  $("stamp").textContent=t.stamp;$("h1").textContent=t.h1;$("sub").textContent=t.sub;$("disc").textContent=t.disc;$("reset").textContent=t.reset;
+  $("links").innerHTML=!ready?"":'<a href="https://france-visas.gouv.fr/en/tunisie" target="_blank" rel="noopener">'+t.linkFV+'</a><a href="https://visas-fr.tlscontact.com/fr-fr/country/tn/vac/tnTUN2fr/application-fees" target="_blank" rel="noopener">'+t.linkTLS+'</a>';
+  ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
+  $("panel").innerHTML=panelHtml(t);
+  var vis=(S.purpose==="reunion"?RITEMS:ITEMS).filter(function(i){return i.w(S)});
+  var req=vis.filter(function(i){return !i.opt}),doneReq=req.filter(function(i){return S.done[i.id]}).length;
+  var pct=req.length?Math.round(doneReq/req.length*100):0,left=req.length-doneReq;
+  $("pnum").textContent=doneReq+" "+t.of+" "+req.length+" "+t.ready;
+  $("pmsg").textContent=left===0?t.msgDone:(doneReq===0?t.msg0:t.msgN(left));
+  $("barfill").style.width=pct+"%";$("bar").className="bar"+(left===0?" done":"");
+  var h="";
+  ORDER.forEach(function(g){
+    var gi=vis.filter(function(i){return i.g===g});if(!gi.length)return;
+    var gd=gi.filter(function(i){return S.done[i.id]}).length;
+    h+='<section class="group"><div class="g-head"><h2>'+t.groups[g]+'</h2><span class="g-count">'+gd+'/'+gi.length+'</span></div>';
+    gi.forEach(function(i){
+      var c=i[S.lang],on=!!S.done[i.id];
+      h+='<label class="item'+(on?' on':'')+'"><input type="checkbox" data-id="'+i.id+'"'+(on?' checked':'')+'><span class="i-body">'+(i.opt?'<span class="tag">'+t.opt+'</span>':'')+'<span class="i-title">'+c[0]+'</span>'+(c[1]?'<span class="i-note">'+c[1]+'</span>':'')+'</span></label>';
+    });
+    if(g==="stay"){h+='<div class="book"><span class="slot">'+t.bookSlot+'</span><b>'+t.bookTitle+'</b><p>'+t.bookText+'</p></div>'}
+    h+='</section>';
+  });
+  $("list").innerHTML=ready?h:"";
+  document.querySelector(".progress").hidden=!ready;
+  renderAgency(t);
+  $("refus").hidden=!ready;
+  if(ready)renderRefus(t);
+}
+document.addEventListener("click",function(e){
+  if(e.target.id==="unlock"){
+    var v=($("code").value||"").trim().toUpperCase();
+    if(CODES.indexOf(v)>-1){S.paid=true;save();render()}else{$("err").textContent=UI[S.lang].badCode}
+    return;
+  }
+  if(e.target.id==="unlock2"){
+    var v2=($("code2").value||"").trim().toUpperCase();
+    if(CODES2.indexOf(v2)>-1){S.pack=true;save();render()}else{$("err2").textContent=UI[S.lang].badCode}
+    return;
+  }
+  var cb=e.target.closest(".cp");
+  if(cb){copyLetter(cb);return}
+  var c=e.target.closest(".chip");
+  if(c){S[c.dataset.q]=c.dataset.v;if(c.dataset.q==="purpose"&&c.dataset.v==="family")S.stay="hosted";save();render();return}
+});
+document.addEventListener("change",function(e){
+  if(e.target.id==="country"){S.country=e.target.value;save();render();$("country").focus();return}
+  if(e.target.id==="gov"){S.gov=e.target.value;save();render();$("gov").focus();return}
+  var id=e.target.dataset&&e.target.dataset.id;
+  if(id){if(e.target.checked)S.done[id]=1;else delete S.done[id];save();render();
+    var again=document.querySelector('input[data-id="'+id+'"]');if(again)again.focus()}
+});
+["fr","en","ar"].forEach(function(l){$("l-"+l).onclick=function(){S.lang=l;save();render()}});
+$("reset").onclick=function(){S.done={};save();render()};
+render();
+})();
+</script>
+
+</body></html>
