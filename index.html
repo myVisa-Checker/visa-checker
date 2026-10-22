@@ -391,6 +391,23 @@ html[lang="ar"] .fe,html[lang="ar"] button.sp-chip{font-family:var(--f-ar)}
 
 </style>
 
+<style>
+.home-btn{color:#e5484d;background:#fff1f1;border-color:#f3a6a8}
+.home-btn svg{width:24px;height:24px}
+.home-btn svg path{stroke-width:2.6}
+.home-btn:hover{background:#e5484d;border-color:#e5484d;color:#fff}
+:root[data-theme="dark"] .home-btn{color:#ff8a8d;background:#3a1d1f;border-color:#7a3a3d}
+:root[data-theme="dark"] .home-btn:hover{background:#ff6b6f;border-color:#ff6b6f;color:#1a0f0e}
+textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
+.act{display:grid;gap:8px;margin:12px 0}
+@media print{
+ body.print-pack header,body.print-pack nav,body.print-pack .nav,body.print-pack footer,body.print-pack .dock,body.print-pack .deco,body.print-pack #agency,body.print-pack #stepper,body.print-pack .cp,body.print-pack [data-print],body.print-pack .home-btn,body.print-pack .act,body.print-pack #legal{display:none!important}
+ body.print-pack .rv{opacity:1!important;transform:none!important}
+ body.print-pack #refus::before{content:"Visa Checker · Pack recours";display:block;font-size:20px;font-weight:700;margin-bottom:12px}
+ body.print-pack .lt{break-before:page}
+ body.print-pack{background:#fff;color:#000}
+}
+</style>
 <div class="wrap">
   <header>
     <div class="top">
@@ -453,11 +470,11 @@ html[lang="ar"] .fe,html[lang="ar"] button.sp-chip{font-family:var(--f-ar)}
 var UI={
 fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destination, puis cochez chaque document au fur et à mesure.",
  s_country:"Destination",cAvail:"Disponible",cSoon:"Bientôt",soonText:"La liste des pièces pour ce pays arrive bientôt. La France est disponible dès maintenant.",
- agTitle:"Un coup de main d'une agence près de chez vous ?",agSub:"Choisissez votre gouvernorat. Voir les agences partenaires coûte 10 DT, en paiement unique.",
- gov:"Gouvernorat",govPick:"Choisir un gouvernorat",agCount:function(n){return n+(n>1?" agences partenaires":" agence partenaire")},
- agNone:"Pas encore d'agence partenaire dans ce gouvernorat.",payBtn:"Payer 10 DT",payWait:"Lien de paiement bientôt",
+ agTitle:"Besoin d'un conseiller visa ?",agSub:"Voir ses coordonnées coûte 10 DT, en paiement unique.",
+ gov:"Gouvernorat",govPick:"Choisir un gouvernorat",agCount:function(n){return n+(n>1?" conseillers":" conseiller")},
+ agNone:"Pas encore de conseiller disponible.",payBtn:"Payer 10 DT",payWait:"Lien de paiement bientôt",
  codeLabel:"Déjà payé ? Entrez le code reçu",unlock:"Débloquer",badCode:"Code incorrect.",contactSoon:"Coordonnées à venir",
- agNote:"Les agences sont indépendantes. Visa Checker ne garantit pas l'obtention du visa.",
+ agNote:"Les conseillers sont indépendants. Visa Checker ne garantit pas l'obtention du visa.",
  s_status:"Votre activité",s_party:"Vous voyagez",s_stay:"Hébergement",s_pay:"Qui finance le voyage",
  status:{employee:"Salarié",self:"Indépendant / entrepreneur",student:"Étudiant",retired:"Retraité"},
  party:{alone:"Seul(e)",family:"En famille"},stay:{hotel:"Hôtel / location",hosted:"Chez un hôte"},pay:{self:"Moi-même",sponsor:"Un garant"},
@@ -473,7 +490,7 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  s_pass:"Passeport",passName:"Tunisie",s_dest:"Destination",s_motive:"Motif du voyage",
  motive:{medical:"Visite médicale",other:"Autre motif"},motiveHint:{medical:"Soins, consultation ou opération",other:"Tourisme, famille, affaires"},
  start:"Commencer",back:"Retour",next:"Continuer",stepWord:function(n){return "Étape "+n+" sur 2"},stepNames:["Motif","Profil","Documents","Aide en plus"],
- pTitle:"Votre profil",pSub:"Quelques réponses pour adapter la liste à votre situation.",dTitle:"Vos documents",dSub:"Cochez chaque document au fur et à mesure.",hTitle:"Un coup de pouce",hSub:"Agences partenaires et aide en cas de refus.",
+ pTitle:"Votre profil",pSub:"Quelques réponses pour adapter la liste à votre situation.",dTitle:"Vos documents",dSub:"Cochez chaque document au fur et à mesure.",hTitle:"Un coup de pouce",hSub:"Conseiller et aide en cas de refus.",
  medNote:"Visite médicale : le consulat veut voir un rendez-vous réel en France, le coût des soins et la preuve que vous pouvez les payer.",gMed:"Votre visite médicale",
  destTitle:"Votre voyage",destSub:"Pourquoi voyagez-vous ?",
  sloganA:"Votre dossier visa, vérifié",sloganB:"avant le dépôt",homeSub2:"Votre conseiller visa : nous vérifions que rien ne manque. Nous ne déposons pas votre demande."
@@ -485,19 +502,19 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  reunTitle:"Visa de long séjour",reunText:"Procédure différente d'un voyage touristique : la personne qui vit en France dépose d'abord la demande de regroupement familial auprès de l'OFII. Cette liste est générale. Confirmez les pièces sur France-Visas et auprès du consulat, car elles varient selon votre cas.",
  rfTitle:"Visa refusé ? Reprenez votre dossier",rfSub:"Un refus n'est pas définitif. Le pack contient ce qu'il faut pour contester ou redéposer.",
  rfWarn:"Le délai pour contester est court, environ 30 jours après la notification. Lisez dès aujourd'hui le motif indiqué sur votre formulaire de refus.",
- rfInc:["Lettre de recours à compléter","Conseils pour redéposer, étape par étape","4 lettres de motivation modèles : salarié, indépendant, étudiant, retraité"],
- refHint:"Visa refusé ? Aide en cas de refus : 20 DT (lettre de recours et modèles de motivation).",rfPrice:"Pack complet : 20 DT",rfPriceSub:"Payé à l'avance. Vous recevez tout de suite les textes à copier et à imprimer.",
- rfPay:"Payer 20 DT",rfAdvTitle:"Conseils pour redéposer",rfLetTitle:"Lettres à copier",
+ rfInc:["Lettre de recours à compléter","Conseils pour redéposer, étape par étape","4 lettres de motivation modèles : salarié, indépendant, étudiant, retraité","Le tout en PDF, à télécharger ou à recevoir par e-mail"],
+ refHint:"Visa refusé ? Aide en cas de refus : 20 DT (lettre de recours et modèles de motivation).",rfPrice:"Pack complet : 20 DT",rfPriceSub:"Payé à l'avance. Vous recevez tout de suite le pack : à télécharger en PDF ou à recevoir par e-mail.",
+ caseLabel:"Votre cas, en bref",casePh:"Ex. : moyens de subsistance insuffisants",caseHint:"Écrivez le motif de refus comme indiqué sur le papier remis lors du refus (ou votre question).",advMail:"Écrire par e-mail",advWA:"Écrire sur WhatsApp",advSubject:"demande de conseil",advDest:"Destination",advCase:"Mon cas",pdfBtn:"Télécharger le pack en PDF",pdfHint:"Dans la fenêtre qui s'ouvre, choisissez « Enregistrer au format PDF ».",pdfMail:"Recevoir par e-mail",rfPay:"Payer 20 DT",rfAdvTitle:"Conseils pour redéposer",rfLetTitle:"Lettres à copier",
  rfNote:"Les lettres sont en français, car elles sont adressées aux autorités françaises. Remplacez tout ce qui est entre [crochets]. Collez le texte dans Word ou Google Docs, puis imprimez.",
  rfNoGuar:"Ces modèles aident à présenter votre dossier. Ils ne garantissent pas le visa.",copy:"Copier le texte",copied:"Copié",selected:"Texte sélectionné, copiez-le",
  adv:["Lisez le formulaire de refus. La case cochée indique le motif à corriger.","Choisissez : un recours (délai court, indiqué sur la notification) ou une nouvelle demande, qui entraîne de nouveaux frais.","Corrigez le motif avec des preuves nouvelles. Moyens financiers : relevés réguliers, sans gros dépôt soudain. Objet du séjour : programme clair et réservations réelles. Retour en Tunisie : preuves d'attaches (emploi, famille, logement).","Restez cohérent avec la première demande. Le consulat garde votre dossier : dates, emploi et revenus doivent être identiques.","Il n'existe pas de délai légal d'attente avant de redéposer, mais ne redéposez pas le même dossier sans changement.","Aucun intermédiaire ne peut promettre un visa. Un faux document peut entraîner de graves conséquences, dont une interdiction d'entrée."]},
 en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, then tick each document as you collect it.",
  s_country:"Destination",cAvail:"Available",cSoon:"Coming soon",soonText:"The document list for this country is coming soon. France is available now.",
- agTitle:"Want help from an agency near you?",agSub:"Pick your governorate. Seeing the partner agencies costs 10 TND, paid once.",
- gov:"Governorate",govPick:"Choose a governorate",agCount:function(n){return n+(n>1?" partner agencies":" partner agency")},
- agNone:"No partner agency in this governorate yet.",payBtn:"Pay 10 TND",payWait:"Payment link coming soon",
+ agTitle:"Need a visa advisor?",agSub:"Seeing his contact details costs 10 TND, paid once.",
+ gov:"Governorate",govPick:"Choose a governorate",agCount:function(n){return n+(n>1?" advisors":" advisor")},
+ agNone:"No advisor available yet.",payBtn:"Pay 10 TND",payWait:"Payment link coming soon",
  codeLabel:"Already paid? Enter the code you received",unlock:"Unlock",badCode:"Incorrect code.",contactSoon:"Contact details coming",
- agNote:"Agencies are independent. Visa Checker does not guarantee a visa.",
+ agNote:"Advisors are independent. Visa Checker does not guarantee a visa.",
  s_status:"Your activity",s_party:"You travel",s_stay:"Accommodation",s_pay:"Who pays for the trip",
  status:{employee:"Employee",self:"Self-employed / business owner",student:"Student",retired:"Retired"},
  party:{alone:"Alone",family:"With family"},stay:{hotel:"Hotel / rental",hosted:"With a host"},pay:{self:"Myself",sponsor:"A sponsor"},
@@ -513,7 +530,7 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  s_pass:"Passport",passName:"Tunisia",s_dest:"Destination",s_motive:"Reason for travel",
  motive:{medical:"Medical visit",other:"Other reason"},motiveHint:{medical:"Treatment, consultation or surgery",other:"Tourism, family, business"},
  start:"Start",back:"Back",next:"Continue",stepWord:function(n){return "Step "+n+" of 2"},stepNames:["Reason","Profile","Documents","Extra help"],
- pTitle:"Your profile",pSub:"A few answers to fit the list to your situation.",dTitle:"Your documents",dSub:"Tick each document as you collect it.",hTitle:"A helping hand",hSub:"Partner agencies and help after a refusal.",
+ pTitle:"Your profile",pSub:"A few answers to fit the list to your situation.",dTitle:"Your documents",dSub:"Tick each document as you collect it.",hTitle:"A helping hand",hSub:"Advisor and help after a refusal.",
  medNote:"Medical visit: the consulate wants a real appointment in France, the cost of care and proof you can pay for it.",gMed:"Your medical visit",
  destTitle:"Your trip",destSub:"Why are you travelling?",
  sloganA:"Your visa file, checked",sloganB:"before you apply",homeSub2:"Your visa advisor: we check that nothing is missing. We do not file your application."
@@ -525,19 +542,19 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  reunTitle:"Long-stay visa",reunText:"This is a different procedure from a tourist trip: the person living in France first files the family reunification request with the OFII. This list is general. Confirm the documents on France-Visas and with the consulate, because they vary by case.",
  rfTitle:"Visa refused? Rebuild your file",rfSub:"A refusal is not final. The pack has what you need to appeal or apply again.",
  rfWarn:"The time to appeal is short, about 30 days after you are notified. Read the reason on your refusal form today.",
- rfInc:["Appeal letter to complete","Advice for applying again, step by step","4 sample motivation letters: employee, self-employed, student, retired"],
- refHint:"Visa refused? Refusal help: 20 TND (appeal letter and sample motivation letters).",rfPrice:"Full pack: 20 TND",rfPriceSub:"Paid in advance. You get the texts at once, ready to copy and print.",
- rfPay:"Pay 20 TND",rfAdvTitle:"Advice for applying again",rfLetTitle:"Letters to copy",
+ rfInc:["Appeal letter to complete","Advice for applying again, step by step","4 sample motivation letters: employee, self-employed, student, retired","All in PDF, to download or receive by e-mail"],
+ refHint:"Visa refused? Refusal help: 20 TND (appeal letter and sample motivation letters).",rfPrice:"Full pack: 20 TND",rfPriceSub:"Paid in advance. You get the pack at once: download it as a PDF or receive it by e-mail.",
+ caseLabel:"Your case, in brief",casePh:"E.g.: insufficient means of subsistence",caseHint:"Write the refusal reason as shown on the paper you received with the refusal (or your question).",advMail:"Write by e-mail",advWA:"Write on WhatsApp",advSubject:"advice request",advDest:"Destination",advCase:"My case",pdfBtn:"Download the pack as PDF",pdfHint:"In the window that opens, choose \"Save as PDF\".",pdfMail:"Receive by e-mail",rfPay:"Pay 20 TND",rfAdvTitle:"Advice for applying again",rfLetTitle:"Letters to copy",
  rfNote:"The letters are in French because they go to the French authorities. Replace everything in [brackets]. Paste the text into Word or Google Docs, then print.",
  rfNoGuar:"These models help you present your file. They do not guarantee a visa.",copy:"Copy the text",copied:"Copied",selected:"Text selected, copy it",
  adv:["Read the refusal form. The ticked box shows the reason to fix.","Choose: an appeal (short deadline, shown on the notification) or a new application, which means new fees.","Fix the reason with new evidence. Funds: regular statements, no sudden large deposit. Purpose of stay: a clear plan and real bookings. Return to Tunisia: proof of ties (job, family, home).","Stay consistent with your first application. The consulate keeps your file: dates, job and income must be identical.","There is no legal waiting period before you apply again, but do not resubmit the same file unchanged.","No intermediary can promise a visa. A false document can have serious consequences, including an entry ban."]},
 ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اختر وجهتك ثم علّم كل وثيقة بعد تجهيزها.",
  s_country:"الوجهة",cAvail:"متاحة",cSoon:"قريبًا",soonText:"قائمة وثائق هذا البلد قادمة قريبًا. فرنسا متاحة الآن.",
- agTitle:"هل تريد مساعدة من وكالة قريبة منك؟",agSub:"اختر ولايتك. مشاهدة الوكالات الشريكة تكلّف 10 دنانير، تُدفع مرة واحدة.",
- gov:"الولاية",govPick:"اختر الولاية",agCount:function(n){return n===1?"وكالة شريكة واحدة":n+" وكالات شريكة"},
- agNone:"لا توجد وكالة شريكة في هذه الولاية بعد.",payBtn:"ادفع 10 د.ت",payWait:"رابط الدفع قريبًا",
+ agTitle:"هل تحتاج إلى مستشار تأشيرة؟",agSub:"مشاهدة بيانات الاتصال تكلّف 10 دنانير، تُدفع مرة واحدة.",
+ gov:"الولاية",govPick:"اختر الولاية",agCount:function(n){return n===1?"مستشار واحد":n+" مستشارين"},
+ agNone:"لا يوجد مستشار متاح بعد.",payBtn:"ادفع 10 د.ت",payWait:"رابط الدفع قريبًا",
  codeLabel:"دفعت؟ أدخل الرمز الذي وصلك",unlock:"فتح",badCode:"الرمز غير صحيح.",contactSoon:"بيانات الاتصال قريبًا",
- agNote:"الوكالات مستقلة. Visa Checker لا يضمن الحصول على التأشيرة.",
+ agNote:"المستشارون مستقلون. Visa Checker لا يضمن الحصول على التأشيرة.",
  s_status:"نشاطك",s_party:"تسافر",s_stay:"الإقامة",s_pay:"من يموّل السفر",
  status:{employee:"موظف",self:"عمل حر / صاحب مشروع",student:"طالب",retired:"متقاعد"},
  party:{alone:"بمفردي",family:"مع العائلة"},stay:{hotel:"فندق / كراء",hosted:"عند مضيف"},pay:{self:"أنا",sponsor:"كفيل"},
@@ -553,7 +570,7 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  s_pass:"جواز السفر",passName:"تونس",s_dest:"الوجهة",s_motive:"سبب السفر",
  motive:{medical:"زيارة طبية",other:"سبب آخر"},motiveHint:{medical:"علاج أو استشارة أو عملية",other:"سياحة أو عائلة أو أعمال"},
  start:"ابدأ",back:"رجوع",next:"متابعة",stepWord:function(n){return "الخطوة "+n+" من 2"},stepNames:["السبب","ملفك","الوثائق","مساعدة"],
- pTitle:"ملفك",pSub:"بضعة أجوبة لملاءمة القائمة مع وضعك.",dTitle:"وثائقك",dSub:"علّم كل وثيقة بعد تجهيزها.",hTitle:"مساعدة إضافية",hSub:"وكالات شريكة ومساعدة في حال الرفض.",
+ pTitle:"ملفك",pSub:"بضعة أجوبة لملاءمة القائمة مع وضعك.",dTitle:"وثائقك",dSub:"علّم كل وثيقة بعد تجهيزها.",hTitle:"مساعدة إضافية",hSub:"مستشار ومساعدة في حال الرفض.",
  medNote:"زيارة طبية: تريد القنصلية موعدًا حقيقيًا في فرنسا وتكلفة العلاج وإثبات قدرتك على دفعها.",gMed:"زيارتك الطبية",
  destTitle:"رحلتك",destSub:"ما سبب سفرك؟",
  sloganA:"ملف تأشيرتك، مُراجَع",sloganB:"قبل تقديمه",homeSub2:"مستشارك للتأشيرة: نتحقق من أنه لا ينقصك شيء. نحن لا نودع طلبك."
@@ -565,9 +582,9 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  reunTitle:"تأشيرة الإقامة الطويلة",reunText:"الإجراء يختلف عن السفر السياحي: يقدّم الشخص المقيم في فرنسا أولًا طلب لمّ الشمل لدى المكتب الفرنسي للهجرة والاندماج (OFII). هذه القائمة عامة. تأكد من الوثائق على موقع France-Visas ولدى القنصلية لأنها تختلف حسب حالتك.",
  rfTitle:"رُفضت التأشيرة؟ أعد بناء ملفك",rfSub:"الرفض ليس نهائيًا. تجد في الحزمة ما تحتاجه للطعن أو لإعادة التقديم.",
  rfWarn:"مهلة الطعن قصيرة، نحو 30 يومًا بعد التبليغ. اقرأ اليوم سبب الرفض المكتوب في استمارة الرفض.",
- rfInc:["رسالة طعن جاهزة للتعبئة","نصائح لإعادة التقديم خطوة بخطوة","4 رسائل تحفيز نموذجية: موظف، عمل حر، طالب، متقاعد"],
- refHint:"تم رفض التأشيرة؟ المساعدة بعد الرفض: 20 د.ت (رسالة طعن ونماذج رسائل تحفيز).",rfPrice:"الحزمة الكاملة: 20 د.ت",rfPriceSub:"تُدفع مسبقًا. تحصل فورًا على النصوص لنسخها وطباعتها.",
- rfPay:"ادفع 20 د.ت",rfAdvTitle:"نصائح لإعادة التقديم",rfLetTitle:"رسائل للنسخ",
+ rfInc:["رسالة طعن جاهزة للتعبئة","نصائح لإعادة التقديم خطوة بخطوة","4 رسائل تحفيز نموذجية: موظف، عمل حر، طالب، متقاعد","كل ذلك بصيغة PDF، للتحميل أو الاستلام عبر البريد"],
+ refHint:"تم رفض التأشيرة؟ المساعدة بعد الرفض: 20 د.ت (رسالة طعن ونماذج رسائل تحفيز).",rfPrice:"الحزمة الكاملة: 20 د.ت",rfPriceSub:"تُدفع مسبقًا. تحصل فورًا على الحزمة: تحميل بصيغة PDF أو استلام عبر البريد.",
+ caseLabel:"حالتك باختصار",casePh:"مثال: عدم كفاية وسائل العيش",caseHint:"اكتب سبب الرفض كما هو مذكور في الورقة المسلّمة لك عند الرفض (أو سؤالك).",advMail:"راسل عبر البريد",advWA:"راسل عبر واتساب",advSubject:"طلب نصيحة",advDest:"الوجهة",advCase:"حالتي",pdfBtn:"تحميل الحزمة بصيغة PDF",pdfHint:"في النافذة التي تُفتح، اختر «حفظ بصيغة PDF».",pdfMail:"استلام عبر البريد",rfPay:"ادفع 20 د.ت",rfAdvTitle:"نصائح لإعادة التقديم",rfLetTitle:"رسائل للنسخ",
  rfNote:"الرسائل بالفرنسية لأنها موجهة إلى السلطات الفرنسية. عوّض كل ما بين [أقواس]. الصق النص في Word أو Google Docs ثم اطبعه.",
  rfNoGuar:"هذه النماذج تساعدك على عرض ملفك ولا تضمن الحصول على التأشيرة.",copy:"نسخ النص",copied:"تم النسخ",selected:"تم تحديد النص، انسخه",
  adv:["اقرأ استمارة الرفض. الخانة المعلّمة تبيّن السبب الذي يجب إصلاحه.","اختر: الطعن (مهلة قصيرة مذكورة في التبليغ) أو تقديم طلب جديد، وهو يتطلب رسومًا جديدة.","أصلح السبب بإثباتات جديدة. الموارد المالية: كشوف منتظمة دون إيداع كبير مفاجئ. غرض الإقامة: برنامج واضح وحجوزات حقيقية. العودة إلى تونس: إثباتات الارتباط (عمل، عائلة، سكن).","حافظ على الانسجام مع الطلب الأول. القنصلية تحتفظ بملفك: يجب أن تتطابق التواريخ والعمل والدخل.","لا توجد مدة انتظار قانونية قبل إعادة التقديم، لكن لا تقدّم الملف نفسه دون تغيير.","لا يستطيع أي وسيط أن يعد بتأشيرة. الوثيقة المزوّرة قد تؤدي إلى عواقب خطيرة منها المنع من الدخول."]}
@@ -934,6 +951,7 @@ function renderRefus(t){
     h+=PAY_URL2?'<a class="pay" href="'+PAY_URL2+'" target="_blank" rel="noopener">'+t.rfPay+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
     h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
   }else{
+    h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
     h+='<h2>'+t.rfAdvTitle+'</h2><ol class="adv">'+t.adv.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ol>';
     h+='<h2>'+t.rfLetTitle+'</h2><p class="rf-sub">'+t.rfNote+'</p>';
     PACK.forEach(function(p){
@@ -1041,7 +1059,7 @@ function applyCountry(t){
 }
 /* Partner agencies by governorate id. Despina Travel and Events is an example entry: edit or remove it. */
 var PARTNERS={
- nabeul:[{id:"despina",name:"Despina Travel and Events",city:"Hammamet",svc:["flight","hotel"],what:{fr:"Réservations d'hôtel et de vol",en:"Hotel and flight reservations",ar:"حجوزات الفنادق والطيران"},contact:"",email:"despinatravelandevents@gmail.com",telegram:"",whatsapp:""}]
+ nabeul:[{id:"despina",name:"Despina Travel and Events",city:"Hammamet",svc:["flight","hotel"],what:{fr:"Réservations d'hôtel et de vol",en:"Hotel and flight reservations",ar:"حجوزات الفنادق والطيران"},adv:{fr:"Conseil pour votre dossier de visa",en:"Advice on your visa file",ar:"نصائح لملف التأشيرة"},contact:"",email:"despinatravelandevents@gmail.com",telegram:"",whatsapp:""}]
 };
 function nm(o){return o.n[S.lang]}
 function curC(){return COUNTRIES.filter(function(c){return c.id===S.country})[0]||COUNTRIES[0]}
@@ -1263,20 +1281,27 @@ function panelHtml(t){
   if(e==="medical"){return '<div class="book"><b>'+t.gMed+'</b><p>'+t.medNote+'</p></div>'+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay)}
   return chips("purpose",t.s_purpose)+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay);
 }
+function allAdvisors(){var a=[];for(var k in PARTNERS){PARTNERS[k].forEach(function(p){a.push(p)})}return a}
+function advMsg(){var t=UI[S.lang];return "Visa Checker : "+t.advSubject+"\n"+t.advDest+" : "+nm(curC())+"\n"+t.advCase+" : "+(S.refus||"-")}
 function renderAgency(t){
-  var L=S.lang,gl=GOVS.slice().sort(function(a,b){return a.n[L].localeCompare(b.n[L],L)});
+  var L=S.lang,list=allAdvisors();
   var h='<h2>'+t.agTitle+'</h2><p class="ag-sub">'+t.agSub+'</p>';
-  h+='<div class="q"><label class="q-label" for="gov">'+t.gov+'</label><select class="sel" id="gov"><option value="">'+t.govPick+'</option>'+gl.map(function(g){return '<option value="'+g.id+'"'+(S.gov===g.id?' selected':'')+'>'+g.n[L]+'</option>'}).join("")+'</select></div>';
-  if(S.gov){
-    var list=PARTNERS[S.gov]||[];
-    if(!list.length){h+='<p class="ag-none">'+t.agNone+'</p>'}
-    else if(S.paid){
-      list.forEach(function(p){h+='<div class="partner"><b>'+p.name+'</b><span class="tag">'+p.city+'</span><span class="i-note">'+p.what[L]+'</span><span class="i-note">'+(p.contact||t.contactSoon)+'</span></div>'});
-    }else{
-      h+='<div class="locked"><b>'+t.agCount(list.length)+'</b><i></i><i></i></div>';
-      h+=PAY_URL?'<a class="pay" href="'+PAY_URL+'" target="_blank" rel="noopener">'+t.payBtn+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
-      h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>';
-    }
+  h+='<div class="q"><label class="q-label" for="refcase">'+t.caseLabel+'</label><textarea class="sel" id="refcase" rows="3" maxlength="300" placeholder="'+esc(t.casePh)+'">'+esc(S.refus||"")+'</textarea><span class="i-note">'+t.caseHint+'</span></div>';
+  if(!list.length){h+='<p class="ag-none">'+t.agNone+'</p>'}
+  else if(S.paid){
+    list.forEach(function(p){
+      var m=encodeURIComponent(advMsg());
+      h+='<div class="partner"><b>'+p.name+'</b><span class="i-note">'+(p.adv||p.what)[L]+'</span>';
+      if(p.contact)h+='<span class="i-note">'+p.contact+'</span>';
+      if(p.email)h+='<a class="pay wide" href="mailto:'+p.email+'?subject='+encodeURIComponent("Visa Checker")+'&body='+m+'">'+t.advMail+'</a>';
+      if(p.whatsapp)h+='<a class="pay wide" href="https://wa.me/'+String(p.whatsapp).replace(/\D/g,"")+'?text='+m+'" target="_blank" rel="noopener">'+t.advWA+'</a>';
+      if(!p.contact&&!p.email&&!p.whatsapp)h+='<span class="i-note">'+t.contactSoon+'</span>';
+      h+='</div>';
+    });
+  }else{
+    h+='<div class="locked"><b>'+t.agCount(list.length)+'</b><i></i><i></i></div>';
+    h+=PAY_URL?'<a class="pay" href="'+PAY_URL+'" target="_blank" rel="noopener">'+t.payBtn+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
+    h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>';
   }
   h+='<p class="ag-note">'+t.agNote+'</p>';
   $("agency").innerHTML=h;
@@ -1480,7 +1505,7 @@ function render(){
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
   $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
-  if(showSt){$("stepper").innerHTML='<div class="st-row"><span class="st-num">'+t.stepWord(st-3)+' · '+t.stepNames[st-2]+'</span><span class="pill"><span class="flag">'+flag(cur.id)+'</span>'+nm(cur)+' · '+t.motive[S.motive]+'</span></div><div class="st-bar" aria-hidden="true">'+[0,1].map(function(i){return '<i'+(i<st-3?' class="on"':'')+'></i>'}).join("")+'</div>'}
+  if(showSt){$("stepper").innerHTML='<div class="st-row"><span class="st-num">'+t.stepWord(st-3)+' · '+t.stepNames[st-2]+'</span><span class="pill"><span class="flag">'+flag(cur.id)+'</span>'+nm(cur)+(S.motive==="medical"?' · '+t.motive.medical:'')+'</span></div><div class="st-bar" aria-hidden="true">'+[0,1].map(function(i){return '<i'+(i<st-3?' class="on"':'')+'></i>'}).join("")+'</div>'}
   $("home").hidden=st!==0;if(st===0)$("home").innerHTML=homeHtml(t);
   $("mode").hidden=st!==1;if(st===1)$("mode").innerHTML=modeHtml(t);
   $("dest").hidden=st!==2;if(st===2)$("dest").innerHTML=destHtml(t);
@@ -1624,6 +1649,15 @@ function openLegal(k){
   var d=$("lg");if(d.showModal)d.showModal();else d.setAttribute("open","");
 }
 document.addEventListener("click",function(e){var b=e.target.closest("[data-legal]");if(b){openLegal(b.dataset.legal);return}if(e.target.id==="lg-x"||e.target.id==="lg"){var d=$("lg");if(d.close)d.close();else d.removeAttribute("open")}});
+function printPack(){
+  document.querySelectorAll("#refus details").forEach(function(d){d.open=true});
+  document.body.classList.add("print-pack");
+  var done=function(){document.body.classList.remove("print-pack");window.removeEventListener("afterprint",done)};
+  window.addEventListener("afterprint",done);
+  window.print();
+}
+document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("[data-print]"))printPack()});
+document.addEventListener("input",function(e){if(e.target.id==="refcase"){S.refus=e.target.value;save()}});
 /* Mouvement : décor, apparition au défilement, rejeu à chaque changement d'étape */
 (function(){
   var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
