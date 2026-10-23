@@ -407,6 +407,46 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
  body.print-pack .lt{break-before:page}
  body.print-pack{background:#fff;color:#000}
 }
+.ai{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+.ai-drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;min-height:168px;padding:20px 16px;border:2px dashed var(--accent);border-radius:16px;background:var(--accent-soft);cursor:pointer;overflow:hidden}
+.ai-drop.over{background:var(--surface);border-style:solid}
+.ai-drop:focus-within{outline:3px solid var(--ink);outline-offset:2px}
+.ai-in{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
+.ai-ic{font-size:2rem;line-height:1;color:var(--accent)}
+.ai-thumb{max-height:150px;max-width:100%;border-radius:10px;border:1px solid var(--line)}
+.ai-pdf{display:grid;place-items:center;width:56px;height:68px;border-radius:8px;background:var(--surface);border:2px solid var(--accent);font-weight:800;color:var(--accent)}
+.ai-fn{overflow-wrap:anywhere;max-width:100%}
+.ai-laser{position:absolute;inset-inline:0;top:0;height:3px;background:linear-gradient(90deg,transparent,var(--accent),transparent);box-shadow:0 0 14px 4px var(--accent);animation:aiscan 1.6s ease-in-out infinite alternate}
+@keyframes aiscan{from{top:4%}to{top:96%}}
+@media (prefers-reduced-motion:reduce){.ai-laser{animation:none;top:50%}}
+.ai-err{margin:0;padding:12px 14px;border-radius:10px;border:2px solid #d92d20;background:#fef3f2;color:#912018;font-weight:600}
+:root[data-theme="dark"] .ai-err{background:#3a1d1f;color:#ffb4ae;border-color:#ef6a5e}
+.ai-consent{display:flex;gap:12px;align-items:flex-start;font-size:15px;cursor:pointer;min-height:44px}
+.ai-consent input{width:24px;height:24px;flex:none;accent-color:var(--ok)}
+.ai-card{display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:12px;border:1px solid var(--line);border-inline-start-width:6px;background:var(--surface)}
+.ai-card p{margin:0;font-size:15px}
+.ai-card.bad{border-color:#d92d20;background:#fef3f2}
+.ai-card.warn{border-color:#dc6803;background:#fffaeb}
+:root[data-theme="dark"] .ai-card.bad{background:#3a1d1f;border-color:#ef6a5e}
+:root[data-theme="dark"] .ai-card.warn{background:#3a2c14;border-color:#f5a524}
+.ai-badge{align-self:flex-start;font:700 12px var(--f-body);letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:99px;background:#d92d20;color:#fff}
+.ai-card.warn .ai-badge{background:#b54708}
+.ai-warnbox{margin:0;padding:12px 14px;border-radius:10px;border:2px solid #dc6803;background:#fffaeb;font-weight:600}
+:root[data-theme="dark"] .ai-warnbox{background:#3a2c14;border-color:#f5a524}
+.ai-plan{list-style:none;counter-reset:s;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ai-plan li{counter-increment:s;display:flex;flex-direction:column;gap:2px;padding:12px 14px 12px 52px;position:relative;border-radius:12px;border:1px solid var(--ok);background:var(--ok-soft)}
+html[dir="rtl"] .ai-plan li{padding:12px 52px 12px 14px}
+.ai-plan li::before{content:counter(s);position:absolute;inset-inline-start:12px;top:12px;width:28px;height:28px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-weight:700}
+.ai-fields{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:560px){.ai-fields{grid-template-columns:1fr 1fr}}
+.ai-acts{display:flex;flex-wrap:wrap;gap:8px}
+.ai input.sel,.ai textarea.sel{font-size:16px}
+@media print{
+ body.print-letter *{visibility:hidden!important}
+ body.print-letter #aiLetter,body.print-letter #aiLetter *{visibility:visible!important}
+ body.print-letter #aiLetter{position:absolute;inset:0 auto auto 0;width:100%;border:0;background:#fff;color:#000;white-space:pre-wrap}
+ body.print-pack #aiBox{display:none!important}
+}
 </style>
 <div class="wrap">
   <header>
@@ -502,9 +542,9 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  reunTitle:"Visa de long séjour",reunText:"Procédure différente d'un voyage touristique : la personne qui vit en France dépose d'abord la demande de regroupement familial auprès de l'OFII. Cette liste est générale. Confirmez les pièces sur France-Visas et auprès du consulat, car elles varient selon votre cas.",
  rfTitle:"Visa refusé ? Reprenez votre dossier",rfSub:"Un refus n'est pas définitif. Le pack contient ce qu'il faut pour contester ou redéposer.",
  rfWarn:"Le délai pour contester est court, environ 30 jours après la notification. Lisez dès aujourd'hui le motif indiqué sur votre formulaire de refus.",
- rfInc:["Lettre de recours à compléter","Conseils pour redéposer, étape par étape","4 lettres de motivation modèles : salarié, indépendant, étudiant, retraité","Le tout en PDF, à télécharger ou à recevoir par e-mail"],
+ rfInc:["Lettre de recours à compléter","Conseils pour redéposer, étape par étape","4 lettres de motivation modèles : salarié, indépendant, étudiant, retraité","Le tout en PDF, à télécharger ou à recevoir par e-mail","Analyse IA de votre lettre de refus et lettre de recours personnalisée"],
  refHint:"Visa refusé ? Aide en cas de refus : 20 DT (lettre de recours et modèles de motivation).",rfPrice:"Pack complet : 20 DT",rfPriceSub:"Payé à l'avance. Vous recevez tout de suite le pack : à télécharger en PDF ou à recevoir par e-mail.",
- caseLabel:"Votre cas, en bref",casePh:"Ex. : moyens de subsistance insuffisants",caseHint:"Écrivez le motif de refus comme indiqué sur le papier remis lors du refus (ou votre question).",advMail:"Écrire par e-mail",advWA:"Écrire sur WhatsApp",advSubject:"demande de conseil",advDest:"Destination",advCase:"Mon cas",pdfBtn:"Télécharger le pack en PDF",pdfHint:"Dans la fenêtre qui s'ouvre, choisissez « Enregistrer au format PDF ».",pdfMail:"Recevoir par e-mail",rfPay:"Payer 20 DT",rfAdvTitle:"Conseils pour redéposer",rfLetTitle:"Lettres à copier",
+ caseLabel:"Votre cas, en bref",casePh:"Ex. : moyens de subsistance insuffisants",caseHint:"Écrivez le motif de refus comme indiqué sur le papier remis lors du refus (ou votre question).",advMail:"Écrire par e-mail",advWA:"Écrire sur WhatsApp",advSubject:"demande de conseil",advDest:"Destination",advCase:"Mon cas",pdfBtn:"Télécharger le pack en PDF",pdfHint:"Dans la fenêtre qui s'ouvre, choisissez « Enregistrer au format PDF ».",pdfMail:"Recevoir par e-mail",aiTitle:"Analyser ma lettre de refus (IA)",aiSub:"Envoyez la photo ou le PDF de votre lettre de refus. L'analyse prend environ 30 secondes.",aiDrop:"Glissez votre lettre ici, ou touchez pour choisir un fichier",aiDropHint:"PDF, JPG ou PNG, 5 Mo maximum",aiConsent:"J'accepte que ce document soit envoyé à un service d'IA pour analyse. Visa Checker ne le conserve pas.",aiBtn:"Analyser ma lettre",aiScan:"Analyse en cours…",aiChange:"Toucher pour changer de fichier",aiErrType:"Format non pris en charge. Utilisez un PDF, JPG ou PNG.",aiErrSize:"Fichier trop lourd (5 Mo maximum).",aiErrRead:"Document illisible. Reprenez une photo nette, bien éclairée, page entière.",aiErrNot:"Ce document ne ressemble pas à une lettre de refus de visa Schengen.",aiErrNet:"Connexion impossible. Réessayez dans un instant.",aiErrAuth:"Analyse réservée au pack recours. Vérifiez votre code.",aiErrBusy:"Le service d'analyse est occupé. Réessayez dans quelques minutes.",aiErrConsent:"Cochez la case d'accord pour lancer l'analyse.",aiMot:"1. Motif identifié",aiDiag:"2. Pièces à vérifier ou à renforcer",aiPlan:"3. Plan d'action",aiLet:"Votre lettre de recours",aiLetHint:"Vérifiez les champs, complétez ce qui est entre [crochets], puis copiez ou imprimez.",aiFLn:"Nom",aiFFn:"Prénom",aiFNo:"N° de dossier",aiFDec:"Date de la décision",aiFDate:"Date du courrier",aiMissing:"Manquant",aiWeak:"À renforcer",aiBox:"Case",aiLegal:"Code des visas (règlement CE 810/2009), art. 32 · Annexe VI",aiNone:"Aucune case cochée n'a pu être lue avec certitude. Vérifiez la lettre.",aiPrint:"Imprimer / PDF",aiDl:"Télécharger (.txt)",aiCopy:"Copier la lettre",aiAgain:"Analyser une autre lettre",aiDisc:"Analyse automatique, à vérifier. Elle ne remplace pas un avocat et ne garantit pas le visa.",rfPay:"Payer 20 DT",rfAdvTitle:"Conseils pour redéposer",rfLetTitle:"Lettres à copier",
  rfNote:"Les lettres sont en français, car elles sont adressées aux autorités françaises. Remplacez tout ce qui est entre [crochets]. Collez le texte dans Word ou Google Docs, puis imprimez.",
  rfNoGuar:"Ces modèles aident à présenter votre dossier. Ils ne garantissent pas le visa.",copy:"Copier le texte",copied:"Copié",selected:"Texte sélectionné, copiez-le",
  adv:["Lisez le formulaire de refus. La case cochée indique le motif à corriger.","Choisissez : un recours (délai court, indiqué sur la notification) ou une nouvelle demande, qui entraîne de nouveaux frais.","Corrigez le motif avec des preuves nouvelles. Moyens financiers : relevés réguliers, sans gros dépôt soudain. Objet du séjour : programme clair et réservations réelles. Retour en Tunisie : preuves d'attaches (emploi, famille, logement).","Restez cohérent avec la première demande. Le consulat garde votre dossier : dates, emploi et revenus doivent être identiques.","Il n'existe pas de délai légal d'attente avant de redéposer, mais ne redéposez pas le même dossier sans changement.","Aucun intermédiaire ne peut promettre un visa. Un faux document peut entraîner de graves conséquences, dont une interdiction d'entrée."]},
@@ -542,9 +582,9 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  reunTitle:"Long-stay visa",reunText:"This is a different procedure from a tourist trip: the person living in France first files the family reunification request with the OFII. This list is general. Confirm the documents on France-Visas and with the consulate, because they vary by case.",
  rfTitle:"Visa refused? Rebuild your file",rfSub:"A refusal is not final. The pack has what you need to appeal or apply again.",
  rfWarn:"The time to appeal is short, about 30 days after you are notified. Read the reason on your refusal form today.",
- rfInc:["Appeal letter to complete","Advice for applying again, step by step","4 sample motivation letters: employee, self-employed, student, retired","All in PDF, to download or receive by e-mail"],
+ rfInc:["Appeal letter to complete","Advice for applying again, step by step","4 sample motivation letters: employee, self-employed, student, retired","All in PDF, to download or receive by e-mail","AI analysis of your refusal letter and a personalised appeal letter"],
  refHint:"Visa refused? Refusal help: 20 TND (appeal letter and sample motivation letters).",rfPrice:"Full pack: 20 TND",rfPriceSub:"Paid in advance. You get the pack at once: download it as a PDF or receive it by e-mail.",
- caseLabel:"Your case, in brief",casePh:"E.g.: insufficient means of subsistence",caseHint:"Write the refusal reason as shown on the paper you received with the refusal (or your question).",advMail:"Write by e-mail",advWA:"Write on WhatsApp",advSubject:"advice request",advDest:"Destination",advCase:"My case",pdfBtn:"Download the pack as PDF",pdfHint:"In the window that opens, choose \"Save as PDF\".",pdfMail:"Receive by e-mail",rfPay:"Pay 20 TND",rfAdvTitle:"Advice for applying again",rfLetTitle:"Letters to copy",
+ caseLabel:"Your case, in brief",casePh:"E.g.: insufficient means of subsistence",caseHint:"Write the refusal reason as shown on the paper you received with the refusal (or your question).",advMail:"Write by e-mail",advWA:"Write on WhatsApp",advSubject:"advice request",advDest:"Destination",advCase:"My case",pdfBtn:"Download the pack as PDF",pdfHint:"In the window that opens, choose \"Save as PDF\".",pdfMail:"Receive by e-mail",aiTitle:"Analyse my refusal letter (AI)",aiSub:"Upload a photo or PDF of your refusal letter. The analysis takes about 30 seconds.",aiDrop:"Drop your letter here, or tap to choose a file",aiDropHint:"PDF, JPG or PNG, 5 MB maximum",aiConsent:"I agree that this document is sent to an AI service for analysis. Visa Checker does not keep it.",aiBtn:"Analyse my letter",aiScan:"Analysing…",aiChange:"Tap to change file",aiErrType:"Unsupported format. Use a PDF, JPG or PNG.",aiErrSize:"File too large (5 MB maximum).",aiErrRead:"Unreadable document. Retake a sharp, well-lit photo of the whole page.",aiErrNot:"This document does not look like a Schengen visa refusal letter.",aiErrNet:"Connection failed. Try again in a moment.",aiErrAuth:"Analysis is reserved for the refusal pack. Check your code.",aiErrBusy:"The analysis service is busy. Try again in a few minutes.",aiErrConsent:"Tick the consent box to start the analysis.",aiMot:"1. Reason identified",aiDiag:"2. Documents to check or strengthen",aiPlan:"3. Action plan",aiLet:"Your appeal letter",aiLetHint:"Check the fields, fill in anything in [brackets], then copy or print.",aiFLn:"Last name",aiFFn:"First name",aiFNo:"File number",aiFDec:"Decision date",aiFDate:"Letter date",aiMissing:"Missing",aiWeak:"To strengthen",aiBox:"Box",aiLegal:"Visa Code (Regulation EC 810/2009), art. 32 · Annex VI",aiNone:"No ticked box could be read with certainty. Check the letter.",aiPrint:"Print / PDF",aiDl:"Download (.txt)",aiCopy:"Copy the letter",aiAgain:"Analyse another letter",aiDisc:"Automatic analysis, to be checked. It does not replace a lawyer and does not guarantee a visa.",rfPay:"Pay 20 TND",rfAdvTitle:"Advice for applying again",rfLetTitle:"Letters to copy",
  rfNote:"The letters are in French because they go to the French authorities. Replace everything in [brackets]. Paste the text into Word or Google Docs, then print.",
  rfNoGuar:"These models help you present your file. They do not guarantee a visa.",copy:"Copy the text",copied:"Copied",selected:"Text selected, copy it",
  adv:["Read the refusal form. The ticked box shows the reason to fix.","Choose: an appeal (short deadline, shown on the notification) or a new application, which means new fees.","Fix the reason with new evidence. Funds: regular statements, no sudden large deposit. Purpose of stay: a clear plan and real bookings. Return to Tunisia: proof of ties (job, family, home).","Stay consistent with your first application. The consulate keeps your file: dates, job and income must be identical.","There is no legal waiting period before you apply again, but do not resubmit the same file unchanged.","No intermediary can promise a visa. A false document can have serious consequences, including an entry ban."]},
@@ -582,9 +622,9 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  reunTitle:"تأشيرة الإقامة الطويلة",reunText:"الإجراء يختلف عن السفر السياحي: يقدّم الشخص المقيم في فرنسا أولًا طلب لمّ الشمل لدى المكتب الفرنسي للهجرة والاندماج (OFII). هذه القائمة عامة. تأكد من الوثائق على موقع France-Visas ولدى القنصلية لأنها تختلف حسب حالتك.",
  rfTitle:"رُفضت التأشيرة؟ أعد بناء ملفك",rfSub:"الرفض ليس نهائيًا. تجد في الحزمة ما تحتاجه للطعن أو لإعادة التقديم.",
  rfWarn:"مهلة الطعن قصيرة، نحو 30 يومًا بعد التبليغ. اقرأ اليوم سبب الرفض المكتوب في استمارة الرفض.",
- rfInc:["رسالة طعن جاهزة للتعبئة","نصائح لإعادة التقديم خطوة بخطوة","4 رسائل تحفيز نموذجية: موظف، عمل حر، طالب، متقاعد","كل ذلك بصيغة PDF، للتحميل أو الاستلام عبر البريد"],
+ rfInc:["رسالة طعن جاهزة للتعبئة","نصائح لإعادة التقديم خطوة بخطوة","4 رسائل تحفيز نموذجية: موظف، عمل حر، طالب، متقاعد","كل ذلك بصيغة PDF، للتحميل أو الاستلام عبر البريد","تحليل رسالة الرفض بالذكاء الاصطناعي ورسالة طعن مخصصة"],
  refHint:"تم رفض التأشيرة؟ المساعدة بعد الرفض: 20 د.ت (رسالة طعن ونماذج رسائل تحفيز).",rfPrice:"الحزمة الكاملة: 20 د.ت",rfPriceSub:"تُدفع مسبقًا. تحصل فورًا على الحزمة: تحميل بصيغة PDF أو استلام عبر البريد.",
- caseLabel:"حالتك باختصار",casePh:"مثال: عدم كفاية وسائل العيش",caseHint:"اكتب سبب الرفض كما هو مذكور في الورقة المسلّمة لك عند الرفض (أو سؤالك).",advMail:"راسل عبر البريد",advWA:"راسل عبر واتساب",advSubject:"طلب نصيحة",advDest:"الوجهة",advCase:"حالتي",pdfBtn:"تحميل الحزمة بصيغة PDF",pdfHint:"في النافذة التي تُفتح، اختر «حفظ بصيغة PDF».",pdfMail:"استلام عبر البريد",rfPay:"ادفع 20 د.ت",rfAdvTitle:"نصائح لإعادة التقديم",rfLetTitle:"رسائل للنسخ",
+ caseLabel:"حالتك باختصار",casePh:"مثال: عدم كفاية وسائل العيش",caseHint:"اكتب سبب الرفض كما هو مذكور في الورقة المسلّمة لك عند الرفض (أو سؤالك).",advMail:"راسل عبر البريد",advWA:"راسل عبر واتساب",advSubject:"طلب نصيحة",advDest:"الوجهة",advCase:"حالتي",pdfBtn:"تحميل الحزمة بصيغة PDF",pdfHint:"في النافذة التي تُفتح، اختر «حفظ بصيغة PDF».",pdfMail:"استلام عبر البريد",aiTitle:"تحليل رسالة الرفض (ذكاء اصطناعي)",aiSub:"ارفع صورة أو ملف PDF لرسالة الرفض. يستغرق التحليل نحو 30 ثانية.",aiDrop:"اسحب رسالتك هنا، أو المس لاختيار ملف",aiDropHint:"PDF أو JPG أو PNG، 5 ميغابايت كحد أقصى",aiConsent:"أوافق على إرسال هذه الوثيقة إلى خدمة ذكاء اصطناعي للتحليل. Visa Checker لا يحتفظ بها.",aiBtn:"حلّل رسالتي",aiScan:"جارٍ التحليل…",aiChange:"المس لتغيير الملف",aiErrType:"صيغة غير مدعومة. استعمل PDF أو JPG أو PNG.",aiErrSize:"الملف كبير جدًا (5 ميغابايت كحد أقصى).",aiErrRead:"الوثيقة غير مقروءة. أعد التقاط صورة واضحة ومضاءة للصفحة كاملة.",aiErrNot:"هذه الوثيقة لا تبدو رسالة رفض تأشيرة شنغن.",aiErrNet:"تعذّر الاتصال. أعد المحاولة بعد قليل.",aiErrAuth:"التحليل مخصص لحزمة الطعن. تحقق من الرمز.",aiErrBusy:"خدمة التحليل مشغولة. أعد المحاولة بعد دقائق.",aiErrConsent:"ضع علامة الموافقة لبدء التحليل.",aiMot:"1. سبب الرفض",aiDiag:"2. وثائق للتحقق منها أو تعزيزها",aiPlan:"3. خطة العمل",aiLet:"رسالة الطعن الخاصة بك",aiLetHint:"تحقق من الحقول، أكمل ما بين [أقواس]، ثم انسخ أو اطبع.",aiFLn:"اللقب",aiFFn:"الاسم",aiFNo:"رقم الملف",aiFDec:"تاريخ القرار",aiFDate:"تاريخ الرسالة",aiMissing:"ناقص",aiWeak:"يحتاج تعزيزًا",aiBox:"الخانة",aiLegal:"مدونة التأشيرات (اللائحة EC 810/2009)، المادة 32 · الملحق VI",aiNone:"تعذّرت قراءة أي خانة مؤشَّر عليها بيقين. راجع الرسالة.",aiPrint:"طباعة / PDF",aiDl:"تنزيل (.txt)",aiCopy:"نسخ الرسالة",aiAgain:"تحليل رسالة أخرى",aiDisc:"تحليل آلي يجب التحقق منه. لا يغني عن محامٍ ولا يضمن التأشيرة.",rfPay:"ادفع 20 د.ت",rfAdvTitle:"نصائح لإعادة التقديم",rfLetTitle:"رسائل للنسخ",
  rfNote:"الرسائل بالفرنسية لأنها موجهة إلى السلطات الفرنسية. عوّض كل ما بين [أقواس]. الصق النص في Word أو Google Docs ثم اطبعه.",
  rfNoGuar:"هذه النماذج تساعدك على عرض ملفك ولا تضمن الحصول على التأشيرة.",copy:"نسخ النص",copied:"تم النسخ",selected:"تم تحديد النص، انسخه",
  adv:["اقرأ استمارة الرفض. الخانة المعلّمة تبيّن السبب الذي يجب إصلاحه.","اختر: الطعن (مهلة قصيرة مذكورة في التبليغ) أو تقديم طلب جديد، وهو يتطلب رسومًا جديدة.","أصلح السبب بإثباتات جديدة. الموارد المالية: كشوف منتظمة دون إيداع كبير مفاجئ. غرض الإقامة: برنامج واضح وحجوزات حقيقية. العودة إلى تونس: إثباتات الارتباط (عمل، عائلة، سكن).","حافظ على الانسجام مع الطلب الأول. القنصلية تحتفظ بملفك: يجب أن تتطابق التواريخ والعمل والدخل.","لا توجد مدة انتظار قانونية قبل إعادة التقديم، لكن لا تقدّم الملف نفسه دون تغيير.","لا يستطيع أي وسيط أن يعد بتأشيرة. الوثيقة المزوّرة قد تؤدي إلى عواقب خطيرة منها المنع من الدخول."]}
@@ -952,6 +992,7 @@ function renderRefus(t){
     h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
   }else{
     h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
+    h+='<div id="aiBox" class="ai"></div>';
     h+='<h2>'+t.rfAdvTitle+'</h2><ol class="adv">'+t.adv.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ol>';
     h+='<h2>'+t.rfLetTitle+'</h2><p class="rf-sub">'+t.rfNote+'</p>';
     PACK.forEach(function(p){
@@ -960,6 +1001,7 @@ function renderRefus(t){
   }
   h+='<p class="ag-note">'+t.rfNoGuar+'</p>';
   $("refus").innerHTML=h;
+  if(S.pack)renderAI();
 }
 function copyLetter(btn){
   var t=UI[S.lang],pre=$("pk-"+btn.dataset.copy);
@@ -1549,7 +1591,7 @@ document.addEventListener("click",function(e){
   }
   if(e.target.id==="unlock2"){
     var v2=($("code2").value||"").trim().toUpperCase();
-    if(CODES2.indexOf(v2)>-1){S.pack=true;save();render()}else{$("err2").textContent=UI[S.lang].badCode}
+    if(CODES2.indexOf(v2)>-1){S.pack=true;S.packCode=v2;save();render()}else{$("err2").textContent=UI[S.lang].badCode}
     return;
   }
   var cb=e.target.closest(".cp");
@@ -1649,6 +1691,157 @@ function openLegal(k){
   var d=$("lg");if(d.showModal)d.showModal();else d.setAttribute("open","");
 }
 document.addEventListener("click",function(e){var b=e.target.closest("[data-legal]");if(b){openLegal(b.dataset.legal);return}if(e.target.id==="lg-x"||e.target.id==="lg"){var d=$("lg");if(d.close)d.close();else d.removeAttribute("open")}});
+
+/* ===== Analyseur IA de lettre de refus (module) =====
+   L'analyse passe par le Worker (route /analyze) : la clé API n'est jamais dans la page.
+   Rien n'est stocké : le fichier et le résultat restent en mémoire, perdus au rechargement. */
+var AI_URL=REQUEST_URL.replace(/\/?$/,"/analyze");
+var AI={file:null,thumb:"",busy:false,err:"",res:null,f:{},consent:false,code:"",ll:"fr"};
+var MOTIFS={
+1:{fr:"Document de voyage faux ou falsifié",en:"False or forged travel document",ar:"وثيقة سفر مزوّرة"},
+2:{fr:"Objet et conditions du séjour non justifiés",en:"Purpose and conditions of stay not justified",ar:"غرض الإقامة وشروطها غير مبرَّرين"},
+3:{fr:"Moyens de subsistance suffisants non prouvés",en:"Sufficient means of subsistence not proven",ar:"عدم إثبات وسائل العيش الكافية"},
+4:{fr:"Capacité d'acquérir légalement des moyens de subsistance non prouvée",en:"Ability to lawfully acquire means of subsistence not proven",ar:"عدم إثبات القدرة على اكتساب وسائل العيش بطريقة قانونية"},
+5:{fr:"90 jours déjà utilisés sur les 180 jours en cours",en:"90 days already used in the current 180-day period",ar:"استُنفدت 90 يومًا من فترة 180 يومًا الحالية"},
+6:{fr:"Signalement SIS aux fins de non-admission",en:"SIS alert for refusal of entry",ar:"تنبيه في نظام معلومات شنغن لمنع الدخول"},
+7:{fr:"Menace pour l'ordre public ou la sécurité intérieure",en:"Threat to public policy or internal security",ar:"تهديد للنظام العام أو الأمن الداخلي"},
+8:{fr:"Menace pour la santé publique",en:"Threat to public health",ar:"تهديد للصحة العامة"},
+9:{fr:"Menace pour les relations internationales",en:"Threat to international relations",ar:"تهديد للعلاقات الدولية"},
+10:{fr:"Informations sur l'objet et les conditions du séjour non fiables",en:"Information on purpose and conditions of stay not reliable",ar:"معلومات غرض الإقامة وشروطها غير موثوقة"},
+11:{fr:"Doutes sur la fiabilité de vos déclarations",en:"Doubts on the reliability of your statements",ar:"شكوك في مصداقية تصريحاتك"},
+12:{fr:"Doutes sur l'authenticité ou le contenu des pièces justificatives",en:"Doubts on authenticity or content of supporting documents",ar:"شكوك في صحة الوثائق الداعمة أو محتواها"},
+13:{fr:"Doutes sur votre intention de quitter le territoire à temps",en:"Doubts on your intention to leave the territory in time",ar:"شكوك في نيّتك مغادرة الإقليم في الوقت المحدد"},
+14:{fr:"Impossibilité de demander un visa à l'avance non prouvée",en:"Impossibility of applying for a visa in advance not proven",ar:"عدم إثبات استحالة طلب التأشيرة مسبقًا"},
+15:{fr:"Objet et conditions du transit aéroportuaire non justifiés",en:"Purpose and conditions of airport transit not justified",ar:"غرض العبور في المطار وشروطه غير مبرَّرين"},
+16:{fr:"Assurance maladie voyage valide non prouvée",en:"Valid travel medical insurance not proven",ar:"عدم إثبات تأمين صحي صالح للسفر"},
+17:{fr:"Annulation demandée par le titulaire",en:"Revocation requested by the holder",ar:"إلغاء بطلب من حامل التأشيرة"}
+};
+function aiStr(x,n){return String(x==null?"":x).replace(/\s+\n/g,"\n").trim().slice(0,n||600)}
+function aiClean(r){
+  var o={readable:r&&r.readable!==false,isRefusal:r&&r.is_refusal!==false,fields:{},motives:[],diag:[],plan:[],paras:[],encl:[]};
+  var f=(r&&r.fields)||{};
+  ["lastName","firstName","fileNumber","decisionDate"].forEach(function(k){o.fields[k]=aiStr(f[k],80)});
+  (r&&r.motives||[]).slice(0,17).forEach(function(m){var b=parseInt(m&&m.box,10);if(MOTIFS[b])o.motives.push({box:b,explanation:aiStr(m.explanation,700)})});
+  (r&&r.diagnosis||[]).slice(0,12).forEach(function(d){if(d&&d.piece)o.diag.push({piece:aiStr(d.piece,160),status:d.status==="missing"?"missing":"weak",why:aiStr(d.why,500),how:aiStr(d.how,500)})});
+  (r&&r.plan||[]).slice(0,8).forEach(function(d){if(d&&d.title)o.plan.push({title:aiStr(d.title,160),detail:aiStr(d.detail,500)})});
+  (r&&r.letter_paragraphs||[]).slice(0,8).forEach(function(x){var v=aiStr(x,1400);if(v)o.paras.push(v)});
+  (r&&r.enclosures||[]).slice(0,12).forEach(function(x){var v=aiStr(x,160);if(v)o.encl.push(v)});
+  return o;
+}
+function aiToday(){var d=new Date();return ("0"+d.getDate()).slice(-2)+"/"+("0"+(d.getMonth()+1)).slice(-2)+"/"+d.getFullYear()}
+function buildLetter(){
+  var r=AI.res,f=AI.f,fr=AI.ll!=="en",v=function(x,ph){return x&&x.trim()?x.trim():ph};
+  var name=(f.fn||f.ln)?(v(f.fn,"[Prénom]")+" "+v(f.ln,"[NOM]")):(fr?"[Prénom NOM]":"[First name LAST NAME]");
+  var to=S.country==="fr"?"À l'attention de la Commission de recours contre les décisions de refus de visa d'entrée en France\n[adresse indiquée sur votre notification de refus]":"To the appeals authority indicated on the refusal notice\n[address shown on your refusal notice]";
+  var L=[];
+  if(fr){
+    L.push(name,"[Adresse en Tunisie]","[Téléphone] · [E-mail]","Passeport n° : [numéro]","","[Ville], le "+v(f.date,aiToday()),"",to,"",
+      "Objet : recours contre la décision de refus de visa du "+v(f.dec,"[date de la décision]"),"Référence de la demande : "+v(f.no,"[numéro de dossier]"),"","Madame, Monsieur,","");
+    L.push(r.paras.join("\n\n"));
+    if(r.encl.length){L.push("","Pièces jointes :");r.encl.forEach(function(x){L.push("- "+x)})}
+    L.push("","Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.","","[Signature]");
+  }else{
+    L.push(name,"[Address in Tunisia]","[Phone] · [E-mail]","Passport no.: [number]","","[City], "+v(f.date,aiToday()),"",
+      "To the appeals authority indicated on the refusal notice","[address shown on your refusal notice]","",
+      "Subject: appeal against the visa refusal decision of "+v(f.dec,"[decision date]"),"Application reference: "+v(f.no,"[file number]"),"","Dear Sir or Madam,","");
+    L.push(r.paras.join("\n\n"));
+    if(r.encl.length){L.push("","Enclosures:");r.encl.forEach(function(x){L.push("- "+x)})}
+    L.push("","Yours faithfully,","","[Signature]");
+  }
+  return L.join("\n");
+}
+function aiHtml(t){
+  var h='<h2>'+t.aiTitle+'</h2><p class="rf-sub">'+t.aiSub+'</p>';
+  if(AI.res)return h+aiResult(t);
+  h+='<label class="ai-drop'+(AI.busy?' busy':'')+'" id="aiDrop" for="aiFile">';
+  if(AI.file){h+=(AI.thumb?'<img class="ai-thumb" src="'+AI.thumb+'" alt="">':'<span class="ai-pdf" aria-hidden="true">PDF</span>')+'<b class="ai-fn">'+esc(AI.file.name)+'</b>'+(AI.busy?'<span class="ai-laser" aria-hidden="true"></span>':'<span class="i-note">'+t.aiChange+'</span>')}
+  else h+='<span class="ai-ic" aria-hidden="true">&#8679;</span><b>'+t.aiDrop+'</b><span class="i-note">'+t.aiDropHint+'</span>';
+  h+='<input class="ai-in" id="aiFile" type="file" accept="application/pdf,image/jpeg,image/png,image/webp"'+(AI.busy?' disabled':'')+'></label>';
+  if(AI.err)h+='<p class="ai-err" role="alert">'+t[AI.err]+'</p>';
+  if(AI.file){
+    if(!S.packCode)h+='<div class="q"><label class="q-label" for="aicode">'+t.codeLabel+'</label><input class="sel" id="aicode" type="text" autocomplete="off" value="'+esc(AI.code)+'"></div>';
+    h+='<label class="ai-consent"><input type="checkbox" id="aiConsent"'+(AI.consent?' checked':'')+'><span>'+t.aiConsent+'</span></label>';
+    h+='<button type="button" class="pay wide" id="aiGo"'+(AI.busy?' disabled':'')+'>'+(AI.busy?t.aiScan:t.aiBtn)+'</button>';
+  }
+  return h+'<p class="ag-note">'+t.aiDisc+'</p>';
+}
+function aiResult(t){
+  var r=AI.res,L=S.lang,h='<section class="group"><h2>'+t.aiMot+'</h2>';
+  if(!r.motives.length)h+='<p class="ai-warnbox">'+t.aiNone+'</p>';
+  r.motives.forEach(function(m){h+='<div class="ai-card bad"><span class="ai-badge">'+t.aiBox+' '+m.box+'</span><b>'+esc(MOTIFS[m.box][L])+'</b><span class="i-note">'+t.aiLegal+'</span><p>'+esc(m.explanation)+'</p></div>'});
+  h+='</section><section class="group"><h2>'+t.aiDiag+'</h2>';
+  r.diag.forEach(function(d){var ms=d.status==="missing";h+='<div class="ai-card '+(ms?'bad':'warn')+'"><span class="ai-badge">'+(ms?t.aiMissing:t.aiWeak)+'</span><b>'+esc(d.piece)+'</b><p>'+esc(d.why)+'</p><p class="i-note">'+esc(d.how)+'</p></div>'});
+  h+='</section><section class="group"><h2>'+t.aiPlan+'</h2><ol class="ai-plan">';
+  r.plan.forEach(function(d){h+='<li><b>'+esc(d.title)+'</b><span class="i-note">'+esc(d.detail)+'</span></li>'});
+  h+='</ol></section><section class="group"><h2>'+t.aiLet+'</h2><p class="rf-sub">'+t.aiLetHint+'</p><div class="ai-fields">';
+  [["ln",t.aiFLn],["fn",t.aiFFn],["no",t.aiFNo],["dec",t.aiFDec],["date",t.aiFDate]].forEach(function(x){
+    h+='<label class="q"><span class="q-label">'+x[1]+'</span><input class="sel" type="text" data-aif="'+x[0]+'" value="'+esc(AI.f[x[0]]||"")+'"></label>'});
+  h+='</div><pre class="letter" id="aiLetter">'+esc(buildLetter())+'</pre><div class="ai-acts"><button type="button" class="cp" id="aiCopy">'+t.aiCopy+'</button><button type="button" class="cp" id="aiPrint">'+t.aiPrint+'</button><button type="button" class="cp" id="aiDl">'+t.aiDl+'</button></div>';
+  h+='<button type="button" class="reset" id="aiAgain">'+t.aiAgain+'</button></section><p class="ag-note">'+t.aiDisc+'</p>';
+  return h;
+}
+function renderAI(){var b=$("aiBox");if(b)b.innerHTML=aiHtml(applyCountry(UI[S.lang]))}
+function aiFail(k){AI.busy=false;AI.err=k;renderAI()}
+function aiSetFile(file){
+  AI.res=null;AI.err="";if(AI.thumb){try{URL.revokeObjectURL(AI.thumb)}catch(e){}AI.thumb=""}
+  if(!file){AI.file=null;renderAI();return}
+  var okT=/^(application\/pdf|image\/(jpeg|png|webp))$/.test(file.type);
+  if(!okT){AI.file=null;return aiFail("aiErrType")}
+  if(file.size>(file.type==="application/pdf"?5:15)*1048576){AI.file=null;return aiFail("aiErrSize")}
+  AI.file=file;if(file.type!=="application/pdf")AI.thumb=URL.createObjectURL(file);
+  renderAI();
+}
+function aiPrep(file){return new Promise(function(res,rej){
+  if(file.type==="application/pdf"){var r=new FileReader();r.onload=function(){res({mime:"application/pdf",data:String(r.result).split(",")[1]})};r.onerror=function(){rej("read")};r.readAsDataURL(file);return}
+  var url=URL.createObjectURL(file),img=new Image();
+  img.onload=function(){var sc=Math.min(1,1800/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);res({mime:"image/jpeg",data:c.toDataURL("image/jpeg",0.85).split(",")[1]})};
+  img.onerror=function(){URL.revokeObjectURL(url);rej("read")};img.src=url;
+})}
+function aiAnalyze(){
+  if(AI.busy||!AI.file)return;
+  if(!AI.consent){AI.err="aiErrConsent";renderAI();return}
+  var code=S.packCode||AI.code.trim().toUpperCase();
+  if(!code){AI.err="aiErrAuth";renderAI();return}
+  AI.err="";AI.busy=true;AI.ll=S.country==="fr"?"fr":"en";renderAI();
+  aiPrep(AI.file).then(function(p){
+    var ctl=new AbortController(),to=setTimeout(function(){ctl.abort()},90000);
+    return fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},signal:ctl.signal,
+      body:JSON.stringify({code:code,mime:p.mime,data:p.data,lang:S.lang,letterLang:AI.ll,destination:curC().n.fr})})
+    .then(function(r){clearTimeout(to);return r.json().catch(function(){return {ok:false,error:"upstream"}})});
+  }).then(function(j){
+    if(!j.ok){aiFail(j.error==="auth"?"aiErrAuth":(j.error==="busy"||j.error==="upstream")?"aiErrBusy":j.error==="size"?"aiErrSize":"aiErrNet");return}
+    var r=aiClean(j.result);
+    if(!r.readable)return aiFail("aiErrRead");
+    if(!r.isRefusal)return aiFail("aiErrNot");
+    if(!r.paras.length&&!r.motives.length)return aiFail("aiErrRead");
+    if(!S.packCode){S.packCode=code;save()}
+    AI.res=r;AI.busy=false;
+    AI.f={ln:r.fields.lastName.toUpperCase(),fn:r.fields.firstName.toUpperCase(),no:r.fields.fileNumber,dec:r.fields.decisionDate,date:aiToday()};
+    renderAI();
+  }).catch(function(e){aiFail(e==="read"?"aiErrRead":"aiErrNet")});
+}
+(function(){
+  document.addEventListener("change",function(e){
+    var i=e.target.id;
+    if(i==="aiFile")aiSetFile(e.target.files&&e.target.files[0]);
+    else if(i==="aiConsent"){AI.consent=e.target.checked;if(AI.consent&&AI.err==="aiErrConsent"){AI.err="";renderAI()}}
+  });
+  document.addEventListener("input",function(e){
+    if(e.target.id==="aicode")AI.code=e.target.value;
+    var k=e.target.dataset&&e.target.dataset.aif;
+    if(k){AI.f[k]=e.target.value;var pre=$("aiLetter");if(pre)pre.textContent=buildLetter()}
+  });
+  document.addEventListener("click",function(e){
+    var c=e.target.closest&&e.target.closest("#aiGo,#aiCopy,#aiPrint,#aiDl,#aiAgain");if(!c)return;
+    if(c.id==="aiGo")aiAnalyze();
+    else if(c.id==="aiAgain"){AI.res=null;AI.file=null;AI.err="";if(AI.thumb){try{URL.revokeObjectURL(AI.thumb)}catch(x){}AI.thumb=""}renderAI()}
+    else if(c.id==="aiCopy"){var pre=$("aiLetter"),t=UI[S.lang];try{navigator.clipboard.writeText(pre.textContent).then(function(){c.textContent=t.copied;setTimeout(function(){c.textContent=t.aiCopy},1800)})}catch(x){var rg=document.createRange();rg.selectNodeContents(pre);var sl=window.getSelection();sl.removeAllRanges();sl.addRange(rg)}}
+    else if(c.id==="aiPrint"){document.body.classList.add("print-letter");var d=function(){document.body.classList.remove("print-letter");window.removeEventListener("afterprint",d)};window.addEventListener("afterprint",d);window.print()}
+    else if(c.id==="aiDl"){var b=new Blob([$("aiLetter").textContent],{type:"text/plain;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="lettre-recours.txt";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
+  });
+  ["dragenter","dragover"].forEach(function(n){document.addEventListener(n,function(e){var d=e.target.closest&&e.target.closest("#aiDrop");if(d){e.preventDefault();d.classList.add("over")}})});
+  ["dragleave","drop"].forEach(function(n){document.addEventListener(n,function(e){var d=e.target.closest&&e.target.closest("#aiDrop");if(d){e.preventDefault();d.classList.remove("over");if(n==="drop"&&!AI.busy&&e.dataTransfer.files.length)aiSetFile(e.dataTransfer.files[0])}})});
+})();
 function printPack(){
   document.querySelectorAll("#refus details").forEach(function(d){d.open=true});
   document.body.classList.add("print-pack");
