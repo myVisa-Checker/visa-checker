@@ -447,8 +447,12 @@ html[dir="rtl"] .ai-plan li{padding:12px 52px 12px 14px}
  body.print-letter #aiLetter{position:absolute;inset:0 auto auto 0;width:100%;border:0;background:#fff;color:#000;white-space:pre-wrap}
  body.print-pack #aiBox{display:none!important}
 }
+.skip{position:absolute;inset-inline-start:8px;top:-60px;z-index:100;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;font-weight:700;text-decoration:none}
+.skip:focus{top:8px}
+h1:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radius:6px}
 </style>
 <div class="wrap">
+  <a class="skip" id="skip" href="#h1">Aller au contenu</a>
   <header>
     <div class="top">
       <span class="brand" id="brand"></span>
@@ -465,6 +469,7 @@ html[dir="rtl"] .ai-plan li{padding:12px 52px 12px 14px}
     <p class="sub" id="sub"></p>
   </header>
 
+  <main id="main">
   <div class="hero" id="home"></div>
 
   <div class="panel" id="mode"></div>
@@ -480,7 +485,7 @@ html[dir="rtl"] .ai-plan li{padding:12px 52px 12px 14px}
   <div id="docs">
     <div class="progress" aria-live="polite">
       <div class="p-row"><span class="p-num" id="pnum"></span><span class="p-msg" id="pmsg"></span></div>
-      <div class="bar" id="bar"><i id="barfill"></i></div>
+      <div class="bar" id="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="barfill"></i></div>
     </div>
     <div id="list"></div>
   </div>
@@ -495,6 +500,8 @@ html[dir="rtl"] .ai-plan li{padding:12px 52px 12px 14px}
   <section class="sponsors" id="sponsors" aria-labelledby="sp-h"></section>
 
   <div class="dock" id="dock" hidden></div>
+
+  </main>
 
   <footer>
     <div class="links" id="links"></div>
@@ -989,7 +996,7 @@ function renderRefus(t){
     h+='<ul class="inc">'+t.rfInc.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>';
     h+='<div><div class="price">'+t.rfPrice+'</div><p class="rf-sub">'+t.rfPriceSub+'</p></div>';
     h+=PAY_URL2?'<a class="pay" href="'+PAY_URL2+'" target="_blank" rel="noopener">'+t.rfPay+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
-    h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
+    h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off" aria-describedby="err2"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
   }else{
     h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
     h+='<div id="aiBox" class="ai"></div>';
@@ -1236,7 +1243,7 @@ function pickHtml(t){
   h+='<div class="needs"><h2>'+R.selfT+'</h2><p class="ag-sub">'+R.selfN+'</p>'+tilesHtml(links)+'</div>';
   return h;
 }
-function fld(id,label,type,extra){return '<div class="field"><label class="q-label" for="rq-'+id+'">'+label+'</label><input class="sel" id="rq-'+id+'" data-f="'+id+'" type="'+type+'" value="'+escA(RQ[id])+'" '+(extra||'')+'><span class="fe" id="fe-'+id+'" role="alert"></span></div>'}
+function fld(id,label,type,extra){var req=/^(ln|fn|d1|d2|phone)$/.test(id);return '<div class="field"><label class="q-label" for="rq-'+id+'">'+label+'</label><input class="sel" id="rq-'+id+'" data-f="'+id+'" type="'+type+'" value="'+escA(RQ[id])+'" aria-describedby="fe-'+id+'"'+(req?' aria-required="true"':'')+' '+(extra||'')+'><span class="fe" id="fe-'+id+'" role="alert"></span></div>'}
 function formHtml(t){
   var R=RT[S.lang],a=findAgent(S.agent),hot=S.need==="hotel",td=today(),up='autocapitalize="characters" autocomplete="off" style="text-transform:uppercase"';
   return stepper(3)+'<div class="panel"><div class="ag-card sel-ag"><span class="av" aria-hidden="true">'+initials(a.name)+'</span><div class="ag-body"><b>'+esc(a.name)+'</b><span class="ag-meta">'+R.svc[S.need]+'</span></div></div>'
@@ -1248,7 +1255,7 @@ function formHtml(t){
    +fld("tg",R.tg,"text",'dir="ltr" placeholder="@" autocapitalize="off" autocomplete="off"')
    +fld("mail",R.mail,"email",'dir="ltr" autocomplete="email" autocapitalize="off"')
    +'<div class="q"><span class="q-label">'+R.chan+'</span><div class="chips chgrid" role="group" aria-label="'+R.chan+'">'+["email","whatsapp","telegram","sms"].map(function(c){return '<button type="button" class="chip" data-chan="'+c+'" aria-pressed="'+(RQ.chan===c)+'">'+R.ch[c]+'</button>'}).join("")+'</div></div>'
-   +'<div class="field"><label class="item"><input type="checkbox" data-f="consent" id="rq-consent"'+(RQ.consent?' checked':'')+'><span class="i-body"><span class="i-title">'+R.consent+'</span></span></label><span class="fe" id="fe-consent" role="alert"></span></div>'
+   +'<div class="field"><label class="item"><input type="checkbox" data-f="consent" id="rq-consent" aria-required="true" aria-describedby="fe-consent"'+(RQ.consent?' checked':'')+'><span class="i-body"><span class="i-title">'+R.consent+'</span></span></label><span class="fe" id="fe-consent" role="alert"></span></div>'
    +'<p class="ag-note">'+R.payNote+'</p><span class="fe" id="fe-form" role="alert"></span>'
    +'<button type="submit" class="pay wide" id="rqsend">'+R.send+'</button></form></div>';
 }
@@ -1328,7 +1335,7 @@ function advMsg(){var t=UI[S.lang];return "Visa Checker : "+t.advSubject+"\n"+t.
 function renderAgency(t){
   var L=S.lang,list=allAdvisors();
   var h='<h2>'+t.agTitle+'</h2><p class="ag-sub">'+t.agSub+'</p>';
-  h+='<div class="q"><label class="q-label" for="refcase">'+t.caseLabel+'</label><textarea class="sel" id="refcase" rows="3" maxlength="300" placeholder="'+esc(t.casePh)+'">'+esc(S.refus||"")+'</textarea><span class="i-note">'+t.caseHint+'</span></div>';
+  h+='<div class="q"><label class="q-label" for="refcase">'+t.caseLabel+'</label><textarea class="sel" id="refcase" rows="3" maxlength="300" placeholder="'+esc(t.casePh)+'" aria-describedby="refhint">'+esc(S.refus||"")+'</textarea><span class="i-note" id="refhint">'+t.caseHint+'</span></div>';
   if(!list.length){h+='<p class="ag-none">'+t.agNone+'</p>'}
   else if(S.paid){
     list.forEach(function(p){
@@ -1343,7 +1350,7 @@ function renderAgency(t){
   }else{
     h+='<div class="locked"><b>'+t.agCount(list.length)+'</b><i></i><i></i></div>';
     h+=PAY_URL?'<a class="pay" href="'+PAY_URL+'" target="_blank" rel="noopener">'+t.payBtn+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
-    h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>';
+    h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off" aria-describedby="err"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>';
   }
   h+='<p class="ag-note">'+t.agNote+'</p>';
   $("agency").innerHTML=h;
@@ -1560,7 +1567,7 @@ function render(){
     var pct=req.length?Math.round(doneReq/req.length*100):0,left=req.length-doneReq;
     $("pnum").textContent=doneReq+" "+t.of+" "+req.length+" "+t.ready;
     $("pmsg").textContent=left===0?t.msgDone:(doneReq===0?t.msg0:t.msgN(left));
-    $("barfill").style.width=pct+"%";$("bar").className="bar"+(left===0?" done":"");
+    $("barfill").style.width=pct+"%";$("bar").setAttribute("aria-valuenow",pct);$("bar").setAttribute("aria-valuetext",$("pnum").textContent);$("bar").className="bar"+(left===0?" done":"");
     var h="";
     ORDER.forEach(function(g){
       var gi=vis.filter(function(i){return i.g===g});if(!gi.length)return;
@@ -1581,6 +1588,23 @@ function render(){
   if(st===0&&ready)$("dock").innerHTML='<div class="dock-in"><span class="flag">'+flag("tn")+'</span><span class="arrow" aria-hidden="true">\u2192</span><span class="flag">'+flag(cur.id)+'</span><span class="dname">'+nm(cur)+'</span><button type="button" class="pay" data-go="1">'+t.start+'</button></div>';
   $("nav").hidden=st===0;
   if(st>0){$("nav").innerHTML='<button type="button" class="reset" data-go="-1">'+t.back+'</button>'+(st===4?'<button type="button" class="pay" data-go="1">'+t.next+'</button>':'')}
+  syncA11y();
+}
+/* Gestion du focus : à chaque changement d'étape, le titre <h1> reçoit le focus (lecteur d'écran + clavier),
+   la page remonte en haut et le titre de l'onglet suit l'étape. Aucun effet au premier affichage ni lors d'un simple re-rendu (langue, case cochée). */
+var lastStep=null;
+var SKIPL={fr:"Aller au contenu",en:"Skip to content",ar:"انتقل إلى المحتوى"};
+function focusStepHeading(){
+  var h=$("h1");if(!h)return;
+  window.scrollTo(0,0);
+  try{h.focus({preventScroll:true})}catch(e){h.focus()}
+}
+function syncA11y(){
+  var h=$("h1"),base="Visa Checker";
+  document.title=(S.step>0&&h&&h.textContent?h.textContent.trim()+" · ":"")+base;
+  var sk=$("skip");if(sk)sk.textContent=SKIPL[S.lang]||SKIPL.fr;
+  var changed=lastStep!==null&&lastStep!==S.step;lastStep=S.step;
+  if(changed)focusStepHeading();
 }
 function go(n){if(S.step>=8){S.step=S.step===8?(S.back||0):(S.step===9?8:0);save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(S.step>=6){S.step=S.step===7?6:0;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(n<0&&S.mode==="appeal"&&S.step===5)n=-4;if(n<0&&S.mode!=="appeal"&&S.step===4)n=-3;S.step=Math.max(0,Math.min(5,S.step+n));save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}}
 document.addEventListener("click",function(e){
@@ -1747,11 +1771,11 @@ function aiHtml(t){
   if(AI.res)return h+aiResult(t);
   h+='<label class="ai-drop'+(AI.busy?' busy':'')+'" id="aiDrop" for="aiFile">';
   if(AI.file){h+=(AI.thumb?'<img class="ai-thumb" src="'+AI.thumb+'" alt="">':'<span class="ai-pdf" aria-hidden="true">PDF</span>')+'<b class="ai-fn">'+esc(AI.file.name)+'</b>'+(AI.busy?'<span class="ai-laser" aria-hidden="true"></span>':'<span class="i-note">'+t.aiChange+'</span>')}
-  else h+='<span class="ai-ic" aria-hidden="true">&#8679;</span><b>'+t.aiDrop+'</b><span class="i-note">'+t.aiDropHint+'</span>';
-  h+='<input class="ai-in" id="aiFile" type="file" accept="application/pdf,image/jpeg,image/png,image/webp"'+(AI.busy?' disabled':'')+'></label>';
-  if(AI.err)h+='<p class="ai-err" role="alert">'+t[AI.err]+'</p>';
+  else h+='<span class="ai-ic" aria-hidden="true">&#8679;</span><b>'+t.aiDrop+'</b><span class="i-note" id="aiHint">'+t.aiDropHint+'</span>';
+  h+='<input class="ai-in" id="aiFile" type="file" aria-describedby="aiHint'+(AI.err?' aiErrMsg':'')+'"'+(AI.err?' aria-invalid="true"':'')+' accept="application/pdf,image/jpeg,image/png,image/webp"'+(AI.busy?' disabled':'')+'></label>';
+  if(AI.err)h+='<p class="ai-err" id="aiErrMsg" role="alert">'+t[AI.err]+'</p>';
   if(AI.file){
-    if(!S.packCode)h+='<div class="q"><label class="q-label" for="aicode">'+t.codeLabel+'</label><input class="sel" id="aicode" type="text" autocomplete="off" value="'+esc(AI.code)+'"></div>';
+    if(!S.packCode)h+='<div class="q"><label class="q-label" for="aicode">'+t.codeLabel+'</label><input class="sel" id="aicode" type="text" autocomplete="off" aria-describedby="aiErrMsg" value="'+esc(AI.code)+'"></div>';
     h+='<label class="ai-consent"><input type="checkbox" id="aiConsent"'+(AI.consent?' checked':'')+'><span>'+t.aiConsent+'</span></label>';
     h+='<button type="button" class="pay wide" id="aiGo"'+(AI.busy?' disabled':'')+'>'+(AI.busy?t.aiScan:t.aiBtn)+'</button>';
   }
@@ -1846,11 +1870,11 @@ async function verifyCode(kind,code){
 async function tryUnlock(kind){
   var pack=kind==="pack",inp=$(pack?"code2":"code"),err=$(pack?"err2":"err"),btn=$(pack?"unlock2":"unlock"),t=UI[S.lang];
   var v=(inp.value||"").trim().toUpperCase();
-  if(!v){err.textContent=t.badCode;return}
-  btn.disabled=true;err.textContent=t.chkWait;
+  if(!v){err.textContent=t.badCode;inp.setAttribute("aria-invalid","true");inp.focus();return}
+  inp.setAttribute("aria-invalid","false");btn.disabled=true;err.textContent=t.chkWait;
   var res=await verifyCode(kind,v);
   if(res.ok){if(pack){S.pack=true;S.packCode=v}else S.paid=true;save();render();return}
-  btn.disabled=false;err.textContent=res.locked?t.tooMany:(res.net?t.aiErrNet:t.badCode);
+  btn.disabled=false;err.textContent=res.locked?t.tooMany:(res.net?t.aiErrNet:t.badCode);inp.setAttribute("aria-invalid","true");inp.focus();
 }
 function printPack(){
   document.querySelectorAll("#refus details").forEach(function(d){d.open=true});
