@@ -1,18 +1,40 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Visa Checker : votre dossier visa vérifié avant le dépôt</title>
 <meta name="description" content="Checklist des documents de visa pour les voyageurs tunisiens (France et e-Visa), pack recours en cas de refus, billets d'avion et réservations d'hôtel via des agences partenaires. En français, anglais et arabe.">
+<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="theme-color" content="#e8590c">
-<meta property="og:type" content="website"><meta property="og:site_name" content="Visa Checker">
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Visa Checker">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e8590c'/%3E%3Cpath d='M18 33l9 9 19-21' fill='none' stroke='white' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+<!-- Open Graph (aperçus WhatsApp, Facebook, Telegram) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Visa Checker">
 <meta property="og:title" content="Visa Checker : votre dossier visa vérifié avant le dépôt">
 <meta property="og:description" content="Vérifiez vos documents de visa, préparez un recours et commandez billets et hôtels auprès d'agences partenaires. FR · EN · عربي">
-<meta property="og:locale" content="fr_TN"><meta property="og:locale:alternate" content="en_US"><meta property="og:locale:alternate" content="ar_TN">
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Visa Checker"><meta name="twitter:description" content="Votre dossier visa, vérifié avant le dépôt.">
-<!-- Quand le nom de domaine est choisi, ajoutez : <link rel="canonical" href="https://VOTRE-DOMAINE/"> et <meta property="og:url" content="https://VOTRE-DOMAINE/"> et <meta property="og:image" content="https://VOTRE-DOMAINE/apercu.png"> (image 1200x630) -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e8590c'/%3E%3Cpath d='M18 33l9 9 19-21' fill='none' stroke='white' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<meta name="claude:viewport-fit-sides" content="cover">
+<meta property="og:locale" content="fr_TN">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="ar_TN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Visa Checker">
+<meta name="twitter:description" content="Votre dossier visa, vérifié avant le dépôt.">
+<!-- Quand le domaine est choisi, ajoutez ici : un lien rel="canonical", les balises og:url et og:image (image 1200x630). -->
+
+<!-- Polices -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg,#fff);color:var(--ink,#000)}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <style>
 /* Layout: one narrow column, phone first. Situation chips on top, sticky progress strip, checklist grouped by purpose. FR / EN / AR (RTL). */
 :root{
@@ -27,6 +49,53 @@
 :root[data-theme="dark"]{
   --bg:#0e161c; --surface:#16222a; --ink:#e8eef2; --muted:#93a4af; --line:#2a3a44;
   --accent:#ef6a5e; --accent-soft:#3a2120; --ok:#4fc08a; --ok-soft:#173326; --on-accent:#1a0f0e; color-scheme:dark}
+/* ===== Tokens (une seule source de vérité) =====
+   Le mode sombre s'active avec <html data-theme="dark">. Tout nouveau style doit utiliser ces variables, jamais une couleur en dur. */
+:root{
+  /* couleurs d'état */
+  --accent-ink:#b84a08; --accent-deep:#8f3a04; --accent-wash:#fbdcc4; --accent-2:#ff9a3c;
+  --warn:#b45309; --warn-soft:#fff3d6; --warn-ink:#6b3f00;
+  --rec:#1d4ed8; --rec-soft:#e3edff;
+  --danger:#d92d20; --danger-hover:#b42318; --danger-text:#e5484d; --danger-soft:#fff1f1; --danger-line:#f3a6a8; --on-danger:#ffffff;
+  --on-ok:#ffffff;
+  /* dégradés « vedette » */
+  --hot-b:#ec2d7a; --hot-c:#8b5cf6; --hot-d:#2563eb;
+  /* surfaces fixes (logos, papier d'impression) */
+  --logo-bg:#ffffff; --paper:#ffffff; --paper-ink:#000000;
+  --blob-1:var(--accent-soft); --blob-2:#cfe6ff;
+  /* ombres, voile, halos */
+  --scrim:rgba(10,18,24,.55);
+  --shadow-card:0 8px 24px -16px rgba(20,33,43,.25);
+  --shadow-lift:0 12px 24px -12px rgba(20,33,43,.35);
+  --shadow-sticky:0 8px 12px -12px rgba(0,0,0,.35);
+  --shadow-pop:0 1px 4px rgba(0,0,0,.12);
+  --shadow-modal:0 24px 60px -12px rgba(0,0,0,.45);
+  --shadow-danger:0 10px 20px -10px rgba(217,45,32,.7);
+  --ring-flag:0 0 0 1px rgba(0,0,0,.18);
+  --glow-accent:rgba(232,89,12,.45); --glow-accent-0:rgba(232,89,12,0);
+  --glow-violet:rgba(168,85,247,.45); --glow-violet-0:rgba(168,85,247,0);
+  /* rayons et durées */
+  --r-1:4px; --r-2:8px; --r-3:10px; --r-4:12px; --r-5:14px; --r-6:18px; --r-7:20px; --r-8:24px; --r-pill:999px;
+  --t-fast:.15s; --t-base:.18s; --t-slow:.3s;
+}
+:root[data-theme="dark"]{
+  --accent-ink:#f08a5d; --accent-deep:#ffb08a; --accent-wash:#4a2a24; --accent-2:#ff9a3c;
+  --warn:#fbbf24; --warn-soft:#3a2c10; --warn-ink:#ffd58a;
+  --rec:#8fb4ff; --rec-soft:#172a4d;
+  --danger:#ff6b6f; --danger-hover:#ff8a8d; --danger-text:#ff8a8d; --danger-soft:#3a1d1f; --danger-line:#7a3a3d; --on-danger:#1a0f0e;
+  --on-ok:#06261a;
+  --hot-b:#ff6fa5; --hot-c:#b79bff; --hot-d:#7fa8ff;
+  --blob-2:#1b3a55;
+  --scrim:rgba(0,0,0,.7);
+  --shadow-card:0 8px 24px -16px rgba(0,0,0,.6);
+  --shadow-lift:0 12px 24px -12px rgba(0,0,0,.7);
+  --shadow-sticky:0 8px 12px -12px rgba(0,0,0,.6);
+  --shadow-pop:0 1px 4px rgba(0,0,0,.5);
+  --shadow-modal:0 24px 60px -12px rgba(0,0,0,.8);
+  --shadow-danger:0 10px 20px -10px rgba(255,107,111,.5);
+  --ring-flag:0 0 0 1px rgba(255,255,255,.2);
+  --glow-accent:rgba(239,106,94,.5); --glow-accent-0:rgba(239,106,94,0);
+}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
@@ -34,39 +103,39 @@ body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1
 header{padding-block:24px 8px;display:flex;flex-direction:column;gap:14px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px;direction:ltr}
 .stamp{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
-  border:2px double var(--accent);padding:4px 8px;border-radius:4px;transform:rotate(-3deg);white-space:nowrap}
-.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
+  border:2px double var(--accent);padding:4px 8px;border-radius:var(--r-1);transform:rotate(-3deg);white-space:nowrap}
+.lang{display:flex;border:1px solid var(--line);border-radius:var(--r-pill);overflow:hidden;background:var(--surface)}
 .lang button{border:0;background:transparent;color:var(--muted);font:500 13px var(--f-mono);padding:6px 12px;cursor:pointer;min-width:44px;min-height:32px}
 .lang button#l-ar{font-family:var(--f-ar);font-size:14px}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,8vw,2.9rem);line-height:1.05;margin:0;letter-spacing:-.02em;text-wrap:balance}
 .sub{margin:0;color:var(--muted);max-width:56ch}
 h2{font-family:var(--f-display);font-weight:600;font-size:1.15rem;margin:0;text-wrap:balance}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:16px;margin-top:16px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-3);padding:16px;display:flex;flex-direction:column;gap:16px;margin-top:16px}
 .q{display:flex;flex-direction:column;gap:8px;min-width:0}
 .q-label{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);font:500 14px var(--f-body);padding:8px 14px;border-radius:999px;cursor:pointer;min-height:40px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);font:500 14px var(--f-body);padding:8px 14px;border-radius:var(--r-pill);cursor:pointer;min-height:40px}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .progress{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px 10px;margin-top:8px;border-bottom:1px solid var(--line)}
 .p-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .p-num{font-family:var(--f-display);font-weight:800;font-size:1.6rem;font-variant-numeric:tabular-nums}
 .p-msg{font-size:14px;color:var(--muted);min-width:0}
-.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px}
-.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.bar{height:8px;background:var(--line);border-radius:var(--r-pill);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width var(--t-slow)}
 .bar.done i{background:var(--ok)}
 section.group{margin-top:24px;display:flex;flex-direction:column;gap:10px}
 .g-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .g-count{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-.item{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer}
+.item{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-3);padding:12px 14px;cursor:pointer}
 .item input{width:22px;height:22px;margin:2px 0 0;flex:none;accent-color:var(--ok);cursor:pointer}
 .item.on{background:var(--ok-soft);border-color:var(--ok)}
 .i-body{display:flex;flex-direction:column;gap:2px;min-width:0}
 .i-title{font-weight:600;overflow-wrap:anywhere}
 .i-note{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
-.tag{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 6px;align-self:flex-start;margin-bottom:2px}
-.book{border:2px dashed var(--accent);background:var(--accent-soft);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.tag{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-1);padding:1px 6px;align-self:flex-start;margin-bottom:2px}
+.book{border:2px dashed var(--accent);background:var(--accent-soft);border-radius:var(--r-3);padding:14px;display:flex;flex-direction:column;gap:6px}
 .book b{font-family:var(--f-display);font-size:1.05rem}
 .book p{margin:0;font-size:14px}
 .book .slot{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
@@ -74,30 +143,30 @@ footer{margin-top:32px;display:flex;flex-direction:column;gap:12px;font-size:13p
 footer p{margin:0}
 .links{display:flex;flex-wrap:wrap;gap:8px 16px}
 .links a{color:var(--ink);font-weight:600}
-.reset{align-self:flex-start;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 13px var(--f-body);padding:8px 14px;border-radius:8px;cursor:pointer;min-height:40px}
-.sel{width:100%;min-height:44px;font:500 15px var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
-.agency{margin-top:32px;display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.reset{align-self:flex-start;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 13px var(--f-body);padding:8px 14px;border-radius:var(--r-2);cursor:pointer;min-height:40px}
+.sel{width:100%;min-height:44px;font:500 15px var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-2);padding:8px 12px}
+.agency{margin-top:32px;display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-3);padding:16px}
 .ag-sub,.ag-note,.ag-none{margin:0;font-size:14px;color:var(--muted)}
-.partner{display:flex;flex-direction:column;gap:4px;border:1px solid var(--ok);background:var(--ok-soft);border-radius:10px;padding:12px 14px}
+.partner{display:flex;flex-direction:column;gap:4px;border:1px solid var(--ok);background:var(--ok-soft);border-radius:var(--r-3);padding:12px 14px}
 .partner b{font-family:var(--f-display);font-size:1.05rem}
-.locked{display:flex;flex-direction:column;gap:8px;border:1px dashed var(--line);border-radius:10px;padding:12px 14px}
-.locked i{display:block;height:12px;border-radius:99px;background:var(--line)}
+.locked{display:flex;flex-direction:column;gap:8px;border:1px dashed var(--line);border-radius:var(--r-3);padding:12px 14px}
+.locked i{display:block;height:12px;border-radius:var(--r-pill);background:var(--line)}
 .locked i:last-child{width:60%}
-.pay{align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 20px;border-radius:10px;background:var(--accent);color:var(--on-accent);font:600 16px var(--f-body);text-decoration:none;border:0;cursor:pointer}
+.pay{align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 20px;border-radius:var(--r-3);background:var(--accent);color:var(--on-accent);font:600 16px var(--f-body);text-decoration:none;border:0;cursor:pointer}
 .pay.off{background:var(--line);color:var(--muted);cursor:not-allowed}
 .code-row{display:flex;gap:8px;flex-wrap:wrap}
 .code-row .sel{flex:1 1 140px;width:auto}
 .ag-err{font-size:13px;color:var(--accent);min-height:1em}
-.refus{margin-top:24px;display:flex;flex-direction:column;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.refus{margin-top:24px;display:flex;flex-direction:column;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-3);padding:16px}
 .refus p{margin:0}
 .inc,.adv{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
 .price{font-family:var(--f-display);font-weight:800;font-size:1.25rem}
 .rf-sub{font-size:14px;color:var(--muted)}
-.lt{border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.lt{border:1px solid var(--line);border-radius:var(--r-3);background:var(--bg)}
 .lt summary{padding:12px 14px;font-weight:600;cursor:pointer;min-height:44px;display:flex;align-items:center}
 .lt-body{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
-pre.letter{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;direction:ltr;text-align:left;font:14px/1.55 var(--f-body);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;user-select:text}
-.cp{align-self:flex-start;border:0;background:var(--ink);color:var(--bg);font:600 14px var(--f-body);padding:10px 16px;border-radius:8px;cursor:pointer;min-height:44px}
+pre.letter{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;direction:ltr;text-align:left;font:14px/1.55 var(--f-body);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-2);padding:12px;user-select:text}
+.cp{align-self:flex-start;border:0;background:var(--ink);color:var(--bg);font:600 14px var(--f-body);padding:10px 16px;border-radius:var(--r-2);cursor:pointer;min-height:44px}
 html[lang="ar"] .price,html[lang="ar"] .lt summary,html[lang="ar"] .cp,html[lang="ar"] .refus h2{font-family:var(--f-ar)}
 html[lang="ar"] .sel,html[lang="ar"] .pay,html[lang="ar"] .partner b{font-family:var(--f-ar)}
 /* Arabic: RTL, Arabic faces, no letter-spacing or uppercasing (both break letter joining) */
@@ -111,30 +180,31 @@ html[lang="ar"] .q-label,html[lang="ar"] .book .slot{font-size:13px}
 .brand{font-family:var(--f-display);font-weight:800;font-size:clamp(1.7rem,5vw,2.2rem);line-height:1.1;letter-spacing:-.01em}
 .stamp{align-self:flex-start}
 h1{outline:none}
+h1:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radius:var(--r-2)}
 .flag{font-family:var(--f-flag);font-size:1.6em;line-height:1;flex:none}
-.fimg{display:block;width:28px;height:21px;object-fit:cover;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+.fimg{display:block;width:28px;height:21px;object-fit:cover;border-radius:var(--r-1);box-shadow:var(--ring-flag)}
 .pill .fimg{width:24px;height:18px}
 .stepper{display:flex;flex-direction:column;gap:10px}
 .st-row{display:flex;justify-content:space-between;align-items:center;gap:8px 12px;flex-wrap:wrap}
 .st-num{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.pill{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 14px 4px 10px}
+.pill{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 14px 4px 10px}
 .st-bar{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-.st-bar i{display:block;height:6px;border-radius:99px;background:var(--line)}
+.st-bar i{display:block;height:6px;border-radius:var(--r-pill);background:var(--line)}
 .st-bar i.on{background:var(--accent)}
 .field{display:flex;flex-direction:column;gap:8px;min-width:0}
-.fval,.fbtn{display:flex;align-items:center;gap:12px;min-height:54px;padding:8px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font:500 17px var(--f-body);color:var(--ink);width:100%;text-align:start}
+.fval,.fbtn{display:flex;align-items:center;gap:12px;min-height:54px;padding:8px 14px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--bg);font:500 17px var(--f-body);color:var(--ink);width:100%;text-align:start}
 .fbtn{cursor:pointer}
 .fval.lock{color:var(--muted)}
 .fname{flex:1;min-width:0;overflow-wrap:anywhere}
 .chev{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;transition:transform .2s}
 .fbtn[aria-expanded="true"] .chev{transform:rotate(180deg)}
-.clist{list-style:none;margin:0;padding:4px;border:1px solid var(--line);border-radius:10px;background:var(--surface);display:flex;flex-direction:column;max-height:360px;overflow-y:auto}
-.crow{display:flex;align-items:center;gap:12px;width:100%;min-height:50px;padding:6px 10px;border:0;background:transparent;color:var(--ink);font:500 16px var(--f-body);text-align:start;cursor:pointer;border-radius:8px}
+.clist{list-style:none;margin:0;padding:4px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface);display:flex;flex-direction:column;max-height:360px;overflow-y:auto}
+.crow{display:flex;align-items:center;gap:12px;width:100%;min-height:50px;padding:6px 10px;border:0;background:transparent;color:var(--ink);font:500 16px var(--f-body);text-align:start;cursor:pointer;border-radius:var(--r-2)}
 .crow[aria-current="true"]{background:var(--ok-soft)}
 .crow .cn{flex:1;min-width:0}
 .ctag{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mcard{display:flex;flex-direction:column;gap:4px;text-align:start;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:12px 14px;cursor:pointer;font:inherit;min-width:0}
+.mcard{display:flex;flex-direction:column;gap:4px;text-align:start;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:var(--r-3);padding:12px 14px;cursor:pointer;font:inherit;min-width:0}
 .mcard b{font-family:var(--f-display);font-size:1.05rem}
 .mcard span{font-size:13px;color:var(--muted)}
 .mcard[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);background:var(--surface)}
@@ -151,7 +221,7 @@ html[lang="ar"] .st-num{font-size:13px}
 .needs{display:flex;flex-direction:column;gap:12px;margin-bottom:8px}
 .needs+h2{margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}
 .hint{margin:0;padding-top:12px;border-top:1px solid var(--line)}
-.adapt{margin-top:16px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.adapt{margin-top:16px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface)}
 .adapt summary{padding:12px 14px;font-weight:600;cursor:pointer;min-height:48px;display:flex;align-items:center}
 .adapt-body{padding:4px 14px 16px;display:flex;flex-direction:column;gap:16px}
 html[lang="ar"] .adapt summary{font-family:var(--f-ar)}
@@ -161,7 +231,7 @@ body[data-step="0"]{padding-block:0 110px}
 body[data-step="0"] h1{font-size:clamp(2.4rem,11vw,3.4rem);line-height:1.15}
 .sponsors{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
 .sp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.sp{display:flex;flex-direction:column;gap:6px;min-width:0;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);text-decoration:none}
+.sp{display:flex;flex-direction:column;gap:6px;min-width:0;padding:14px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface);color:var(--ink);text-decoration:none}
 .sp.slot{border-style:dashed;background:transparent}
 .sp b{font-family:var(--f-display);font-size:1.05rem;overflow-wrap:anywhere}
 .sp .tag{margin-bottom:0}
@@ -173,12 +243,12 @@ html[lang="ar"] .sp b,html[lang="ar"] .sp-join{font-family:var(--f-ar)}
 .ico{width:22px;height:22px;flex:none}
 .how h2,.why h2{margin-bottom:12px}.why h2{text-align:center}
 .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-.steps li{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px}
+.steps li{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-3);padding:14px}
 .steps .n{font-family:var(--f-display);font-weight:800;font-size:1.6rem;line-height:1;color:var(--accent);min-width:1.2ch;font-variant-numeric:tabular-nums}
 .steps li div{display:flex;flex-direction:column;gap:2px;min-width:0}
 .steps b{font-family:var(--f-display);font-size:1.05rem}
 .steps div span{font-size:14px;color:var(--muted)}
-.why{width:100%;max-width:720px;margin-inline:auto;background:var(--surface);border:2px solid var(--accent);border-radius:14px;padding:18px;display:flex;flex-direction:column}
+.why{width:100%;max-width:720px;margin-inline:auto;background:var(--surface);border:2px solid var(--accent);border-radius:var(--r-5);padding:18px;display:flex;flex-direction:column}
 .ticks{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:12px}
 .ticks li{display:flex;gap:12px;align-items:flex-start}
 .chk{width:24px;height:24px;flex:none;color:var(--ok);margin-top:1px}
@@ -188,7 +258,7 @@ html[lang="ar"] .sp b,html[lang="ar"] .sp-join{font-family:var(--f-ar)}
 .dock .pay{flex:none;min-height:46px;padding:8px 18px}
 html[lang="ar"] .arrow{display:inline-block;transform:scaleX(-1)}
 html[lang="ar"] .ask,html[lang="ar"] .steps b,html[lang="ar"] .ticks li,html[lang="ar"] .dock .dname,html[lang="ar"] .dock .pay,html[lang="ar"] .why h2,html[lang="ar"] .how h2{font-family:var(--f-ar)}
-.mdcard{display:flex;flex-direction:column;gap:4px;text-align:start;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:16px;cursor:pointer;font:inherit;min-width:0}
+.mdcard{display:flex;flex-direction:column;gap:4px;text-align:start;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:var(--r-3);padding:16px;cursor:pointer;font:inherit;min-width:0}
 .mdcard[disabled]{opacity:.55;cursor:not-allowed}
 .mdcard b{font-family:var(--f-display);font-size:1.15rem}
 .mdcard span{font-size:14px;color:var(--muted)}
@@ -197,7 +267,7 @@ html[lang="ar"] .ask,html[lang="ar"] .steps b,html[lang="ar"] .ticks li,html[lan
 html[lang="ar"] .mdcard,html[lang="ar"] .mdcard b{font-family:var(--f-ar)}
 .hero-art{margin:0}
 .hero-art svg{display:block;width:100%;max-width:420px;height:auto;margin-inline:auto}
-.photo{position:relative;margin:0;border-radius:14px;overflow:hidden;max-width:480px;width:100%;margin-inline:auto}
+.photo{position:relative;margin:0;border-radius:var(--r-5);overflow:hidden;max-width:480px;width:100%;margin-inline:auto}
 .photo img{display:block;width:100%;height:auto}
 .photo figcaption{padding:4px 8px 0;color:var(--ink);display:flex;flex-direction:column;gap:2px;text-align:center}
 .photo figcaption b{font-family:var(--f-display);font-size:1.35rem;line-height:1.15}
@@ -209,7 +279,7 @@ html[lang="ar"] .photo figcaption b,html[lang="ar"] .photo figcaption span{font-
 a.sp:hover{border-color:var(--ink)}
 html[lang="ar"] .sp-grp{font-family:var(--f-ar);letter-spacing:0;text-transform:none;font-size:13px}
 .sp-chips{display:flex;flex-wrap:wrap;gap:8px}
-.sp-chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);text-decoration:none;font-weight:600;font-size:15px}
+.sp-chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--surface);color:var(--ink);text-decoration:none;font-weight:600;font-size:15px}
 .sp-chip .sp-ico{width:18px;height:18px}
 .sp-chip:hover{border-color:var(--ink)}
 .needs{align-items:center;text-align:center}
@@ -219,7 +289,7 @@ html[lang="ar"] .sp-grp{font-family:var(--f-ar);letter-spacing:0;text-transform:
 .needs .sp-chip{font-size:14px;min-height:40px}
 html[lang="ar"] .sp-chip{font-family:var(--f-ar)}
 .sp-logos{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}.c{text-align:center}.side{display:flex;flex-direction:column;gap:24px}
-.sp-logo{display:inline-flex;align-items:center;justify-content:center;width:156px;height:72px;padding:8px 14px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.sp-logo{display:inline-flex;align-items:center;justify-content:center;width:156px;height:72px;padding:8px 14px;border:1px solid var(--line);border-radius:var(--r-4);background:var(--logo-bg)}
 .sp-logo img{display:block;height:auto;width:auto;max-height:42px;max-width:100%;object-fit:contain}
 .sp-logo:hover{border-color:var(--ink)}
 
@@ -238,11 +308,9 @@ body{position:relative}
 body[data-step="0"] .lang{top:34px}
 }
 /* ===== e-Visa section ===== */
-:root{--accent-ink:#b84a08}
-:root[data-theme="dark"]{--accent-ink:#f08a5d}
-.evcard{display:flex;align-items:center;gap:14px;width:100%;text-align:start;font:inherit;color:var(--ink);background:var(--accent-soft);border:2px solid var(--accent);border-radius:12px;padding:12px 14px;cursor:pointer;min-height:68px}
-.evcard:hover{background:#fbdcc4}
-.evico{display:flex;align-items:center;justify-content:center;flex:none;width:48px;height:48px;border-radius:12px;background:var(--accent);color:var(--on-accent)}
+.evcard{display:flex;align-items:center;gap:14px;width:100%;text-align:start;font:inherit;color:var(--ink);background:var(--accent-soft);border:2px solid var(--accent);border-radius:var(--r-4);padding:12px 14px;cursor:pointer;min-height:68px}
+.evcard:hover{background:var(--accent-wash)}
+.evico{display:flex;align-items:center;justify-content:center;flex:none;width:48px;height:48px;border-radius:var(--r-4);background:var(--accent);color:var(--on-accent)}
 .evico svg{width:28px;height:28px}
 .evtxt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
 .evtxt b{font-family:var(--f-display);font-size:1.35rem;line-height:1.1;color:var(--accent-ink)}
@@ -250,12 +318,12 @@ body[data-step="0"] .lang{top:34px}
 .evarrow{width:22px;height:22px;flex:none;color:var(--accent-ink)}
 .evwrap{display:flex;flex-direction:column;gap:14px;margin-top:16px}
 .evlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.evrow{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:500 17px var(--f-body);text-align:start;cursor:pointer}
+.evrow{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 14px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface);color:var(--ink);font:500 17px var(--f-body);text-align:start;cursor:pointer}
 .evrow:hover{border-color:var(--accent)}
 .evrow .cn{flex:1;min-width:0;overflow-wrap:anywhere}
-.evtag{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);border:1px solid var(--accent);border-radius:4px;padding:2px 6px;white-space:nowrap;align-self:center}
+.evtag{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);border:1px solid var(--accent);border-radius:var(--r-1);padding:2px 6px;white-space:nowrap;align-self:center}
 .evhd .evtag{align-self:flex-start}
-.evtag.warn{background:var(--accent-soft);color:#8f3a04;font-weight:500}
+.evtag.warn{background:var(--accent-soft);color:var(--accent-deep);font-weight:500}
 .evhead{display:flex;align-items:center;gap:14px}
 .evhd{display:flex;flex-direction:column;gap:6px;align-items:flex-start;min-width:0}
 .evname{font-family:var(--f-display);font-size:1.5rem;line-height:1.15}
@@ -266,32 +334,75 @@ html[lang="ar"] .evtxt b,html[lang="ar"] .evname,html[lang="ar"] .evrow{font-fam
 html[lang="ar"] .evtag{font-family:var(--f-ar);letter-spacing:0;text-transform:none;font-size:12px}
 html[lang="ar"] .evarrow{transform:scaleX(-1)}
 @media (prefers-reduced-motion:reduce){.bar i,.chev{transition:none}}
+.hp{position:absolute;inset-inline-start:-10000px;width:1px;height:1px;overflow:hidden}
+/* ===== Lisibilité mobile, accessibilité et codes couleur ===== */
+button,label,summary,a,select,input{touch-action:manipulation}
+.q-label{font-size:13px;letter-spacing:.03em}
+.i-note,.i-warn{font-size:15px;line-height:1.5}
+.item{padding:14px 16px;min-height:60px;border-radius:var(--r-5);margin-bottom:10px;border-width:1.5px;transition:background var(--t-fast),border-color var(--t-fast),transform .12s}
+.item:active{transform:scale(.99)}
+.item input{width:26px;height:26px;margin-top:1px}
+.item.on{border-inline-start:6px solid var(--ok)}
+.item.warn{border-color:var(--warn);border-inline-start:6px solid var(--warn)}
+.i-warn{background:var(--warn-soft);color:var(--warn-ink);border-radius:var(--r-3);padding:8px 12px;margin-top:4px}
+.stt{display:inline-flex;align-self:flex-start;align-items:center;gap:4px;font:700 12px var(--f-body);letter-spacing:.02em;padding:3px 10px;border-radius:var(--r-pill)}
+.stt.ok{background:var(--ok);color:var(--on-ok)}
+.stt.warn{background:var(--warn-soft);color:var(--warn-ink);border:1px solid var(--warn)}
+.stt.rec{background:var(--rec-soft);color:var(--rec)}
+.legend{list-style:none;display:flex;flex-wrap:wrap;gap:6px 16px;margin:14px 0 6px;padding:0;font:600 13px var(--f-body);color:var(--muted)}
+.legend li{display:flex;align-items:center;gap:6px}
+.lg{width:14px;height:14px;border-radius:var(--r-1);border:2px solid var(--line);background:var(--surface)}
+.lg.ok{background:var(--ok);border-color:var(--ok)}.lg.warn{background:var(--warn-soft);border-color:var(--warn)}
+.progress{padding-block:10px 8px;box-shadow:var(--shadow-sticky)}
+.p-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.p-num{font-size:1.25rem;display:flex;align-items:center;gap:10px}.p-num .stt{font-size:13px}.p-msg{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;text-align:end}.p-row{flex-wrap:nowrap}
+.bar{height:12px;margin-top:6px}.bar i{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.g-head{margin-top:20px}
+.stp li{font-size:13px}.stp{margin-top:10px}
+.pay,.reset,.chip,.sp-chip{min-height:48px}
+@media (max-width:480px){h1{font-size:clamp(1.9rem,9vw,2.4rem)}.sub{font-size:16px}.wrap{padding-inline:16px}}
+html[lang="ar"] .stt,html[lang="ar"] .legend,html[lang="ar"] .i-warn{font-family:var(--f-ar)}
+
 .top{align-items:center}.brand{white-space:nowrap;font-size:clamp(1.45rem,5vw,2.2rem)}
-.home-btn{margin-inline-start:auto;margin-inline-end:10px;width:44px;height:44px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:transform .18s,background .15s,color .15s,border-color .15s}
+.home-btn{margin-inline-start:auto;margin-inline-end:10px;width:44px;height:44px;border-radius:var(--r-5);border:1.5px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:transform var(--t-base),background var(--t-fast),color var(--t-fast),border-color var(--t-fast)}
 .home-btn svg{width:22px;height:22px}
 .home-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--on-accent);transform:translateY(-2px)}
 .home-btn[hidden]{display:none}
 .lang{flex:none}@media (max-width:400px){.brand{font-size:1.3rem}.home-btn{width:40px;height:40px;margin-inline-end:6px}.top{gap:6px}}
-.nav .reset[data-go="-1"],.reset[data-go="-1"]{background:#d92d20;border-color:#d92d20;color:#fff;font-weight:600;transition:transform .18s,box-shadow .18s,background .15s}
-.reset[data-go="-1"]:hover{background:#b42318;border-color:#b42318;transform:translateY(-2px);box-shadow:0 10px 20px -10px rgba(217,45,32,.7)}
+.nav .reset[data-go="-1"],.reset[data-go="-1"]{background:var(--danger);border-color:var(--danger);color:var(--on-danger);font-weight:600;transition:transform var(--t-base),box-shadow var(--t-base),background var(--t-fast)}
+.reset[data-go="-1"]:hover{background:var(--danger-hover);border-color:var(--danger-hover);transform:translateY(-2px);box-shadow:var(--shadow-danger)}
 .reset[data-go="-1"]:active{transform:scale(.97)}
 @keyframes hue{to{background-position:200% 0}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.45)}50%{box-shadow:0 0 0 9px rgba(168,85,247,0)}}
-.needs h2.hot{font:800 1.3rem/1.2 var(--f-display);background:linear-gradient(90deg,#e8590c,#ec2d7a,#8b5cf6,#2563eb,#e8590c);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#ec2d7a;animation:hue 5s linear infinite,bob 2.6s ease-in-out infinite;text-wrap:balance}
-.needs .sp-chip{border:2px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(90deg,#e8590c,#ec2d7a,#8b5cf6) border-box;animation:glow 2.4s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 var(--glow-violet)}50%{box-shadow:0 0 0 9px var(--glow-violet-0)}}
+.needs h2.hot{font:800 1.3rem/1.2 var(--f-display);background:linear-gradient(90deg,var(--accent),var(--hot-b),var(--hot-c),var(--hot-d),var(--accent));background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--hot-b);animation:hue 5s linear infinite,bob 2.6s ease-in-out infinite;text-wrap:balance}
+.needs .sp-chip{border:2px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(90deg,var(--accent),var(--hot-b),var(--hot-c)) border-box;animation:glow 2.4s ease-in-out infinite}
 .needs .sp-chip:nth-child(2){animation-delay:1.2s}
-.needs .sp-chip svg{color:#ec2d7a;animation:bob 2.2s ease-in-out infinite}
+.needs .sp-chip svg{color:var(--hot-b);animation:bob 2.2s ease-in-out infinite}
 
 .legal{display:flex;flex-wrap:wrap;gap:6px 16px;margin:12px 0 4px}
 .legal button{background:none;border:0;padding:6px 0;font:500 13px var(--f-body);color:var(--muted);text-decoration:underline;cursor:pointer}
 .legal button:hover{color:var(--ink)}
-dialog#lg{width:min(680px,calc(100% - 24px));max-height:calc(100dvh - 24px);padding:0;border:0;border-radius:20px;background:var(--surface);color:var(--ink);box-shadow:0 24px 60px -12px rgba(0,0,0,.45)}
-dialog#lg::backdrop{background:rgba(10,18,24,.55);backdrop-filter:blur(3px)}
+dialog#lg{width:min(680px,calc(100% - 24px));max-height:calc(100dvh - 24px);padding:0;border:0;border-radius:var(--r-7);background:var(--surface);color:var(--ink);box-shadow:var(--shadow-modal)}
+html.modal-open{overflow:hidden}
+/* ===== PWA : bannière d'installation / mise à jour ===== */
+.pwa{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:60;max-width:460px;margin-inline:auto;
+  display:none;gap:12px;align-items:center;padding:12px 14px;background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  border-radius:var(--r-6);box-shadow:var(--shadow-lift);transform:translateY(24px);opacity:0;transition:transform var(--t-slow),opacity var(--t-slow)}
+.pwa.on{display:flex}.pwa.in{transform:none;opacity:1}
+.pwa img{width:44px;height:44px;border-radius:var(--r-4);flex:none}
+.pwa .pwa-t{flex:1;min-width:0;font-size:14px;line-height:1.35}.pwa .pwa-t b{display:block;font-size:15px}
+.pwa .pwa-t span{color:var(--muted)}
+.pwa .pwa-go{min-height:44px;padding:0 16px;border:0;border-radius:var(--r-pill);background:var(--accent);color:var(--on-accent);font:600 14px var(--f-body);cursor:pointer}
+.pwa .pwa-x{min-width:44px;min-height:44px;border:0;background:none;color:var(--muted);font-size:22px;line-height:1;cursor:pointer;border-radius:var(--r-pill)}
+.pwa button:focus-visible{outline:3px solid var(--accent-ink);outline-offset:2px}
+.pwa-steps{margin:6px 0 0;padding-inline-start:18px;color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion:reduce){.pwa{transition:none}}
+dialog#lg::backdrop{background:var(--scrim);backdrop-filter:blur(3px)}
 .lg-in{padding:20px;max-height:calc(100dvh - 24px);overflow:auto}
 .lg-top{display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;top:-20px;background:var(--surface);padding:4px 0 10px;margin-top:-4px}
 .lg-top h2{margin:0;font:800 1.4rem var(--f-display)}
-.lg-x{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;min-height:40px;padding:0 14px;font:600 14px var(--f-body);cursor:pointer}
+.lg-x{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--r-4);min-height:40px;padding:0 14px;font:600 14px var(--f-body);cursor:pointer}
 #lg-b h3{font:700 1rem var(--f-display);margin:18px 0 4px}#lg-b p,#lg-b li{font-size:14.5px;line-height:1.6;color:var(--ink)}#lg-b p{margin:4px 0}#lg-b ul{margin:4px 0;padding-inline-start:20px}
 .lg-d{font-size:12px;color:var(--muted);margin-top:16px}
 html[lang="ar"] #lg-b,html[lang="ar"] .lg-x,html[lang="ar"] .legal button{font-family:var(--f-ar)}
@@ -302,13 +413,11 @@ html[lang="ar"] #lg-b,html[lang="ar"] .lg-x,html[lang="ar"] .legal button{font-f
 @keyframes fly{0%{transform:translate(-80px,30px) rotate(8deg)}50%{transform:translate(50vw,-6px) rotate(0deg)}100%{transform:translate(110vw,-40px) rotate(-6deg)}}
 @keyframes shine{to{background-position:200% 0}}
 @keyframes pop{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
-@keyframes ring{0%{box-shadow:0 0 0 0 rgba(232,89,12,.45)}100%{box-shadow:0 0 0 14px rgba(232,89,12,0)}}
+@keyframes ring{0%{box-shadow:0 0 0 0 var(--glow-accent)}100%{box-shadow:0 0 0 14px var(--glow-accent-0)}}
 .deco{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1}
 .deco i{position:absolute;border-radius:50%;filter:blur(60px);opacity:.45;animation:floaty 14s ease-in-out infinite alternate}
 .deco i:nth-child(1){width:300px;height:300px;background:var(--accent-soft);top:-80px;inset-inline-end:-60px}
-.deco i:nth-child(2){width:260px;height:260px;background:#cfe6ff;bottom:5%;inset-inline-start:-80px;animation-duration:18s}
-:root[data-theme="dark"] .deco i:nth-child(2){background:#1b3a55}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .deco i:nth-child(2){background:#1b3a55}}
+.deco i:nth-child(2){width:260px;height:260px;background:var(--blob-2);bottom:5%;inset-inline-start:-80px;animation-duration:18s}
 .deco .plane{position:absolute;top:120px;left:0;width:34px;height:34px;color:var(--accent);opacity:.55;display:none;animation:fly 22s linear infinite}
 .deco .plane svg{width:100%;height:100%;fill:currentColor;transform:rotate(45deg)}
 body[data-step="0"] .deco .plane{display:block}
@@ -317,9 +426,9 @@ body[data-step="0"] .deco .plane{display:block}
 header h1,header .sub,.hero,#mode,#dest,#panel,#evisa,#req,#docs{animation:fadeUp .5s ease backwards}
 header .sub{animation-delay:.08s}.hero{animation-delay:.16s}
 header.enter h1,header.enter .sub{animation:none}
-h1 .acc{background:linear-gradient(90deg,var(--accent),#ff9a3c,var(--accent));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--accent);animation:shine 4s linear infinite}
-.pay,.chip,.item,.crow,.tile,.ag-card,.sp-chip,.sp-logo{transition:transform .18s ease,box-shadow .18s ease,border-color .15s,background .15s}
-@media (hover:hover){.pay:hover,.tile:hover,.ag-card:hover,.sp-chip:hover,.sp-logo:hover{transform:translateY(-3px);box-shadow:0 12px 24px -12px rgba(20,33,43,.35)}.chip:hover,.item:hover,.crow:hover{transform:translateY(-1px)}}
+h1 .acc{background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--accent);animation:shine 4s linear infinite}
+.pay,.chip,.item,.crow,.tile,.ag-card,.sp-chip,.sp-logo{transition:transform var(--t-base) ease,box-shadow var(--t-base) ease,border-color var(--t-fast),background var(--t-fast)}
+@media (hover:hover){.pay:hover,.tile:hover,.ag-card:hover,.sp-chip:hover,.sp-logo:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift)}.chip:hover,.item:hover,.crow:hover{transform:translateY(-1px)}}
 .pay:active,.chip:active,.tile:active,.sp-chip:active{transform:scale(.97)}
 .ok-ic{animation:pop .6s cubic-bezier(.2,1.4,.4,1) .15s backwards}
 .stp li.on i{animation:ring 1.6s ease-out infinite}
@@ -328,9 +437,9 @@ h1 .acc{background:linear-gradient(90deg,var(--accent),#ff9a3c,var(--accent));ba
 
 #req .q-label{font:600 13px var(--f-body);text-transform:none;letter-spacing:0;color:var(--ink)}
 #req .panel{border:0;background:transparent;padding:0;gap:14px;margin-top:8px}
-#req .sel{min-height:50px;border-radius:14px;background:var(--surface);border:1.5px solid var(--line);padding:10px 14px;font-size:16px;transition:border-color .15s,box-shadow .15s}
+#req .sel{min-height:50px;border-radius:var(--r-5);background:var(--surface);border:1.5px solid var(--line);padding:10px 14px;font-size:16px;transition:border-color var(--t-fast),box-shadow var(--t-fast)}
 #req .sel:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
-#req .req-form{gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 8px 24px -16px rgba(20,33,43,.25)}
+#req .req-form{gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-7);padding:18px;box-shadow:var(--shadow-card)}
 #req .field{display:flex;flex-direction:column;gap:6px}
 #req .fe{min-height:0}#req .fe:empty{display:none}
 .recap dd{white-space:nowrap}
@@ -340,30 +449,30 @@ h1 .acc{background:linear-gradient(90deg,var(--accent),#ff9a3c,var(--accent));ba
 .stp li{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font:500 12px var(--f-body);color:var(--muted);position:relative}
 .stp li i{font-style:normal;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:600;background:var(--surface);position:relative;z-index:1}
 .stp li:not(:last-child)::after{content:"";position:absolute;top:14px;inset-inline-start:calc(50% + 18px);width:calc(100% - 36px);height:2px;background:var(--line)}
-.stp li.dn i{background:var(--ok);border-color:var(--ok);color:#fff}.stp li.dn::after{background:var(--ok)}
+.stp li.dn i{background:var(--ok);border-color:var(--ok);color:var(--on-ok)}.stp li.dn::after{background:var(--ok)}
 .stp li.on{color:var(--ink);font-weight:600}.stp li.on i{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-.svc-pill{align-self:flex-start;background:var(--accent-soft);color:var(--accent);font:600 13px var(--f-body);padding:5px 12px;border-radius:999px}
-.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--line);border-radius:14px}
-.seg .chip{border:0;background:transparent;border-radius:11px;min-height:42px;padding:8px 6px;font-weight:600;color:var(--muted)}
-.seg .chip[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.svc-pill{align-self:flex-start;background:var(--accent-soft);color:var(--accent);font:600 13px var(--f-body);padding:5px 12px;border-radius:var(--r-pill)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--line);border-radius:var(--r-5)}
+.seg .chip{border:0;background:transparent;border-radius:var(--r-4);min-height:42px;padding:8px 6px;font-weight:600;color:var(--muted)}
+.seg .chip[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-pop)}
 .chgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.chgrid .chip{border-radius:12px;min-height:46px;font-weight:600;border-width:1.5px}
+.chgrid .chip{border-radius:var(--r-4);min-height:46px;font-weight:600;border-width:1.5px}
 .chgrid .chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
-.ag-card{display:grid;grid-template-columns:auto 1fr;gap:12px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 8px 24px -16px rgba(20,33,43,.25)}
+.ag-card{display:grid;grid-template-columns:auto 1fr;gap:12px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-6);padding:16px;box-shadow:var(--shadow-card)}
 .ag-card .pay{grid-column:1/-1;margin:0}
 .ag-card.sel-ag{box-shadow:none;background:var(--ok-soft);border-color:var(--ok)}
-.av img{width:100%;height:100%;object-fit:cover;border-radius:inherit}.av{overflow:hidden;width:48px;height:48px;border-radius:14px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:700 16px var(--f-display)}
+.av img{width:100%;height:100%;object-fit:cover;border-radius:inherit}.av{overflow:hidden;width:48px;height:48px;border-radius:var(--r-5);background:var(--ink);color:var(--bg);display:grid;place-items:center;font:700 16px var(--f-display)}
 .ag-body{display:flex;flex-direction:column;gap:2px;min-width:0}.ag-body b{font:700 1.05rem var(--f-display)}
 .ag-meta{font:400 14px var(--f-body);color:var(--muted)}
 .pay.alt{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
-.ok-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin:16px 0 4px;padding:24px 16px;border-radius:20px;background:var(--ok-soft)}
+.ok-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin:16px 0 4px;padding:24px 16px;border-radius:var(--r-7);background:var(--ok-soft)}
 .ok-hero b{font:700 1.25rem var(--f-display)}.ok-hero p{margin:0;color:var(--muted);font-size:15px}
-.ok-ic{width:56px;height:56px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:28px}
+.ok-ic{width:56px;height:56px;border-radius:50%;background:var(--ok);color:var(--on-ok);display:grid;place-items:center;font-size:28px}
 .nxt{list-style:none;margin:14px 0;padding:0;display:flex;flex-direction:column;gap:10px}
 .nxt li{display:flex;align-items:center;gap:12px;font:500 15px var(--f-body)}
 .nxt i{font-style:normal;flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:600;font-size:13px}
-.nxt li.dn i{background:var(--ok);border-color:var(--ok);color:#fff}
-.recap{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px}
+.nxt li.dn i{background:var(--ok);border-color:var(--ok);color:var(--on-ok)}
+.recap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-6);padding:16px;margin-top:14px}
 .recap h2{margin:0 0 8px;font-size:1rem}.recap dl{margin:0}
 .recap dl div{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
 .recap dl div:first-child{border-top:0}.recap dt{color:var(--muted)}.recap dd{margin:0;font-weight:600;text-align:end;overflow-wrap:anywhere}
@@ -371,9 +480,9 @@ html[lang="ar"] .stp li,html[lang="ar"] #req .q-label,html[lang="ar"] .ag-meta{f
 
 .tiles{display:flex;gap:16px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
 .tile{flex:0 0 112px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--ink);scroll-snap-align:start}
-.tile-ic{width:112px;height:112px;border-radius:24px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tile-ic{width:112px;height:112px;border-radius:var(--r-8);border:1px solid var(--line);background:var(--logo-bg);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .tile-ic img{max-width:80%;max-height:80%;object-fit:contain}
-.tile-ic img.fav{width:64px;height:64px;max-width:none;max-height:none;border-radius:14px}.tile-ic .fbt{display:none}.tile-ic.fb{background:var(--tb)}.tile-ic.fb .fbt{display:block;color:var(--tf);font:700 26px var(--f-body);letter-spacing:-.5px}
+.tile-ic img.fav{width:64px;height:64px;max-width:none;max-height:none;border-radius:var(--r-5)}.tile-ic .fbt{display:none}.tile-ic.fb{background:var(--tb)}.tile-ic.fb .fbt{display:block;color:var(--tf);font:700 26px var(--f-body);letter-spacing:-.5px}
 .tile-n{font:500 13px/1.3 var(--f-body)}.tile-k{font:400 12px var(--f-body);color:var(--muted)}
 .tile:hover .tile-ic,.tile:focus-visible .tile-ic{border-color:var(--ink)}
 html[lang="ar"] .tile-n,html[lang="ar"] .tile-k{font-family:var(--f-ar)}
@@ -390,14 +499,11 @@ button.sp-chip{font:600 15px var(--f-body);cursor:pointer;color:var(--ink)}
 html[lang="ar"] .fe,html[lang="ar"] button.sp-chip{font-family:var(--f-ar)}
 
 </style>
-
 <style>
-.home-btn{color:#e5484d;background:#fff1f1;border-color:#f3a6a8}
+.home-btn{color:var(--danger-text);background:var(--danger-soft);border-color:var(--danger-line)}
 .home-btn svg{width:24px;height:24px}
 .home-btn svg path{stroke-width:2.6}
-.home-btn:hover{background:#e5484d;border-color:#e5484d;color:#fff}
-:root[data-theme="dark"] .home-btn{color:#ff8a8d;background:#3a1d1f;border-color:#7a3a3d}
-:root[data-theme="dark"] .home-btn:hover{background:#ff6b6f;border-color:#ff6b6f;color:#1a0f0e}
+.home-btn:hover{background:var(--danger-text);border-color:var(--danger-text);color:var(--on-danger)}
 textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
 .act{display:grid;gap:8px;margin:12px 0}
 @media print{
@@ -405,54 +511,12 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
  body.print-pack .rv{opacity:1!important;transform:none!important}
  body.print-pack #refus::before{content:"Visa Checker · Pack recours";display:block;font-size:20px;font-weight:700;margin-bottom:12px}
  body.print-pack .lt{break-before:page}
- body.print-pack{background:#fff;color:#000}
+ body.print-pack{background:var(--paper);color:var(--paper-ink)}
 }
-.ai{display:flex;flex-direction:column;gap:12px;margin-top:24px}
-.ai-drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;min-height:168px;padding:20px 16px;border:2px dashed var(--accent);border-radius:16px;background:var(--accent-soft);cursor:pointer;overflow:hidden}
-.ai-drop.over{background:var(--surface);border-style:solid}
-.ai-drop:focus-within{outline:3px solid var(--ink);outline-offset:2px}
-.ai-in{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
-.ai-ic{font-size:2rem;line-height:1;color:var(--accent)}
-.ai-thumb{max-height:150px;max-width:100%;border-radius:10px;border:1px solid var(--line)}
-.ai-pdf{display:grid;place-items:center;width:56px;height:68px;border-radius:8px;background:var(--surface);border:2px solid var(--accent);font-weight:800;color:var(--accent)}
-.ai-fn{overflow-wrap:anywhere;max-width:100%}
-.ai-laser{position:absolute;inset-inline:0;top:0;height:3px;background:linear-gradient(90deg,transparent,var(--accent),transparent);box-shadow:0 0 14px 4px var(--accent);animation:aiscan 1.6s ease-in-out infinite alternate}
-@keyframes aiscan{from{top:4%}to{top:96%}}
-@media (prefers-reduced-motion:reduce){.ai-laser{animation:none;top:50%}}
-.ai-err{margin:0;padding:12px 14px;border-radius:10px;border:2px solid #d92d20;background:#fef3f2;color:#912018;font-weight:600}
-:root[data-theme="dark"] .ai-err{background:#3a1d1f;color:#ffb4ae;border-color:#ef6a5e}
-.ai-consent{display:flex;gap:12px;align-items:flex-start;font-size:15px;cursor:pointer;min-height:44px}
-.ai-consent input{width:24px;height:24px;flex:none;accent-color:var(--ok)}
-.ai-card{display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:12px;border:1px solid var(--line);border-inline-start-width:6px;background:var(--surface)}
-.ai-card p{margin:0;font-size:15px}
-.ai-card.bad{border-color:#d92d20;background:#fef3f2}
-.ai-card.warn{border-color:#dc6803;background:#fffaeb}
-:root[data-theme="dark"] .ai-card.bad{background:#3a1d1f;border-color:#ef6a5e}
-:root[data-theme="dark"] .ai-card.warn{background:#3a2c14;border-color:#f5a524}
-.ai-badge{align-self:flex-start;font:700 12px var(--f-body);letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:99px;background:#d92d20;color:#fff}
-.ai-card.warn .ai-badge{background:#b54708}
-.ai-warnbox{margin:0;padding:12px 14px;border-radius:10px;border:2px solid #dc6803;background:#fffaeb;font-weight:600}
-:root[data-theme="dark"] .ai-warnbox{background:#3a2c14;border-color:#f5a524}
-.ai-plan{list-style:none;counter-reset:s;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-.ai-plan li{counter-increment:s;display:flex;flex-direction:column;gap:2px;padding:12px 14px 12px 52px;position:relative;border-radius:12px;border:1px solid var(--ok);background:var(--ok-soft)}
-html[dir="rtl"] .ai-plan li{padding:12px 52px 12px 14px}
-.ai-plan li::before{content:counter(s);position:absolute;inset-inline-start:12px;top:12px;width:28px;height:28px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-weight:700}
-.ai-fields{display:grid;grid-template-columns:1fr;gap:10px}
-@media (min-width:560px){.ai-fields{grid-template-columns:1fr 1fr}}
-.ai-acts{display:flex;flex-wrap:wrap;gap:8px}
-.ai input.sel,.ai textarea.sel{font-size:16px}
-@media print{
- body.print-letter *{visibility:hidden!important}
- body.print-letter #aiLetter,body.print-letter #aiLetter *{visibility:visible!important}
- body.print-letter #aiLetter{position:absolute;inset:0 auto auto 0;width:100%;border:0;background:#fff;color:#000;white-space:pre-wrap}
- body.print-pack #aiBox{display:none!important}
-}
-.skip{position:absolute;inset-inline-start:8px;top:-60px;z-index:100;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;font-weight:700;text-decoration:none}
-.skip:focus{top:8px}
-h1:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radius:6px}
 </style>
+</head>
+<body>
 <div class="wrap">
-  <a class="skip" id="skip" href="#h1">Aller au contenu</a>
   <header>
     <div class="top">
       <span class="brand" id="brand"></span>
@@ -469,7 +533,6 @@ h1:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radiu
     <p class="sub" id="sub"></p>
   </header>
 
-  <main id="main">
   <div class="hero" id="home"></div>
 
   <div class="panel" id="mode"></div>
@@ -485,7 +548,7 @@ h1:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radiu
   <div id="docs">
     <div class="progress" aria-live="polite">
       <div class="p-row"><span class="p-num" id="pnum"></span><span class="p-msg" id="pmsg"></span></div>
-      <div class="bar" id="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="barfill"></i></div>
+      <div class="bar" id="bar"><i id="barfill"></i></div>
     </div>
     <div id="list"></div>
   </div>
@@ -501,8 +564,6 @@ h1:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radiu
 
   <div class="dock" id="dock" hidden></div>
 
-  </main>
-
   <footer>
     <div class="links" id="links"></div>
     <p id="disc"></p>
@@ -510,7 +571,13 @@ h1:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radiu
     <button type="button" class="reset" id="reset"></button>
   </footer>
 </div>
-<dialog id="lg" aria-labelledby="lg-t"><div class="lg-in"><div class="lg-top"><h2 id="lg-t"></h2><button type="button" class="lg-x" id="lg-x"></button></div><div id="lg-b"></div></div></dialog>
+<div class="pwa" id="pwa" role="region" aria-live="polite" aria-labelledby="pwa-t" hidden>
+  <img src="icons/icon-192.png" alt="" width="44" height="44">
+  <div class="pwa-t"><b id="pwa-t"></b><span id="pwa-d"></span><ol class="pwa-steps" id="pwa-s" hidden></ol></div>
+  <button type="button" class="pwa-go" id="pwa-go"></button>
+  <button type="button" class="pwa-x" id="pwa-x"></button>
+</div>
+<dialog id="lg" aria-labelledby="lg-t" aria-modal="true" aria-hidden="true"><div class="lg-in"><div class="lg-top"><h2 id="lg-t"></h2><button type="button" class="lg-x" id="lg-x"></button></div><div id="lg-b"></div></div></dialog>
 
 <script>
 (function(){
@@ -549,9 +616,9 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  reunTitle:"Visa de long séjour",reunText:"Procédure différente d'un voyage touristique : la personne qui vit en France dépose d'abord la demande de regroupement familial auprès de l'OFII. Cette liste est générale. Confirmez les pièces sur France-Visas et auprès du consulat, car elles varient selon votre cas.",
  rfTitle:"Visa refusé ? Reprenez votre dossier",rfSub:"Un refus n'est pas définitif. Le pack contient ce qu'il faut pour contester ou redéposer.",
  rfWarn:"Le délai pour contester est court, environ 30 jours après la notification. Lisez dès aujourd'hui le motif indiqué sur votre formulaire de refus.",
- rfInc:["Lettre de recours à compléter","Conseils pour redéposer, étape par étape","4 lettres de motivation modèles : salarié, indépendant, étudiant, retraité","Le tout en PDF, à télécharger ou à recevoir par e-mail","Analyse IA de votre lettre de refus et lettre de recours personnalisée"],
+ rfInc:["Lettre de recours à compléter","Conseils pour redéposer, étape par étape","4 lettres de motivation modèles : salarié, indépendant, étudiant, retraité","Le tout en PDF, à télécharger ou à recevoir par e-mail"],
  refHint:"Visa refusé ? Aide en cas de refus : 20 DT (lettre de recours et modèles de motivation).",rfPrice:"Pack complet : 20 DT",rfPriceSub:"Payé à l'avance. Vous recevez tout de suite le pack : à télécharger en PDF ou à recevoir par e-mail.",
- caseLabel:"Votre cas, en bref",casePh:"Ex. : moyens de subsistance insuffisants",caseHint:"Écrivez le motif de refus comme indiqué sur le papier remis lors du refus (ou votre question).",advMail:"Écrire par e-mail",advWA:"Écrire sur WhatsApp",advSubject:"demande de conseil",advDest:"Destination",advCase:"Mon cas",pdfBtn:"Télécharger le pack en PDF",pdfHint:"Dans la fenêtre qui s'ouvre, choisissez « Enregistrer au format PDF ».",pdfMail:"Recevoir par e-mail",aiTitle:"Analyser ma lettre de refus (IA)",aiSub:"Envoyez la photo ou le PDF de votre lettre de refus. L'analyse prend environ 30 secondes.",aiDrop:"Glissez votre lettre ici, ou touchez pour choisir un fichier",aiDropHint:"PDF, JPG ou PNG, 5 Mo maximum",aiConsent:"J'accepte que ce document soit envoyé à un service d'IA pour analyse. Visa Checker ne le conserve pas.",aiBtn:"Analyser ma lettre",aiScan:"Analyse en cours…",aiChange:"Toucher pour changer de fichier",aiErrType:"Format non pris en charge. Utilisez un PDF, JPG ou PNG.",aiErrSize:"Fichier trop lourd (5 Mo maximum).",aiErrRead:"Document illisible. Reprenez une photo nette, bien éclairée, page entière.",aiErrNot:"Ce document ne ressemble pas à une lettre de refus de visa Schengen.",aiErrNet:"Connexion impossible. Réessayez dans un instant.",aiErrAuth:"Analyse réservée au pack recours. Vérifiez votre code.",aiErrLocked:"Trop d'essais. Réessayez dans une heure.",aiErrBusy:"Le service d'analyse est occupé. Réessayez dans quelques minutes.",aiErrConsent:"Cochez la case d'accord pour lancer l'analyse.",aiMot:"1. Motif identifié",aiDiag:"2. Pièces à vérifier ou à renforcer",aiPlan:"3. Plan d'action",aiLet:"Votre lettre de recours",aiLetHint:"Vérifiez les champs, complétez ce qui est entre [crochets], puis copiez ou imprimez.",aiFLn:"Nom",aiFFn:"Prénom",aiFNo:"N° de dossier",aiFDec:"Date de la décision",aiFDate:"Date du courrier",aiMissing:"Manquant",aiWeak:"À renforcer",aiBox:"Case",aiLegal:"Code des visas (règlement CE 810/2009), art. 32 · Annexe VI",aiNone:"Aucune case cochée n'a pu être lue avec certitude. Vérifiez la lettre.",aiPrint:"Imprimer / PDF",aiDl:"Télécharger (.txt)",aiCopy:"Copier la lettre",aiAgain:"Analyser une autre lettre",aiDisc:"Analyse automatique, à vérifier. Elle ne remplace pas un avocat et ne garantit pas le visa.",tooMany:"Trop d'essais. Réessayez dans une heure.",chkWait:"Vérification…",rfPay:"Payer 20 DT",rfAdvTitle:"Conseils pour redéposer",rfLetTitle:"Lettres à copier",
+ caseLabel:"Votre cas, en bref",casePh:"Ex. : moyens de subsistance insuffisants",caseHint:"Écrivez le motif de refus comme indiqué sur le papier remis lors du refus (ou votre question).",advMail:"Écrire par e-mail",advWA:"Écrire sur WhatsApp",advSubject:"demande de conseil",advDest:"Destination",advCase:"Mon cas",pdfBtn:"Télécharger le pack en PDF",pdfHint:"Dans la fenêtre qui s'ouvre, choisissez « Enregistrer au format PDF ».",pdfMail:"Recevoir par e-mail",rfPay:"Payer 20 DT",rfAdvTitle:"Conseils pour redéposer",rfLetTitle:"Lettres à copier",
  rfNote:"Les lettres sont en français, car elles sont adressées aux autorités françaises. Remplacez tout ce qui est entre [crochets]. Collez le texte dans Word ou Google Docs, puis imprimez.",
  rfNoGuar:"Ces modèles aident à présenter votre dossier. Ils ne garantissent pas le visa.",copy:"Copier le texte",copied:"Copié",selected:"Texte sélectionné, copiez-le",
  adv:["Lisez le formulaire de refus. La case cochée indique le motif à corriger.","Choisissez : un recours (délai court, indiqué sur la notification) ou une nouvelle demande, qui entraîne de nouveaux frais.","Corrigez le motif avec des preuves nouvelles. Moyens financiers : relevés réguliers, sans gros dépôt soudain. Objet du séjour : programme clair et réservations réelles. Retour en Tunisie : preuves d'attaches (emploi, famille, logement).","Restez cohérent avec la première demande. Le consulat garde votre dossier : dates, emploi et revenus doivent être identiques.","Il n'existe pas de délai légal d'attente avant de redéposer, mais ne redéposez pas le même dossier sans changement.","Aucun intermédiaire ne peut promettre un visa. Un faux document peut entraîner de graves conséquences, dont une interdiction d'entrée."]},
@@ -589,9 +656,9 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  reunTitle:"Long-stay visa",reunText:"This is a different procedure from a tourist trip: the person living in France first files the family reunification request with the OFII. This list is general. Confirm the documents on France-Visas and with the consulate, because they vary by case.",
  rfTitle:"Visa refused? Rebuild your file",rfSub:"A refusal is not final. The pack has what you need to appeal or apply again.",
  rfWarn:"The time to appeal is short, about 30 days after you are notified. Read the reason on your refusal form today.",
- rfInc:["Appeal letter to complete","Advice for applying again, step by step","4 sample motivation letters: employee, self-employed, student, retired","All in PDF, to download or receive by e-mail","AI analysis of your refusal letter and a personalised appeal letter"],
+ rfInc:["Appeal letter to complete","Advice for applying again, step by step","4 sample motivation letters: employee, self-employed, student, retired","All in PDF, to download or receive by e-mail"],
  refHint:"Visa refused? Refusal help: 20 TND (appeal letter and sample motivation letters).",rfPrice:"Full pack: 20 TND",rfPriceSub:"Paid in advance. You get the pack at once: download it as a PDF or receive it by e-mail.",
- caseLabel:"Your case, in brief",casePh:"E.g.: insufficient means of subsistence",caseHint:"Write the refusal reason as shown on the paper you received with the refusal (or your question).",advMail:"Write by e-mail",advWA:"Write on WhatsApp",advSubject:"advice request",advDest:"Destination",advCase:"My case",pdfBtn:"Download the pack as PDF",pdfHint:"In the window that opens, choose \"Save as PDF\".",pdfMail:"Receive by e-mail",aiTitle:"Analyse my refusal letter (AI)",aiSub:"Upload a photo or PDF of your refusal letter. The analysis takes about 30 seconds.",aiDrop:"Drop your letter here, or tap to choose a file",aiDropHint:"PDF, JPG or PNG, 5 MB maximum",aiConsent:"I agree that this document is sent to an AI service for analysis. Visa Checker does not keep it.",aiBtn:"Analyse my letter",aiScan:"Analysing…",aiChange:"Tap to change file",aiErrType:"Unsupported format. Use a PDF, JPG or PNG.",aiErrSize:"File too large (5 MB maximum).",aiErrRead:"Unreadable document. Retake a sharp, well-lit photo of the whole page.",aiErrNot:"This document does not look like a Schengen visa refusal letter.",aiErrNet:"Connection failed. Try again in a moment.",aiErrAuth:"Analysis is reserved for the refusal pack. Check your code.",aiErrLocked:"Too many attempts. Try again in an hour.",aiErrBusy:"The analysis service is busy. Try again in a few minutes.",aiErrConsent:"Tick the consent box to start the analysis.",aiMot:"1. Reason identified",aiDiag:"2. Documents to check or strengthen",aiPlan:"3. Action plan",aiLet:"Your appeal letter",aiLetHint:"Check the fields, fill in anything in [brackets], then copy or print.",aiFLn:"Last name",aiFFn:"First name",aiFNo:"File number",aiFDec:"Decision date",aiFDate:"Letter date",aiMissing:"Missing",aiWeak:"To strengthen",aiBox:"Box",aiLegal:"Visa Code (Regulation EC 810/2009), art. 32 · Annex VI",aiNone:"No ticked box could be read with certainty. Check the letter.",aiPrint:"Print / PDF",aiDl:"Download (.txt)",aiCopy:"Copy the letter",aiAgain:"Analyse another letter",aiDisc:"Automatic analysis, to be checked. It does not replace a lawyer and does not guarantee a visa.",tooMany:"Too many attempts. Try again in an hour.",chkWait:"Checking…",rfPay:"Pay 20 TND",rfAdvTitle:"Advice for applying again",rfLetTitle:"Letters to copy",
+ caseLabel:"Your case, in brief",casePh:"E.g.: insufficient means of subsistence",caseHint:"Write the refusal reason as shown on the paper you received with the refusal (or your question).",advMail:"Write by e-mail",advWA:"Write on WhatsApp",advSubject:"advice request",advDest:"Destination",advCase:"My case",pdfBtn:"Download the pack as PDF",pdfHint:"In the window that opens, choose \"Save as PDF\".",pdfMail:"Receive by e-mail",rfPay:"Pay 20 TND",rfAdvTitle:"Advice for applying again",rfLetTitle:"Letters to copy",
  rfNote:"The letters are in French because they go to the French authorities. Replace everything in [brackets]. Paste the text into Word or Google Docs, then print.",
  rfNoGuar:"These models help you present your file. They do not guarantee a visa.",copy:"Copy the text",copied:"Copied",selected:"Text selected, copy it",
  adv:["Read the refusal form. The ticked box shows the reason to fix.","Choose: an appeal (short deadline, shown on the notification) or a new application, which means new fees.","Fix the reason with new evidence. Funds: regular statements, no sudden large deposit. Purpose of stay: a clear plan and real bookings. Return to Tunisia: proof of ties (job, family, home).","Stay consistent with your first application. The consulate keeps your file: dates, job and income must be identical.","There is no legal waiting period before you apply again, but do not resubmit the same file unchanged.","No intermediary can promise a visa. A false document can have serious consequences, including an entry ban."]},
@@ -629,9 +696,9 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  reunTitle:"تأشيرة الإقامة الطويلة",reunText:"الإجراء يختلف عن السفر السياحي: يقدّم الشخص المقيم في فرنسا أولًا طلب لمّ الشمل لدى المكتب الفرنسي للهجرة والاندماج (OFII). هذه القائمة عامة. تأكد من الوثائق على موقع France-Visas ولدى القنصلية لأنها تختلف حسب حالتك.",
  rfTitle:"رُفضت التأشيرة؟ أعد بناء ملفك",rfSub:"الرفض ليس نهائيًا. تجد في الحزمة ما تحتاجه للطعن أو لإعادة التقديم.",
  rfWarn:"مهلة الطعن قصيرة، نحو 30 يومًا بعد التبليغ. اقرأ اليوم سبب الرفض المكتوب في استمارة الرفض.",
- rfInc:["رسالة طعن جاهزة للتعبئة","نصائح لإعادة التقديم خطوة بخطوة","4 رسائل تحفيز نموذجية: موظف، عمل حر، طالب، متقاعد","كل ذلك بصيغة PDF، للتحميل أو الاستلام عبر البريد","تحليل رسالة الرفض بالذكاء الاصطناعي ورسالة طعن مخصصة"],
+ rfInc:["رسالة طعن جاهزة للتعبئة","نصائح لإعادة التقديم خطوة بخطوة","4 رسائل تحفيز نموذجية: موظف، عمل حر، طالب، متقاعد","كل ذلك بصيغة PDF، للتحميل أو الاستلام عبر البريد"],
  refHint:"تم رفض التأشيرة؟ المساعدة بعد الرفض: 20 د.ت (رسالة طعن ونماذج رسائل تحفيز).",rfPrice:"الحزمة الكاملة: 20 د.ت",rfPriceSub:"تُدفع مسبقًا. تحصل فورًا على الحزمة: تحميل بصيغة PDF أو استلام عبر البريد.",
- caseLabel:"حالتك باختصار",casePh:"مثال: عدم كفاية وسائل العيش",caseHint:"اكتب سبب الرفض كما هو مذكور في الورقة المسلّمة لك عند الرفض (أو سؤالك).",advMail:"راسل عبر البريد",advWA:"راسل عبر واتساب",advSubject:"طلب نصيحة",advDest:"الوجهة",advCase:"حالتي",pdfBtn:"تحميل الحزمة بصيغة PDF",pdfHint:"في النافذة التي تُفتح، اختر «حفظ بصيغة PDF».",pdfMail:"استلام عبر البريد",aiTitle:"تحليل رسالة الرفض (ذكاء اصطناعي)",aiSub:"ارفع صورة أو ملف PDF لرسالة الرفض. يستغرق التحليل نحو 30 ثانية.",aiDrop:"اسحب رسالتك هنا، أو المس لاختيار ملف",aiDropHint:"PDF أو JPG أو PNG، 5 ميغابايت كحد أقصى",aiConsent:"أوافق على إرسال هذه الوثيقة إلى خدمة ذكاء اصطناعي للتحليل. Visa Checker لا يحتفظ بها.",aiBtn:"حلّل رسالتي",aiScan:"جارٍ التحليل…",aiChange:"المس لتغيير الملف",aiErrType:"صيغة غير مدعومة. استعمل PDF أو JPG أو PNG.",aiErrSize:"الملف كبير جدًا (5 ميغابايت كحد أقصى).",aiErrRead:"الوثيقة غير مقروءة. أعد التقاط صورة واضحة ومضاءة للصفحة كاملة.",aiErrNot:"هذه الوثيقة لا تبدو رسالة رفض تأشيرة شنغن.",aiErrNet:"تعذّر الاتصال. أعد المحاولة بعد قليل.",aiErrAuth:"التحليل مخصص لحزمة الطعن. تحقق من الرمز.",aiErrLocked:"محاولات كثيرة. أعد المحاولة بعد ساعة.",aiErrBusy:"خدمة التحليل مشغولة. أعد المحاولة بعد دقائق.",aiErrConsent:"ضع علامة الموافقة لبدء التحليل.",aiMot:"1. سبب الرفض",aiDiag:"2. وثائق للتحقق منها أو تعزيزها",aiPlan:"3. خطة العمل",aiLet:"رسالة الطعن الخاصة بك",aiLetHint:"تحقق من الحقول، أكمل ما بين [أقواس]، ثم انسخ أو اطبع.",aiFLn:"اللقب",aiFFn:"الاسم",aiFNo:"رقم الملف",aiFDec:"تاريخ القرار",aiFDate:"تاريخ الرسالة",aiMissing:"ناقص",aiWeak:"يحتاج تعزيزًا",aiBox:"الخانة",aiLegal:"مدونة التأشيرات (اللائحة EC 810/2009)، المادة 32 · الملحق VI",aiNone:"تعذّرت قراءة أي خانة مؤشَّر عليها بيقين. راجع الرسالة.",aiPrint:"طباعة / PDF",aiDl:"تنزيل (.txt)",aiCopy:"نسخ الرسالة",aiAgain:"تحليل رسالة أخرى",aiDisc:"تحليل آلي يجب التحقق منه. لا يغني عن محامٍ ولا يضمن التأشيرة.",tooMany:"محاولات كثيرة. أعد المحاولة بعد ساعة.",chkWait:"جارٍ التحقق…",rfPay:"ادفع 20 د.ت",rfAdvTitle:"نصائح لإعادة التقديم",rfLetTitle:"رسائل للنسخ",
+ caseLabel:"حالتك باختصار",casePh:"مثال: عدم كفاية وسائل العيش",caseHint:"اكتب سبب الرفض كما هو مذكور في الورقة المسلّمة لك عند الرفض (أو سؤالك).",advMail:"راسل عبر البريد",advWA:"راسل عبر واتساب",advSubject:"طلب نصيحة",advDest:"الوجهة",advCase:"حالتي",pdfBtn:"تحميل الحزمة بصيغة PDF",pdfHint:"في النافذة التي تُفتح، اختر «حفظ بصيغة PDF».",pdfMail:"استلام عبر البريد",rfPay:"ادفع 20 د.ت",rfAdvTitle:"نصائح لإعادة التقديم",rfLetTitle:"رسائل للنسخ",
  rfNote:"الرسائل بالفرنسية لأنها موجهة إلى السلطات الفرنسية. عوّض كل ما بين [أقواس]. الصق النص في Word أو Google Docs ثم اطبعه.",
  rfNoGuar:"هذه النماذج تساعدك على عرض ملفك ولا تضمن الحصول على التأشيرة.",copy:"نسخ النص",copied:"تم النسخ",selected:"تم تحديد النص، انسخه",
  adv:["اقرأ استمارة الرفض. الخانة المعلّمة تبيّن السبب الذي يجب إصلاحه.","اختر: الطعن (مهلة قصيرة مذكورة في التبليغ) أو تقديم طلب جديد، وهو يتطلب رسومًا جديدة.","أصلح السبب بإثباتات جديدة. الموارد المالية: كشوف منتظمة دون إيداع كبير مفاجئ. غرض الإقامة: برنامج واضح وحجوزات حقيقية. العودة إلى تونس: إثباتات الارتباط (عمل، عائلة، سكن).","حافظ على الانسجام مع الطلب الأول. القنصلية تحتفظ بملفك: يجب أن تتطابق التواريخ والعمل والدخل.","لا توجد مدة انتظار قانونية قبل إعادة التقديم، لكن لا تقدّم الملف نفسه دون تغيير.","لا يستطيع أي وسيط أن يعد بتأشيرة. الوثيقة المزوّرة قد تؤدي إلى عواقب خطيرة منها المنع من الدخول."]}
@@ -843,23 +910,117 @@ var RITEMS=[
  ar:["ترجمة فرنسية محلّفة للوثائق بالعربية","تُطلب غالبًا للوثائق المحرّرة بالعربية."]}
 ];
 var ORDER=["steps","core","purpose","money","activity","stay","family"];
-var KEY="dossier-schengen-v1";
-var S={lang:"fr",step:0,mode:"check",motive:"other",country:"fr",gov:"",paid:false,pack:false,purpose:"tourism",status:"employee",party:"alone",stay:"hotel",pay:"self",done:{}};
-try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);for(var k in o){S[k]=o[k]}}}catch(e){}
+/* ===== Persistance versionnée (localStorage) =====
+   Enveloppe : {v:<version>, t:<horodatage>, d:<état>}. Chaque changement de forme du schéma incrémente SCHEMA_V
+   et ajoute une fonction dans MIGRATIONS (clé = version de départ). Données illisibles ou trop récentes :
+   copie dans CORRUPT_KEY puis retour aux valeurs par défaut (jamais d'exécution de données non validées). */
+var KEY="dossier-schengen-v2",SCHEMA_V=2,LEGACY_KEYS=["dossier-schengen-v1"],CORRUPT_KEY="dossier-schengen-corrupt";
+var S_DEFAULT={lang:"fr",step:0,mode:"check",motive:"other",country:"fr",gov:"",paid:false,pack:false,purpose:"tourism",status:"employee",party:"alone",stay:"hotel",pay:"self",done:{}};
+var S=JSON.parse(JSON.stringify(S_DEFAULT));
+var MIGRATIONS={
+ 1:function(d){return d} /* v1 -> v2 : même contenu, nouveau conteneur versionné ; le tri se fait dans sanitizeState */
+};
+function sanitizeState(o){
+  var r=JSON.parse(JSON.stringify(S_DEFAULT));
+  if(!o||typeof o!=="object"||Array.isArray(o))return r;
+  ["lang","mode","motive","country","gov","purpose","status","party","stay","pay","need","pgov","pt","agent","evc"].forEach(function(k){
+    if(typeof o[k]==="string"&&o[k].length<=64&&/^[\w-]*$/.test(o[k]))r[k]=o[k]});
+  if(typeof o.refus==="string")r.refus=o.refus.slice(0,300);
+  if(typeof o.tok==="string"&&o.tok.length<=1024)r.tok=o.tok;
+  ["paid","pack"].forEach(function(k){if(typeof o[k]==="boolean")r[k]=o[k]});
+  ["step","back"].forEach(function(k){var n=o[k];if(typeof n==="number"&&isFinite(n)&&Math.floor(n)===n&&n>=0&&n<=10)r[k]=n});
+  if(o.done&&typeof o.done==="object"&&!Array.isArray(o.done)){var c=0,id;for(id in o.done){if(/^[A-Za-z0-9_]{1,32}$/.test(id)&&o.done[id]===true&&c<300){r.done[id]=true;c++}}}
+  if(["fr","en","ar"].indexOf(r.lang)<0)r.lang="fr";
+  if(["check","appeal"].indexOf(r.mode)<0)r.mode="check";
+  return r;
+}
+function readJson(k){var raw=localStorage.getItem(k);if(raw==null)return {raw:null};try{return {raw:raw,val:JSON.parse(raw)}}catch(e){return {raw:raw,bad:true}}}
+function quarantine(raw,key){try{localStorage.setItem(CORRUPT_KEY,String(raw).slice(0,20000));localStorage.removeItem(key)}catch(e){}}
+function migrate(d,from){var v=from;while(v<SCHEMA_V){d=(MIGRATIONS[v]||function(x){return x})(d);v++}return d}
+function loadState(){
+  try{
+    var cur=readJson(KEY);
+    if(cur.raw!=null){
+      var e=cur.val;
+      if(cur.bad||!e||typeof e!=="object"||typeof e.v!=="number"||!e.d||e.v<1||e.v>SCHEMA_V){quarantine(cur.raw,KEY);return null}
+      return sanitizeState(migrate(e.d,e.v));
+    }
+    for(var i=0;i<LEGACY_KEYS.length;i++){
+      var lg=readJson(LEGACY_KEYS[i]);
+      if(lg.raw==null)continue;
+      localStorage.removeItem(LEGACY_KEYS[i]);
+      if(lg.bad){quarantine(lg.raw,LEGACY_KEYS[i]);return null}
+      return sanitizeState(migrate(lg.val,1));
+    }
+  }catch(err){}
+  return null;
+}
+(function(){var o=loadState();if(o){for(var k in o)S[k]=o[k]}})();
 if(!UI[S.lang])S.lang="fr";
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({v:SCHEMA_V,t:Date.now(),d:S}))}catch(e){}}
+save(); /* écrit tout de suite l'état migré (l'ancienne clé a été supprimée) */
+/* Effacement complet des données locales (bouton « tout effacer » à brancher si besoin). */
+function wipeLocalData(){try{localStorage.removeItem(KEY);localStorage.removeItem(CORRUPT_KEY);LEGACY_KEYS.forEach(function(k){localStorage.removeItem(k)})}catch(e){}S=sanitizeState(null)}
 var $=function(id){return document.getElementById(id)};
 function chips(q,label){
   var t=UI[S.lang],h='<div class="q"><div class="q-label">'+label+'</div><div class="chips" role="group" aria-label="'+label+'">';
   Object.keys(t[q]).forEach(function(v){h+='<button type="button" class="chip" data-q="'+q+'" data-v="'+v+'" aria-pressed="'+(S[q]===v)+'">'+t[q][v]+'</button>'});
   return h+'</div></div>';
 }
-/* Config: put the Flouci or Paymee payment link in PAY_URL. Unlock codes live in the Worker (secret UNLOCK_CODES). */
+/* ===== Paiement et déblocage =====
+   PAY_URL / PAY_URL2 : liens de paiement Flouci ou Paymee (10 DT conseillers, 20 DT pack recours).
+   Les codes ne sont PLUS stockés dans cette page : ils sont vérifiés par votre serveur (voir ARCHITECTURE-SECURITE.md).
+   UNLOCK_URL : adresse HTTPS de l'API, par exemple "https://api.votre-domaine.tn/v1/unlock". Vide = déblocage désactivé.
+   UNLOCK_DEV_MODE : true uniquement pour tester sans serveur (compare l'empreinte SHA-256 du code ; jamais en production). */
 var PAY_URL="";
-
-/* Refusal pack (20 DT): put its Flouci or Paymee link in PAY_URL2. Unlock codes live in the Worker (secret PACK_CODES). */
 var PAY_URL2="";
-/* Les codes de déblocage ne sont plus dans la page : ils sont vérifiés par le Worker (route /verify, secrets UNLOCK_CODES et PACK_CODES). */
+var UNLOCK_URL="";
+var UNLOCK_TIMEOUT_MS=8000;
+var UNLOCK_DEV_MODE=false;
+var UNLOCK_DEV_HASHES={advisors:["27007c851cd84fa9f9629fa29433779708952cbbc4734d54e68d9299e5d4b650"],pack:["cfb77905e1d97dcfe27a8823be04064629cabf350f7c2602d18295277ee7ea8f"]};
+var UNX={
+ fr:{format:"Code invalide : 4 à 32 caractères (lettres, chiffres, tiret).",bad:"Code incorrect ou déjà utilisé.",rate:"Trop d'essais. Réessayez dans quelques minutes.",timeout:"Le serveur met trop de temps à répondre. Réessayez.",network:"Pas de connexion. Vérifiez votre réseau puis réessayez.",server:"Service momentanément indisponible. Réessayez plus tard.",off:"Le déblocage n'est pas encore activé.",checking:"Vérification…"},
+ en:{format:"Invalid code: 4 to 32 characters (letters, digits, hyphen).",bad:"Incorrect or already used code.",rate:"Too many attempts. Try again in a few minutes.",timeout:"The server is taking too long to answer. Try again.",network:"No connection. Check your network and try again.",server:"Service temporarily unavailable. Try again later.",off:"Unlocking is not enabled yet.",checking:"Checking…"},
+ ar:{format:"رمز غير صالح: من 4 إلى 32 حرفًا (حروف وأرقام وشرطة).",bad:"الرمز غير صحيح أو مستعمل من قبل.",rate:"محاولات كثيرة. أعد المحاولة بعد دقائق.",timeout:"الخادم يتأخر في الرد. أعد المحاولة.",network:"لا يوجد اتصال. تحقق من الشبكة ثم أعد المحاولة.",server:"الخدمة غير متاحة مؤقتًا. أعد المحاولة لاحقًا.",off:"لم يتم تفعيل فتح الخدمة بعد.",checking:"جارٍ التحقق…"}
+};
+/* fetch JSON avec délai maximal ; ne lève jamais d'exception : renvoie {ok,status,data} ou {ok:false,status:0,err:"timeout"|"network"} */
+function fetchJson(url,opts,ms){
+  var ctl=typeof AbortController==="function"?new AbortController():null,timer=null,o=Object.assign({credentials:"omit",cache:"no-store"},opts);
+  if(ctl){o.signal=ctl.signal;timer=setTimeout(function(){ctl.abort()},ms)}
+  return fetch(url,o).then(function(r){
+    clearTimeout(timer);
+    return r.text().then(function(t){var d=null;try{d=t?JSON.parse(t):null}catch(e){}return {ok:r.ok,status:r.status,data:d}});
+  },function(err){clearTimeout(timer);return {ok:false,status:0,err:(err&&err.name==="AbortError")?"timeout":"network"}});
+}
+function statusToErr(st){return st===429?"rate":(st===400||st===401||st===403||st===404||st===409||st===410||st===422)?"bad":"server"}
+function sha256Hex(txt){
+  if(!(window.crypto&&crypto.subtle))return Promise.reject(new Error("no-subtle"));
+  return crypto.subtle.digest("SHA-256",new TextEncoder().encode(txt)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return ("0"+x.toString(16)).slice(-2)}).join("")});
+}
+/* kind : "advisors" (liste des agences) ou "pack" (pack recours). Renvoie une promesse {ok:true,token} ou {ok:false,err}. */
+function verifyCode(kind,code){
+  if(!UNLOCK_URL){
+    if(!UNLOCK_DEV_MODE)return Promise.resolve({ok:false,err:"off"});
+    return sha256Hex(code).then(function(h){return (UNLOCK_DEV_HASHES[kind]||[]).indexOf(h)>-1?{ok:true,token:"dev"}:{ok:false,err:"bad"}},function(){return {ok:false,err:"server"}});
+  }
+  return fetchJson(UNLOCK_URL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({kind:kind,code:code})},UNLOCK_TIMEOUT_MS).then(function(r){
+    if(r.err)return {ok:false,err:r.err};
+    if(r.ok&&r.data&&r.data.ok===true&&typeof r.data.token==="string")return {ok:true,token:r.data.token};
+    return {ok:false,err:r.ok?"bad":statusToErr(r.status)};
+  });
+}
+function doUnlock(kind,inputId,errId,btn){
+  var X=UNX[S.lang],err=$(errId),code=($(inputId).value||"").trim().toUpperCase();
+  err.setAttribute("role","alert");err.textContent="";$(inputId).setAttribute("aria-invalid","false");
+  if(!/^[A-Z0-9-]{4,32}$/.test(code)){err.textContent=X.format;$(inputId).setAttribute("aria-invalid","true");$(inputId).focus();return}
+  btn.disabled=true;btn.setAttribute("aria-busy","true");err.textContent=X.checking;
+  verifyCode(kind,code).then(function(r){
+    btn.disabled=false;btn.removeAttribute("aria-busy");
+    if(!r.ok){err.textContent=X[r.err]||X.server;$(inputId).setAttribute("aria-invalid","true");return}
+    if(kind==="advisors")S.paid=true;else S.pack=true;
+    S.tok=r.token;save();render();
+  });
+}
 var HEAD=`[Prénom NOM]
 [Adresse en Tunisie]
 [Téléphone] · [E-mail]
@@ -996,10 +1157,9 @@ function renderRefus(t){
     h+='<ul class="inc">'+t.rfInc.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>';
     h+='<div><div class="price">'+t.rfPrice+'</div><p class="rf-sub">'+t.rfPriceSub+'</p></div>';
     h+=PAY_URL2?'<a class="pay" href="'+PAY_URL2+'" target="_blank" rel="noopener">'+t.rfPay+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
-    h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off" aria-describedby="err2"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
+    h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off" aria-describedby="err2" aria-invalid="false"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
   }else{
     h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
-    h+='<div id="aiBox" class="ai"></div>';
     h+='<h2>'+t.rfAdvTitle+'</h2><ol class="adv">'+t.adv.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ol>';
     h+='<h2>'+t.rfLetTitle+'</h2><p class="rf-sub">'+t.rfNote+'</p>';
     PACK.forEach(function(p){
@@ -1008,7 +1168,6 @@ function renderRefus(t){
   }
   h+='<p class="ag-note">'+t.rfNoGuar+'</p>';
   $("refus").innerHTML=h;
-  if(S.pack)renderAI();
 }
 function copyLetter(btn){
   var t=UI[S.lang],pre=$("pk-"+btn.dataset.copy);
@@ -1086,6 +1245,13 @@ var PX={
  link:{fr:"Site officiel du dépôt de demande",en:"Official application page",ar:"الصفحة الرسمية لتقديم الطلب"}
 };
 var ITEM0={};
+/* Points d'attention : documents souvent refusés ou mal préparés (affichés en orange tant qu'ils ne sont pas cochés). */
+var ATTN={photos:1,bank:1,insurance:1,flight:1,passport:1};
+var STX={
+ fr:{ok:"Prêt",warn:"Point d'attention",todo:"À faire",rec:"Conseillé",legend:"Légende",att:function(n){return n+(n>1?" points d'attention":" point d'attention")},step:function(n){return "Étape "+n+" sur 3"},prog:"Avancement du dossier"},
+ en:{ok:"Ready",warn:"Watch out",todo:"To do",rec:"Advised",legend:"Legend",att:function(n){return n+(n>1?" points to watch":" point to watch")},step:function(n){return "Step "+n+" of 3"},prog:"File progress"},
+ ar:{ok:"جاهز",warn:"انتبه",todo:"للإنجاز",rec:"مُستحسن",legend:"دليل الألوان",att:function(n){return n+" نقاط للانتباه"},step:function(n){return "الخطوة "+n+" من 3"},prog:"تقدّم الملف"}
+};
 function applyCountry(t){
   var cur=curC(),P=PROF[cur.id],L=S.lang,i;
   ["fv","appt","fee"].forEach(function(id){for(i=0;i<ITEMS.length;i++){if(ITEMS[i].id===id){if(!ITEM0[id])ITEM0[id]={fr:ITEMS[i].fr,en:ITEMS[i].en,ar:ITEMS[i].ar}}}});
@@ -1157,7 +1323,11 @@ var WORLD=[
  {n:"Agoda",dom:"agoda.com",svc:["hotel"],k:{fr:"Hôtels",en:"Hotels",ar:"فنادق"},u:"https://www.agoda.com",bg:"#ffffff",fg:"#5392f9",txt:"agoda"},
  {n:"MakeMyTrip",dom:"makemytrip.com",svc:["flight","hotel"],k:{fr:"Vols et hôtels",en:"Flights & hotels",ar:"طيران وفنادق"},u:"https://www.makemytrip.com",bg:"#e41b23",fg:"#ffffff",txt:"my"},
  {n:"Where is my Train",dom:"whereismytrain.in",svc:["train"],k:{fr:"Trains (Inde)",en:"Trains (India)",ar:"قطارات (الهند)"},u:"https://whereismytrain.in",bg:"#1fa5e8",fg:"#ffffff",txt:"WIMT"},
- {n:"Checkmytrip",dom:"checkmytrip.com",svc:["trip"],k:{fr:"Suivi de voyage",en:"Trip tracking",ar:"متابعة الرحلة"},u:"https://www.checkmytrip.com",bg:"#0a2a5e",fg:"#ffffff",txt:"CMT"}
+ {n:"Checkmytrip",dom:"checkmytrip.com",svc:["trip"],k:{fr:"Suivi de voyage",en:"Trip tracking",ar:"متابعة الرحلة"},u:"https://www.checkmytrip.com",bg:"#0a2a5e",fg:"#ffffff",txt:"CMT"},
+ {n:"Airalo",dom:"airalo.com",svc:["esim"],k:{fr:"eSIM voyage",en:"Travel eSIM",ar:"شريحة eSIM للسفر"},u:"https://www.airalo.com",bg:"#ffffff",fg:"#ff3b5c",txt:"airalo"},
+ {n:"Holafly",dom:"holafly.com",svc:["esim"],k:{fr:"eSIM voyage",en:"Travel eSIM",ar:"شريحة eSIM للسفر"},u:"https://esim.holafly.com",bg:"#ffffff",fg:"#f26522",txt:"holafly"},
+ {n:"Nomad",dom:"getnomad.app",svc:["esim"],k:{fr:"eSIM voyage",en:"Travel eSIM",ar:"شريحة eSIM للسفر"},u:"https://www.getnomad.app",bg:"#0f172a",fg:"#ffffff",txt:"nomad"},
+ {n:"Saily",dom:"saily.com",svc:["esim"],k:{fr:"eSIM voyage",en:"Travel eSIM",ar:"شريحة eSIM للسفر"},u:"https://saily.com",bg:"#ffffff",fg:"#2563eb",txt:"saily"}
 ];
 function tileHtml(x){
   var ic;
@@ -1178,9 +1348,13 @@ var ICONS={
 /* ===== Demande de documents de voyage (billet d'avion / hôtel) =====
    REQUEST_URL : adresse qui reçoit la demande en POST JSON (Make, n8n, Zapier, Formspree...). Vide = mode test (envoi manuel par bouton).
    Chaque agence a ses contacts (email, telegram, whatsapp). Les données personnelles ne sont pas gardées dans le navigateur. */
-var REQUEST_URL="https://visa-proxy.rabehfly.workers.dev/";
+var REQUEST_URL="https://visa-proxy.rabehfly.workers.dev";
+/* REQUEST_MODE : "opaque" = envoi sans lecture de la réponse (aucun en-tête CORS requis ; on ne connaît que l'échec réseau)
+                  "cors"   = envoi JSON et lecture du statut HTTP (le serveur doit renvoyer les en-têtes CORS : voir ARCHITECTURE-SECURITE.md). */
+var REQUEST_MODE="cors";
+var REQUEST_TIMEOUT_MS=10000,REQUEST_RETRIES=1,REQUEST_COOLDOWN_MS=30000;
 var INTL=[{id:"intl-test",name:"Partenaire international (test)",test:1,svc:["flight","hotel"],what:{fr:"Billets d'avion et hôtels dans le monde",en:"Flights and hotels worldwide",ar:"تذاكر طيران وفنادق حول العالم"},email:"rabehfly@gmail.com",telegram:"rabehtlili",whatsapp:"21658986980"}];
-var RQ={chan:"email",ln:"",fn:"",d1:"",d2:"",city:"",phone:"",tg:"",mail:"",consent:false,done:false,mode:"",failed:false};
+var RQ={sending:false,tries:0,chan:"email",ln:"",fn:"",d1:"",d2:"",city:"",phone:"",tg:"",mail:"",consent:false,done:false,mode:"",failed:false,er:{}};
 var RT={
 fr:{svc:{flight:"Billet d'avion",hotel:"Réservation d'hôtel"},t8:"Choisissez votre agence",s8:"Agences locales classées par gouvernorat, ou partenaires internationaux.",t9:"Vos informations",s9:"Saisissez-les comme sur votre passeport.",t10a:"Demande envoyée",t10b:"Dernière étape",s10a:"L'agence vous répond bientôt.",s10b:"Envoyez votre demande à l'agence.",
  tabL:"Agences locales",tabI:"Partenaires internationaux",choose:"Choisir cette agence",test:"Agence test",noLocal:"Pas encore d'agence pour ce service dans ce gouvernorat. Essayez un partenaire international.",
@@ -1224,7 +1398,7 @@ function rq(st){var R=RT[S.lang];return st===8?R.t8:st===9?R.t9:(RQ.mode==="sent
 function rqs(st){var R=RT[S.lang];return st===8?R.s8:st===9?R.s9:(RQ.mode==="sent"?R.s10a:R.s10b)}
 var STP={fr:["Service","Agence","Infos","Envoi"],en:["Service","Agency","Details","Send"],ar:["الخدمة","الوكالة","البيانات","الإرسال"]};
 var NS={fr:["L'agence reçoit votre demande","Vous recevez le lien de paiement","Vous payez et recevez votre document"],en:["The agency receives your request","You receive the payment link","You pay and receive your document"],ar:["تستلم الوكالة طلبك","يصلك رابط الدفع","تدفع وتستلم وثيقتك"]};
-function stepper(n){return '<ol class="stp" aria-label="'+STP[S.lang].join(", ")+'">'+STP[S.lang].map(function(x,i){return '<li class="'+(i+1<n?'dn':i+1===n?'on':'')+'"'+(i+1===n?' aria-current="step"':'')+'><i>'+(i+1<n?'✓':i+1)+'</i><span>'+x+'</span></li>'}).join("")+'</ol>'}
+function stepper(n,labels){var Lb=labels||STP[S.lang];return '<ol class="stp" aria-label="'+Lb.join(", ")+'">'+Lb.map(function(x,i){return '<li class="'+(i+1<n?'dn':i+1===n?'on':'')+'"'+(i+1===n?' aria-current="step"':'')+'><i>'+(i+1<n?'✓':i+1)+'</i><span>'+x+'</span></li>'}).join("")+'</ol>'}
 function initials(n){return n.split(/\s+/).slice(0,2).map(function(w){return w.charAt(0)}).join("").toUpperCase()}
 function avHtml(p){return '<span class="av" aria-hidden="true">'+(p.logo?'<img src="'+p.logo+'" alt="">':initials(p.name))+'</span>'}
 function agentCard(p,R){return '<div class="ag-card">'+avHtml(p)+'<div class="ag-body"><b>'+esc(p.name)+'</b><span class="ag-meta">'+(p.city?esc(p.city)+' · ':'')+p.what[S.lang]+'</span>'+(p.test?'<span class="tag">'+R.test+'</span>':'')+'</div><button type="button" class="pay wide" data-agent="'+p.id+'">'+R.choose+'</button></div>'}
@@ -1243,7 +1417,13 @@ function pickHtml(t){
   h+='<div class="needs"><h2>'+R.selfT+'</h2><p class="ag-sub">'+R.selfN+'</p>'+tilesHtml(links)+'</div>';
   return h;
 }
-function fld(id,label,type,extra){var req=/^(ln|fn|d1|d2|phone)$/.test(id);return '<div class="field"><label class="q-label" for="rq-'+id+'">'+label+'</label><input class="sel" id="rq-'+id+'" data-f="'+id+'" type="'+type+'" value="'+escA(RQ[id])+'" aria-describedby="fe-'+id+'"'+(req?' aria-required="true"':'')+' '+(extra||'')+'><span class="fe" id="fe-'+id+'" role="alert"></span></div>'}
+var A11Y={
+  fr:{cons:"Consentement",sum:function(n,l){return n+(n>1?" champs à corriger : ":" champ à corriger : ")+l}},
+  en:{cons:"Consent",sum:function(n,l){return n+(n>1?" fields to fix: ":" field to fix: ")+l}},
+  ar:{cons:"الموافقة",sum:function(n,l){return "عدد الحقول التي تحتاج تصحيحًا: "+n+" — "+l}}
+};
+function fErr(k){return (RQ.er&&RQ.er[k])||""}
+function fld(id,label,type,extra){var req=/^(ln|fn|d1|d2|phone)$/.test(id);return '<div class="field"><label class="q-label" for="rq-'+id+'">'+label+'</label><input class="sel" id="rq-'+id+'" data-f="'+id+'" type="'+type+'" value="'+escA(RQ[id])+'" aria-describedby="fe-'+id+'" aria-invalid="'+(fErr(id)?"true":"false")+'"'+(req?' aria-required="true"':'')+' '+(extra||'')+'><span class="fe" id="fe-'+id+'">'+esc(fErr(id))+'</span></div>'}
 function formHtml(t){
   var R=RT[S.lang],a=findAgent(S.agent),hot=S.need==="hotel",td=today(),up='autocapitalize="characters" autocomplete="off" style="text-transform:uppercase"';
   return stepper(3)+'<div class="panel"><div class="ag-card sel-ag"><span class="av" aria-hidden="true">'+initials(a.name)+'</span><div class="ag-body"><b>'+esc(a.name)+'</b><span class="ag-meta">'+R.svc[S.need]+'</span></div></div>'
@@ -1255,8 +1435,8 @@ function formHtml(t){
    +fld("tg",R.tg,"text",'dir="ltr" placeholder="@" autocapitalize="off" autocomplete="off"')
    +fld("mail",R.mail,"email",'dir="ltr" autocomplete="email" autocapitalize="off"')
    +'<div class="q"><span class="q-label">'+R.chan+'</span><div class="chips chgrid" role="group" aria-label="'+R.chan+'">'+["email","whatsapp","telegram","sms"].map(function(c){return '<button type="button" class="chip" data-chan="'+c+'" aria-pressed="'+(RQ.chan===c)+'">'+R.ch[c]+'</button>'}).join("")+'</div></div>'
-   +'<div class="field"><label class="item"><input type="checkbox" data-f="consent" id="rq-consent" aria-required="true" aria-describedby="fe-consent"'+(RQ.consent?' checked':'')+'><span class="i-body"><span class="i-title">'+R.consent+'</span></span></label><span class="fe" id="fe-consent" role="alert"></span></div>'
-   +'<p class="ag-note">'+R.payNote+'</p><span class="fe" id="fe-form" role="alert"></span>'
+   +'<div class="field"><label class="item"><input type="checkbox" data-f="consent" id="rq-consent" aria-required="true" aria-describedby="fe-consent" aria-invalid="'+(fErr("consent")?"true":"false")+'"'+(RQ.consent?' checked':'')+'><span class="i-body"><span class="i-title">'+R.consent+'</span></span></label><span class="fe" id="fe-consent">'+esc(fErr("consent"))+'</span></div>'
+   +'<div class="hp" aria-hidden="true"><label for="rq-website">Website</label><input type="text" id="rq-website" name="website" tabindex="-1" autocomplete="off"></div>'+'<p class="ag-note">'+R.payNote+'</p><span class="fe" id="fe-form" role="alert"></span>'
    +'<button type="submit" class="pay wide" id="rqsend">'+R.send+'</button></form></div>';
 }
 function normPhone(v){var d=String(v||"").replace(/[\s().\-]/g,"");if(/^00/.test(d))d="+"+d.slice(2);if(/^216[0-9]{8}$/.test(d))d="+"+d;if(/^[0-9]{8}$/.test(d))d="+216"+d;return /^\+[0-9]{8,15}$/.test(d)?d:""}
@@ -1290,33 +1470,93 @@ function doneHtml(t){
   h+='<div class="recap"><h2>'+R.recap+'</h2><dl>'+rows.map(function(r){return '<div><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>'}).join("")+'</dl></div>';
   return h;
 }
-function submitReq(){
-  var R=RT[S.lang],E=R.e,er={},a=findAgent(S.agent),hot=S.need==="hotel",td=today(),F=RQ;
-  var ln=F.ln.trim(),fn=F.fn.trim(),tg=normTg(F.tg),mail=F.mail.trim(),phone=normPhone(F.phone),latin=/^[A-Za-z][A-Za-z' \-]*$/;
-  if(!ln)er.ln=E.req;else if(!latin.test(ln))er.ln=E.name;
-  if(!fn)er.fn=E.req;else if(!latin.test(fn))er.fn=E.name;
-  if(!F.d1)er.d1=E.req;else if(F.d1<td)er.d1=E.past;
-  if(!F.d2)er.d2=E.req;else if(F.d1&&(hot?F.d2<=F.d1:F.d2<F.d1))er.d2=hot?E.dHotel:E.dFlight;
-  if(!phone)er.phone=F.phone.trim()?E.phone:E.req;
-  if(F.tg.trim()&&!/^[A-Za-z0-9_]{5,32}$/.test(tg))er.tg=E.tg;
-  if(mail&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail))er.mail=E.mail;
+var ERX={
+ fr:{long:"Trop long (60 caractères au maximum).",city:"Caractères non autorisés dans la ville.",date:"Date invalide.",far:"Choisissez une date dans les 18 prochains mois.",stay:"Séjour trop long (365 jours au maximum).",mailLong:"E-mail trop long.",
+  dup:"Une demande vient d'être envoyée. Patientez quelques secondes avant d'en envoyer une autre.",
+  net:"Pas de connexion. Vérifiez votre réseau puis réessayez.",timeout:"Le serveur met trop de temps à répondre. Réessayez.",invalid:"La demande a été refusée : vérifiez les champs puis réessayez.",rate:"Trop de demandes. Réessayez dans quelques minutes.",server:"Service momentanément indisponible. Réessayez."},
+ en:{long:"Too long (60 characters maximum).",city:"Characters not allowed in the city.",date:"Invalid date.",far:"Choose a date within the next 18 months.",stay:"Stay too long (365 days maximum).",mailLong:"E-mail too long.",
+  dup:"A request was just sent. Wait a few seconds before sending another one.",
+  net:"No connection. Check your network and try again.",timeout:"The server is taking too long to answer. Try again.",invalid:"The request was rejected: check the fields and try again.",rate:"Too many requests. Try again in a few minutes.",server:"Service temporarily unavailable. Try again."},
+ ar:{long:"طويل جدًا (60 حرفًا كحد أقصى).",city:"أحرف غير مسموح بها في اسم المدينة.",date:"تاريخ غير صالح.",far:"اختر تاريخًا ضمن الأشهر الـ18 القادمة.",stay:"مدة الإقامة طويلة جدًا (365 يومًا كحد أقصى).",mailLong:"البريد الإلكتروني طويل جدًا.",
+  dup:"تم إرسال طلب للتو. انتظر بضع ثوانٍ قبل إرسال طلب آخر.",
+  net:"لا يوجد اتصال. تحقق من الشبكة ثم أعد المحاولة.",timeout:"الخادم يتأخر في الرد. أعد المحاولة.",invalid:"تم رفض الطلب: تحقق من الحقول ثم أعد المحاولة.",rate:"طلبات كثيرة. أعد المحاولة بعد دقائق.",server:"الخدمة غير متاحة مؤقتًا. أعد المحاولة."}
+};
+function isoOk(v){if(!/^\d{4}-\d{2}-\d{2}$/.test(v))return false;var d=new Date(v+"T00:00:00Z");return !isNaN(d)&&d.toISOString().slice(0,10)===v}
+function dayDiff(a,b){return Math.round((new Date(b+"T00:00:00Z")-new Date(a+"T00:00:00Z"))/864e5)}
+function cleanTxt(v){return String(v||"").replace(/[\u0000-\u001f\u007f]/g,"").replace(/\s+/g," ").trim()}
+/* Validation stricte : renvoie {er:{champ:message}, clean:{valeurs nettoyées}} */
+function validateRequest(F,need){
+  var R=RT[S.lang],E=R.e,X=ERX[S.lang],er={},hot=need==="hotel",td=today(),lim=new Date(Date.now()+548*864e5).toISOString().slice(0,10);
+  var ln=cleanTxt(F.ln),fn=cleanTxt(F.fn),city=cleanTxt(F.city),mail=cleanTxt(F.mail).toLowerCase(),tg=normTg(cleanTxt(F.tg)),phone=normPhone(F.phone),latin=/^[A-Za-z][A-Za-z' \-]*$/;
+  if(!ln)er.ln=E.req;else if(ln.length>60)er.ln=X.long;else if(!latin.test(ln))er.ln=E.name;
+  if(!fn)er.fn=E.req;else if(fn.length>60)er.fn=X.long;else if(!latin.test(fn))er.fn=E.name;
+  if(!F.d1)er.d1=E.req;else if(!isoOk(F.d1))er.d1=X.date;else if(F.d1<td)er.d1=E.past;else if(F.d1>lim)er.d1=X.far;
+  if(!F.d2)er.d2=E.req;else if(!isoOk(F.d2))er.d2=X.date;else if(F.d1&&isoOk(F.d1)){
+    if(hot?F.d2<=F.d1:F.d2<F.d1)er.d2=hot?E.dHotel:E.dFlight;else if(dayDiff(F.d1,F.d2)>365)er.d2=X.stay}
+  if(city.length>60)er.city=X.long;else if(city&&!/^[A-Za-zÀ-ɏ؀-ۿ0-9 '’.,()\-]+$/.test(city))er.city=X.city;
+  if(!phone)er.phone=cleanTxt(F.phone)?E.phone:E.req;
+  if(tg&&!/^[A-Za-z0-9_]{5,32}$/.test(tg))er.tg=E.tg;
+  if(mail){if(mail.length>254)er.mail=X.mailLong;else if(!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(mail))er.mail=E.mail}
   if(F.chan==="telegram"&&!tg&&!er.tg)er.tg=E.needTg;
   if(F.chan==="email"&&!mail&&!er.mail)er.mail=E.needMail;
   if(!F.consent)er.consent=E.consent;
-  ["ln","fn","d1","d2","phone","tg","mail","consent"].forEach(function(k){var s=$("fe-"+k),i=$("rq-"+k);if(s)s.textContent=er[k]||"";if(i)i.setAttribute("aria-invalid",er[k]?"true":"false")});
+  return {er:er,clean:{ln:ln.toUpperCase(),fn:fn.toUpperCase(),city:city,mail:mail,tg:tg,phone:phone}};
+}
+function newId(){try{if(crypto.randomUUID)return crypto.randomUUID()}catch(e){}return "r"+Date.now().toString(36)+Math.random().toString(36).slice(2,10)}
+/* Envoi avec délai maximal, nouvelle tentative (erreurs réseau / 5xx) et lecture du statut HTTP en mode "cors". */
+function postRequest(payload){
+  var attempt=0;
+  function once(){
+    if(REQUEST_MODE==="cors"){
+      return fetchJson(REQUEST_URL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","Idempotency-Key":payload.requestId},body:JSON.stringify(payload)},REQUEST_TIMEOUT_MS).then(function(r){
+        if(r.err)return {ok:false,kind:r.err,retry:true};
+        if(r.ok)return {ok:true,kind:"sent"};
+        if(r.status===429)return {ok:false,kind:"rate",status:429};
+        if(r.status>=400&&r.status<500)return {ok:false,kind:"invalid",status:r.status};
+        return {ok:false,kind:"server",status:r.status,retry:true};
+      });
+    }
+    var fd=new URLSearchParams(),k;
+    for(k in payload){if(k!=="agency")fd.append(k,payload[k])}
+    fd.append("agencyName",payload.agency.name);fd.append("agencyEmail",payload.agency.email);fd.append("agencyTelegram",payload.agency.telegram);fd.append("agencyWhatsapp",payload.agency.whatsapp);
+    var ctl=typeof AbortController==="function"?new AbortController():null,timer=ctl&&setTimeout(function(){ctl.abort()},REQUEST_TIMEOUT_MS);
+    return fetch(REQUEST_URL,{method:"POST",mode:"no-cors",credentials:"omit",body:fd,signal:ctl?ctl.signal:undefined}).then(function(){clearTimeout(timer);return {ok:true,kind:"sent"}},
+      function(err){clearTimeout(timer);return {ok:false,kind:(err&&err.name==="AbortError")?"timeout":"net",retry:true}});
+  }
+  function run(){return once().then(function(r){
+    if(r.ok||!r.retry||attempt>=REQUEST_RETRIES)return r;
+    attempt++;return new Promise(function(ok){setTimeout(ok,800*Math.pow(2,attempt-1))}).then(run);
+  })}
+  return run();
+}
+function submitReq(){
+  if(RQ.sending)return;
+  var R=RT[S.lang],X=ERX[S.lang],a=findAgent(S.agent),F=RQ,v=validateRequest(F,S.need),er=v.er,c=v.clean;
+  RQ.er=er;
+  ["ln","fn","d1","d2","city","phone","tg","mail","consent"].forEach(function(k){var s=$("fe-"+k),i=$("rq-"+k);if(s)s.textContent=er[k]||"";if(i)i.setAttribute("aria-invalid",er[k]?"true":"false")});
+  var form=$("fe-form");if(form)form.textContent="";
   var bad=Object.keys(er);
-  if(bad.length){var f=$("rq-"+bad[0]);if(f)f.focus();return}
-  F.ln=ln.toUpperCase();F.fn=fn.toUpperCase();F.phone=phone;F.tg=tg;F.mail=mail;
-  var payload={service:S.need,destination:curC().n.fr,lastName:F.ln,firstName:F.fn,date1:F.d1,date2:F.d2,city:F.city.trim(),phone:phone,telegram:tg,email:mail,channel:F.chan,lang:S.lang,sentAt:new Date().toISOString(),
-    agency:{id:a.id,name:a.name,email:a.email||"",telegram:a.telegram||"",whatsapp:a.whatsapp||""},message:reqText()};
-  var btn=$("rqsend");btn.disabled=true;btn.textContent=R.sending;
-  function fin(mode,failed){F.done=true;F.mode=mode;F.failed=!!failed;S.step=10;save();render();window.scrollTo(0,0)}
+  if(bad.length){
+    var hot=S.need==="hotel",LB={ln:R.ln,fn:R.fn,d1:hot?R.d1h:R.d1f,d2:hot?R.d2h:R.d2f,city:R.city,phone:R.phone,tg:R.tg,mail:R.mail,consent:A11Y[S.lang].cons};
+    if(form)form.textContent=A11Y[S.lang].sum(bad.length,bad.map(function(k){return LB[k]}).join(", "));
+    var f=$("rq-"+bad[0]);if(f)f.focus();return}
+  RQ.er={};F.ln=c.ln;F.fn=c.fn;F.city=c.city;F.phone=c.phone;F.tg=c.tg;F.mail=c.mail;
+  function fin(mode,failed){F.done=true;F.mode=mode;F.failed=!!failed;F.tries=0;S.step=10;save();render();window.scrollTo(0,0)}
+  var hp=$("rq-website");if(hp&&hp.value){fin("sent");return}              /* champ piège rempli par un robot : on fait semblant */
+  try{var last=+sessionStorage.getItem("vc-last-send")||0;if(Date.now()-last<REQUEST_COOLDOWN_MS){if(form)form.textContent=X.dup;return}}catch(e){}
   if(!REQUEST_URL){fin("manual");return}
-  var fd=new URLSearchParams(),k;
-  for(k in payload){if(k!=="agency")fd.append(k,payload[k])}
-  fd.append("agencyName",a.name);fd.append("agencyEmail",a.email||"");fd.append("agencyTelegram",a.telegram||"");fd.append("agencyWhatsapp",a.whatsapp||"");
-  /* formulaire simple (pas de pré-vérification CORS) : le Worker renvoie les en-têtes CORS, on lit la réponse et on ne confirme l'envoi que si elle est OK */
-  fetch(REQUEST_URL,{method:"POST",body:fd}).then(function(r){if(r.ok)fin("sent",false);else fin("manual",true)},function(){fin("manual",true)});
+  var payload={requestId:newId(),service:S.need,destination:curC().n.fr,lastName:c.ln,firstName:c.fn,date1:F.d1,date2:F.d2,city:c.city,phone:c.phone,telegram:c.tg,email:c.mail,channel:F.chan,lang:S.lang,sentAt:new Date().toISOString(),
+    agency:{id:a.id,name:a.name,email:a.email||"",telegram:a.telegram||"",whatsapp:a.whatsapp||""},message:reqText()};
+  var btn=$("rqsend");RQ.sending=true;btn.disabled=true;btn.setAttribute("aria-busy","true");btn.textContent=R.sending;
+  postRequest(payload).then(function(r){
+    RQ.sending=false;
+    if(r.ok){try{sessionStorage.setItem("vc-last-send",String(Date.now()))}catch(e){}fin("sent");return}
+    F.tries=(F.tries||0)+1;
+    if(F.tries>=2&&r.kind!=="invalid"&&r.kind!=="rate"){fin("manual",true);return}           /* 2 échecs : on propose l'envoi manuel */
+    var b=$("rqsend"),fe=$("fe-form");
+    if(b){b.disabled=false;b.removeAttribute("aria-busy");b.textContent=R.send}
+    if(fe)fe.textContent=X[r.kind==="net"?"net":r.kind]||X.server;
+  });
 }
 function needsHtml(t){return '<div class="needs"><h2 class="hot">'+t.needTitle+'</h2><p class="ag-sub">'+t.needSub+'</p><div class="sp-chips"><button type="button" class="sp-chip" data-need="flight">'+ICONS.plane+t.needFlight+'</button><button type="button" class="sp-chip" data-need="hotel">'+ICONS.bed+t.needHotel+'</button></div>'+'</div>'}
 function renderSponsors(t){
@@ -1335,7 +1575,7 @@ function advMsg(){var t=UI[S.lang];return "Visa Checker : "+t.advSubject+"\n"+t.
 function renderAgency(t){
   var L=S.lang,list=allAdvisors();
   var h='<h2>'+t.agTitle+'</h2><p class="ag-sub">'+t.agSub+'</p>';
-  h+='<div class="q"><label class="q-label" for="refcase">'+t.caseLabel+'</label><textarea class="sel" id="refcase" rows="3" maxlength="300" placeholder="'+esc(t.casePh)+'" aria-describedby="refhint">'+esc(S.refus||"")+'</textarea><span class="i-note" id="refhint">'+t.caseHint+'</span></div>';
+  h+='<div class="q"><label class="q-label" for="refcase">'+t.caseLabel+'</label><textarea class="sel" id="refcase" rows="3" maxlength="300" placeholder="'+esc(t.casePh)+'">'+esc(S.refus||"")+'</textarea><span class="i-note">'+t.caseHint+'</span></div>';
   if(!list.length){h+='<p class="ag-none">'+t.agNone+'</p>'}
   else if(S.paid){
     list.forEach(function(p){
@@ -1350,7 +1590,7 @@ function renderAgency(t){
   }else{
     h+='<div class="locked"><b>'+t.agCount(list.length)+'</b><i></i><i></i></div>';
     h+=PAY_URL?'<a class="pay" href="'+PAY_URL+'" target="_blank" rel="noopener">'+t.payBtn+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
-    h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off" aria-describedby="err"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>';
+    h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off" aria-describedby="err" aria-invalid="false"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>';
   }
   h+='<p class="ag-note">'+t.agNote+'</p>';
   $("agency").innerHTML=h;
@@ -1538,6 +1778,83 @@ function evDetailHtml(t){
   return h+'<p class="ag-note">'+x.srcNote+'</p></div>';
 }
 function evTitle(){var c=evFind(S.evc);return c?c.n[S.lang]+" · e-Visa":""}
+/* ===== Mise à jour ciblée du DOM =====
+   render() continue de produire du HTML, mais patchHTML() compare le résultat au DOM existant et ne modifie que les
+   nœuds texte et les attributs qui changent : le focus, la sélection, le défilement et les saisies ne sont plus perdus.
+   Les éléments portant data-id / data-c / data-agent / id servent de clés pour réutiliser les bons nœuds dans les listes. */
+var KEEP_CLS={rv:1,"in":1};
+function keyOf(n){return n.nodeType===1?(n.getAttribute("data-id")||n.getAttribute("data-c")||n.getAttribute("data-agent")||n.id||null):null}
+function sameNode(a,b){
+  if(a.nodeType!==b.nodeType)return false;
+  if(a.nodeType!==1)return true;
+  if(a.nodeName!==b.nodeName)return false;
+  var ka=keyOf(a),kb=keyOf(b);
+  return ka===kb||(!ka&&!kb);
+}
+function syncAttrs(a,b){
+  var i,n,v,reveal=a.hasAttribute("data-rv"),cur=a.getAttribute("class")||"",keep=[];
+  if(reveal)cur.split(/\s+/).forEach(function(c){if(KEEP_CLS[c])keep.push(c)});
+  var want=((b.getAttribute("class")||"")+(keep.length?" "+keep.join(" "):"")).trim();
+  if(cur!==want){if(want)a.setAttribute("class",want);else a.removeAttribute("class")}
+  for(i=0;i<b.attributes.length;i++){
+    n=b.attributes[i].name;v=b.attributes[i].value;
+    if(n==="class"||(n==="style"&&reveal))continue;
+    if(a.getAttribute(n)!==v)a.setAttribute(n,v);
+  }
+  for(i=a.attributes.length-1;i>=0;i--){
+    n=a.attributes[i].name;
+    if(n==="class"||n==="data-rv"||(n==="style"&&reveal))continue;
+    if(!b.hasAttribute(n))a.removeAttribute(n);
+  }
+}
+function syncControl(a,b){
+  var t=a.nodeName,focus=document.activeElement===a,v;
+  if(t==="INPUT"){
+    if(a.type==="checkbox"||a.type==="radio"){v=b.hasAttribute("checked");if(a.checked!==v)a.checked=v}
+    else if(!focus){v=b.getAttribute("value")||"";if(a.value!==v)a.value=v}
+  }else if(t==="TEXTAREA"){
+    if(!focus){v=b.textContent;if(a.value!==v)a.value=v}
+  }else if(t==="SELECT"){
+    var opts=b.querySelectorAll("option"),want=-1,i;
+    for(i=0;i<opts.length;i++){if(opts[i].hasAttribute("selected")){want=i;break}}
+    if(want<0)want=0;
+    if(a.selectedIndex!==want)a.selectedIndex=want;
+  }
+}
+function morphNode(a,b){
+  if(a.nodeType!==1){if(a.nodeValue!==b.nodeValue)a.nodeValue=b.nodeValue;return}
+  syncAttrs(a,b);
+  if(a.nodeName!=="TEXTAREA")morphChildren(a,b);
+  if(a.nodeName==="INPUT"||a.nodeName==="TEXTAREA"||a.nodeName==="SELECT")syncControl(a,b);
+}
+function morphChildren(from,to){
+  var live={},i,n=to.childNodes.length;
+  for(i=0;i<from.childNodes.length;i++){var k0=keyOf(from.childNodes[i]);if(k0&&!live[k0])live[k0]=from.childNodes[i]}
+  for(i=0;i<n;i++){
+    var nb=to.childNodes[i],na=from.childNodes[i],k=keyOf(nb);
+    if(k&&live[k]&&live[k]!==na){from.insertBefore(live[k],na||null);na=live[k]}
+    if(!na){from.appendChild(nb.cloneNode(true));continue}
+    if(!sameNode(na,nb)){from.replaceChild(nb.cloneNode(true),na);continue}
+    morphNode(na,nb);
+  }
+  while(from.childNodes.length>n)from.removeChild(from.lastChild);
+}
+function patchHTML(el,html){var t=document.createElement("template");t.innerHTML=html;morphChildren(el,t.content)}
+/* Les conteneurs de rendu reçoivent un « innerHTML » qui applique patchHTML : le reste du code n'a pas à changer. */
+(function(){
+  var d=Object.getOwnPropertyDescriptor(Element.prototype,"innerHTML");
+  ["h1","stepper","home","mode","dest","panel","req","evisa","list","agency","refus","sponsors","dock","nav","links","legal"].forEach(function(id){
+    var el=document.getElementById(id);if(!el)return;
+    Object.defineProperty(el,"innerHTML",{configurable:true,get:function(){return d.get.call(el)},set:function(h){patchHTML(el,String(h))}});
+  });
+})();
+var prevStep;
+function focusStepHeading(){
+  var d=$("lg");if(d&&d.open)return;
+  var h=$("h1");if(!h)return;
+  window.scrollTo(0,0);
+  try{h.focus({preventScroll:true})}catch(x){h.focus()}
+}
 function render(){
   var cur=curC(),ready=cur.ready;
   var t=applyCountry(UI[S.lang]);
@@ -1554,7 +1871,7 @@ function render(){
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
   $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
-  if(showSt){$("stepper").innerHTML='<div class="st-row"><span class="st-num">'+t.stepWord(st-3)+' · '+t.stepNames[st-2]+'</span><span class="pill"><span class="flag">'+flag(cur.id)+'</span>'+nm(cur)+(S.motive==="medical"?' · '+t.motive.medical:'')+'</span></div><div class="st-bar" aria-hidden="true">'+[0,1].map(function(i){return '<i'+(i<st-3?' class="on"':'')+'></i>'}).join("")+'</div>'}
+  if(showSt){$("stepper").innerHTML='<div class="st-row"><span class="st-num">'+STX[S.lang].step(st-2)+' · '+t.stepNames[st-2]+'</span><span class="pill"><span class="flag">'+flag(cur.id)+'</span>'+nm(cur)+(S.motive==="medical"?' · '+t.motive.medical:'')+'</span></div>'+stepper(st-2,[t.stepNames[0],t.stepNames[2],t.stepNames[3]])}
   $("home").hidden=st!==0;if(st===0)$("home").innerHTML=homeHtml(t);
   $("mode").hidden=st!==1;if(st===1)$("mode").innerHTML=modeHtml(t);
   $("dest").hidden=st!==2;if(st===2)$("dest").innerHTML=destHtml(t);
@@ -1565,22 +1882,29 @@ function render(){
     var vis=(e==="reunion"?RITEMS:ITEMS).filter(function(i){return i.w(Object.assign({},S,{purpose:e}))});
     var req=vis.filter(function(i){return !i.opt}),doneReq=req.filter(function(i){return S.done[i.id]}).length;
     var pct=req.length?Math.round(doneReq/req.length*100):0,left=req.length-doneReq;
-    $("pnum").textContent=doneReq+" "+t.of+" "+req.length+" "+t.ready;
+    $("barfill").style.width=pct+"%";$("bar").className="bar"+(left===0?" done":"");
+    var bar=$("bar");bar.setAttribute("role","progressbar");bar.setAttribute("aria-valuemin","0");bar.setAttribute("aria-valuemax","100");bar.setAttribute("aria-valuenow",pct);bar.setAttribute("aria-label",STX[S.lang].prog);
+    var nAttn=req.filter(function(i){return !S.done[i.id]&&ATTN[i.id]&&i[S.lang][1]}).length;
+    $("pnum").innerHTML='<bdi dir="ltr">'+doneReq+" / "+req.length+" · "+pct+" %</bdi>"+(nAttn&&left?' <span class="stt warn">\u26A0 '+nAttn+'</span>':'');$("pnum").title=nAttn?STX[S.lang].att(nAttn):"";
     $("pmsg").textContent=left===0?t.msgDone:(doneReq===0?t.msg0:t.msgN(left));
-    $("barfill").style.width=pct+"%";$("bar").setAttribute("aria-valuenow",pct);$("bar").setAttribute("aria-valuetext",$("pnum").textContent);$("bar").className="bar"+(left===0?" done":"");
     var h="";
     ORDER.forEach(function(g){
       var gi=vis.filter(function(i){return i.g===g});if(!gi.length)return;
       var gd=gi.filter(function(i){return S.done[i.id]}).length;
       h+='<section class="group"><div class="g-head"><h2>'+((g==="purpose"&&e==="medical")?t.gMed:t.groups[g])+'</h2><span class="g-count">'+gd+'/'+gi.length+'</span></div>';
       gi.forEach(function(i){
-        var c=i[S.lang],on=!!S.done[i.id];
-        h+='<label class="item'+(on?' on':'')+'"><input type="checkbox" data-id="'+i.id+'"'+(on?' checked':'')+'><span class="i-body">'+(i.opt?'<span class="tag">'+t.opt+'</span>':'')+'<span class="i-title">'+c[0]+'</span>'+(c[1]?'<span class="i-note">'+c[1]+'</span>':'')+'</span></label>';
+        var c=i[S.lang],on=!!S.done[i.id],X=STX[S.lang],warn=!on&&!i.opt&&ATTN[i.id]&&c[1];
+        h+='<label class="item'+(on?' on':warn?' warn':'')+'"><input type="checkbox" data-id="'+i.id+'"'+(on?' checked':'')+'><span class="i-body">'
+          +(on?'<span class="stt ok">\u2713 '+X.ok+'</span>':warn?'<span class="stt warn">\u26A0 '+X.warn+'</span>':'')
+          +(i.opt?'<span class="stt rec">'+X.rec+'</span>':'')
+          +'<span class="i-title">'+c[0]+'</span>'+(c[1]?'<span class="'+(warn?'i-warn':'i-note')+'">'+c[1]+'</span>':'')+'</span></label>';
       });
       if(g==="stay"){h+='<div class="book"><span class="slot">'+t.bookSlot+'</span><b>'+t.bookTitle+'</b><p>'+t.bookText+'</p></div>'}
       h+='</section>';
     });
-    $("list").innerHTML=adaptHtml(t)+h;
+    var X=STX[S.lang];
+    var legend='<ul class="legend" aria-label="'+X.legend+'"><li><i class="lg ok"></i>'+X.ok+'</li><li><i class="lg warn"></i>'+X.warn+'</li><li><i class="lg todo"></i>'+X.todo+'</li></ul>';
+    $("list").innerHTML=adaptHtml(t)+legend+h;
   }
   if(st===5){if(S.mode==="appeal"){renderRefus(t)}else{renderAgency(t)}}
   renderSponsors(t);$("sponsors").hidden=st>=8;
@@ -1588,28 +1912,13 @@ function render(){
   if(st===0&&ready)$("dock").innerHTML='<div class="dock-in"><span class="flag">'+flag("tn")+'</span><span class="arrow" aria-hidden="true">\u2192</span><span class="flag">'+flag(cur.id)+'</span><span class="dname">'+nm(cur)+'</span><button type="button" class="pay" data-go="1">'+t.start+'</button></div>';
   $("nav").hidden=st===0;
   if(st>0){$("nav").innerHTML='<button type="button" class="reset" data-go="-1">'+t.back+'</button>'+(st===4?'<button type="button" class="pay" data-go="1">'+t.next+'</button>':'')}
-  syncA11y();
-}
-/* Gestion du focus : à chaque changement d'étape, le titre <h1> reçoit le focus (lecteur d'écran + clavier),
-   la page remonte en haut et le titre de l'onglet suit l'étape. Aucun effet au premier affichage ni lors d'un simple re-rendu (langue, case cochée). */
-var lastStep=null;
-var SKIPL={fr:"Aller au contenu",en:"Skip to content",ar:"انتقل إلى المحتوى"};
-function focusStepHeading(){
-  var h=$("h1");if(!h)return;
-  window.scrollTo(0,0);
-  try{h.focus({preventScroll:true})}catch(e){h.focus()}
-}
-function syncA11y(){
-  var h=$("h1"),base="Visa Checker";
-  document.title=(S.step>0&&h&&h.textContent?h.textContent.trim()+" · ":"")+base;
-  var sk=$("skip");if(sk)sk.textContent=SKIPL[S.lang]||SKIPL.fr;
-  var changed=lastStep!==null&&lastStep!==S.step;lastStep=S.step;
-  if(changed)focusStepHeading();
+  if(typeof prevStep==="number"&&prevStep!==S.step)focusStepHeading();
+  prevStep=S.step;
 }
 function go(n){if(S.step>=8){S.step=S.step===8?(S.back||0):(S.step===9?8:0);save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(S.step>=6){S.step=S.step===7?6:0;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(n<0&&S.mode==="appeal"&&S.step===5)n=-4;if(n<0&&S.mode!=="appeal"&&S.step===4)n=-3;S.step=Math.max(0,Math.min(5,S.step+n));save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}}
 document.addEventListener("click",function(e){
-  if(e.target.id==="unlock"){tryUnlock("block");return}
-  if(e.target.id==="unlock2"){tryUnlock("pack");return}
+  if(e.target.id==="unlock"){doUnlock("advisors","code","err",e.target);return}
+  if(e.target.id==="unlock2"){doUnlock("pack","code2","err2",e.target);return}
   var cb=e.target.closest(".cp");
   if(cb){copyLetter(cb);return}
   var nd=e.target.closest("[data-need]");
@@ -1645,7 +1954,9 @@ document.addEventListener("change",function(e){
   if(id){if(e.target.checked)S.done[id]=1;else delete S.done[id];save();render();
     var again=document.querySelector('input[data-id="'+id+'"]');if(again)again.focus()}
 });
-document.addEventListener("input",function(e){var f=e.target.dataset&&e.target.dataset.f;if(f)RQ[f]=e.target.type==="checkbox"?e.target.checked:e.target.value});
+document.addEventListener("input",function(e){var f=e.target.dataset&&e.target.dataset.f;if(f){RQ[f]=e.target.type==="checkbox"?e.target.checked:e.target.value;
+  if(RQ.er&&RQ.er[f]){delete RQ.er[f];var se=$("fe-"+f);if(se)se.textContent="";e.target.setAttribute("aria-invalid","false");
+    if(!Object.keys(RQ.er).length){var fm=$("fe-form");if(fm)fm.textContent=""}}}});
 document.addEventListener("submit",function(e){if(e.target.id==="rqform"){e.preventDefault();submitReq()}});
 
 
@@ -1699,183 +2010,62 @@ ar:{m:"الإشعار القانوني",c:"الخصوصية",x:"إغلاق",d:"�
 var HOMEL={fr:"Accueil",en:"Home",ar:"الرئيسية"};
 document.addEventListener("click",function(e){if(e.target.closest("#homeBtn")){S.step=0;save();render();window.scrollTo(0,0)}});
 function L(a){return a.filter(Boolean).join("<br>")}
-function renderLegal(){var g=LGL[S.lang];$("legal").innerHTML='<button type="button" data-legal="m">'+g.m+'</button><button type="button" data-legal="c">'+g.c+'</button>'}
-function openLegal(k){
-  var g=LGL[S.lang],items=k==="m"?g.mt:g.ct,b="";
+var lgOpener=null,lgIsOpen=false;
+function renderLegal(){
+  var g=LGL[S.lang];
+  $("legal").innerHTML=["m","c"].map(function(k){
+    var on=lgIsOpen&&lgOpener&&lgOpener.dataset&&lgOpener.dataset.legal===k;
+    return '<button type="button" data-legal="'+k+'" aria-haspopup="dialog" aria-controls="lg" aria-expanded="'+(on?"true":"false")+'">'+g[k]+'</button>';
+  }).join("");
+}
+/* Fond inerte pendant que la modale est ouverte : masqué aux lecteurs d'écran (aria-hidden) et non focalisable (inert). */
+function setBackground(hidden){
+  Array.prototype.forEach.call(document.querySelectorAll(".wrap,#dock,.deco"),function(el){
+    if(hidden){el.setAttribute("aria-hidden","true");el.inert=true}else{el.removeAttribute("aria-hidden");el.inert=false}
+  });
+}
+function lgFocusables(){
+  return Array.prototype.filter.call($("lg").querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'),function(el){return el.getClientRects().length>0});
+}
+function openLegal(k,opener){
+  var g=LGL[S.lang],items=k==="m"?g.mt:g.ct,b="",d=$("lg");
   items.forEach(function(it){var v=typeof it[1]==="function"?it[1]():esc(it[1]);b+="<h3>"+esc(it[0])+"</h3><p>"+v+"</p>"});
   $("lg-t").textContent=k==="m"?g.m:g.c;$("lg-x").textContent=g.x;$("lg-b").innerHTML=b+'<p class="lg-d">'+esc(g.d)+"</p>";
-  var d=$("lg");if(d.showModal)d.showModal();else d.setAttribute("open","");
+  lgOpener=opener||document.activeElement;lgIsOpen=true;
+  if(lgOpener&&lgOpener.setAttribute)lgOpener.setAttribute("aria-expanded","true");
+  d.setAttribute("aria-modal","true");d.setAttribute("aria-hidden","false");
+  if(d.showModal){if(!d.open)d.showModal()}else d.setAttribute("open","");
+  setBackground(true);document.documentElement.classList.add("modal-open");
+  d.querySelector(".lg-in").scrollTop=0;$("lg-x").focus();
 }
-document.addEventListener("click",function(e){var b=e.target.closest("[data-legal]");if(b){openLegal(b.dataset.legal);return}if(e.target.id==="lg-x"||e.target.id==="lg"){var d=$("lg");if(d.close)d.close();else d.removeAttribute("open")}});
-
-/* ===== Analyseur IA de lettre de refus (module) =====
-   L'analyse passe par le Worker (route /analyze) : la clé API n'est jamais dans la page.
-   Rien n'est stocké : le fichier et le résultat restent en mémoire, perdus au rechargement. */
-var AI_URL=REQUEST_URL.replace(/\/?$/,"/analyze");
-var AI={file:null,thumb:"",busy:false,err:"",res:null,f:{},consent:false,code:"",ll:"fr"};
-var MOTIFS={
-1:{fr:"Document de voyage faux ou falsifié",en:"False or forged travel document",ar:"وثيقة سفر مزوّرة"},
-2:{fr:"Objet et conditions du séjour non justifiés",en:"Purpose and conditions of stay not justified",ar:"غرض الإقامة وشروطها غير مبرَّرين"},
-3:{fr:"Moyens de subsistance suffisants non prouvés",en:"Sufficient means of subsistence not proven",ar:"عدم إثبات وسائل العيش الكافية"},
-4:{fr:"Capacité d'acquérir légalement des moyens de subsistance non prouvée",en:"Ability to lawfully acquire means of subsistence not proven",ar:"عدم إثبات القدرة على اكتساب وسائل العيش بطريقة قانونية"},
-5:{fr:"90 jours déjà utilisés sur les 180 jours en cours",en:"90 days already used in the current 180-day period",ar:"استُنفدت 90 يومًا من فترة 180 يومًا الحالية"},
-6:{fr:"Signalement SIS aux fins de non-admission",en:"SIS alert for refusal of entry",ar:"تنبيه في نظام معلومات شنغن لمنع الدخول"},
-7:{fr:"Menace pour l'ordre public ou la sécurité intérieure",en:"Threat to public policy or internal security",ar:"تهديد للنظام العام أو الأمن الداخلي"},
-8:{fr:"Menace pour la santé publique",en:"Threat to public health",ar:"تهديد للصحة العامة"},
-9:{fr:"Menace pour les relations internationales",en:"Threat to international relations",ar:"تهديد للعلاقات الدولية"},
-10:{fr:"Informations sur l'objet et les conditions du séjour non fiables",en:"Information on purpose and conditions of stay not reliable",ar:"معلومات غرض الإقامة وشروطها غير موثوقة"},
-11:{fr:"Doutes sur la fiabilité de vos déclarations",en:"Doubts on the reliability of your statements",ar:"شكوك في مصداقية تصريحاتك"},
-12:{fr:"Doutes sur l'authenticité ou le contenu des pièces justificatives",en:"Doubts on authenticity or content of supporting documents",ar:"شكوك في صحة الوثائق الداعمة أو محتواها"},
-13:{fr:"Doutes sur votre intention de quitter le territoire à temps",en:"Doubts on your intention to leave the territory in time",ar:"شكوك في نيّتك مغادرة الإقليم في الوقت المحدد"},
-14:{fr:"Impossibilité de demander un visa à l'avance non prouvée",en:"Impossibility of applying for a visa in advance not proven",ar:"عدم إثبات استحالة طلب التأشيرة مسبقًا"},
-15:{fr:"Objet et conditions du transit aéroportuaire non justifiés",en:"Purpose and conditions of airport transit not justified",ar:"غرض العبور في المطار وشروطه غير مبرَّرين"},
-16:{fr:"Assurance maladie voyage valide non prouvée",en:"Valid travel medical insurance not proven",ar:"عدم إثبات تأمين صحي صالح للسفر"},
-17:{fr:"Annulation demandée par le titulaire",en:"Revocation requested by the holder",ar:"إلغاء بطلب من حامل التأشيرة"}
-};
-function aiStr(x,n){return String(x==null?"":x).replace(/\s+\n/g,"\n").trim().slice(0,n||600)}
-function aiClean(r){
-  var o={readable:r&&r.readable!==false,isRefusal:r&&r.is_refusal!==false,fields:{},motives:[],diag:[],plan:[],paras:[],encl:[]};
-  var f=(r&&r.fields)||{};
-  ["lastName","firstName","fileNumber","decisionDate"].forEach(function(k){o.fields[k]=aiStr(f[k],80)});
-  (r&&r.motives||[]).slice(0,17).forEach(function(m){var b=parseInt(m&&m.box,10);if(MOTIFS[b])o.motives.push({box:b,explanation:aiStr(m.explanation,700)})});
-  (r&&r.diagnosis||[]).slice(0,12).forEach(function(d){if(d&&d.piece)o.diag.push({piece:aiStr(d.piece,160),status:d.status==="missing"?"missing":"weak",why:aiStr(d.why,500),how:aiStr(d.how,500)})});
-  (r&&r.plan||[]).slice(0,8).forEach(function(d){if(d&&d.title)o.plan.push({title:aiStr(d.title,160),detail:aiStr(d.detail,500)})});
-  (r&&r.letter_paragraphs||[]).slice(0,8).forEach(function(x){var v=aiStr(x,1400);if(v)o.paras.push(v)});
-  (r&&r.enclosures||[]).slice(0,12).forEach(function(x){var v=aiStr(x,160);if(v)o.encl.push(v)});
-  return o;
+function afterCloseLegal(){
+  if(!lgIsOpen)return;
+  lgIsOpen=false;
+  var d=$("lg"),op=lgOpener;lgOpener=null;
+  d.setAttribute("aria-hidden","true");
+  setBackground(false);document.documentElement.classList.remove("modal-open");
+  if(op&&op.setAttribute){op.setAttribute("aria-expanded","false");try{op.focus()}catch(e){}}
 }
-function aiToday(){var d=new Date();return ("0"+d.getDate()).slice(-2)+"/"+("0"+(d.getMonth()+1)).slice(-2)+"/"+d.getFullYear()}
-function buildLetter(){
-  var r=AI.res,f=AI.f,fr=AI.ll!=="en",v=function(x,ph){return x&&x.trim()?x.trim():ph};
-  var name=(f.fn||f.ln)?(v(f.fn,"[Prénom]")+" "+v(f.ln,"[NOM]")):(fr?"[Prénom NOM]":"[First name LAST NAME]");
-  var to=S.country==="fr"?"À l'attention de la Commission de recours contre les décisions de refus de visa d'entrée en France\n[adresse indiquée sur votre notification de refus]":"To the appeals authority indicated on the refusal notice\n[address shown on your refusal notice]";
-  var L=[];
-  if(fr){
-    L.push(name,"[Adresse en Tunisie]","[Téléphone] · [E-mail]","Passeport n° : [numéro]","","[Ville], le "+v(f.date,aiToday()),"",to,"",
-      "Objet : recours contre la décision de refus de visa du "+v(f.dec,"[date de la décision]"),"Référence de la demande : "+v(f.no,"[numéro de dossier]"),"","Madame, Monsieur,","");
-    L.push(r.paras.join("\n\n"));
-    if(r.encl.length){L.push("","Pièces jointes :");r.encl.forEach(function(x){L.push("- "+x)})}
-    L.push("","Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.","","[Signature]");
-  }else{
-    L.push(name,"[Address in Tunisia]","[Phone] · [E-mail]","Passport no.: [number]","","[City], "+v(f.date,aiToday()),"",
-      "To the appeals authority indicated on the refusal notice","[address shown on your refusal notice]","",
-      "Subject: appeal against the visa refusal decision of "+v(f.dec,"[decision date]"),"Application reference: "+v(f.no,"[file number]"),"","Dear Sir or Madam,","");
-    L.push(r.paras.join("\n\n"));
-    if(r.encl.length){L.push("","Enclosures:");r.encl.forEach(function(x){L.push("- "+x)})}
-    L.push("","Yours faithfully,","","[Signature]");
-  }
-  return L.join("\n");
-}
-function aiHtml(t){
-  var h='<h2>'+t.aiTitle+'</h2><p class="rf-sub">'+t.aiSub+'</p>';
-  if(AI.res)return h+aiResult(t);
-  h+='<label class="ai-drop'+(AI.busy?' busy':'')+'" id="aiDrop" for="aiFile">';
-  if(AI.file){h+=(AI.thumb?'<img class="ai-thumb" src="'+AI.thumb+'" alt="">':'<span class="ai-pdf" aria-hidden="true">PDF</span>')+'<b class="ai-fn">'+esc(AI.file.name)+'</b>'+(AI.busy?'<span class="ai-laser" aria-hidden="true"></span>':'<span class="i-note">'+t.aiChange+'</span>')}
-  else h+='<span class="ai-ic" aria-hidden="true">&#8679;</span><b>'+t.aiDrop+'</b><span class="i-note" id="aiHint">'+t.aiDropHint+'</span>';
-  h+='<input class="ai-in" id="aiFile" type="file" aria-describedby="aiHint'+(AI.err?' aiErrMsg':'')+'"'+(AI.err?' aria-invalid="true"':'')+' accept="application/pdf,image/jpeg,image/png,image/webp"'+(AI.busy?' disabled':'')+'></label>';
-  if(AI.err)h+='<p class="ai-err" id="aiErrMsg" role="alert">'+t[AI.err]+'</p>';
-  if(AI.file){
-    if(!S.packCode)h+='<div class="q"><label class="q-label" for="aicode">'+t.codeLabel+'</label><input class="sel" id="aicode" type="text" autocomplete="off" aria-describedby="aiErrMsg" value="'+esc(AI.code)+'"></div>';
-    h+='<label class="ai-consent"><input type="checkbox" id="aiConsent"'+(AI.consent?' checked':'')+'><span>'+t.aiConsent+'</span></label>';
-    h+='<button type="button" class="pay wide" id="aiGo"'+(AI.busy?' disabled':'')+'>'+(AI.busy?t.aiScan:t.aiBtn)+'</button>';
-  }
-  return h+'<p class="ag-note">'+t.aiDisc+'</p>';
-}
-function aiResult(t){
-  var r=AI.res,L=S.lang,h='<section class="group"><h2>'+t.aiMot+'</h2>';
-  if(!r.motives.length)h+='<p class="ai-warnbox">'+t.aiNone+'</p>';
-  r.motives.forEach(function(m){h+='<div class="ai-card bad"><span class="ai-badge">'+t.aiBox+' '+m.box+'</span><b>'+esc(MOTIFS[m.box][L])+'</b><span class="i-note">'+t.aiLegal+'</span><p>'+esc(m.explanation)+'</p></div>'});
-  h+='</section><section class="group"><h2>'+t.aiDiag+'</h2>';
-  r.diag.forEach(function(d){var ms=d.status==="missing";h+='<div class="ai-card '+(ms?'bad':'warn')+'"><span class="ai-badge">'+(ms?t.aiMissing:t.aiWeak)+'</span><b>'+esc(d.piece)+'</b><p>'+esc(d.why)+'</p><p class="i-note">'+esc(d.how)+'</p></div>'});
-  h+='</section><section class="group"><h2>'+t.aiPlan+'</h2><ol class="ai-plan">';
-  r.plan.forEach(function(d){h+='<li><b>'+esc(d.title)+'</b><span class="i-note">'+esc(d.detail)+'</span></li>'});
-  h+='</ol></section><section class="group"><h2>'+t.aiLet+'</h2><p class="rf-sub">'+t.aiLetHint+'</p><div class="ai-fields">';
-  [["ln",t.aiFLn],["fn",t.aiFFn],["no",t.aiFNo],["dec",t.aiFDec],["date",t.aiFDate]].forEach(function(x){
-    h+='<label class="q"><span class="q-label">'+x[1]+'</span><input class="sel" type="text" data-aif="'+x[0]+'" value="'+esc(AI.f[x[0]]||"")+'"></label>'});
-  h+='</div><pre class="letter" id="aiLetter">'+esc(buildLetter())+'</pre><div class="ai-acts"><button type="button" class="cp" id="aiCopy">'+t.aiCopy+'</button><button type="button" class="cp" id="aiPrint">'+t.aiPrint+'</button><button type="button" class="cp" id="aiDl">'+t.aiDl+'</button></div>';
-  h+='<button type="button" class="reset" id="aiAgain">'+t.aiAgain+'</button></section><p class="ag-note">'+t.aiDisc+'</p>';
-  return h;
-}
-function renderAI(){var b=$("aiBox");if(b)b.innerHTML=aiHtml(applyCountry(UI[S.lang]))}
-function aiFail(k){AI.busy=false;AI.err=k;renderAI()}
-function aiSetFile(file){
-  AI.res=null;AI.err="";if(AI.thumb){try{URL.revokeObjectURL(AI.thumb)}catch(e){}AI.thumb=""}
-  if(!file){AI.file=null;renderAI();return}
-  var okT=/^(application\/pdf|image\/(jpeg|png|webp))$/.test(file.type);
-  if(!okT){AI.file=null;return aiFail("aiErrType")}
-  if(file.size>(file.type==="application/pdf"?5:15)*1048576){AI.file=null;return aiFail("aiErrSize")}
-  AI.file=file;if(file.type!=="application/pdf")AI.thumb=URL.createObjectURL(file);
-  renderAI();
-}
-function aiPrep(file){return new Promise(function(res,rej){
-  if(file.type==="application/pdf"){var r=new FileReader();r.onload=function(){res({mime:"application/pdf",data:String(r.result).split(",")[1]})};r.onerror=function(){rej("read")};r.readAsDataURL(file);return}
-  var url=URL.createObjectURL(file),img=new Image();
-  img.onload=function(){var sc=Math.min(1,1800/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);res({mime:"image/jpeg",data:c.toDataURL("image/jpeg",0.85).split(",")[1]})};
-  img.onerror=function(){URL.revokeObjectURL(url);rej("read")};img.src=url;
-})}
-function aiAnalyze(){
-  if(AI.busy||!AI.file)return;
-  if(!AI.consent){AI.err="aiErrConsent";renderAI();return}
-  var code=S.packCode||AI.code.trim().toUpperCase();
-  if(!code){AI.err="aiErrAuth";renderAI();return}
-  AI.err="";AI.busy=true;AI.ll=S.country==="fr"?"fr":"en";renderAI();
-  aiPrep(AI.file).then(function(p){
-    var ctl=new AbortController(),to=setTimeout(function(){ctl.abort()},90000);
-    return fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},signal:ctl.signal,
-      body:JSON.stringify({code:code,mime:p.mime,data:p.data,lang:S.lang,letterLang:AI.ll,destination:curC().n.fr})})
-    .then(function(r){clearTimeout(to);return r.json().catch(function(){return {ok:false,error:"upstream"}})});
-  }).then(function(j){
-    if(!j.ok){aiFail(j.error==="locked"?"aiErrLocked":j.error==="auth"?"aiErrAuth":(j.error==="busy"||j.error==="upstream")?"aiErrBusy":j.error==="size"?"aiErrSize":"aiErrNet");return}
-    var r=aiClean(j.result);
-    if(!r.readable)return aiFail("aiErrRead");
-    if(!r.isRefusal)return aiFail("aiErrNot");
-    if(!r.paras.length&&!r.motives.length)return aiFail("aiErrRead");
-    if(!S.packCode){S.packCode=code;save()}
-    AI.res=r;AI.busy=false;
-    AI.f={ln:r.fields.lastName.toUpperCase(),fn:r.fields.firstName.toUpperCase(),no:r.fields.fileNumber,dec:r.fields.decisionDate,date:aiToday()};
-    renderAI();
-  }).catch(function(e){aiFail(e==="read"?"aiErrRead":"aiErrNet")});
-}
+function closeLegal(){var d=$("lg");if(d.close&&d.open)d.close();else d.removeAttribute("open");afterCloseLegal()}
 (function(){
-  document.addEventListener("change",function(e){
-    var i=e.target.id;
-    if(i==="aiFile")aiSetFile(e.target.files&&e.target.files[0]);
-    else if(i==="aiConsent"){AI.consent=e.target.checked;if(AI.consent&&AI.err==="aiErrConsent"){AI.err="";renderAI()}}
+  var d=$("lg");
+  d.setAttribute("aria-hidden","true");
+  d.addEventListener("cancel",function(e){e.preventDefault();closeLegal()});     /* touche Échap */
+  d.addEventListener("close",afterCloseLegal);                                  /* fermeture native */
+  d.addEventListener("keydown",function(e){
+    if(e.key==="Escape"||e.key==="Esc"){e.preventDefault();closeLegal();return}
+    if(e.key!=="Tab")return;
+    var f=lgFocusables();
+    if(!f.length){e.preventDefault();return}
+    var first=f[0],last=f[f.length-1],act=document.activeElement;
+    if(e.shiftKey&&(act===first||!d.contains(act))){e.preventDefault();last.focus()}
+    else if(!e.shiftKey&&(act===last||!d.contains(act))){e.preventDefault();first.focus()}
   });
-  document.addEventListener("input",function(e){
-    if(e.target.id==="aicode")AI.code=e.target.value;
-    var k=e.target.dataset&&e.target.dataset.aif;
-    if(k){AI.f[k]=e.target.value;var pre=$("aiLetter");if(pre)pre.textContent=buildLetter()}
-  });
-  document.addEventListener("click",function(e){
-    var c=e.target.closest&&e.target.closest("#aiGo,#aiCopy,#aiPrint,#aiDl,#aiAgain");if(!c)return;
-    if(c.id==="aiGo")aiAnalyze();
-    else if(c.id==="aiAgain"){AI.res=null;AI.file=null;AI.err="";if(AI.thumb){try{URL.revokeObjectURL(AI.thumb)}catch(x){}AI.thumb=""}renderAI()}
-    else if(c.id==="aiCopy"){var pre=$("aiLetter"),t=UI[S.lang];try{navigator.clipboard.writeText(pre.textContent).then(function(){c.textContent=t.copied;setTimeout(function(){c.textContent=t.aiCopy},1800)})}catch(x){var rg=document.createRange();rg.selectNodeContents(pre);var sl=window.getSelection();sl.removeAllRanges();sl.addRange(rg)}}
-    else if(c.id==="aiPrint"){document.body.classList.add("print-letter");var d=function(){document.body.classList.remove("print-letter");window.removeEventListener("afterprint",d)};window.addEventListener("afterprint",d);window.print()}
-    else if(c.id==="aiDl"){var b=new Blob([$("aiLetter").textContent],{type:"text/plain;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="lettre-recours.txt";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
-  });
-  ["dragenter","dragover"].forEach(function(n){document.addEventListener(n,function(e){var d=e.target.closest&&e.target.closest("#aiDrop");if(d){e.preventDefault();d.classList.add("over")}})});
-  ["dragleave","drop"].forEach(function(n){document.addEventListener(n,function(e){var d=e.target.closest&&e.target.closest("#aiDrop");if(d){e.preventDefault();d.classList.remove("over");if(n==="drop"&&!AI.busy&&e.dataTransfer.files.length)aiSetFile(e.dataTransfer.files[0])}})});
 })();
-/* Vérification des codes : la page n'envoie que le code saisi, la liste des codes valides reste côté serveur. */
-var VERIFY_URL=REQUEST_URL.replace(/\/?$/,"/verify");
-async function verifyCode(kind,code){
-  try{
-    var r=await fetch(VERIFY_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind:kind,code:code})});
-    var j=await r.json();
-    return {ok:j.ok===true,net:false,locked:j.error==="locked"};
-  }catch(e){return {ok:false,net:true}}
-}
-async function tryUnlock(kind){
-  var pack=kind==="pack",inp=$(pack?"code2":"code"),err=$(pack?"err2":"err"),btn=$(pack?"unlock2":"unlock"),t=UI[S.lang];
-  var v=(inp.value||"").trim().toUpperCase();
-  if(!v){err.textContent=t.badCode;inp.setAttribute("aria-invalid","true");inp.focus();return}
-  inp.setAttribute("aria-invalid","false");btn.disabled=true;err.textContent=t.chkWait;
-  var res=await verifyCode(kind,v);
-  if(res.ok){if(pack){S.pack=true;S.packCode=v}else S.paid=true;save();render();return}
-  btn.disabled=false;err.textContent=res.locked?t.tooMany:(res.net?t.aiErrNet:t.badCode);inp.setAttribute("aria-invalid","true");inp.focus();
-}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-legal]");if(b){openLegal(b.dataset.legal,b);return}
+  if(e.target.id==="lg-x"||e.target.id==="lg")closeLegal();
+});
 function printPack(){
   document.querySelectorAll("#refus details").forEach(function(d){d.open=true});
   document.body.classList.add("print-pack");
@@ -1901,6 +2091,73 @@ document.addEventListener("input",function(e){if(e.target.id==="refcase"){S.refu
 ["fr","en","ar"].forEach(function(l){$("l-"+l).onclick=function(){S.lang=l;save();render()}});
 $("reset").onclick=function(){S.done={};save();render()};
 render();
+})();
+</script>
+
+<script>
+/* PWA : enregistrement du Service Worker + bannière d'installation (Android/Chrome : invite native ; iOS : mode d'emploi) */
+(function(){
+  var T={
+    fr:{it:"Installer Visa Checker",id:"Accès rapide depuis l'écran d'accueil, même sans connexion.",ig:"Installer",x:"Plus tard",
+        ios:"Sur iPhone : touchez Partager, puis « Sur l'écran d'accueil ».",ios1:"Touchez le bouton Partager",ios2:"Choisissez « Sur l'écran d'accueil »",ios3:"Touchez Ajouter",ok:"Compris",
+        ut:"Nouvelle version disponible",ud:"Rechargez pour profiter des dernières mises à jour.",ug:"Mettre à jour"},
+    en:{it:"Install Visa Checker",id:"Quick access from your home screen, even offline.",ig:"Install",x:"Later",
+        ios:"On iPhone: tap Share, then “Add to Home Screen”.",ios1:"Tap the Share button",ios2:"Choose “Add to Home Screen”",ios3:"Tap Add",ok:"Got it",
+        ut:"New version available",ud:"Reload to get the latest updates.",ug:"Update"},
+    ar:{it:"ثبّت Visa Checker",id:"وصول سريع من الشاشة الرئيسية، حتى دون اتصال.",ig:"تثبيت",x:"لاحقًا",
+        ios:"على الآيفون: اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية».",ios1:"اضغط على زر المشاركة",ios2:"اختر «إضافة إلى الشاشة الرئيسية»",ios3:"اضغط إضافة",ok:"حسنًا",
+        ut:"إصدار جديد متاح",ud:"أعد التحميل للحصول على آخر التحديثات.",ug:"تحديث"}
+  };
+  var SNOOZE="vc-pwa-snooze",DAYS=14,box=document.getElementById("pwa"),
+      el=function(i){return document.getElementById(i)},mode=null,deferred=null,waiting=null;
+  function lang(){var l=document.documentElement.lang;return T[l]?l:"fr"}
+  function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+  function standalone(){return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}
+  function ios(){return /iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1)}
+  function snoozed(){var t=+store(SNOOZE);return t&&Date.now()-t<DAYS*864e5}
+  function paint(){
+    if(!mode)return;var t=T[lang()],s=el("pwa-s");
+    el("pwa-x").setAttribute("aria-label",t.x);el("pwa-x").textContent="×";
+    if(mode==="update"){el("pwa-t").textContent=t.ut;el("pwa-d").textContent=t.ud;el("pwa-go").textContent=t.ug;s.hidden=true}
+    else if(mode==="ios"){el("pwa-t").textContent=t.it;el("pwa-d").textContent="";el("pwa-go").textContent=t.ok;
+      s.innerHTML="<li>"+t.ios1+"</li><li>"+t.ios2+"</li><li>"+t.ios3+"</li>";s.hidden=false}
+    else{el("pwa-t").textContent=t.it;el("pwa-d").textContent=t.id;el("pwa-go").textContent=t.ig;s.hidden=true}
+  }
+  function show(m){mode=m;paint();box.hidden=false;box.classList.add("on");requestAnimationFrame(function(){requestAnimationFrame(function(){box.classList.add("in")})})}
+  function hide(){box.classList.remove("in");setTimeout(function(){box.classList.remove("on");box.hidden=true;mode=null},300)}
+  new MutationObserver(paint).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
+
+  /* 1. Invite d'installation (Chrome, Edge, Samsung Internet, Android) : affichée après 8 s d'usage, jamais si refusée récemment */
+  window.addEventListener("beforeinstallprompt",function(e){
+    e.preventDefault();deferred=e;
+    if(standalone()||snoozed())return;
+    setTimeout(function(){if(deferred&&!mode)show("install")},8000);
+  });
+  window.addEventListener("appinstalled",function(){deferred=null;if(mode)hide();store(SNOOZE,String(Date.now()))});
+  /* iOS Safari ne propose pas d'invite native : on affiche le mode d'emploi */
+  if(ios()&&!standalone()&&!snoozed())setTimeout(function(){if(!mode)show("ios")},8000);
+
+  el("pwa-go").onclick=function(){
+    if(mode==="update"&&waiting){waiting.postMessage({type:"SKIP_WAITING"});return}
+    if(mode==="install"&&deferred){var d=deferred;deferred=null;hide();d.prompt();d.userChoice.then(function(r){if(r.outcome!=="accepted")store(SNOOZE,String(Date.now()))});return}
+    store(SNOOZE,String(Date.now()));hide();
+  };
+  el("pwa-x").onclick=function(){if(mode!=="update")store(SNOOZE,String(Date.now()));hide()};
+  box.addEventListener("keydown",function(e){if(e.key==="Escape")el("pwa-x").click()});
+
+  /* 2. Service Worker (https ou localhost uniquement) */
+  if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol)){
+    window.addEventListener("load",function(){
+      navigator.serviceWorker.register("sw.js",{scope:"./"}).then(function(reg){
+        function watch(w){w.addEventListener("statechange",function(){if(w.state==="installed"&&navigator.serviceWorker.controller){waiting=w;show("update")}})}
+        if(reg.waiting&&navigator.serviceWorker.controller){waiting=reg.waiting;show("update")}
+        reg.addEventListener("updatefound",function(){watch(reg.installing)});
+        setInterval(function(){reg.update().catch(function(){})},3600e3);
+      }).catch(function(){});
+      var reloaded=false,had=!!navigator.serviceWorker.controller;
+      navigator.serviceWorker.addEventListener("controllerchange",function(){if(reloaded||!had)return;reloaded=true;location.reload()});
+    });
+  }
 })();
 </script>
 
