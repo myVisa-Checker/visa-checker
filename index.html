@@ -1347,10 +1347,10 @@ var ICONS={
 /* ===== Demande de documents de voyage (billet d'avion / hôtel) =====
    REQUEST_URL : adresse qui reçoit la demande en POST JSON (Make, n8n, Zapier, Formspree...). Vide = mode test (envoi manuel par bouton).
    Chaque agence a ses contacts (email, telegram, whatsapp). Les données personnelles ne sont pas gardées dans le navigateur. */
-var REQUEST_URL="https://hook.eu1.make.com/wrlw2dxzpl31p2b39rjgiqc983fjle3p";
+var REQUEST_URL="https://visa-proxy.rabehfly.workers.dev";
 /* REQUEST_MODE : "opaque" = envoi sans lecture de la réponse (aucun en-tête CORS requis ; on ne connaît que l'échec réseau)
                   "cors"   = envoi JSON et lecture du statut HTTP (le serveur doit renvoyer les en-têtes CORS : voir ARCHITECTURE-SECURITE.md). */
-var REQUEST_MODE="opaque";
+var REQUEST_MODE="cors";
 var REQUEST_TIMEOUT_MS=10000,REQUEST_RETRIES=1,REQUEST_COOLDOWN_MS=30000;
 var INTL=[{id:"intl-test",name:"Partenaire international (test)",test:1,svc:["flight","hotel"],what:{fr:"Billets d'avion et hôtels dans le monde",en:"Flights and hotels worldwide",ar:"تذاكر طيران وفنادق حول العالم"},email:"rabehfly@gmail.com",telegram:"rabehtlili",whatsapp:"21658986980"}];
 var RQ={sending:false,tries:0,chan:"email",ln:"",fn:"",d1:"",d2:"",city:"",phone:"",tg:"",mail:"",consent:false,done:false,mode:"",failed:false};
