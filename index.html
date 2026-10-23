@@ -1266,8 +1266,8 @@ function submitReq(){
   var fd=new URLSearchParams(),k;
   for(k in payload){if(k!=="agency")fd.append(k,payload[k])}
   fd.append("agencyName",a.name);fd.append("agencyEmail",a.email||"");fd.append("agencyTelegram",a.telegram||"");fd.append("agencyWhatsapp",a.whatsapp||"");
-  /* formulaire simple + no-cors : pas de pré-vérification CORS ; la réponse n'est pas lisible, on considère l'envoi réussi s'il n'y a pas d'erreur réseau */
-  fetch(REQUEST_URL,{method:"POST",mode:"no-cors",body:fd}).then(function(){fin("sent",false)},function(){fin("manual",true)});
+  /* formulaire simple (pas de pré-vérification CORS) : le Worker renvoie les en-têtes CORS, on lit la réponse et on ne confirme l'envoi que si elle est OK */
+  fetch(REQUEST_URL,{method:"POST",body:fd}).then(function(r){if(r.ok)fin("sent",false);else fin("manual",true)},function(){fin("manual",true)});
 }
 function needsHtml(t){return '<div class="needs"><h2 class="hot">'+t.needTitle+'</h2><p class="ag-sub">'+t.needSub+'</p><div class="sp-chips"><button type="button" class="sp-chip" data-need="flight">'+ICONS.plane+t.needFlight+'</button><button type="button" class="sp-chip" data-need="hotel">'+ICONS.bed+t.needHotel+'</button></div>'+'</div>'}
 function renderSponsors(t){
