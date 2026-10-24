@@ -4,7 +4,7 @@
    - Fichiers statiques même origine + polices : cache d'abord, rafraîchi en arrière-plan.
    - Jamais de cache pour les requêtes POST ni pour les API (Make, déblocage) : elles passent directement.
    Changez VERSION à chaque déploiement : les anciens caches sont supprimés à l'activation. */
-const VERSION = "v4";
+const VERSION = "v5";
 const SHELL = "vc-shell-" + VERSION;
 const RUNTIME = "vc-runtime-" + VERSION;
 const NET_TIMEOUT = 4000; // au-delà, on sert le cache (réseau lent = « hors-ligne » pour l'utilisateur)
@@ -12,6 +12,8 @@ const NET_TIMEOUT = 4000; // au-delà, on sert le cache (réseau lent = « hors-
 const PRECACHE = [
   "./",
   "manifest.json",
+  "partners.json",
+  "rdv.json",
   "icons/icon-192.png",
   "icons/icon-512.png",
   "icons/maskable-512.png",
