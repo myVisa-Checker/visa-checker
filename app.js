@@ -73,6 +73,7 @@ function renderRefus(t){
   var L=S.lang,h='<h2>'+t.rfTitle+'</h2><p class="rf-sub">'+t.rfSub+'</p>';
   h+='<div class="book"><p>'+t.rfWarn+'</p></div>';
   if(!S.pack){
+    h+=aiPromoHtml(t);
     h+='<ul class="inc">'+t.rfInc.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>';
     h+='<div><div class="price">'+t.rfPrice+'</div><p class="rf-sub">'+t.rfPriceSub+'</p></div>';
     h+=PAY_URL2?'<a class="pay" href="'+PAY_URL2+'" target="_blank" rel="noopener">'+t.rfPay+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
@@ -88,7 +89,7 @@ function renderRefus(t){
   }
   h+='<p class="ag-note">'+t.rfNoGuar+'</p>';
   $("refus").innerHTML=h;
-  if(S.pack)renderAI();
+  if(S.pack)renderAI();else mkStart();
 }
 function copyLetter(btn){
   var t=UI[S.lang],pre=$("pk-"+btn.dataset.copy);
@@ -499,13 +500,67 @@ function buildLetter(){
   }
   return L.join("\n");
 }
+/* ===== Présentation marketing de l'analyseur IA (pack recours) ===== */
+var MK={i:0,timer:null,touched:false};
+var IA_SPARK='<svg class="ia-spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l2.2 6.3L20.5 10l-6.3 1.7L12 18l-2.2-6.3L3.5 10l6.3-1.7zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>';
+function iaBadge(t){return '<span class="ia-badge">'+IA_SPARK+t.mkBadge+'</span>'}
+function mkVisual(i,t){
+  var L=S.lang;
+  if(i===0)return '<div class="mk-vis"><div class="mk-paper up"><i></i><i></i><i class="s"></i><i></i><i class="s"></i></div><span class="mk-arrow" aria-hidden="true">&uarr;</span><span class="mk-chip">'+t.mkV1+'</span></div>';
+  if(i===1)return '<div class="mk-vis"><div class="mk-paper scan"><i></i><i class="hl"></i><i class="s"></i><i></i><i class="s"></i><span class="mk-beam" aria-hidden="true"></span></div><span class="mk-chip found">&#10003; '+t.aiBox+' 3 · '+esc(MOTIFS[3][L])+'</span></div>';
+  return '<div class="mk-vis"><div class="mk-paper letter"><b class="f">NOM Prénom</b><i></i><i class="s"></i><i class="f2"></i><i></i><i class="s"></i></div><span class="mk-chip ok">&#10003; '+t.mkV3+'</span></div>';
+}
+function aiPromoHtml(t){
+  var h='<section class="mk" aria-labelledby="mk-t">'+iaBadge(t)+'<h2 id="mk-t" class="mk-title">'+t.mkTitle+'</h2><p class="mk-sub">'+t.mkSub+'</p>';
+  h+='<div class="mk-tabs" role="tablist" aria-label="'+esc(t.mkH)+'">';
+  [0,1,2].forEach(function(i){
+    h+='<button type="button" role="tab" class="mk-tab'+(i===MK.i?' on':'')+'" id="mk-tab'+i+'" aria-selected="'+(i===MK.i)+'" aria-controls="mkPanel" tabindex="'+(i===MK.i?0:-1)+'" data-mk="'+i+'"><span class="mk-n">'+(i+1)+'</span><span class="mk-tt"><b>'+t["mk"+(i+1)+"T"]+'</b><span>'+t["mk"+(i+1)+"D"]+'</span></span></button>';
+  });
+  h+='</div><div class="mk-panel" id="mkPanel" role="tabpanel" aria-labelledby="mk-tab'+MK.i+'" tabindex="0">'+mkVisual(MK.i,t)+'</div>';
+  h+='<ul class="mk-trust"><li>'+t.mkTr1+'</li><li>'+t.mkTr2+'</li><li>'+t.mkTr3+'</li></ul></section>';
+  return h;
+}
+function mkSel(i,user){
+  var t=UI[S.lang],tabs=document.querySelectorAll(".mk-tab");if(!tabs.length)return;
+  MK.i=i;if(user){MK.touched=true;mkStop()}
+  tabs.forEach(function(b,k){var on=k===i;b.classList.toggle("on",on);b.setAttribute("aria-selected",on);b.tabIndex=on?0:-1});
+  var p=$("mkPanel");p.setAttribute("aria-labelledby","mk-tab"+i);p.innerHTML=mkVisual(i,t);
+  p.classList.remove("swap");void p.offsetWidth;p.classList.add("swap");
+}
+function mkStop(){if(MK.timer){clearInterval(MK.timer);MK.timer=null}}
+function mkStart(){
+  mkStop();
+  if(MK.touched||reduceMotion()||!$("mkPanel"))return;
+  MK.timer=setInterval(function(){
+    if(!$("mkPanel")){mkStop();return}
+    if(document.hidden)return;
+    mkSel((MK.i+1)%3,false);
+  },4500);
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest&&e.target.closest("[data-mk]");if(b)mkSel(parseInt(b.dataset.mk,10),true);
+});
+document.addEventListener("keydown",function(e){
+  var b=e.target.closest&&e.target.closest(".mk-tab");if(!b)return;
+  var k=e.key,i=MK.i,rtl=document.documentElement.dir==="rtl";
+  if(k==="ArrowRight")i=(i+(rtl?2:1))%3;else if(k==="ArrowLeft")i=(i+(rtl?1:2))%3;else if(k==="ArrowDown")i=(i+1)%3;else if(k==="ArrowUp")i=(i+2)%3;else return;
+  e.preventDefault();mkSel(i,true);var nb=$("mk-tab"+i);if(nb)nb.focus();
+});
+/* Indicateur de chargement stylisé pendant l'analyse : anneau animé + 3 étapes qui s'allument. */
+var LDK=["ldRead","ldFind","ldWrite"];
+function aiLoadHtml(t){
+  return '<div class="ai-load" data-phase="'+(AI.phase||0)+'" role="status" aria-live="polite"><span class="ld-ring" aria-hidden="true"></span><div class="ld-tx"><b id="aiPhase">'+t[LDK[AI.phase||0]]+'</b><span>'+t.ldNote+'</span><ol class="ld-steps" aria-hidden="true"><li></li><li></li><li></li></ol></div></div>';
+}
+function aiSetPhase(n){AI.phase=n;var el=document.querySelector(".ai-load"),t=UI[S.lang];if(el){el.setAttribute("data-phase",n);var p=$("aiPhase");if(p)p.textContent=t[LDK[n]]}}
+function aiStopLoad(){(AI.timers||[]).forEach(clearTimeout);AI.timers=[];AI.phase=0}
 function aiHtml(t){
-  var h='<h2>'+t.aiTitle+'</h2><p class="rf-sub">'+t.aiSub+'</p>';
+  var h=iaBadge(t)+'<h2>'+t.aiTitle+'</h2><p class="rf-sub">'+t.aiSub+'</p>';
   if(AI.res)return h+aiResult(t);
   h+='<label class="ai-drop'+(AI.busy?' busy':'')+'" id="aiDrop" for="aiFile">';
   if(AI.file){h+=(AI.thumb?'<img class="ai-thumb" src="'+AI.thumb+'" alt="">':'<span class="ai-pdf" aria-hidden="true">PDF</span>')+'<b class="ai-fn">'+esc(AI.file.name)+'</b>'+(AI.busy?'<span class="ai-laser" aria-hidden="true"></span>':'<span class="i-note">'+t.aiChange+'</span>')}
   else h+='<span class="ai-ic" aria-hidden="true">&#8679;</span><b>'+t.aiDrop+'</b><span class="i-note" id="aiHint">'+t.aiDropHint+'</span>';
   h+='<input class="ai-in" id="aiFile" type="file" aria-describedby="aiHint'+(AI.err?' aiErrMsg':'')+'"'+(AI.err?' aria-invalid="true"':'')+' accept="application/pdf,image/jpeg,image/png,image/webp"'+(AI.busy?' disabled':'')+'></label>';
+  if(AI.busy)h+=aiLoadHtml(t);
   if(AI.err)h+='<p class="ai-err" id="aiErrMsg" role="alert">'+t[AI.err]+'</p>';
   if(AI.file){
     if(!S.packCode)h+='<div class="q"><label class="q-label" for="aicode">'+t.codeLabel+'</label><input class="sel" id="aicode" type="text" autocomplete="off" aria-describedby="aiErrMsg" value="'+esc(AI.code)+'"></div>';
@@ -530,7 +585,7 @@ function aiResult(t){
   return h;
 }
 function renderAI(){var b=$("aiBox");if(b)b.innerHTML=aiHtml(applyCountry(UI[S.lang]))}
-function aiFail(k){AI.busy=false;AI.err=k;renderAI()}
+function aiFail(k){aiStopLoad();AI.busy=false;AI.err=k;renderAI()}
 function aiSetFile(file){
   AI.res=null;AI.err="";if(AI.thumb){try{URL.revokeObjectURL(AI.thumb)}catch(e){}AI.thumb=""}
   if(!file){AI.file=null;renderAI();return}
@@ -551,7 +606,8 @@ function aiAnalyze(){
   if(!AI.consent){AI.err="aiErrConsent";renderAI();return}
   var code=S.packCode||AI.code.trim().toUpperCase();
   if(!code){AI.err="aiErrAuth";renderAI();return}
-  AI.err="";AI.busy=true;AI.ll=S.country==="fr"?"fr":"en";renderAI();
+  AI.err="";AI.busy=true;AI.ll=S.country==="fr"?"fr":"en";aiStopLoad();renderAI();
+  AI.timers=[setTimeout(function(){aiSetPhase(1)},6000),setTimeout(function(){aiSetPhase(2)},16000)];
   aiPrep(AI.file).then(function(p){
     var ctl=new AbortController(),to=setTimeout(function(){ctl.abort()},90000);
     return fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},signal:ctl.signal,
@@ -564,7 +620,7 @@ function aiAnalyze(){
     if(!r.isRefusal)return aiFail("aiErrNot");
     if(!r.paras.length&&!r.motives.length)return aiFail("aiErrRead");
     if(!S.packCode){S.packCode=code;save()}
-    AI.res=r;AI.busy=false;
+    aiStopLoad();AI.res=r;AI.busy=false;
     AI.f={ln:r.fields.lastName.toUpperCase(),fn:r.fields.firstName.toUpperCase(),no:r.fields.fileNumber,dec:r.fields.decisionDate,date:aiToday()};
     renderAI();
   }).catch(function(e){aiFail(e==="read"?"aiErrRead":"aiErrNet")});
