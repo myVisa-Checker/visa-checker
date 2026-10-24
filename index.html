@@ -450,6 +450,8 @@ html[dir="rtl"] .ai-plan li{padding:12px 52px 12px 14px}
 .skip{position:absolute;inset-inline-start:8px;top:-60px;z-index:100;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;font-weight:700;text-decoration:none}
 .skip:focus{top:8px}
 h1:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radius:6px}
+.reset.wipe{border-color:#d92d20;color:#b42318}
+:root[data-theme="dark"] .reset.wipe{border-color:#ef6a5e;color:#ff9b93}
 </style>
 <div class="wrap">
   <a class="skip" id="skip" href="#h1">Aller au contenu</a>
@@ -508,6 +510,7 @@ h1:focus-visible{outline:3px solid var(--accent);outline-offset:6px;border-radiu
     <p id="disc"></p>
     <nav class="legal" id="legal"></nav>
     <button type="button" class="reset" id="reset"></button>
+    <button type="button" class="reset wipe" id="wipe"></button>
   </footer>
 </div>
 <dialog id="lg" aria-labelledby="lg-t"><div class="lg-in"><div class="lg-top"><h2 id="lg-t"></h2><button type="button" class="lg-x" id="lg-x"></button></div><div id="lg-b"></div></div></dialog>
@@ -532,7 +535,7 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  bookText:"Le consulat demande une réservation d'hôtel et de vol. Prenez uniquement des réservations réelles, de préférence annulables. Les agences partenaires seront proposées ici.",
  linkFV:"France-Visas Tunisie (officiel)",linkTLS:"TLScontact Tunisie",
  disc:"Les pièces exigées peuvent évoluer. Confirmez toujours la liste sur France-Visas et auprès de TLScontact. Cet outil aide à préparer le dossier et ne garantit pas l'obtention du visa. Il n'est lié à aucune ambassade. Passez uniquement par le portail officiel et méfiez-vous des intermédiaires qui promettent des facilités.",
- reset:"Tout décocher",
+ wipe:"Réinitialiser mes données",wipeConfirm:"Effacer toutes vos données sur cet appareil (réponses, cases cochées, langue) ?\n\nSi vous avez débloqué le conseiller ou le pack recours, vous devrez ressaisir votre code.\n\nCette action est définitive.", reset:"Tout décocher",
  brand:"Visa Checker",slogan:"Déposez votre dossier visa sans rien oublier.",homeSub:"Choisissez votre destination, dites-nous pourquoi vous voyagez, puis suivez la liste exacte des documents.",
  s_pass:"Passeport",passName:"Tunisie",s_dest:"Destination",s_motive:"Motif du voyage",
  motive:{medical:"Visite médicale",other:"Autre motif"},motiveHint:{medical:"Soins, consultation ou opération",other:"Tourisme, famille, affaires"},
@@ -572,7 +575,7 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  bookText:"The consulate asks for a hotel and flight reservation. Use real bookings only, preferably cancellable ones. Partner agencies will be listed here.",
  linkFV:"France-Visas Tunisia (official)",linkTLS:"TLScontact Tunisia",
  disc:"Required documents can change. Always confirm the list on France-Visas and with TLScontact. This tool helps you prepare your file and does not guarantee a visa. It is not affiliated with any embassy. Use the official portal only, and be wary of intermediaries who promise shortcuts.",
- reset:"Untick everything",
+ wipe:"Reset my data",wipeConfirm:"Delete all your data on this device (answers, ticked boxes, language)?\n\nIf you unlocked the advisor or the refusal pack, you will have to enter your code again.\n\nThis cannot be undone.", reset:"Untick everything",
  brand:"Visa Checker",slogan:"Apply for your visa without missing a document.",homeSub:"Pick your destination, tell us why you travel, then follow the exact list of documents.",
  s_pass:"Passport",passName:"Tunisia",s_dest:"Destination",s_motive:"Reason for travel",
  motive:{medical:"Medical visit",other:"Other reason"},motiveHint:{medical:"Treatment, consultation or surgery",other:"Tourism, family, business"},
@@ -612,7 +615,7 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  bookText:"تطلب القنصلية حجز فندق وطيران. استعمل حجوزات حقيقية فقط، ويُفضّل القابلة للإلغاء. ستظهر الوكالات الشريكة هنا.",
  linkFV:"France-Visas تونس (الموقع الرسمي)",linkTLS:"TLScontact تونس",
  disc:"قد تتغير الوثائق المطلوبة. تأكد دائمًا من القائمة على موقع France-Visas ولدى TLScontact. هذه الأداة تساعدك على تحضير ملفك ولا تضمن الحصول على التأشيرة، وهي غير تابعة لأي سفارة. اعتمد البوابة الرسمية فقط واحذر من الوسطاء الذين يعدون بتسهيلات.",
- reset:"إلغاء كل العلامات",
+ wipe:"إعادة تعيين بياناتي",wipeConfirm:"هل تريد حذف كل بياناتك على هذا الجهاز (الإجابات والخانات المحددة واللغة)؟\n\nإذا فتحتَ المستشار أو حزمة الطعن فسيتعين عليك إدخال الرمز مجددًا.\n\nلا يمكن التراجع عن هذا الإجراء.", reset:"إلغاء كل العلامات",
  brand:"Visa Checker",slogan:"قدّم ملف تأشيرتك دون أن تنسى أي وثيقة.",homeSub:"اختر وجهتك، وأخبرنا سبب سفرك، ثم اتبع قائمة الوثائق الدقيقة.",
  s_pass:"جواز السفر",passName:"تونس",s_dest:"الوجهة",s_motive:"سبب السفر",
  motive:{medical:"زيارة طبية",other:"سبب آخر"},motiveHint:{medical:"علاج أو استشارة أو عملية",other:"سياحة أو عائلة أو أعمال"},
@@ -847,7 +850,8 @@ var KEY="dossier-schengen-v1";
 var S={lang:"fr",step:0,mode:"check",motive:"other",country:"fr",gov:"",paid:false,pack:false,purpose:"tourism",status:"employee",party:"alone",stay:"hotel",pay:"self",done:{}};
 try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);for(var k in o){S[k]=o[k]}}}catch(e){}
 if(!UI[S.lang])S.lang="fr";
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+var WIPED=false;
+function save(){if(WIPED)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 var $=function(id){return document.getElementById(id)};
 function chips(q,label){
   var t=UI[S.lang],h='<div class="q"><div class="q-label">'+label+'</div><div class="chips" role="group" aria-label="'+label+'">';
@@ -1570,7 +1574,7 @@ function render(){
   $("brand").innerHTML='<span style="color:var(--accent)">Visa</span> Checker';$("stamp").hidden=true;
   if(st===0){$("h1").innerHTML=t.sloganA+'<span class="acc">'+t.sloganB+'</span>'}else{$("h1").textContent=[0,t.modeTitle,t.destTitle,t.pTitle,t.dTitle,S.mode==="appeal"?t.apTitle:t.hTitle,EVT[S.lang].listTitle,evTitle(),rq(8),rq(9),rq(10)][st]}
   $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10)][st];document.body.dataset.step=st;
-  $("disc").textContent=t.disc;renderLegal();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
+  $("disc").textContent=t.disc;renderLegal();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("wipe").textContent=t.wipe;$("reset").hidden=st!==4;
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
   $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
@@ -1920,6 +1924,17 @@ document.addEventListener("input",function(e){if(e.target.id==="refcase"){S.refu
 })();
 ["fr","en","ar"].forEach(function(l){$("l-"+l).onclick=function(){S.lang=l;save();render()}});
 $("reset").onclick=function(){S.done={};save();render()};
+/* Réinitialiser mes données : confirmation, effacement du localStorage, puis rechargement propre.
+   WIPED empêche save() de réécrire l'état pendant le rechargement. */
+function wipeAll(){
+  if(!window.confirm(UI[S.lang].wipeConfirm))return;
+  WIPED=true;
+  try{localStorage.removeItem(KEY)}catch(e){}
+  try{sessionStorage.clear()}catch(e){}
+  window.scrollTo(0,0);
+  window.location.reload();
+}
+$("wipe").onclick=wipeAll;
 render();
 })();
 </script>
