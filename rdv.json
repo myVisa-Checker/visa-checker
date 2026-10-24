@@ -1,0 +1,16 @@
+{
+ "updated": "2026-10-24",
+ "note": "Délais d'attente de rendez-vous en jours, saisis à la main. Mettre null si inconnu. Un pays absent affiche « non renseigné ».",
+ "items": {
+  "fr": { "days": null },
+  "de": { "days": null },
+  "it": { "days": null },
+  "es": { "days": null },
+  "be": { "days": null },
+  "nl": { "days": null },
+  "ch": { "days": null },
+  "at": { "days": null },
+  "dk": { "days": null },
+  "fi": { "days": null }
+ }
+}
