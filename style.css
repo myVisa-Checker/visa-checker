@@ -496,3 +496,64 @@ body[data-step="0"] .sponsors{margin-top:64px}
 body[data-step="0"] footer{align-items:center;text-align:center}
 body[data-step="0"] .links,body[data-step="0"] .legal{justify-content:center}
 body[data-step="0"] footer .reset{align-self:center}
+
+/* 7. Présentation marketing de l'analyseur IA, badge, chargement */
+.ia-badge{display:inline-flex;align-self:flex-start;align-items:center;gap:6px;padding:6px 14px 6px 10px;border-radius:999px;background:linear-gradient(135deg,#c2410c,#7c3aed);color:#fff;font:700 12px var(--f-body);letter-spacing:.06em;text-transform:uppercase;box-shadow:0 8px 20px -10px rgba(124,58,237,.7)}
+html[lang="ar"] .ia-badge{letter-spacing:0;text-transform:none;font-size:13px}
+.ia-spark{width:16px;height:16px;flex:none}
+.mk{display:flex;flex-direction:column;gap:14px;padding:20px 16px;border-radius:22px;border:1.5px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(135deg,#ff9b5e,#a78bfa) border-box;box-shadow:0 26px 50px -32px rgba(124,58,237,.55)}
+.mk-title{margin:0;font-size:clamp(1.45rem,5.2vw,2rem);line-height:1.15}
+.mk-title{background:linear-gradient(90deg,#c2410c,#7c3aed);-webkit-background-clip:text;background-clip:text;color:transparent}
+:root[data-theme="dark"] .mk-title{background:linear-gradient(90deg,#ff9b5e,#c4b5fd);-webkit-background-clip:text;background-clip:text}
+.mk-sub{margin:0;font-size:16px;color:var(--muted)}
+.mk-tabs{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:700px){.mk-tabs{grid-template-columns:repeat(3,1fr)}}
+.mk-tab{display:flex;gap:12px;align-items:flex-start;text-align:start;font:inherit;color:var(--ink);padding:14px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;min-height:44px;transition:transform .18s,border-color .18s,box-shadow .18s,background .18s}
+.mk-tab:hover{transform:translateY(-2px);border-color:#a78bfa}
+.mk-tab.on{border-color:#7c3aed;background:#f5f0ff;box-shadow:0 14px 28px -18px rgba(124,58,237,.7)}
+:root[data-theme="dark"] .mk-tab.on{background:#241b3a}
+.mk-n{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--line);font-weight:800;transition:background .2s,color .2s}
+.mk-tab.on .mk-n{background:linear-gradient(135deg,#c2410c,#7c3aed);color:#fff}
+.mk-tt{display:flex;flex-direction:column;gap:3px;min-width:0}
+.mk-tt b{font-size:15px;line-height:1.25}
+.mk-tt span{font-size:13.5px;line-height:1.4;color:var(--muted)}
+.mk-panel{display:grid;place-items:center;min-height:210px;border-radius:18px;background:radial-gradient(ellipse at 50% 40%,#fff0e6,#f3ecff 70%);padding:16px;overflow:hidden}
+:root[data-theme="dark"] .mk-panel{background:radial-gradient(ellipse at 50% 40%,#2c2236,#1b1730 75%)}
+.mk-panel.swap .mk-vis{animation:mkin .45s ease}
+@keyframes mkin{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.mk-vis{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px}
+.mk-paper{position:relative;width:150px;padding:16px 14px;border-radius:12px;background:#fff;border:1px solid #e1e5e9;box-shadow:0 18px 30px -18px rgba(20,33,43,.45);display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.mk-paper i{display:block;height:7px;border-radius:99px;background:#e3e7eb}
+.mk-paper i.s{width:62%}
+.mk-paper i.hl{background:linear-gradient(90deg,#ffb27d,#ffd9c0);box-shadow:0 0 0 3px rgba(255,155,94,.35);animation:mkpulse 1.6s ease-in-out infinite}
+.mk-paper i.f2{background:#bfe8d1}
+.mk-paper b.f{font-size:11px;padding:3px 8px;border-radius:6px;background:#dff1e7;color:#1f7a4d;align-self:flex-start}
+.mk-paper.up{border:2px dashed #a78bfa;animation:mkfloat 2.4s ease-in-out infinite}
+.mk-arrow{position:absolute;top:-6px;inset-inline-end:-18px;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#c2410c,#7c3aed);color:#fff;font-weight:800;animation:mkbob 1.4s ease-in-out infinite}
+.mk-beam{position:absolute;inset-inline:0;top:0;height:3px;background:linear-gradient(90deg,transparent,#7c3aed,transparent);box-shadow:0 0 12px 3px rgba(124,58,237,.6);animation:aiscan 1.8s ease-in-out infinite alternate}
+.mk-chip{padding:7px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font:700 13px var(--f-body);box-shadow:0 8px 18px -12px rgba(20,33,43,.5)}
+.mk-chip.found{border-color:#d92d20;color:#b42318;background:#fef3f2}
+.mk-chip.ok{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+@keyframes mkpulse{50%{box-shadow:0 0 0 6px rgba(255,155,94,.15)}}
+@keyframes mkfloat{50%{transform:translateY(-6px)}}
+@keyframes mkbob{50%{transform:translateY(-5px)}}
+.mk-trust{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.mk-trust li{font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--ok-soft);color:var(--ok)}
+.mk-trust li::before{content:"\2713\00a0"}
+/* chargement */
+.ai-load{display:flex;gap:16px;align-items:center;padding:16px;border-radius:18px;background:linear-gradient(135deg,#fff0e6,#f3ecff);border:1px solid #d8c9fb}
+:root[data-theme="dark"] .ai-load{background:linear-gradient(135deg,#2c2236,#1b1730);border-color:#4b3a78}
+.ld-ring{flex:none;width:56px;height:56px;border-radius:50%;background:conic-gradient(from 0deg,#c2410c,#7c3aed,rgba(124,58,237,0) 72%);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));animation:ldspin 1s linear infinite}
+@keyframes ldspin{to{transform:rotate(360deg)}}
+.ld-tx{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ld-tx b{font-size:16px}.ld-tx span{font-size:13px;color:var(--muted)}
+.ld-steps{list-style:none;display:flex;gap:6px;margin:6px 0 0;padding:0}
+.ld-steps li{flex:1;height:6px;border-radius:99px;background:rgba(124,58,237,.18);transition:background .4s}
+.ai-load[data-phase="0"] .ld-steps li:nth-child(1),.ai-load[data-phase="1"] .ld-steps li:nth-child(-n+2),.ai-load[data-phase="2"] .ld-steps li{background:linear-gradient(90deg,#c2410c,#7c3aed)}
+.ai-load[data-phase="0"] .ld-steps li:nth-child(1){animation:ldblink 1.1s ease-in-out infinite}
+@keyframes ldblink{50%{opacity:.4}}
+/* cartes de résultat interactives */
+.ai-card{transition:transform .18s,box-shadow .18s}
+@media (hover:hover){.ai-card:hover{transform:translateY(-2px);box-shadow:0 14px 26px -18px rgba(20,33,43,.5)}}
+.ai-hd{display:flex}
+@media print{.mk,.ai-load{display:none!important}}
