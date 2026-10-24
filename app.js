@@ -3,7 +3,8 @@
 (function(){
 var D=window.VC&&window.VC.data;
 if(!D){document.body.insertAdjacentHTML("afterbegin",'<p style="padding:16px;font:16px sans-serif">data.js introuvable : rechargez la page (Ctrl+F5). / data.js not found: reload the page.</p>');return}
-var KEY=D.KEY,
+var SUPPORT=D.SUPPORT,
+    KEY=D.KEY,
     UI=D.UI,
     PAY_URL2=D.PAY_URL2,
     SITE=D.SITE,
@@ -75,7 +76,7 @@ function renderRefus(t){
     h+='<ul class="inc">'+t.rfInc.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>';
     h+='<div><div class="price">'+t.rfPrice+'</div><p class="rf-sub">'+t.rfPriceSub+'</p></div>';
     h+=PAY_URL2?'<a class="pay" href="'+PAY_URL2+'" target="_blank" rel="noopener">'+t.rfPay+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
-    h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off" aria-describedby="err2"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
+    h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go" aria-describedby="err2"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>'+supportHtml(t,"pack")+'';
   }else{
     h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
     h+='<div id="aiBox" class="ai"></div>';
@@ -311,7 +312,7 @@ function renderAgency(t){
   }else{
     h+='<div class="locked"><b>'+t.agCount(list.length)+'</b><i></i><i></i></div>';
     h+=PAY_URL?'<a class="pay" href="'+PAY_URL+'" target="_blank" rel="noopener">'+t.payBtn+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
-    h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off" aria-describedby="err"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>';
+    h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go" aria-describedby="err"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>'+supportHtml(t,"block")+'';
   }
   h+='<p class="ag-note">'+t.agNote+'</p>';
   $("agency").innerHTML=h;
@@ -374,7 +375,7 @@ function render(){
     var pct=req.length?Math.round(doneReq/req.length*100):0,left=req.length-doneReq;
     $("pnum").textContent=doneReq+" "+t.of+" "+req.length+" "+t.ready;
     $("pmsg").textContent=left===0?t.msgDone:(doneReq===0?t.msg0:t.msgN(left));
-    $("barfill").style.width=pct+"%";$("bar").setAttribute("aria-valuenow",pct);$("bar").setAttribute("aria-valuetext",$("pnum").textContent);$("bar").className="bar"+(left===0?" done":"");
+    CTAS.done=doneReq;CTAS.left=left;$("barfill").style.width=pct+"%";$("bar").setAttribute("aria-valuenow",pct);$("bar").setAttribute("aria-valuetext",$("pnum").textContent);$("bar").className="bar"+(left===0?" done":"");
     var h="";
     ORDER.forEach(function(g){
       var gi=vis.filter(function(i){return i.g===g});if(!gi.length)return;
@@ -395,6 +396,7 @@ function render(){
   if(st===0&&ready)$("dock").innerHTML='<div class="dock-in"><span class="flag">'+flag("tn")+'</span><span class="arrow" aria-hidden="true">\u2192</span><span class="flag">'+flag(cur.id)+'</span><span class="dname">'+nm(cur)+'</span><button type="button" class="pay" data-go="1">'+t.start+'</button></div>';
   $("nav").hidden=st===0;
   if(st>0){$("nav").innerHTML='<button type="button" class="reset" data-go="-1">'+t.back+'</button>'+(st===4?'<button type="button" class="pay" data-go="1">'+t.next+'</button>':'')}
+  renderCta();
   syncA11y();
 }
 /* Gestion du focus : à chaque changement d'étape, le titre <h1> reçoit le focus (lecteur d'écran + clavier),
@@ -596,15 +598,76 @@ async function verifyCode(kind,code){
     return {ok:j.ok===true,net:false,locked:j.error==="locked"};
   }catch(e){return {ok:false,net:true}}
 }
-async function tryUnlock(kind){
-  var pack=kind==="pack",inp=$(pack?"code2":"code"),err=$(pack?"err2":"err"),btn=$(pack?"unlock2":"unlock"),t=UI[S.lang];
-  var v=(inp.value||"").trim().toUpperCase();
-  if(!v){err.textContent=t.badCode;inp.setAttribute("aria-invalid","true");inp.focus();return}
-  inp.setAttribute("aria-invalid","false");btn.disabled=true;err.textContent=t.chkWait;
-  var res=await verifyCode(kind,v);
-  if(res.ok){if(pack){S.pack=true;S.packCode=v}else S.paid=true;save();render();return}
-  btn.disabled=false;err.textContent=res.locked?t.tooMany:(res.net?t.aiErrNet:t.badCode);inp.setAttribute("aria-invalid","true");inp.focus();
+function reduceMotion(){return !!(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches)}
+/* Assistance sous le champ de code : un bouton principal (premier canal configuré) + liens secondaires. */
+function supportHtml(t,kind){
+  var m=encodeURIComponent((SUPPORT.msg&&SUPPORT.msg[kind])||"Visa Checker"),L=[];
+  var wa=String(SUPPORT.whatsapp||"").replace(/\D/g,"");
+  if(wa)L.push(['https://wa.me/'+wa+'?text='+m,t.viaWA,true]);
+  if(SUPPORT.telegram)L.push(['https://t.me/'+encodeURIComponent(String(SUPPORT.telegram).replace(/^@/,"")),t.viaTG,true]);
+  if(SUPPORT.email)L.push(['mailto:'+SUPPORT.email+'?subject='+encodeURIComponent("Visa Checker")+'&body='+m,t.viaMail,false]);
+  if(!L.length)return "";
+  var h='<div class="help-code"><span class="help-q">'+t.noCode+'</span><a class="help-main" href="'+L[0][0]+'"'+(L[0][2]?' target="_blank" rel="noopener noreferrer"':'')+'>'+L[0][1]+'</a>';
+  if(L.length>1)h+='<span class="help-alt">'+L.slice(1).map(function(x){return '<a href="'+x[0]+'"'+(x[2]?' target="_blank" rel="noopener noreferrer"':'')+'>'+x[1]+'</a>'}).join(" · ")+'</span>';
+  return h+'</div>';
 }
+/* Déblocage par code : retour visuel clair (secousse + message rouge si invalide, coche animée + message vert si valide). */
+async function tryUnlock(kind){
+  var pack=kind==="pack",inp=$(pack?"code2":"code"),err=$(pack?"err2":"err"),btn=$(pack?"unlock2":"unlock"),row=inp.closest(".code-row"),t=UI[S.lang];
+  function bad(msg){
+    inp.setAttribute("aria-invalid","true");err.className="ag-err bad";err.textContent=msg;
+    row.classList.remove("shake");void row.offsetWidth;row.classList.add("shake");
+    try{inp.focus();inp.select()}catch(e){}
+  }
+  var v=(inp.value||"").trim().toUpperCase();
+  if(!v){bad(t.codeEmpty);return}
+  inp.setAttribute("aria-invalid","false");row.classList.remove("shake");btn.disabled=true;err.className="ag-err wait";err.textContent=t.chkWait;
+  var res=await verifyCode(kind,v);
+  if(res.ok){
+    row.classList.add("ok");inp.readOnly=true;err.className="ag-err ok";err.textContent=t.codeOk;
+    if(pack){S.pack=true;S.packCode=v}else S.paid=true;
+    save();
+    setTimeout(render,reduceMotion()?250:1100);
+    return;
+  }
+  btn.disabled=false;bad(res.locked?t.tooMany:(res.net?t.aiErrNet:t.codeBad));
+}
+document.addEventListener("keydown",function(e){
+  if(e.key==="Enter"&&(e.target.id==="code"||e.target.id==="code2")){e.preventDefault();tryUnlock(e.target.id==="code2"?"pack":"block")}
+});
+/* Bannière flottante (Sticky CTA) : met en avant le service payant aux moments clés. */
+var CTAS={done:0,left:0},ctaOff={},ctaIO=null;
+var CTAK={ready:["ctaReadyT","ctaReadyS","ctaReadyB"],review:["ctaRevT","ctaRevS","ctaRevB"],advisor:["ctaAdvT","ctaAdvS","ctaAdvB"],pack:["ctaPackT","ctaPackS","ctaPackB"]};
+function ctaKind(){
+  if(S.step===4&&S.mode!=="appeal"&&!S.paid&&CTAS.done>0)return CTAS.left===0?"ready":"review";
+  if(S.step===5&&S.mode==="appeal"&&!S.pack)return "pack";
+  if(S.step===5&&S.mode!=="appeal"&&!S.paid)return "advisor";
+  return "";
+}
+function renderCta(){
+  var el=$("cta");if(!el)return;
+  if(ctaIO){ctaIO.disconnect();ctaIO=null}
+  var k=ctaKind(),t=UI[S.lang];
+  if(!k||ctaOff[k]){el.hidden=true;el.innerHTML="";el.classList.remove("off");document.body.classList.remove("has-cta");return}
+  var K=CTAK[k];
+  el.innerHTML='<div class="cta-in" role="region" aria-label="'+esc(t[K[0]])+'"><div class="cta-tx"><b>'+t[K[0]]+'</b><span>'+t[K[1]]+'</span></div><button type="button" class="cta-go" data-cta="'+k+'">'+t[K[2]]+'</button><button type="button" class="cta-x" data-cta-x="'+k+'" aria-label="'+esc(t.ctaClose)+'">&times;</button></div>';
+  el.hidden=false;el.classList.remove("off");document.body.classList.add("has-cta");
+  /* inutile de doubler le bloc de paiement quand il est déjà à l'écran */
+  var tgt=(k==="pack"||k==="advisor")?$(k==="pack"?"unlock2":"unlock"):null;
+  if(tgt&&window.IntersectionObserver){
+    ctaIO=new IntersectionObserver(function(es){el.classList.toggle("off",es[0].isIntersecting)},{threshold:.6});
+    ctaIO.observe(tgt.closest(".q")||tgt);
+  }
+}
+document.addEventListener("click",function(e){
+  var x=e.target.closest&&e.target.closest("[data-cta-x]");
+  if(x){ctaOff[x.dataset.ctaX]=true;renderCta();return}
+  var g=e.target.closest&&e.target.closest("[data-cta]");if(!g)return;
+  var k=g.dataset.cta;
+  if(k==="ready"||k==="review"){S.step=5;save();render();return}
+  var tgt=$(k==="pack"?"code2":"code");
+  if(tgt){var r=reduceMotion();tgt.scrollIntoView({behavior:r?"auto":"smooth",block:"center"});setTimeout(function(){try{tgt.focus({preventScroll:true})}catch(x){}},r?0:400)}
+});
 function printPack(){
   document.querySelectorAll("#refus details").forEach(function(d){d.open=true});
   document.body.classList.add("print-pack");
