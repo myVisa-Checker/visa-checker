@@ -1,0 +1,31 @@
+{
+ "version": 1,
+ "updated": "2026-10-24",
+ "partners": {
+  "nabeul": [
+   {
+    "id": "despina",
+    "name": "Despina Travel and Events",
+    "city": "Hammamet",
+    "svc": [
+     "flight",
+     "hotel"
+    ],
+    "what": {
+     "fr": "Réservations d'hôtel et de vol",
+     "en": "Hotel and flight reservations",
+     "ar": "حجوزات الفنادق والطيران"
+    },
+    "adv": {
+     "fr": "Conseil pour votre dossier de visa",
+     "en": "Advice on your visa file",
+     "ar": "نصائح لملف التأشيرة"
+    },
+    "contact": "",
+    "email": "despinatravelandevents@gmail.com",
+    "telegram": "",
+    "whatsapp": ""
+   }
+  ]
+ }
+}
