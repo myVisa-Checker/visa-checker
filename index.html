@@ -43,7 +43,7 @@
 .tool .sc-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
 .tool .sc-row label,.tool .sc-plan{display:flex;flex-direction:column;gap:4px;font:500 13px var(--f-body);color:var(--muted)}
 .tool .sc-res{display:flex;flex-direction:column;gap:8px;padding-top:4px}
-.tool .sc-res p{margin:0}.tool .sc-ok{color:var(--ok);font-weight:600}
+.tool .sc-res p{margin:0}.aibox{display:flex;flex-direction:column;gap:6px;margin-block:16px;padding:16px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface)}.aibox .pay{align-self:flex-start;margin-top:8px}.tool .sc-ok{color:var(--ok);font-weight:600}
 .tool .faq{display:flex;flex-direction:column;gap:8px}
 .tool .faq details{border:1px solid var(--line);border-radius:var(--r-2);padding:10px 14px;background:var(--bg)}
 .tool .faq summary{cursor:pointer;font-weight:600;min-height:28px}
@@ -1069,6 +1069,7 @@ function renderRefus(t){
   }else{
     h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
     h+='<h2>'+t.rfAdvTitle+'</h2><ol class="adv">'+t.adv.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ol>';
+    h+=aiHtml();
     h+='<h2>'+t.rfLetTitle+'</h2><p class="rf-sub">'+t.rfNote+'</p>';
     if(PACK_STATE!=="ok"){var K=PKX[L];loadPack();h+='<p class="rf-sub" role="status">'+(PACK_STATE==="err"?K.err:K.load)+'</p>'+(PACK_STATE==="err"?'<button type="button" class="reset" data-pkretry="1">'+K.retry+'</button>':'');$("refus").innerHTML=h;return}
     PACK.forEach(function(p){
@@ -1956,6 +1957,62 @@ document.addEventListener("change",function(e){
   if(el.id==="faq-c"||el.id==="pl-c"){PLN.c=el.value;render();var n=$(el.id);if(n)n.focus()}
 });
 
+
+/* ===== Générateur de lettre sur mesure (IA, via le Worker /letter, réservé au pack) ===== */
+var LETTER_URL="https://visa-proxy.rabehfly.workers.dev/letter";
+var AIS={f:{language:"fr",purpose:"tourism",profile:"employee",country:"",dateFrom:"",dateTo:"",job:"",income:"",budget:"",lodging:"",ties:"",notes:""},busy:false,err:"",res:""};
+var AIX={
+fr:{title:"Lettre de motivation sur mesure (IA)",intro:"Renseignez votre situation : l'IA rédige un brouillon que vous relisez et corrigez. Ne saisissez jamais de numéro de passeport. Les informations sont envoyées à un service d'IA (Anthropic) pour écrire la lettre ; notre serveur ne les conserve pas.",
+ lang:"Langue de la lettre",purpose:"Motif du voyage",prof:"Votre situation",country:"Pays de destination",from:"Départ prévu",to:"Retour prévu",job:"Profession et employeur / établissement",income:"Revenu mensuel (ex. 1800 dinars)",budget:"Budget du séjour (ex. 1500 euros)",lodging:"Hébergement (hôtel, chez un proche…)",ties:"Attaches en Tunisie (famille, logement, travail…)",notes:"Précisions utiles (facultatif)",go:"Générer la lettre",busy:"Rédaction en cours…",
+ reqErr:"Renseignez la situation, le pays et des dates valides (retour après le départ).",auth:"Votre accès a expiré. Saisissez un nouveau code.",rate:"Limite du jour atteinte. Réessayez demain.",fail:"La génération a échoué. Réessayez dans un instant.",resT:"Votre lettre (brouillon IA)",warn:"Brouillon : vérifiez chaque fait, complétez les [crochets] et signez vous-même.",
+ purposes:{tourism:"Tourisme",family:"Visite familiale ou amicale",business:"Affaires",medical:"Soins médicaux"},profs:{employee:"Salarié(e)",self:"Indépendant(e)",student:"Étudiant(e)",retired:"Retraité(e)",other:"Autre"},copy:"Copier",pdf:"Enregistrer en PDF"},
+en:{title:"Tailor-made cover letter (AI)",intro:"Describe your situation: the AI writes a draft that you review and correct. Never enter a passport number. The details are sent to an AI service (Anthropic) to write the letter; our server does not keep them.",
+ lang:"Letter language",purpose:"Purpose of travel",prof:"Your situation",country:"Destination country",from:"Planned departure",to:"Planned return",job:"Job and employer / school",income:"Monthly income (e.g. 1800 dinars)",budget:"Trip budget (e.g. 1500 euros)",lodging:"Accommodation (hotel, with a relative…)",ties:"Ties to Tunisia (family, home, work…)",notes:"Useful details (optional)",go:"Generate the letter",busy:"Writing…",
+ reqErr:"Fill in your situation, the country and valid dates (return after departure).",auth:"Your access has expired. Enter a new code.",rate:"Daily limit reached. Try again tomorrow.",fail:"Generation failed. Try again shortly.",resT:"Your letter (AI draft)",warn:"Draft: check every fact, fill in the [brackets] and sign it yourself.",
+ purposes:{tourism:"Tourism",family:"Family or friends visit",business:"Business",medical:"Medical care"},profs:{employee:"Employee",self:"Self-employed",student:"Student",retired:"Retired",other:"Other"},copy:"Copy",pdf:"Save as PDF"},
+ar:{title:"رسالة تحفيز مخصّصة (ذكاء اصطناعي)",intro:"صف وضعيتك: يكتب الذكاء الاصطناعي مسودة تراجعها وتصحّحها. لا تدخل أبداً رقم جواز السفر. تُرسل المعلومات إلى خدمة ذكاء اصطناعي (Anthropic) لكتابة الرسالة ولا يحتفظ بها خادمنا.",
+ lang:"لغة الرسالة",purpose:"سبب السفر",prof:"وضعيتك",country:"بلد الوجهة",from:"تاريخ السفر المتوقع",to:"تاريخ العودة المتوقع",job:"المهنة والمؤجّر / المؤسسة",income:"الدخل الشهري (مثال: 1800 دينار)",budget:"ميزانية الرحلة (مثال: 1500 أورو)",lodging:"الإقامة (فندق، عند قريب…)",ties:"الروابط في تونس (عائلة، سكن، عمل…)",notes:"تفاصيل مفيدة (اختياري)",go:"إنشاء الرسالة",busy:"جارٍ الكتابة…",
+ reqErr:"أدخل وضعيتك والبلد وتواريخ صحيحة (العودة بعد السفر).",auth:"انتهت صلاحية وصولك. أدخل رمزاً جديداً.",rate:"بلغتَ الحد اليومي. أعد المحاولة غداً.",fail:"فشل الإنشاء. أعد المحاولة بعد قليل.",resT:"رسالتك (مسودة بالذكاء الاصطناعي)",warn:"مسودة: تحقق من كل معلومة وأكمل ما بين [الأقواس] ووقّع بنفسك.",
+ purposes:{tourism:"سياحة",family:"زيارة عائلية أو أصدقاء",business:"أعمال",medical:"علاج طبي"},profs:{employee:"موظف",self:"عمل حر",student:"طالب",retired:"متقاعد",other:"آخر"},copy:"نسخ",pdf:"حفظ بصيغة PDF"}};
+function aiOpts(o,v){return Object.keys(o).map(function(k){return '<option value="'+k+'"'+(k===v?' selected':'')+'>'+esc(o[k])+'</option>'}).join("")}
+function aiResHtml(){
+  var X=AIX[S.lang],h="";
+  if(AIS.err)h+='<p class="ag-err" role="alert">'+esc(AIS.err)+'</p>';
+  if(AIS.busy)h+='<p class="rf-sub" role="status">'+esc(X.busy)+'</p>';
+  if(AIS.res)h+='<p class="rf-sub">'+esc(X.warn)+'</p><details class="lt" open><summary>'+esc(X.resT)+'</summary><div class="lt-body"><pre class="letter" id="pk-ai">'+esc(AIS.res)+'</pre><button type="button" class="cp" data-copy="ai">'+esc(X.copy)+'</button> <button type="button" class="cp" data-pdf="ai">'+esc(X.pdf)+'</button></div></details>';
+  return h;
+}
+function aiHtml(){
+  var X=AIX[S.lang],f=AIS.f;
+  function inp(k,l,ph){return '<label class="q-label" for="ai-'+k+'">'+esc(l)+'</label><input class="sel" id="ai-'+k+'" data-ai="'+k+'" type="text" maxlength="160" autocomplete="off" value="'+escA(f[k])+'">'}
+  var h='<section class="aibox"><h2>'+esc(X.title)+'</h2><p class="rf-sub">'+esc(X.intro)+'</p>';
+  h+='<label class="q-label" for="ai-language">'+esc(X.lang)+'</label><select class="sel" id="ai-language" data-ai="language">'+aiOpts({fr:"Français",en:"English"},f.language)+'</select>';
+  h+='<label class="q-label" for="ai-purpose">'+esc(X.purpose)+'</label><select class="sel" id="ai-purpose" data-ai="purpose">'+aiOpts(X.purposes,f.purpose)+'</select>';
+  h+='<label class="q-label" for="ai-profile">'+esc(X.prof)+'</label><select class="sel" id="ai-profile" data-ai="profile">'+aiOpts(X.profs,f.profile)+'</select>';
+  h+=inp("country",X.country)+'<label class="q-label" for="ai-dateFrom">'+esc(X.from)+'</label><input class="sel" id="ai-dateFrom" data-ai="dateFrom" type="date" value="'+escA(f.dateFrom)+'">';
+  h+='<label class="q-label" for="ai-dateTo">'+esc(X.to)+'</label><input class="sel" id="ai-dateTo" data-ai="dateTo" type="date" value="'+escA(f.dateTo)+'">';
+  h+=inp("job",X.job)+inp("income",X.income)+inp("budget",X.budget)+inp("lodging",X.lodging)+inp("ties",X.ties)+inp("notes",X.notes);
+  h+='<button type="button" class="pay" data-ai-go="1"'+(AIS.busy?' disabled':'')+'>'+esc(X.go)+'</button><div id="ai-res" role="status" aria-live="polite">'+aiResHtml()+'</div></section>';
+  return h;
+}
+function aiShow(){var el=$("ai-res");if(el)el.innerHTML=aiResHtml();var b=document.querySelector("[data-ai-go]");if(b)b.disabled=AIS.busy}
+document.addEventListener("input",function(e){var k=e.target.dataset&&e.target.dataset.ai;if(k&&AIS.f.hasOwnProperty(k))AIS.f[k]=e.target.value});
+document.addEventListener("change",function(e){var k=e.target.dataset&&e.target.dataset.ai;if(k&&AIS.f.hasOwnProperty(k))AIS.f[k]=e.target.value});
+document.addEventListener("click",function(e){
+  if(!(e.target.closest&&e.target.closest("[data-ai-go]"))||AIS.busy)return;
+  var X=AIX[S.lang],f=AIS.f;
+  if(!f.country.trim()||!isoOk(f.dateFrom)||!isoOk(f.dateTo)||f.dateTo<f.dateFrom){AIS.err=X.reqErr;aiShow();return}
+  AIS.err="";AIS.res="";AIS.busy=true;aiShow();
+  var body={};Object.keys(f).forEach(function(k){body[k]=cleanTxt(f[k])});
+  fetchJson(LETTER_URL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","Authorization":"Bearer "+S.tok},body:JSON.stringify(body)},35000).then(function(r){
+    AIS.busy=false;
+    if(r.ok&&r.data&&r.data.ok&&typeof r.data.letter==="string")AIS.res=r.data.letter;
+    else if(r.status===401){S.pack=false;S.tok="";PACK_STATE="expired";save();render();return}
+    else AIS.err=r.status===429?X.rate:X.fail;
+    aiShow();
+  });
+});
+
 function evCardHtml(){var x=EVT[S.lang];return '<button type="button" class="evcard" id="evbtn"><span class="evico">'+EVICON+'</span><span class="evtxt"><b>'+x.cardTitle+'</b><span>'+x.cardSub+'</span></span>'+EVARROW+'</button>'}
 function evListHtml(){
   var x=EVT[S.lang],L=S.lang;
@@ -2176,7 +2233,7 @@ fr:{m:"Mentions légales",c:"Confidentialité",x:"Fermer",d:"Dernière mise à j
  ct:[["Qui est responsable de vos données ?",function(){return "Le responsable est l'éditeur indiqué dans les mentions légales."+(SITE.email?" Contact : "+SITE.email+".":"")}],
  ["Quelles données collectons-nous ?","Quand vous demandez un billet d'avion ou une réservation : nom et prénom comme sur le passeport, dates de voyage, ville de destination, numéro de téléphone ou WhatsApp (avec l'indicatif du pays), identifiant Telegram et e-mail si vous les donnez, et le canal choisi pour recevoir le paiement et le document. N'envoyez jamais de copie de passeport ni de numéro de carte bancaire par ce formulaire."],
  ["Pourquoi ?","Uniquement pour traiter votre demande, la transmettre à l'agence choisie et vous envoyer le lien de paiement puis le document. Nous ne vendons pas vos données."],
- ["Qui les reçoit ?","L'agence que vous choisissez, et les services techniques qui acheminent la demande : Cloudflare (serveur relais) puis Make (automatisation, serveurs situés dans l'Union européenne). Ces destinataires ne les utilisent que pour exécuter votre demande."],
+ ["Qui les reçoit ?","L'agence que vous choisissez, et les services techniques qui acheminent la demande : Cloudflare (serveur relais) puis Make (automatisation, serveurs situés dans l'Union européenne). Ces destinataires ne les utilisent que pour exécuter votre demande. Si vous utilisez le générateur de lettre, les informations saisies sont envoyées à Anthropic (service d'IA) pour rédiger le texte ; notre serveur ne les conserve pas."],
  ["Combien de temps ?","Le temps nécessaire au traitement de votre demande et à nos obligations légales, puis suppression. Vous pouvez demander la suppression plus tôt."],
  ["Stockage sur votre appareil et services tiers","Le site n'utilise pas de cookies publicitaires. Votre progression et, si vous les saisissez, les dates du calculateur Schengen sont enregistrées sur votre appareil (stockage local) et ne sont pas envoyées. Un code de déblocage saisi est vérifié par notre serveur, qui conserve seulement son empreinte chiffrée. Les polices et certaines icônes de partenaires sont chargées depuis des serveurs tiers (par exemple Google), qui voient alors votre adresse IP."],
  ["Vos droits","Vous pouvez demander l'accès, la rectification, la suppression de vos données ou vous opposer à leur traitement en nous écrivant"+" (voir l'e-mail dans les mentions légales). En Tunisie, ces droits sont encadrés par la loi organique n° 2004-63 du 27 juillet 2004 ; vous pouvez aussi saisir l'Instance nationale de protection des données personnelles (INPDP)."]]},
@@ -2190,7 +2247,7 @@ en:{m:"Legal notice",c:"Privacy",x:"Close",d:"Last updated: October 2026. This t
  ct:[["Who is responsible for your data?",function(){return "The controller is the publisher named in the legal notice."+(SITE.email?" Contact: "+SITE.email+".":"")}],
  ["What data do we collect?","When you request a flight ticket or hotel booking: first and last name as in your passport, travel dates, destination city, phone or WhatsApp number, Telegram username and e-mail if you provide them, and the channel chosen to receive payment and the document. Never send a passport copy or card number through this form."],
  ["Why?","Only to process your request, pass it to the chosen agency and send you the payment link and then the document. We do not sell your data."],
- ["Who receives it?","The agency you choose, and the technical services that route the request: Cloudflare (relay server) then Make (automation, servers in the European Union). They use it only to carry out your request."],
+ ["Who receives it?","The agency you choose, and the technical services that route the request: Cloudflare (relay server) then Make (automation, servers in the European Union). They use it only to carry out your request. If you use the letter generator, what you type is sent to Anthropic (AI service) to write the text; our server does not keep it."],
  ["How long?","As long as needed to process your request and meet our legal duties, then deletion. You can ask for earlier deletion."],
  ["Storage on your device and third-party services","The site uses no advertising cookies. Your progress and, if you enter them, the Schengen calculator dates are saved on your device (local storage) and are never sent. An unlock code you enter is checked by our server, which keeps only its encrypted fingerprint. Fonts and some partner icons load from third-party servers (for example Google), which then see your IP address."],
  ["Your rights","You can ask for access, correction or deletion of your data, or object to its processing, by writing to us (see the e-mail in the legal notice). In Tunisia these rights are governed by Organic Law No. 2004-63 of 27 July 2004; you may also contact the national personal data protection authority (INPDP)."]]},
@@ -2204,7 +2261,7 @@ ar:{m:"الإشعار القانوني",c:"الخصوصية",x:"إغلاق",d:"�
  ct:[["من المسؤول عن بياناتك؟",function(){return "المسؤول هو ناشر الموقع المذكور في الإشعار القانوني."+(SITE.email?" للتواصل: "+SITE.email+".":"")}],
  ["ما البيانات التي نجمعها؟","عند طلب تذكرة طيران أو حجز فندق: الاسم واللقب كما في جواز السفر، وتواريخ السفر، ومدينة الوجهة، ورقم الهاتف أو واتساب، ومعرّف تيليغرام والبريد الإلكتروني إن قدّمتهما، والقناة المختارة لاستلام الدفع والوثيقة. لا ترسل أبدًا نسخة من الجواز أو رقم بطاقة بنكية عبر هذا النموذج."],
  ["لماذا؟","فقط لمعالجة طلبك وإرساله إلى الوكالة المختارة وإرسال رابط الدفع ثم الوثيقة إليك. لا نبيع بياناتك."],
- ["من يستلمها؟","الوكالة التي تختارها، والخدمات التقنية التي تنقل الطلب: Cloudflare (خادم وسيط) ثم Make (الأتمتة، خوادم داخل الاتحاد الأوروبي). لا تستعملها إلا لتنفيذ طلبك."],
+ ["من يستلمها؟","الوكالة التي تختارها، والخدمات التقنية التي تنقل الطلب: Cloudflare (خادم وسيط) ثم Make (الأتمتة، خوادم داخل الاتحاد الأوروبي). لا تستعملها إلا لتنفيذ طلبك. وإذا استعملت مولّد الرسائل فإن ما تدخله يُرسل إلى Anthropic (خدمة ذكاء اصطناعي) لكتابة النص ولا يحتفظ به خادمنا."],
  ["كم المدة؟","المدة اللازمة لمعالجة طلبك وللوفاء بالتزاماتنا القانونية، ثم تُحذف. يمكنك طلب الحذف قبل ذلك."],
  ["التخزين على جهازك والخدمات الخارجية","لا يستعمل الموقع ملفات تعريف ارتباط إعلانية. يُحفظ تقدّمك وتواريخ حاسبة شنغن (إن أدخلتها) على جهازك (التخزين المحلي) ولا تُرسل أبداً. يتحقق خادمنا من رمز الفتح الذي تدخله ولا يحتفظ إلا ببصمته المشفّرة. تُحمَّل الخطوط وبعض أيقونات الشركاء من خوادم خارجية (مثل Google) ترى عنوان IP الخاص بك."],
  ["حقوقك","يمكنك طلب الاطلاع على بياناتك أو تصحيحها أو حذفها أو الاعتراض على معالجتها بمراسلتنا (انظر البريد في الإشعار القانوني). في تونس تنظّم هذه الحقوق القانون الأساسي عدد 63 لسنة 2004 المؤرخ في 27 جويلية 2004، ويمكنك أيضًا اللجوء إلى الهيئة الوطنية لحماية المعطيات الشخصية (INPDP)."]]}
