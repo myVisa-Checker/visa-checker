@@ -559,7 +559,14 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
 }
 </style>
 <style>
-.ag-card.ag-anon{grid-template-columns:1fr}
+.ag-card.ag-anon{grid-template-columns:1fr;text-align:center}
+.ag-card.ag-anon .ag-body{align-items:center}
+.srv-sub{text-align:center}
+.srv-row{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+.srv-row .ag-card.ag-anon{flex:1 1 180px;max-width:230px}
+footer{background:#000;color:#fff;padding:24px 22px;border-radius:var(--r-6)}
+footer p,footer .links a,footer .legal button,footer .legal button:hover{color:#fff}
+footer .reset{background:#fff;color:#000;border-color:#fff}
 #req .tiles{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:14px;width:100%;padding-bottom:12px}
 #req .tile{flex:0 0 96px}
 </style>
@@ -1371,8 +1378,10 @@ function pickHtml(t){
   var h=stepper(2)+'<div class="panel"><span class="svc-pill">'+R.svc[S.need]+'</span><div class="chips seg" role="group" aria-label="'+R.svc[S.need]+'">'+[["local",R.tabL],["intl",R.tabI]].map(function(x){return '<button type="button" class="chip" data-pt="'+x[0]+'" aria-pressed="'+(pt===x[0])+'">'+x[1]+'</button>'}).join("")+'</div>';
   if(pt==="intl"){h+=INTL.filter(svc).map(function(p,i){return agentCard(p,R,i+1)}).join("")}
   else{
-    var seen={},list=[];Object.keys(PARTNERS).forEach(function(k){PARTNERS[k].forEach(function(p){if(!seen[p.id]&&svc(p)){seen[p.id]=1;list.push(p)}})});list=list.slice(0,3);
-    h+=list.length?'<p class="ag-sub">'+R.anyWhere+'</p>'+list.map(function(p,i){return agentCard(p,R,i+1)}).join(""):'<p class="ag-none">'+R.noLocal+'</p>';
+    var seen={},list=[];delete PARTNERS._srv;Object.keys(PARTNERS).forEach(function(k){PARTNERS[k].forEach(function(p){if(!seen[p.id]&&svc(p)){seen[p.id]=1;list.push(p)}})});list=list.slice(0,3);
+    /* Trois serveurs toujours proposés : tant qu'il y a moins de 3 agences, les places libres reprennent la première (à remplacer par de vraies agences dans partners.json). */
+    if(list.length&&list.length<3){var base=list.slice(),extra=[],j=0;while(list.length<3){var b=base[j%base.length],c=Object.assign({},b,{id:b.id+"-s"+(list.length+1)});list.push(c);extra.push(c);j++}PARTNERS._srv=extra}
+    h+=list.length?'<p class="ag-sub srv-sub">'+R.anyWhere+'</p><div class="srv-row">'+list.map(function(p,i){return agentCard(p,R,i+1)}).join("")+'</div>':'<p class="ag-none">'+R.noLocal+'</p>';
   }
   h+='</div>';
   var links=WORLD.filter(function(x){return x.svc.indexOf(S.need)>-1});
