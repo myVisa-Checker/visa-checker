@@ -1239,7 +1239,7 @@ function homeHtml(t){
   }
   h+='</div>';
   if(!cur.ready){h+='<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+t.soonText+'</p></div>'}
-  h+=evCardHtml();h+=toolsCardsHtml();
+  h+=evCardHtml();
   h+='</div>';
   h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+needsHtml(t)+'</div>';
   h+='<section class="why"><h2>'+t.whyTitle+'</h2><ul class="ticks">'+t.why.map(function(x){return '<li><svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" style="stroke:var(--surface)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>'+x+'</span></li>'}).join("")+'</ul><p class="ag-note">'+t.whyNote+'</p></section>';
