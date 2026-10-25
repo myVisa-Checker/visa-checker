@@ -495,12 +495,12 @@ h1 .acc{background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--acc
 .recap dl div:first-child{border-top:0}.recap dt{color:var(--muted)}.recap dd{margin:0;font-weight:600;text-align:end;overflow-wrap:anywhere}
 html[lang="ar"] .stp li,html[lang="ar"] #req .q-label,html[lang="ar"] .ag-meta{font-family:var(--f-ar)}
 
-.tiles{display:flex;gap:16px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
-.tile{flex:0 0 112px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--ink);scroll-snap-align:start}
-.tile-ic{width:112px;height:112px;border-radius:var(--r-8);border:1px solid var(--line);background:var(--logo-bg);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:18px 14px;padding:4px 2px 12px;overflow:visible}
+.tile{min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;text-decoration:none;color:var(--ink)}
+.tile-ic{width:100%;max-width:112px;aspect-ratio:1/1;border-radius:var(--r-8);border:1px solid var(--line);background:var(--logo-bg);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .tile-ic img{max-width:80%;max-height:80%;object-fit:contain}
 .tile-ic img.fav{width:64px;height:64px;max-width:none;max-height:none;border-radius:var(--r-5)}.tile-ic .fbt{display:none}.tile-ic.fb{background:var(--tb)}.tile-ic.fb .fbt{display:block;color:var(--tf);font:700 26px var(--f-body);letter-spacing:-.5px}
-.tile-n{font:500 13px/1.3 var(--f-body)}.tile-k{font:400 12px var(--f-body);color:var(--muted)}
+.tile-n{font:500 13px/1.3 var(--f-body);overflow-wrap:anywhere}.tile-k{font:400 12px var(--f-body);color:var(--muted)}
 .tile:hover .tile-ic,.tile:focus-visible .tile-ic{border-color:var(--ink)}
 html[lang="ar"] .tile-n,html[lang="ar"] .tile-k{font-family:var(--f-ar)}
 
@@ -515,6 +515,11 @@ html[lang="ar"] .tile-n,html[lang="ar"] .tile-k{font-family:var(--f-ar)}
 button.sp-chip{font:600 15px var(--f-body);cursor:pointer;color:var(--ink)}
 html[lang="ar"] .fe,html[lang="ar"] button.sp-chip{font-family:var(--f-ar)}
 
+#sp-h{color:var(--danger-text)}
+.totop{position:fixed;inset-inline-start:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));width:48px;height:48px;border-radius:var(--r-pill);border:1px solid var(--danger-line);background:var(--danger);color:var(--on-danger);box-shadow:var(--shadow-lift);z-index:50;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s}
+.totop.on{opacity:1;visibility:visible;transform:none}
+.totop:hover{background:var(--danger-hover)}
+.totop svg{width:22px;height:22px}
 </style>
 <style>
 .home-btn{color:var(--danger-text);background:var(--danger-soft);border-color:var(--danger-line)}
@@ -585,6 +590,7 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
 
   <div class="dock" id="dock" hidden></div>
 
+  <button type="button" class="totop" id="totop" aria-label="Haut de page" title="Haut de page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
   <footer>
     <div class="links" id="links"></div>
     <p id="disc"></p>
@@ -2409,6 +2415,11 @@ document.addEventListener("input",function(e){if(e.target.id==="refcase"){S.refu
 ["fr","en","ar"].forEach(function(l){$("l-"+l).onclick=function(){S.lang=l;save();render()}});
 $("reset").onclick=function(){S.done={};save();render()};
 loadPartners();
+(function(){var b=document.getElementById("totop");if(!b)return;
+  function chk(){b.classList.toggle("on",(window.pageYOffset||document.documentElement.scrollTop)>400)}
+  window.addEventListener("scroll",chk,{passive:true});chk();
+  b.addEventListener("click",function(){var r=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;window.scrollTo({top:0,behavior:r?"auto":"smooth"})});
+})();
 render();
 window.__vcCtx=function(){try{var c=curC();return{id:c.id,fr:c.n.fr,name:c.n[S.lang]||c.n.fr,ready:!!c.ready}}catch(e){return null}};
 })();
