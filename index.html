@@ -318,7 +318,7 @@ body[data-step="0"] .side{grid-column:2;grid-row:1/3;align-self:start}
 body[data-step="0"] .photo{max-width:none;margin:0}
 body[data-step="0"] .side{margin-top:56px}
 body[data-step="0"] .why{grid-column:1/-1;margin-top:40px}
-body[data-step="0"] .sponsors,body[data-step="0"] .avs,body[data-step="0"] .trd,body[data-step="0"] footer{grid-column:1/-1}
+body[data-step="0"] .sponsors,body[data-step="0"] .avs,body[data-step="0"] .trd,body[data-step="0"] .bpn,body[data-step="0"] footer{grid-column:1/-1}
 body{position:relative}
 .lang{position:absolute;top:26px;right:24px;z-index:6}
 body[data-step="0"] .lang{top:34px}
@@ -561,6 +561,26 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
 <style>
 /* Avis voyageurs : n'affiche que les avis réels de reviews.json */
 /* Répertoire des traducteurs assermentés (liste officielle du Consulat général de France à Tunis) */
+/* Bons plans et réductions partenaires : alimenté par deals.json (offres réelles, négociées) */
+.bpn{margin:32px auto 0;width:100%;max-width:760px;display:flex;flex-direction:column;gap:14px}
+.bpn[hidden]{display:none}
+.bpn h2{margin:0;font-family:var(--f-display);font-size:1.6rem;line-height:1.15}
+.bpn-sub,.bpn-note{margin:0;font-size:14px;line-height:1.55;color:var(--muted)}
+.bpn-chips{display:flex;flex-wrap:wrap;gap:8px}
+.bpn-list{display:flex;flex-direction:column;gap:12px}
+.bpn-card{background:var(--surface);border:2px solid var(--accent);border-radius:var(--r-6);padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-card)}
+.bpn-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.bpn-top b{font-size:16px}
+.bpn-tag{font:600 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);border:1px solid var(--accent);border-radius:var(--r-1);padding:2px 8px}
+.bpn-t{margin:0;font-family:var(--f-display);font-size:1.25rem;line-height:1.2;color:var(--accent-ink)}
+.bpn-card p{margin:0;font-size:15px;line-height:1.5}
+.bpn-code{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bpn-code code{font:700 15px var(--f-mono);letter-spacing:.08em;background:var(--accent-soft);border:1px dashed var(--accent);border-radius:var(--r-2);padding:8px 12px;color:var(--accent-deep)}
+.bpn-code button{min-height:40px;padding:6px 14px}
+.bpn-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.bpn-foot a.pay{min-height:44px}
+.bpn-cta{align-self:flex-start}
+html[lang="ar"] .bpn h2,html[lang="ar"] .bpn-card{font-family:var(--f-ar)}
 .trd{margin:32px auto 0;width:100%;max-width:760px;display:flex;flex-direction:column;gap:14px}
 .trd[hidden]{display:none}
 .trd h2{margin:0;font-family:var(--f-display);font-size:1.6rem;line-height:1.15}
@@ -665,6 +685,7 @@ footer .reset{background:#fff;color:#000;border-color:#fff}
   <div class="dock" id="dock" hidden></div>
 
   <button type="button" class="totop" id="totop" aria-label="Haut de page" title="Haut de page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+  <section class="bpn" id="bpn" aria-label="Bons plans" hidden></section>
   <section class="trd" id="trans" aria-label="Traducteurs assermentés" hidden></section>
   <section class="avs" id="reviews" aria-labelledby="rv-t" hidden></section>
   <footer>
@@ -1370,6 +1391,57 @@ document.addEventListener("click",function(e){var b=e.target.closest&&e.target.c
   if(TRS.pos){TRS.pos=null;trSig="";renderTrans();return}
   if(!navigator.geolocation){TRS.posErr=true;trSig="";renderTrans();return}
   navigator.geolocation.getCurrentPosition(function(p){TRS.pos=[p.coords.latitude,p.coords.longitude];TRS.posErr=false;trSig="";renderTrans()},function(){TRS.posErr=true;trSig="";renderTrans()},{timeout:8000,maximumAge:600000})});
+/* Bons plans : les offres viennent uniquement de deals.json (accords réels). Une offre expirée disparaît toute seule. */
+var DEALS=[],BPN={cat:""},bpnSig="";
+var BPT={
+ fr:{t:"Bons plans et réductions partenaires",sub:"Des avantages négociés pour les utilisateurs de Visa Checker : agences de voyages locales, hôtels partenaires, transferts d'argent et cartes pour voyager.",all:"Tout",cat:{agence:"Agences de voyages",hotel:"Hôtels",transfert:"Transferts d'argent",carte:"Cartes et eSIM"},tag:{agence:"Agence",hotel:"Hôtel",transfert:"Transfert",carte:"Carte"},none:"Les premiers bons plans arrivent bientôt. Revenez nous voir !",noneCat:"Aucune offre dans cette catégorie pour le moment.",code:"Code promo",copy:"Copier",copied:"Copié ✓",go:"Profiter de l'offre",until:"Valable jusqu'au ",aff:"Lien partenaire : Visa Checker peut recevoir une commission, sans frais pour vous.",join:"Vous êtes une agence, un hôtel ou un service pour voyageurs ? Devenez partenaire.",joinBtn:"Devenir partenaire",jsub:"Visa Checker - Devenir partenaire",jbody:"Nom de l'établissement : \nVille / pays : \nType (agence, hôtel, transfert d'argent, carte) : \nOffre proposée aux utilisateurs : \nContact : "},
+ en:{t:"Partner deals and discounts",sub:"Benefits negotiated for Visa Checker users: local travel agencies, partner hotels, money transfers and travel cards.",all:"All",cat:{agence:"Travel agencies",hotel:"Hotels",transfert:"Money transfers",carte:"Cards and eSIM"},tag:{agence:"Agency",hotel:"Hotel",transfert:"Transfer",carte:"Card"},none:"The first deals are coming soon. Check back!",noneCat:"No offers in this category for now.",code:"Promo code",copy:"Copy",copied:"Copied ✓",go:"Get the offer",until:"Valid until ",aff:"Partner link: Visa Checker may earn a commission, at no cost to you.",join:"Are you an agency, a hotel or a service for travellers? Become a partner.",joinBtn:"Become a partner",jsub:"Visa Checker - Become a partner",jbody:"Business name: \nCity / country: \nType (agency, hotel, money transfer, card): \nOffer for users: \nContact: "},
+ ar:{t:"عروض وتخفيضات الشركاء",sub:"مزايا متفاوض عليها لمستخدمي Visa Checker: وكالات سفر محلية، فنادق شريكة، تحويل الأموال وبطاقات السفر.",all:"الكل",cat:{agence:"وكالات السفر",hotel:"الفنادق",transfert:"تحويل الأموال",carte:"البطاقات وeSIM"},tag:{agence:"وكالة",hotel:"فندق",transfert:"تحويل",carte:"بطاقة"},none:"أولى العروض قادمة قريبًا. عُد لزيارتنا!",noneCat:"لا توجد عروض في هذه الفئة حاليًا.",code:"رمز الخصم",copy:"نسخ",copied:"تم النسخ ✓",go:"استفد من العرض",until:"صالح حتى ",aff:"رابط شريك: قد يتلقى Visa Checker عمولة دون أي كلفة عليك.",join:"هل أنت وكالة أو فندق أو خدمة للمسافرين؟ كن شريكًا.",joinBtn:"كن شريكًا",jsub:"Visa Checker - كن شريكًا",jbody:"اسم المؤسسة: \nالمدينة / البلد: \nالنوع (وكالة، فندق، تحويل أموال، بطاقة): \nالعرض المقدَّم للمستخدمين: \nجهة الاتصال: "}
+};
+function cleanDeals(j){
+  if(!j||!Array.isArray(j.deals))return [];
+  var out=[],cats={agence:1,hotel:1,transfert:1,carte:1},now=new Date();now.setHours(0,0,0,0);
+  function tri(v,m){var o={};if(typeof v==="string")v={fr:v,en:v,ar:v};v=v&&typeof v==="object"?v:{};["fr","en","ar"].forEach(function(l){o[l]=typeof v[l]==="string"?cleanTxt(v[l]).slice(0,m):""});return o}
+  j.deals.slice(0,20).forEach(function(d,i){
+    if(!d||typeof d!=="object"||!cats[d.category])return;
+    var pn=typeof d.partner==="string"?cleanTxt(d.partner).slice(0,60):"",t=tri(d.title,90),ds=tri(d.desc,260),url=typeof d.url==="string"&&/^https:\/\/[^\s"'<>]+$/.test(d.url)?d.url:"";
+    if(!pn||!(t.fr||t.en||t.ar))return;
+    var code=typeof d.code==="string"&&/^[A-Za-z0-9_.\-]{2,30}$/.test(d.code)?d.code:"";
+    var until="";if(typeof d.valid_until==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(d.valid_until)){var e=new Date(d.valid_until+"T23:59:59");if(isNaN(e)||e<now)return;until=d.valid_until}
+    out.push({id:"d"+i,cat:d.category,partner:pn,t:t,desc:ds,code:code,url:url,until:until,aff:!!d.affiliate,cond:tri(d.conditions,160)});
+  });
+  return out;
+}
+function bpnDate(s,L){var p=s.split("-"),d=new Date(+p[0],+p[1]-1,+p[2]);try{return d.toLocaleDateString(L==="ar"?"ar-TN":L==="en"?"en-GB":"fr-FR",{day:"numeric",month:"long",year:"numeric"})}catch(e){return s}}
+function renderBpn(){
+  var el=$("bpn");if(!el)return;
+  var on=S.step===0;el.hidden=!on;if(!on)return;
+  var sig=S.lang+"|"+BPN.cat+"|"+DEALS.length;if(sig===bpnSig&&el.firstChild)return;bpnSig=sig;
+  var R=BPT[S.lang]||BPT.fr,L=S.lang;
+  var join=SITE.email?'<p class="bpn-note">'+R.join+'</p><a class="pay bpn-cta" href="mailto:'+SITE.email+'?subject='+encodeURIComponent(R.jsub)+'&body='+encodeURIComponent(R.jbody)+'">'+R.joinBtn+'</a>':'';
+  var h='<h2>'+R.t+'</h2><p class="bpn-sub">'+R.sub+'</p>';
+  if(!DEALS.length){el.innerHTML=h+'<p class="bpn-note">'+R.none+'</p>'+join;return}
+  var cats=["agence","hotel","transfert","carte"].filter(function(c){return DEALS.some(function(d){return d.cat===c})});
+  h+='<div class="bpn-chips" role="group">'+[["",R.all]].concat(cats.map(function(c){return [c,R.cat[c]]})).map(function(x){return '<button type="button" class="chip" data-bpn="'+x[0]+'" aria-pressed="'+(BPN.cat===x[0])+'">'+x[1]+'</button>'}).join("")+'</div>';
+  var list=DEALS.filter(function(d){return !BPN.cat||d.cat===BPN.cat});
+  h+='<div class="bpn-list">'+(list.length?list.map(function(d){
+    return '<article class="bpn-card"><div class="bpn-top"><b>'+esc(d.partner)+'</b><span class="bpn-tag">'+R.tag[d.cat]+'</span></div><h3 class="bpn-t">'+esc(d.t[L]||d.t.fr||d.t.en||d.t.ar)+'</h3>'+((d.desc[L]||d.desc.fr)?'<p>'+esc(d.desc[L]||d.desc.fr||d.desc.en)+'</p>':'')+
+      (d.code?'<div class="bpn-code"><span>'+R.code+'</span><code dir="ltr">'+esc(d.code)+'</code><button type="button" class="reset" data-bcopy="'+escA(d.code)+'">'+R.copy+'</button></div>':'')+
+      ((d.cond[L]||d.cond.fr)?'<p class="bpn-note">'+esc(d.cond[L]||d.cond.fr)+'</p>':'')+
+      (d.aff?'<p class="bpn-note">'+R.aff+'</p>':'')+
+      '<div class="bpn-foot"><span>'+(d.until?R.until+bpnDate(d.until,L):'')+'</span>'+(d.url?'<a class="pay" href="'+escA(d.url)+'" target="_blank" rel="noopener sponsored">'+R.go+'</a>':'')+'</div></article>'}).join(""):'<p class="bpn-note">'+R.noneCat+'</p>')+'</div>'+join;
+  el.innerHTML=h;
+}
+function loadDeals(){
+  try{var c=new AbortController(),tm=setTimeout(function(){c.abort()},6000);
+    fetch("deals.json",{signal:c.signal,cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(function(j){clearTimeout(tm);DEALS=cleanDeals(j);bpnSig="";renderBpn()}).catch(function(){})}catch(e){}
+}
+document.addEventListener("click",function(e){
+  var f=e.target.closest&&e.target.closest("[data-bpn]");if(f){BPN.cat=f.dataset.bpn;bpnSig="";renderBpn();return}
+  var b=e.target.closest&&e.target.closest("[data-bcopy]");if(!b)return;
+  var R=BPT[S.lang]||BPT.fr,v=b.dataset.bcopy,ok=function(){b.textContent=R.copied;setTimeout(function(){b.textContent=R.copy},1800)};
+  try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(ok,function(){})}else{var t=document.createElement("textarea");t.value=v;document.body.appendChild(t);t.select();document.execCommand("copy");document.body.removeChild(t);ok()}}catch(x){}
+});
 function nm(o){return o.n[S.lang]}
 function curC(){return COUNTRIES.filter(function(c){return c.id===S.country})[0]||COUNTRIES[0]}
 function eff(){if(S.purpose==="reunion")S.purpose="tourism";return S.motive==="medical"?"medical":S.purpose}
@@ -2346,7 +2418,7 @@ function render(){
   $("brand").innerHTML='<span style="color:var(--accent)">Visa</span> Checker';$("stamp").hidden=true;
   if(st===0){$("h1").innerHTML=t.sloganA+'<span class="acc">'+t.sloganB+'</span>'}else{$("h1").textContent=[0,t.modeTitle,t.destTitle,t.pTitle,t.dTitle,S.mode==="appeal"?t.apTitle:t.hTitle,EVT[S.lang].listTitle,evTitle(),rq(8),rq(9),rq(10),TLS[S.lang].t11,TLS[S.lang].t12,TLS[S.lang].t13][st]}
   $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10),TLS[S.lang].s11,TLS[S.lang].s12,TLS[S.lang].s13][st];document.body.dataset.step=st;
-  $("disc").textContent=t.disc;renderLegal();renderTrans();renderReviews();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
+  $("disc").textContent=t.disc;renderLegal();renderBpn();renderTrans();renderReviews();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
   $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
@@ -2578,7 +2650,7 @@ document.addEventListener("input",function(e){if(e.target.id==="refcase"){S.refu
 })();
 ["fr","en","ar"].forEach(function(l){$("l-"+l).onclick=function(){S.lang=l;save();render()}});
 $("reset").onclick=function(){S.done={};save();render()};
-loadPartners();loadReviews();
+loadPartners();loadReviews();loadDeals();
 (function(){var b=document.getElementById("totop");if(!b)return;
   function chk(){b.classList.toggle("on",(window.pageYOffset||document.documentElement.scrollTop)>400)}
   window.addEventListener("scroll",chk,{passive:true});chk();
