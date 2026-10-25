@@ -1,3 +1,96 @@
 {
-  "deals": []
+  "deals": [
+    {
+      "category": "agence",
+      "partner": "Agence test",
+      "title": {
+        "fr": "-10 % sur votre billet d'avion (offre test)",
+        "en": "10% off your flight ticket (test offer)",
+        "ar": "خصم 10٪ على تذكرة الطيران (عرض تجريبي)"
+      },
+      "desc": {
+        "fr": "Exemple d'offre d'une agence de voyages locale. À remplacer par votre vrai partenaire.",
+        "en": "Example offer from a local travel agency. Replace with your real partner.",
+        "ar": "مثال على عرض من وكالة سفر محلية. استبدله بشريكك الحقيقي."
+      },
+      "code": "AGENCE-TEST",
+      "url": "https://example.com/",
+      "valid_until": "2027-12-31",
+      "conditions": {
+        "fr": "Offre d'exemple, sans valeur réelle.",
+        "en": "Example offer, no real value.",
+        "ar": "عرض تجريبي بلا قيمة فعلية."
+      },
+      "affiliate": false
+    },
+    {
+      "category": "hotel",
+      "partner": "Hôtel test",
+      "title": {
+        "fr": "-15 % sur votre séjour (offre test)",
+        "en": "15% off your stay (test offer)",
+        "ar": "خصم 15٪ على إقامتك (عرض تجريبي)"
+      },
+      "desc": {
+        "fr": "Exemple d'offre d'un hôtel partenaire. À remplacer par votre vrai partenaire.",
+        "en": "Example offer from a partner hotel. Replace with your real partner.",
+        "ar": "مثال على عرض من فندق شريك. استبدله بشريكك الحقيقي."
+      },
+      "code": "HOTEL-TEST",
+      "url": "https://example.com/",
+      "valid_until": "2027-12-31",
+      "conditions": {
+        "fr": "Offre d'exemple, sans valeur réelle.",
+        "en": "Example offer, no real value.",
+        "ar": "عرض تجريبي بلا قيمة فعلية."
+      },
+      "affiliate": false
+    },
+    {
+      "category": "transfert",
+      "partner": "Transfert d'argent test",
+      "title": {
+        "fr": "Frais offerts sur votre premier transfert (offre test)",
+        "en": "No fees on your first transfer (test offer)",
+        "ar": "بدون رسوم على أول تحويل (عرض تجريبي)"
+      },
+      "desc": {
+        "fr": "Exemple d'offre d'un service de transfert d'argent. À remplacer par votre vrai partenaire.",
+        "en": "Example offer from a money transfer service. Replace with your real partner.",
+        "ar": "مثال على عرض من خدمة تحويل الأموال. استبدله بشريكك الحقيقي."
+      },
+      "code": "TRANSFERT-TEST",
+      "url": "https://example.com/",
+      "valid_until": "2027-12-31",
+      "conditions": {
+        "fr": "Offre d'exemple, sans valeur réelle.",
+        "en": "Example offer, no real value.",
+        "ar": "عرض تجريبي بلا قيمة فعلية."
+      },
+      "affiliate": true
+    },
+    {
+      "category": "carte",
+      "partner": "Carte test",
+      "title": {
+        "fr": "Carte de voyage ou eSIM à prix réduit (offre test)",
+        "en": "Discounted travel card or eSIM (test offer)",
+        "ar": "بطاقة سفر أو eSIM بسعر مخفض (عرض تجريبي)"
+      },
+      "desc": {
+        "fr": "Exemple d'offre d'une carte technologique ou d'une eSIM. À remplacer par votre vrai partenaire.",
+        "en": "Example offer for a travel card or eSIM. Replace with your real partner.",
+        "ar": "مثال على عرض لبطاقة سفر أو eSIM. استبدله بشريكك الحقيقي."
+      },
+      "code": "CARTE-TEST",
+      "url": "https://example.com/",
+      "valid_until": "2027-12-31",
+      "conditions": {
+        "fr": "Offre d'exemple, sans valeur réelle.",
+        "en": "Example offer, no real value.",
+        "ar": "عرض تجريبي بلا قيمة فعلية."
+      },
+      "affiliate": true
+    }
+  ]
 }
