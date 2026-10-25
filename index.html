@@ -318,7 +318,7 @@ body[data-step="0"] .side{grid-column:2;grid-row:1/3;align-self:start}
 body[data-step="0"] .photo{max-width:none;margin:0}
 body[data-step="0"] .side{margin-top:56px}
 body[data-step="0"] .why{grid-column:1/-1;margin-top:40px}
-body[data-step="0"] .sponsors,body[data-step="0"] .avs,body[data-step="0"] footer{grid-column:1/-1}
+body[data-step="0"] .sponsors,body[data-step="0"] .avs,body[data-step="0"] .trd,body[data-step="0"] footer{grid-column:1/-1}
 body{position:relative}
 .lang{position:absolute;top:26px;right:24px;z-index:6}
 body[data-step="0"] .lang{top:34px}
@@ -560,6 +560,28 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
 </style>
 <style>
 /* Avis voyageurs : n'affiche que les avis réels de reviews.json */
+/* Répertoire des traducteurs assermentés (liste officielle du Consulat général de France à Tunis) */
+.trd{margin:32px auto 0;width:100%;max-width:760px;display:flex;flex-direction:column;gap:14px}
+.trd[hidden]{display:none}
+.trd h2{margin:0;font-family:var(--f-display);font-size:1.6rem;line-height:1.15}
+.trd-sub,.trd-src{margin:0;font-size:14px;line-height:1.55;color:var(--muted)}
+.trd-src a{color:var(--accent-ink)}
+.trd-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.trd-bar select{flex:1 1 200px;min-height:48px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface);color:var(--ink);font:500 15px var(--f-body)}
+.trd-bar button{min-height:48px}
+.trd-n{font-size:13px;color:var(--muted)}
+.trd-list{display:flex;flex-direction:column;gap:12px}
+.trd-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-6);padding:16px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow-card)}
+.trd-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.trd-top b{font-size:16px}
+.trd-city{font:600 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink)}
+.trd-km{font-size:12px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:var(--f-body)}
+.trd-adr{margin:0;font-size:14px;color:var(--muted)}
+.trd-act{display:flex;flex-wrap:wrap;gap:8px}
+.trd-act a{display:inline-flex;align-items:center;min-height:40px;padding:6px 12px;border:1px solid var(--line);border-radius:var(--r-pill);font:500 13px var(--f-body);color:var(--ink);text-decoration:none;background:var(--surface)}
+.trd-act a:hover{border-color:var(--accent);color:var(--accent-ink)}
+.trd-more{align-self:center}
+html[lang="ar"] .trd h2,html[lang="ar"] .trd-card{font-family:var(--f-ar)}
 .avs{margin:32px auto 0;width:100%;max-width:760px;display:flex;flex-direction:column;gap:18px}
 .avs[hidden]{display:none}
 .rv-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px}
@@ -643,6 +665,7 @@ footer .reset{background:#fff;color:#000;border-color:#fff}
   <div class="dock" id="dock" hidden></div>
 
   <button type="button" class="totop" id="totop" aria-label="Haut de page" title="Haut de page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+  <section class="trd" id="trans" aria-label="Traducteurs assermentés" hidden></section>
   <section class="avs" id="reviews" aria-labelledby="rv-t" hidden></section>
   <footer>
     <div class="links" id="links"></div>
@@ -1308,6 +1331,45 @@ function loadReviews(){
     fetch("reviews.json",{signal:c.signal,cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(function(j){clearTimeout(tm);REVIEWS=cleanReviews(j);rvSig="";renderReviews()}).catch(function(){})}catch(e){}
 }
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-rv]");if(!b)return;var t=$("rv-track");if(t)t.scrollBy({left:(b.dataset.rv==="1"?1:-1)*(document.documentElement.dir==="rtl"?-1:1)*Math.min(320,t.clientWidth),behavior:"smooth"})});
+/* Traducteurs assermentés : données reprises de la liste officielle du Consulat général de France à Tunis (valide au 10/06/2026). Format : [nom, ville, adresse, téléphones, e-mails, index du téléphone WhatsApp ou -1] */
+var TR_SRC={date:"10/06/2026",url:"https://tn.diplomatie.gouv.fr/files/tn/files/Consulat/traducteurs-et-interpretes-assermentes-en-langue-francaise_liste-valide-au-10062026.pdf"};
+var TR_CITY={"Tunis":[36.8065,10.1815],"Hammam Lif":[36.73,10.335],"La Soukra":[36.878,10.251],"La Marsa":[36.878,10.325],"Grombalia":[36.599,10.5],"Nabeul":[36.4561,10.7376],"Sousse":[35.8256,10.636],"Béja":[36.7256,9.1817],"Sfax":[34.7406,10.7603],"Djerba":[33.875,10.8575]};
+var TR_DATA=[["Ines BEN AMOR","Hammam Lif","17 Rue Houcine Bouzaiene, 1er étage, 2050 Hammam Lif",["94 229 283","71 291 522","55 099 005"],["inesba.translator@mail.com","inesbenamor2016@yahoo.com"],-1],["Hend BEN SALEM","Tunis","63 Avenue Habib Bourguiba, Le Parnasse, bureau 507, 5e étage, 1000 Tunis",["98 215 462","29 913 664"],["Hend.bensalem@gmail.com"],-1],["Chaima GHAZOUANI","Tunis","35 Avenue de Paris, Immeuble Le Versailles, 5e étage, Tunis",["21 611 861","71 254 581"],["chaima_ghazouani@yahoo.fr"],-1],["Amel ZRIBI","Tunis","18 Rue Mahres, Jardins de l'Aouina, 2045 Tunis",["56 476 628","28 647 939"],["Serviceslinguist@gmail.com"],-1],["Badreddine SNOUSSI","Tunis","Résidence Rihab, bloc B, appartement 3, 43 Rue du Lac Malaren, Les Berges du Lac 1, Tunis",["98 320 193","26 750 318","52 279 211"],["snoussibadr@gmail.com"],0],["Hanen BEJAOUI","Tunis","Immeuble El Fatah, 6e étage, bureau 6-3, 71 Rue Jean Jaurès, Tunis",["54 276 914"],["hanenebejaoui@yahoo.fr"],-1],["Meriem BEN MESSAOUD","Tunis","105 Rue El Bacha, 1006 Tunis",["54 182 202"],["meriembenmessaoud15@gmail.com"],-1],["Marwa AYADI","La Soukra","Complexe Golf Center, bloc B, bureau 10, 1er étage, Avenue Fattouma Bourguiba, 2036 La Soukra, Ariana",["22 579 496"],["translation.web.agency@gmail.com"],-1],["Latifa AYADI HAKIM","Tunis","18 bis Rue Ibn El Khaldoun, 1000 Tunis",["71 354 267","71 332 308","92 816 817"],["ayadihakimlatifa@yahoo.fr"],-1],["Kamel LOUMI","Tunis","44 bis Avenue Bab Bnet, 1006 Tunis",["95 108 044"],["etudetradkam@gmail.com"],-1],["Hamida BARHOUMI","","",["98 771 779"],["hamidabarhoumi50@gmail.com"],-1],["Mohamed BEN CHIKHA","Tunis","63 Avenue Habib Bourguiba, Le Parnasse, bureau 301, 1001 Tunis",["22 098 518","25 815 045"],["traduitout@gmail.com"],-1],["Brahim BEN ROMDHANE","Tunis","43-45 Avenue Habib Bourguiba, Le Colisée, 5e étage, B517, 1000 Tunis",["71 241 707","22 696 048"],["Benromdhane.brahim2@gmail.com"],-1],["Lotfi BEN ROMDHANE","","",["54 685 052"],["lotfibr2014@gmail.com"],-1],["Samia BESBES","Tunis","63 Rue Radhia Haddad, Tunis",["71 340 580"],[],-1],["Najoua BETTOUZIA","Tunis","Centre Alyssa, bureau 45, Manar 1, Tunis",["97 299 817"],["Najoua.bettouzia@gmail.com"],-1],["Aymen CHALBI","La Marsa","3 Rue Tahar Ben Achour, 2070 La Marsa",["71 743 632"],[],-1],["Nizar DRIDI","Tunis","37 Rue Mokthar Attia, Tunis",["71 335 262","58 530 756"],["Nizar.dridi@planet.tn"],-1],["Asma KHLASS","Tunis","102 Rue Radhia Haddad (ex rue de Yougoslavie), impasse Guettar, 2e étage, 1001 Tunis",["71 336 946","54 873 329","26 497 217"],["s.traduction@gmail.com"],-1],["Alaeddine MAHOUECHI","","",["55 310 440"],["alamahouechi@gmail.com"],-1],["Ahmed SAID CHABBI","Tunis","28 Avenue Bab Bnet, 1006 Tunis",["71 563 673","28 672 807","98 347 509"],["traductionalios@gmail.com"],-1],["Narjes CHIKHAOUI","Grombalia","Place de la Révolution du 14 janvier, immeuble Bajli, route de Benikhaled, en face de la station Agil, 8030 Grombalia",["93 614 993","72 214 072"],[],-1],["Mouna M'HAMED","Nabeul","Avenue de France, Immeuble Chelbi, 2e étage, bureau 3, 8000 Nabeul",["55 500 360","36 452 350"],["traductionexpress3@gmail.com"],-1],["Emna BEN HAMOUDA","Sousse","14 Avenue de la République, Immeuble Jaiem Trocadéro, Sousse",["22 652 574"],["emnabenh71@yahoo.fr"],-1],["Saïd BEN LATIFA","Sousse","3 Rue Bechir Sfar, Immeuble Chelly, 2e étage, Sousse",["73 219 153"],[],-1],["Samir BOULILA","Béja","3 Rue Ferhat Hached, 9000 Béja",["98 444 038"],["Samirboulila90@gmail.com"],-1],["Anis BEN FREDJ","Sfax","Route de Tunis, km 0,5, Immeuble Zayatine, Médina, Sfax",["96 816 798","27 634 099"],["anis.bf@hotmail.com"],-1],["Asma BOUSSOFFARA","Djerba","Avenue Abdelhamid El Kadhi, 4180 Houmt Souk, Djerba",["75 620 111","97 742 616"],["asma.traductrice.assermentee@gmail.com"],-1],["Chiheb CHAÂBANE","Sfax","12 Avenue Hédi Chaker (au-dessus d'El Arem), 3000 Sfax",["27 838 385"],["chiheb.traducteur@gmail.com"],-1],["Monia DEKKEM","","",["92 604 633","24 731 633"],["dekkemmonia@gmail.com"],-1],["Imen ELFEKI","","",["29 474 721"],["ifeki29@gmail.com"],-1],["Waël KHABOU","Sfax","4 Rue Habib Maazoun, Bab Bhar, Immeuble Bourji, Sfax",["50 424 325","25 424 321"],["Waelkhabou995@gmail.com"],-1]];
+var TRT={
+ fr:{t:"Traducteurs assermentés en Tunisie",sub:function(d){return "Liste officielle du Consulat général de France à Tunis (valide au "+d+"), pour la traduction vers et depuis le français. Pour un autre pays Schengen, demandez à son ambassade ou à son consulat quelles traductions il accepte."},src:"Source",all:"Toutes les villes",unk:"Ville non précisée",near:"Près de moi",nearOff:"Position refusée ou indisponible.",n:function(n){return n+(n>1?" traducteurs":" traducteur")},call:"Appeler",wa:"WhatsApp",mail:"E-mail",map:"Voir sur la carte",more:function(n){return "Afficher tout ("+n+")"},less:"Réduire",city:"Filtrer par ville",appr:"Distances approximatives, calculées depuis le centre de la ville.",note:"Liste donnée à titre d'information par le consulat : elle ne remplace pas la vérification auprès des autorités locales. Pour corriger ou retirer une fiche, écrivez-nous."},
+ en:{t:"Sworn translators in Tunisia",sub:function(d){return "Official list of the Consulate General of France in Tunis (valid on "+d+"), for translation to and from French. For another Schengen country, ask its embassy or consulate which translations it accepts."},src:"Source",all:"All cities",unk:"City not specified",near:"Near me",nearOff:"Location denied or unavailable.",n:function(n){return n+(n>1?" translators":" translator")},call:"Call",wa:"WhatsApp",mail:"E-mail",map:"View on map",more:function(n){return "Show all ("+n+")"},less:"Show less",city:"Filter by city",appr:"Approximate distances, measured from the city centre.",note:"List provided for information by the consulate: it does not replace checking with the local authorities. To correct or remove an entry, write to us."},
+ ar:{t:"المترجمون المحلَّفون في تونس",sub:function(d){return "القائمة الرسمية للقنصلية العامة لفرنسا في تونس (سارية بتاريخ "+d+")، للترجمة من الفرنسية وإليها. بالنسبة لدولة شنغن أخرى، اسأل سفارتها أو قنصليتها عن الترجمات المقبولة."},src:"المصدر",all:"كل المدن",unk:"المدينة غير محددة",near:"الأقرب إليّ",nearOff:"تم رفض الموقع أو هو غير متاح.",n:function(n){return n+" مترجم"},call:"اتصال",wa:"واتساب",mail:"بريد إلكتروني",map:"عرض على الخريطة",more:function(n){return "عرض الكل ("+n+")"},less:"عرض أقل",city:"التصفية حسب المدينة",appr:"المسافات تقريبية، محسوبة من وسط المدينة.",note:"القائمة مقدَّمة للإعلام من القنصلية ولا تغني عن التحقق لدى السلطات المحلية. لتصحيح بطاقة أو حذفها، راسلنا."}
+};
+var TRS={city:"",pos:null,posErr:false,all:false},trSig="";
+function trTel(p){return "+216"+String(p).replace(/\D/g,"")}
+function trKm(a,b,c,d){var r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,h=Math.sin(x/2)*Math.sin(x/2)+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)*Math.sin(y/2);return 12742*Math.asin(Math.sqrt(h))}
+function renderTrans(){
+  var el=$("trans");if(!el)return;
+  var on=S.step===0;el.hidden=!on;if(!on)return;
+  var sig=[S.lang,TRS.city,TRS.pos?TRS.pos.join():"",TRS.posErr,TRS.all].join("|");if(sig===trSig&&el.firstChild)return;trSig=sig;
+  var R=TRT[S.lang]||TRT.fr,L=S.lang,rows=TR_DATA.map(function(r){var c=TR_CITY[r[1]],km=(TRS.pos&&c)?trKm(TRS.pos[0],TRS.pos[1],c[0],c[1]):null;return {r:r,km:km}});
+  if(TRS.city==="__unk")rows=rows.filter(function(x){return !x.r[1]});else if(TRS.city)rows=rows.filter(function(x){return x.r[1]===TRS.city});
+  if(TRS.pos)rows.sort(function(a,b){return (a.km==null?1e9:a.km)-(b.km==null?1e9:b.km)});
+  var cities=Object.keys(TR_CITY).filter(function(c){return TR_DATA.some(function(r){return r[1]===c})}),total=rows.length,shown=TRS.all?rows:rows.slice(0,6);
+  var h='<h2>'+R.t+'</h2><p class="trd-sub">'+R.sub(TR_SRC.date)+'</p>';
+  h+='<div class="trd-bar"><select id="trd-city" aria-label="'+R.city+'"><option value="">'+R.all+'</option>'+cities.map(function(c){return '<option value="'+escA(c)+'"'+(TRS.city===c?' selected':'')+'>'+esc(c)+'</option>'}).join("")+'<option value="__unk"'+(TRS.city==="__unk"?' selected':'')+'>'+R.unk+'</option></select><button type="button" class="reset" id="trd-near">📍 '+R.near+'</button></div>';
+  h+='<span class="trd-n">'+R.n(total)+(TRS.pos?' · '+R.appr:'')+(TRS.posErr?' · '+R.nearOff:'')+'</span>';
+  h+='<div class="trd-list">'+shown.map(function(x){
+    var r=x.r,tel=r[3].map(function(p,i){return '<a href="tel:'+trTel(p)+'" dir="ltr">'+R.call+' '+esc(p)+'</a>'}).join("");
+    var wa=r[5]>=0?'<a href="https://wa.me/'+trTel(r[3][r[5]]).slice(1)+'" rel="noopener" target="_blank">'+R.wa+'</a>':'';
+    var ml=r[4].length?'<a href="mailto:'+escA(r[4][0])+'">'+R.mail+'</a>':'';
+    var mp=r[2]?'<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r[2]+", Tunisie")+'" rel="noopener" target="_blank">'+R.map+'</a>':'';
+    return '<article class="trd-card"><div class="trd-top"><b>'+esc(r[0])+'</b><span class="trd-city">'+esc(r[1]||R.unk)+(x.km!=null?' <span class="trd-km">· ≈ '+Math.round(x.km)+' km</span>':'')+'</span></div>'+(r[2]?'<p class="trd-adr">'+esc(r[2])+'</p>':'')+'<div class="trd-act">'+tel+wa+ml+mp+'</div></article>'}).join("")+'</div>';
+  if(total>6)h+='<button type="button" class="reset trd-more" id="trd-more">'+(TRS.all?R.less:R.more(total))+'</button>';
+  h+='<p class="trd-src">'+R.src+' : <a href="'+TR_SRC.url+'" rel="noopener" target="_blank">Consulat général de France à Tunis</a>. '+R.note+(SITE.email?' <a href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Traducteurs")+'">'+SITE.email+'</a>':'')+'</p>';
+  el.innerHTML=h;
+}
+document.addEventListener("change",function(e){if(e.target&&e.target.id==="trd-city"){TRS.city=e.target.value;TRS.all=false;trSig="";renderTrans()}});
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("#trd-near,#trd-more");if(!b)return;
+  if(b.id==="trd-more"){TRS.all=!TRS.all;trSig="";renderTrans();return}
+  if(TRS.pos){TRS.pos=null;trSig="";renderTrans();return}
+  if(!navigator.geolocation){TRS.posErr=true;trSig="";renderTrans();return}
+  navigator.geolocation.getCurrentPosition(function(p){TRS.pos=[p.coords.latitude,p.coords.longitude];TRS.posErr=false;trSig="";renderTrans()},function(){TRS.posErr=true;trSig="";renderTrans()},{timeout:8000,maximumAge:600000})});
 function nm(o){return o.n[S.lang]}
 function curC(){return COUNTRIES.filter(function(c){return c.id===S.country})[0]||COUNTRIES[0]}
 function eff(){if(S.purpose==="reunion")S.purpose="tourism";return S.motive==="medical"?"medical":S.purpose}
@@ -2284,7 +2346,7 @@ function render(){
   $("brand").innerHTML='<span style="color:var(--accent)">Visa</span> Checker';$("stamp").hidden=true;
   if(st===0){$("h1").innerHTML=t.sloganA+'<span class="acc">'+t.sloganB+'</span>'}else{$("h1").textContent=[0,t.modeTitle,t.destTitle,t.pTitle,t.dTitle,S.mode==="appeal"?t.apTitle:t.hTitle,EVT[S.lang].listTitle,evTitle(),rq(8),rq(9),rq(10),TLS[S.lang].t11,TLS[S.lang].t12,TLS[S.lang].t13][st]}
   $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10),TLS[S.lang].s11,TLS[S.lang].s12,TLS[S.lang].s13][st];document.body.dataset.step=st;
-  $("disc").textContent=t.disc;renderLegal();renderReviews();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
+  $("disc").textContent=t.disc;renderLegal();renderTrans();renderReviews();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
   $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
