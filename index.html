@@ -559,6 +559,23 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
 }
 </style>
 <style>
+/* Avis voyageurs : n'affiche que les avis réels de reviews.json */
+.rv{margin-top:32px;display:flex;flex-direction:column;gap:18px}
+.rv-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px}
+.rv h2{margin:0;font-family:var(--f-display);font-size:1.6rem;line-height:1.15}
+.rv-sum{display:flex;align-items:center;gap:10px;font-weight:600}
+.rv-stars{color:var(--accent-2);letter-spacing:2px;font-size:20px;line-height:1;white-space:nowrap}
+.rv-stars i{font-style:normal;color:var(--line)}
+.rv-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:thin}
+.rv-card{flex:0 0 min(300px,82%);scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-6);padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow-card)}
+.rv-card p{margin:0;font-size:15px;line-height:1.55;flex:1}
+.rv-by{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted)}
+.rv-by b{color:var(--ink)}
+.rv-nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rv-nav button.rv-b{width:44px;height:44px;border-radius:50%;border:0;background:var(--accent);color:var(--on-accent);font-size:20px;cursor:pointer}
+.rv-nav .rv-cta{margin-inline-start:auto}
+.rv-empty{margin:0;color:var(--muted);font-size:15px}
+html[lang="ar"] .rv h2,html[lang="ar"] .rv-card{font-family:var(--f-ar)}
 .ag-card.ag-anon{grid-template-columns:1fr;text-align:center}
 .ag-card.ag-anon .ag-body{align-items:center}
 .srv-sub{text-align:center}
@@ -623,6 +640,7 @@ footer .reset{background:#fff;color:#000;border-color:#fff}
   <div class="dock" id="dock" hidden></div>
 
   <button type="button" class="totop" id="totop" aria-label="Haut de page" title="Haut de page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+  <section class="rv" id="reviews" aria-labelledby="rv-t" hidden></section>
   <footer>
     <div class="links" id="links"></div>
     <p id="disc"></p>
@@ -1246,6 +1264,46 @@ function loadPartners(){
   try{var c=new AbortController(),tm=setTimeout(function(){c.abort()},6000);
     fetch("partners.json",{signal:c.signal,cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(function(j){clearTimeout(tm);var p=cleanPartners(j);if(p){PARTNERS=p;if(S.step===8)render()}}).catch(function(){})}catch(e){}
 }
+/* Avis : les avis viennent uniquement de reviews.json (vrais clients, avec leur accord). Rien n'est inventé. */
+var REVIEWS=[],rvSig="";
+var RVT={
+ fr:{t:"Avis de nos voyageurs",none:"Vous avez utilisé Visa Checker ? Partagez votre expérience, elle aidera d'autres voyageurs.",cta:"Laisser un avis",of:"sur 5",n:function(n){return n+(n>1?" avis":" avis")},prev:"Avis précédents",next:"Avis suivants",sub:"Visa Checker - Mon avis",body:"Ma note (1 à 5) : \nMon avis : \nMon prénom : \n\nJ'accepte que mon avis soit publié sur le site."},
+ en:{t:"Traveller reviews",none:"Used Visa Checker? Share your experience, it will help other travellers.",cta:"Leave a review",of:"out of 5",n:function(n){return n+(n>1?" reviews":" review")},prev:"Previous reviews",next:"Next reviews",sub:"Visa Checker - My review",body:"My rating (1 to 5): \nMy review: \nMy first name: \n\nI agree that my review is published on the site."},
+ ar:{t:"آراء المسافرين",none:"هل استعملت Visa Checker؟ شاركنا تجربتك، فهي تساعد مسافرين آخرين.",cta:"اترك رأيك",of:"من 5",n:function(n){return n+" تقييم"},prev:"الآراء السابقة",next:"الآراء التالية",sub:"Visa Checker - رأيي",body:"تقييمي (من 1 إلى 5): \nرأيي: \nاسمي الأول: \n\nأوافق على نشر رأيي في الموقع."}
+};
+function cleanReviews(j){
+  if(!j||!Array.isArray(j.reviews))return [];
+  var out=[];
+  j.reviews.slice(0,12).forEach(function(r){
+    if(!r||typeof r!=="object")return;
+    var rt=Math.round(Number(r.rating)),nm=typeof r.name==="string"?cleanTxt(r.name).slice(0,40):"",tx={};
+    if(typeof r.text==="string")tx={fr:r.text,en:r.text,ar:r.text};else if(r.text&&typeof r.text==="object")tx=r.text;
+    ["fr","en","ar"].forEach(function(l){tx[l]=typeof tx[l]==="string"?cleanTxt(tx[l]).slice(0,320):""});
+    if(!(rt>=1&&rt<=5)||!nm||!(tx.fr||tx.en||tx.ar))return;
+    out.push({rating:rt,name:nm,text:tx,place:typeof r.place==="string"?cleanTxt(r.place).slice(0,40):""});
+  });
+  return out;
+}
+function starsHtml(n){var s="";for(var i=1;i<=5;i++)s+=i<=n?"★":"<i>★</i>";return '<span class="rv-stars" role="img" aria-label="'+n+' / 5" dir="ltr">'+s+'</span>'}
+function renderReviews(){
+  var el=$("reviews");if(!el)return;
+  var on=S.step===0;el.hidden=!on;if(!on)return;
+  var sig=S.lang+"|"+REVIEWS.length;if(sig===rvSig&&el.firstChild)return;rvSig=sig;
+  var R=RVT[S.lang]||RVT.fr,L=S.lang,n=REVIEWS.length,h='';
+  var mail=SITE.email?'<a class="pay rv-cta" href="mailto:'+SITE.email+'?subject='+encodeURIComponent(R.sub)+'&body='+encodeURIComponent(R.body)+'">'+R.cta+'</a>':'';
+  if(!n){el.innerHTML='<h2 id="rv-t">'+R.t+'</h2><p class="rv-empty">'+R.none+'</p><div class="rv-nav">'+mail+'</div>';return}
+  var avg=REVIEWS.reduce(function(a,r){return a+r.rating},0)/n;
+  h+='<div class="rv-head"><h2 id="rv-t">'+R.t+'</h2><div class="rv-sum">'+starsHtml(Math.round(avg))+'<span dir="ltr">'+avg.toFixed(1)+' '+R.of+'</span><span>· '+R.n(n)+'</span></div></div>';
+  h+='<div class="rv-track" id="rv-track" tabindex="0">'+REVIEWS.map(function(r){
+    return '<article class="rv-card">'+starsHtml(r.rating)+'<p>'+esc(r.text[L]||r.text.fr||r.text.en||r.text.ar)+'</p><div class="rv-by"><b>'+esc(r.name)+'</b><span>'+esc(r.place)+'</span></div></article>'}).join("")+'</div>';
+  h+='<div class="rv-nav"><button type="button" class="rv-b" data-rv="-1" aria-label="'+R.prev+'">‹</button><button type="button" class="rv-b" data-rv="1" aria-label="'+R.next+'">›</button>'+mail+'</div>';
+  el.innerHTML=h;
+}
+function loadReviews(){
+  try{var c=new AbortController(),tm=setTimeout(function(){c.abort()},6000);
+    fetch("reviews.json",{signal:c.signal,cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(function(j){clearTimeout(tm);REVIEWS=cleanReviews(j);rvSig="";renderReviews()}).catch(function(){})}catch(e){}
+}
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-rv]");if(!b)return;var t=$("rv-track");if(t)t.scrollBy({left:(b.dataset.rv==="1"?1:-1)*(document.documentElement.dir==="rtl"?-1:1)*Math.min(320,t.clientWidth),behavior:"smooth"})});
 function nm(o){return o.n[S.lang]}
 function curC(){return COUNTRIES.filter(function(c){return c.id===S.country})[0]||COUNTRIES[0]}
 function eff(){if(S.purpose==="reunion")S.purpose="tourism";return S.motive==="medical"?"medical":S.purpose}
@@ -2219,7 +2277,7 @@ function render(){
   $("brand").innerHTML='<span style="color:var(--accent)">Visa</span> Checker';$("stamp").hidden=true;
   if(st===0){$("h1").innerHTML=t.sloganA+'<span class="acc">'+t.sloganB+'</span>'}else{$("h1").textContent=[0,t.modeTitle,t.destTitle,t.pTitle,t.dTitle,S.mode==="appeal"?t.apTitle:t.hTitle,EVT[S.lang].listTitle,evTitle(),rq(8),rq(9),rq(10),TLS[S.lang].t11,TLS[S.lang].t12,TLS[S.lang].t13][st]}
   $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10),TLS[S.lang].s11,TLS[S.lang].s12,TLS[S.lang].s13][st];document.body.dataset.step=st;
-  $("disc").textContent=t.disc;renderLegal();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
+  $("disc").textContent=t.disc;renderLegal();renderReviews();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
   $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
@@ -2451,7 +2509,7 @@ document.addEventListener("input",function(e){if(e.target.id==="refcase"){S.refu
 })();
 ["fr","en","ar"].forEach(function(l){$("l-"+l).onclick=function(){S.lang=l;save();render()}});
 $("reset").onclick=function(){S.done={};save();render()};
-loadPartners();
+loadPartners();loadReviews();
 (function(){var b=document.getElementById("totop");if(!b)return;
   function chk(){b.classList.toggle("on",(window.pageYOffset||document.documentElement.scrollTop)>400)}
   window.addEventListener("scroll",chk,{passive:true});chk();
