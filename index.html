@@ -1538,6 +1538,9 @@ function reqText(){
   if(F.city)l.push("Ville : "+F.city);
   l.push("Téléphone / WhatsApp : "+F.phone);if(F.tg)l.push("Telegram : @"+F.tg);if(F.mail)l.push("E-mail : "+F.mail);
   l.push("Canal pour le paiement et le document : "+CHFR[F.chan]);
+  /* Lien de réponse en un clic pour l'agence, selon le canal choisi par le client */
+  var reply=F.chan==="whatsapp"&&F.phone?"https://wa.me/"+F.phone.replace(/[^\d]/g,""):F.chan==="telegram"&&F.tg?"https://t.me/"+F.tg:F.chan==="email"&&F.mail?"mailto:"+F.mail:"";
+  if(reply)l.push("Répondre au client (lien de paiement) : "+reply);
   return l.join("\n");
 }
 function contactFor(){return RQ.chan==="telegram"?"@"+RQ.tg:RQ.chan==="email"?RQ.mail:RQ.phone}
