@@ -2482,46 +2482,74 @@ render();
 
 
 <style>
-#vc-btn{position:fixed;inset-inline-end:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:var(--r-pill);background:var(--accent);color:var(--on-accent);border:0;font-size:26px;box-shadow:var(--shadow-lift);z-index:50;cursor:pointer}
-#vc-box{position:fixed;inset-inline-end:16px;bottom:calc(150px + env(safe-area-inset-bottom,0px));width:min(340px,calc(100vw - 32px));height:min(420px,calc(100vh - 220px));background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-5);box-shadow:var(--shadow-modal);display:none;flex-direction:column;overflow:hidden;z-index:50;font-family:var(--f-body)}
-#vc-head{background:var(--accent);color:var(--on-accent);padding:12px;font-weight:700}
+#vc-btn{position:fixed;inset-inline-end:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:var(--r-pill);background:var(--accent);color:var(--on-accent);border:0;box-shadow:var(--shadow-lift);z-index:50;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#vc-btn svg{width:30px;height:30px}
+#vc-box{position:fixed;inset-inline-end:16px;bottom:calc(150px + env(safe-area-inset-bottom,0px));width:min(340px,calc(100vw - 32px));height:min(460px,calc(100vh - 220px));background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-5);box-shadow:var(--shadow-modal);display:none;flex-direction:column;overflow:hidden;z-index:50;font-family:var(--f-body)}
+#vc-head{background:var(--accent);color:var(--on-accent);padding:10px 12px;display:flex;align-items:center;gap:10px}
+.vc-av{width:38px;height:38px;border-radius:var(--r-pill);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;flex:none}
+.vc-av svg{width:26px;height:26px}
+#vc-name{font-weight:700;line-height:1.2}
+#vc-on{font-size:12px;display:flex;align-items:center;gap:5px}
+#vc-on::before{content:"";width:8px;height:8px;border-radius:var(--r-pill);background:var(--ok-soft);box-shadow:0 0 0 1px var(--ok)}
+#vc-hello{text-align:center;font-size:13px;color:var(--muted);padding:6px 10px;border-bottom:1px solid var(--line);min-height:20px}
 #vc-msgs{flex:1;overflow-y:auto;padding:10px;font-size:14px}
 .vc-m{margin:6px 0;padding:8px 10px;border-radius:var(--r-3);max-width:85%;white-space:pre-wrap;overflow-wrap:anywhere}
 .vc-u{background:var(--accent-soft);margin-inline-start:auto}
 .vc-a{background:var(--line)}
+#vc-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 10px 8px}
+.vc-chip{border:1px solid var(--accent);background:var(--surface);color:var(--accent-ink);border-radius:var(--r-pill);padding:6px 10px;font-size:13px;cursor:pointer;font-family:inherit}
 #vc-form{display:flex;border-top:1px solid var(--line)}
 #vc-in{flex:1;min-width:0;border:0;padding:12px;font-size:16px;outline:none;background:var(--surface);color:var(--ink);font-family:inherit}
 #vc-send{border:0;background:var(--accent);color:var(--on-accent);padding:0 16px;cursor:pointer;font-family:inherit}
 </style>
-<button id="vc-btn" type="button" aria-label="Assistant">&#128172;</button>
+<button id="vc-btn" type="button" aria-label="Assistant"></button>
 <div id="vc-box" role="dialog" aria-label="Assistant Visa Checker">
-  <div id="vc-head">Assistant Visa Checker</div>
+  <div id="vc-head"><span class="vc-av"></span><div><div id="vc-name">Assistant Visa Checker</div><div id="vc-on"></div></div></div>
+  <div id="vc-hello" aria-hidden="true"></div>
   <div id="vc-msgs" aria-live="polite"></div>
+  <div id="vc-chips"></div>
   <div id="vc-form"><input id="vc-in" maxlength="500" autocomplete="off"><button id="vc-send" type="button"></button></div>
 </div>
 <script>
 (function(){
   var CHAT_URL="https://visa-chat.rabehfly.workers.dev";
+  var FACE='<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="8" width="22" height="18" rx="7" fill="#fff" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="17" r="2.4" fill="currentColor"/><circle cx="20" cy="17" r="2.4" fill="currentColor"/><path d="M12 22c2.5 1.6 5.5 1.6 8 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 8V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="3.5" r="1.6" fill="currentColor"/></svg>';
+  var HELLOS=["Bonjour","Hello","مرحبا","Bienvenue","Welcome","أهلاً"];
   var T={
-    fr:{hi:"Bonjour ! Pose-moi ta question sur ton dossier de visa pour la France. Je ne remplace pas le consulat et je ne peux pas promettre un visa.",ph:"Pose ta question…",send:"Envoyer",err:"Erreur, réessaie.",net:"Connexion impossible, réessaie."},
-    en:{hi:"Hello! Ask me about your visa file for France. I don't replace the consulate and I can't promise a visa.",ph:"Ask your question…",send:"Send",err:"Error, please try again.",net:"Connection failed, please try again."},
-    ar:{hi:"مرحباً! اسألني عن ملف التأشيرة إلى فرنسا. أنا لا أحل محل القنصلية ولا أستطيع ضمان التأشيرة.",ph:"اكتب سؤالك…",send:"إرسال",err:"خطأ، حاول مرة أخرى.",net:"تعذر الاتصال، حاول مرة أخرى."}
+    fr:{hi:"Bonjour ! Je suis l'assistant Visa Checker. Pose-moi ta question sur ton dossier de visa pour la France. Je ne remplace pas le consulat et je ne peux pas promettre un visa.",ph:"Pose ta question…",send:"Envoyer",on:"En ligne",err:"Erreur, réessaie.",net:"Connexion impossible, réessaie.",chips:[["Quels documents ?","Quels documents dois-je préparer pour mon visa ?"],["Visa refusé","Mon visa a été refusé, que faire ?"],["Billet et hôtel","Comment justifier mon billet d'avion et ma réservation d'hôtel ?"]]},
+    en:{hi:"Hello! I'm the Visa Checker assistant. Ask me about your visa file for France. I don't replace the consulate and I can't promise a visa.",ph:"Ask your question…",send:"Send",on:"Online",err:"Error, please try again.",net:"Connection failed, please try again.",chips:[["Which documents?","Which documents should I prepare for my visa?"],["Visa refused","My visa was refused, what should I do?"],["Ticket and hotel","How do I justify my flight ticket and hotel booking?"]]},
+    ar:{hi:"مرحباً! أنا مساعد Visa Checker. اسألني عن ملف التأشيرة إلى فرنسا. لا أحل محل القنصلية ولا أستطيع ضمان التأشيرة.",ph:"اكتب سؤالك…",send:"إرسال",on:"متصل",err:"خطأ، حاول مرة أخرى.",net:"تعذر الاتصال، حاول مرة أخرى.",chips:[["ما هي الوثائق؟","ما هي الوثائق التي يجب أن أحضّرها لتأشيرتي؟"],["تأشيرة مرفوضة","تم رفض تأشيرتي، ماذا أفعل؟"],["التذكرة والفندق","كيف أثبت تذكرة الطائرة وحجز الفندق؟"]]}
   };
   function L(){var l=(document.documentElement.lang||"fr").slice(0,2);return T[l]||T.fr;}
-  var box=document.getElementById("vc-box"),msgs=document.getElementById("vc-msgs"),
-      inp=document.getElementById("vc-in"),sendBtn=document.getElementById("vc-send"),
-      hist=[],busy=false,last=0,greet=null;
+  var $=function(i){return document.getElementById(i)};
+  var box=$("vc-box"),msgs=$("vc-msgs"),inp=$("vc-in"),sendBtn=$("vc-send"),chips=$("vc-chips"),hello=$("vc-hello"),
+      hist=[],busy=false,last=0,greet=null,timer=null,hi=0,
+      still=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  $("vc-btn").innerHTML=FACE;document.querySelector(".vc-av").innerHTML=FACE;
   function add(t,c){var d=document.createElement("div");d.className="vc-m "+c;d.textContent=t;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;}
-  function labels(){var l=L();inp.placeholder=l.ph;sendBtn.textContent=l.send;if(greet&&!hist.length)greet.textContent=l.hi;}
+  function labels(){
+    var l=L();inp.placeholder=l.ph;sendBtn.textContent=l.send;$("vc-on").textContent=l.on;
+    if(greet&&!hist.length)greet.textContent=l.hi;
+    chips.innerHTML="";
+    if(!hist.length)l.chips.forEach(function(c){var b=document.createElement("button");b.type="button";b.className="vc-chip";b.textContent=c[0];b.onclick=function(){send(c[1])};chips.appendChild(b);});
+  }
+  function tick(){hello.textContent=HELLOS[hi++%HELLOS.length];}
+  function startHello(){
+    if(still){hello.textContent=HELLOS.slice(0,3).join(" · ");return;}
+    tick();clearInterval(timer);timer=setInterval(tick,2200);
+  }
+  function stopHello(){clearInterval(timer);hello.hidden=true;}
   greet=add(L().hi,"vc-a");labels();
-  document.getElementById("vc-btn").onclick=function(){
+  $("vc-btn").onclick=function(){
     var open=box.style.display==="flex";box.style.display=open?"none":"flex";
-    if(!open){labels();inp.focus();}
+    if(open){clearInterval(timer);return;}
+    labels();if(!hist.length){hello.hidden=false;startHello();}inp.focus();
   };
-  function send(){
-    var t=inp.value.trim();
+  function send(text){
+    var t=(typeof text==="string"?text:inp.value).trim();
     if(!t||busy||Date.now()-last<2000)return;
     last=Date.now();busy=true;inp.value="";
+    stopHello();chips.innerHTML="";
     add(t,"vc-u");hist.push({role:"user",text:t});
     var w=add("…","vc-a"),l=L();
     fetch(CHAT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:hist})})
@@ -2530,7 +2558,7 @@ render();
       .catch(function(){w.textContent=l.net;hist.pop();})
       .then(function(){busy=false;});
   }
-  sendBtn.onclick=send;
+  sendBtn.onclick=function(){send()};
   inp.addEventListener("keydown",function(e){if(e.key==="Enter")send();});
 })();
 </script>
