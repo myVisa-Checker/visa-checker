@@ -578,26 +578,49 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
 <style>
 /* Avis voyageurs : n'affiche que les avis réels de reviews.json */
 /* Répertoire des traducteurs assermentés (liste officielle du Consulat général de France à Tunis) */
-/* Bons plans et réductions partenaires : alimenté par deals.json (offres réelles, négociées) */
-.bpn{margin:32px auto 0;width:100%;max-width:760px;display:flex;flex-direction:column;gap:14px}
+/* Bons plans et réductions partenaires : alimenté par deals.json. Centré, coloré, animé ; l'offre s'affiche quand le client choisit une catégorie */
+.bpn{margin:36px auto 0;width:100%;max-width:760px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
 .bpn[hidden]{display:none}
-.bpn h2{margin:0;font-family:var(--f-display);font-size:1.6rem;line-height:1.15}
-.bpn-sub,.bpn-note{margin:0;font-size:14px;line-height:1.55;color:var(--muted)}
-.bpn-chips{display:flex;flex-wrap:wrap;gap:8px}
-.bpn-list{display:flex;flex-direction:column;gap:12px}
-.bpn-card{background:var(--surface);border:2px solid var(--accent);border-radius:var(--r-6);padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-card)}
-.bpn-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.bpn h2{margin:0;font-family:var(--f-display);font-size:1.75rem;line-height:1.15;background:linear-gradient(90deg,#e8590c,#c026d3 55%,#6d28d9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bpn-sub,.bpn-note,.bpn-hint{margin:0;font-size:14px;line-height:1.55;color:var(--muted);max-width:560px}
+.bpn-tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;width:100%}
+.bpn-tile{--c1:#ff8a3d;--c2:#e8590c;appearance:none;border:2px solid var(--c1);background:var(--surface);color:var(--ink);border-radius:var(--r-6);width:150px;padding:16px 10px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;font:600 14px var(--f-body);cursor:pointer;opacity:0;animation:bpnIn .55s cubic-bezier(.3,1.3,.5,1) forwards;transition:transform .25s ease,box-shadow .25s ease,background .25s ease,color .25s ease}
+.bpn-tile[data-c="agence"]{--c1:#ff8a3d;--c2:#e8590c}
+.bpn-tile[data-c="hotel"]{--c1:#a78bfa;--c2:#6d28d9}
+.bpn-tile[data-c="transfert"]{--c1:#34d399;--c2:#15803d}
+.bpn-tile[data-c="carte"]{--c1:#38bdf8;--c2:#0369a1}
+.bpn-tile:nth-child(2){animation-delay:.08s}.bpn-tile:nth-child(3){animation-delay:.16s}.bpn-tile:nth-child(4){animation-delay:.24s}
+.bpn-ic{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 6px 16px -6px var(--c2);animation:bpnFloat 3.2s ease-in-out infinite}
+.bpn-tile:nth-child(2) .bpn-ic{animation-delay:.4s}.bpn-tile:nth-child(3) .bpn-ic{animation-delay:.8s}.bpn-tile:nth-child(4) .bpn-ic{animation-delay:1.2s}
+.bpn-ic svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.bpn-ic svg.fl{fill:currentColor;stroke:none}
+@media (hover:hover){.bpn-tile:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 14px 28px -14px var(--c2)}}
+.bpn-tile[aria-pressed="true"]{background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;border-color:var(--c2);box-shadow:0 14px 30px -12px var(--c2);transform:translateY(-3px)}
+.bpn-tile[aria-pressed="true"] .bpn-ic{background:#fff;color:var(--c2);box-shadow:none}
+.bpn-hint{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;color:var(--accent-ink)}
+.bpn-hint i{font-style:normal;display:inline-block;animation:bpnBounce 1.2s ease-in-out infinite}
+.bpn-res{width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;min-height:24px}
+.bpn-card{--c1:#ff8a3d;--c2:#e8590c;width:100%;max-width:520px;background:var(--surface);border:2px solid var(--c2);border-radius:var(--r-6);padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 18px 36px -22px var(--c2);position:relative;overflow:hidden;animation:bpnCard .5s cubic-bezier(.3,1.2,.5,1) both}
+.bpn-card::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,var(--c1),var(--c2))}
+.bpn-card[data-c="hotel"]{--c1:#a78bfa;--c2:#6d28d9}.bpn-card[data-c="transfert"]{--c1:#34d399;--c2:#15803d}.bpn-card[data-c="carte"]{--c1:#38bdf8;--c2:#0369a1}
+.bpn-top{display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:4px}
 .bpn-top b{font-size:16px}
-.bpn-tag{font:600 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);border:1px solid var(--accent);border-radius:var(--r-1);padding:2px 8px}
-.bpn-t{margin:0;font-family:var(--f-display);font-size:1.25rem;line-height:1.2;color:var(--accent-ink)}
-.bpn-card p{margin:0;font-size:15px;line-height:1.5}
-.bpn-code{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.bpn-code code{font:700 15px var(--f-mono);letter-spacing:.08em;background:var(--accent-soft);border:1px dashed var(--accent);border-radius:var(--r-2);padding:8px 12px;color:var(--accent-deep)}
+.bpn-tag{font:700 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));border-radius:999px;padding:3px 12px}
+.bpn-t{margin:0;font-family:var(--f-display);font-size:1.4rem;line-height:1.2;color:var(--c2)}
+.bpn-card p{margin:0;font-size:15px;line-height:1.5;color:var(--ink)}
+.bpn-card .bpn-note{font-size:13px;color:var(--muted)}
+.bpn-code{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.bpn-code code{font:700 16px var(--f-mono);letter-spacing:.1em;color:var(--c2);background:var(--surface);border:2px dashed var(--c2);border-radius:var(--r-2);padding:8px 14px;animation:bpnPulse 2.4s ease-in-out infinite}
 .bpn-code button{min-height:40px;padding:6px 14px}
-.bpn-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
-.bpn-foot a.pay{min-height:44px}
-.bpn-cta{align-self:flex-start}
-html[lang="ar"] .bpn h2,html[lang="ar"] .bpn-card{font-family:var(--f-ar)}
+.bpn-foot{display:flex;flex-direction:column;align-items:center;gap:10px;font-size:13px;color:var(--muted);width:100%}
+.bpn-foot a.pay{min-height:46px;align-self:center;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;box-shadow:0 10px 22px -10px var(--c2)}
+.bpn-cta{align-self:center}
+@keyframes bpnIn{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes bpnFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes bpnBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes bpnCard{from{opacity:0;transform:translateY(22px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes bpnPulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--c2) 18%,transparent)}}
+html[lang="ar"] .bpn h2,html[lang="ar"] .bpn-card,html[lang="ar"] .bpn-tile{font-family:var(--f-ar)}
 .trd{margin:32px auto 0;width:100%;max-width:760px;display:flex;flex-direction:column;gap:14px}
 .trd[hidden]{display:none}
 .trd h2{margin:0;font-family:var(--f-display);font-size:1.6rem;line-height:1.15}
