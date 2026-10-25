@@ -1069,6 +1069,7 @@ function renderRefus(t){
   }else{
     h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
     h+='<h2>'+t.rfAdvTitle+'</h2><ol class="adv">'+t.adv.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ol>';
+    h+=anHtml();
     h+=aiHtml();
     h+='<h2>'+t.rfLetTitle+'</h2><p class="rf-sub">'+t.rfNote+'</p>';
     if(PACK_STATE!=="ok"){var K=PKX[L];loadPack();h+='<p class="rf-sub" role="status">'+(PACK_STATE==="err"?K.err:K.load)+'</p>'+(PACK_STATE==="err"?'<button type="button" class="reset" data-pkretry="1">'+K.retry+'</button>':'');$("refus").innerHTML=h;return}
@@ -1076,6 +1077,7 @@ function renderRefus(t){
       h+='<details class="lt"><summary>'+p.t[L]+'</summary><div class="lt-body"><pre class="letter" id="pk-'+p.id+'">'+esc(p.body)+'</pre><button type="button" class="cp" data-copy="'+p.id+'">'+t.copy+'</button> <button type="button" class="cp" data-pdf="'+p.id+'">'+({fr:"Enregistrer en PDF",en:"Save as PDF",ar:"حفظ بصيغة PDF"})[L]+'</button></div></details>';
     });
   }
+  h+=soonHtml();
   h+='<p class="ag-note">'+t.rfNoGuar+'</p>';
   $("refus").innerHTML=h;
 }
@@ -1962,15 +1964,15 @@ document.addEventListener("change",function(e){
 var LETTER_URL="https://visa-proxy.rabehfly.workers.dev/letter";
 var AIS={f:{language:"fr",purpose:"tourism",profile:"employee",country:"",dateFrom:"",dateTo:"",job:"",income:"",budget:"",lodging:"",ties:"",notes:""},busy:false,err:"",res:""};
 var AIX={
-fr:{title:"Lettre de motivation sur mesure (IA)",intro:"Renseignez votre situation : l'IA rédige un brouillon que vous relisez et corrigez. Ne saisissez jamais de numéro de passeport. Les informations sont envoyées à un service d'IA (Anthropic) pour écrire la lettre ; notre serveur ne les conserve pas.",
+fr:{title:"Lettre de motivation sur mesure (IA)",intro:"Renseignez votre situation : l'IA rédige un brouillon que vous relisez et corrigez. Ne saisissez jamais de numéro de passeport. Votre texte est envoyé à un service d'intelligence artificielle tiers pour écrire la lettre ; notre serveur ne le conserve pas.",
  lang:"Langue de la lettre",purpose:"Motif du voyage",prof:"Votre situation",country:"Pays de destination",from:"Départ prévu",to:"Retour prévu",job:"Profession et employeur / établissement",income:"Revenu mensuel (ex. 1800 dinars)",budget:"Budget du séjour (ex. 1500 euros)",lodging:"Hébergement (hôtel, chez un proche…)",ties:"Attaches en Tunisie (famille, logement, travail…)",notes:"Précisions utiles (facultatif)",go:"Générer la lettre",busy:"Rédaction en cours…",
  reqErr:"Renseignez la situation, le pays et des dates valides (retour après le départ).",auth:"Votre accès a expiré. Saisissez un nouveau code.",rate:"Limite du jour atteinte. Réessayez demain.",fail:"La génération a échoué. Réessayez dans un instant.",resT:"Votre lettre (brouillon IA)",warn:"Brouillon : vérifiez chaque fait, complétez les [crochets] et signez vous-même.",
  purposes:{tourism:"Tourisme",family:"Visite familiale ou amicale",business:"Affaires",medical:"Soins médicaux"},profs:{employee:"Salarié(e)",self:"Indépendant(e)",student:"Étudiant(e)",retired:"Retraité(e)",other:"Autre"},copy:"Copier",pdf:"Enregistrer en PDF"},
-en:{title:"Tailor-made cover letter (AI)",intro:"Describe your situation: the AI writes a draft that you review and correct. Never enter a passport number. The details are sent to an AI service (Anthropic) to write the letter; our server does not keep them.",
+en:{title:"Tailor-made cover letter (AI)",intro:"Describe your situation: the AI writes a draft that you review and correct. Never enter a passport number. Your text is sent to a third-party artificial intelligence service to write the letter; our server does not keep it.",
  lang:"Letter language",purpose:"Purpose of travel",prof:"Your situation",country:"Destination country",from:"Planned departure",to:"Planned return",job:"Job and employer / school",income:"Monthly income (e.g. 1800 dinars)",budget:"Trip budget (e.g. 1500 euros)",lodging:"Accommodation (hotel, with a relative…)",ties:"Ties to Tunisia (family, home, work…)",notes:"Useful details (optional)",go:"Generate the letter",busy:"Writing…",
  reqErr:"Fill in your situation, the country and valid dates (return after departure).",auth:"Your access has expired. Enter a new code.",rate:"Daily limit reached. Try again tomorrow.",fail:"Generation failed. Try again shortly.",resT:"Your letter (AI draft)",warn:"Draft: check every fact, fill in the [brackets] and sign it yourself.",
  purposes:{tourism:"Tourism",family:"Family or friends visit",business:"Business",medical:"Medical care"},profs:{employee:"Employee",self:"Self-employed",student:"Student",retired:"Retired",other:"Other"},copy:"Copy",pdf:"Save as PDF"},
-ar:{title:"رسالة تحفيز مخصّصة (ذكاء اصطناعي)",intro:"صف وضعيتك: يكتب الذكاء الاصطناعي مسودة تراجعها وتصحّحها. لا تدخل أبداً رقم جواز السفر. تُرسل المعلومات إلى خدمة ذكاء اصطناعي (Anthropic) لكتابة الرسالة ولا يحتفظ بها خادمنا.",
+ar:{title:"رسالة تحفيز مخصّصة (ذكاء اصطناعي)",intro:"صف وضعيتك: يكتب الذكاء الاصطناعي مسودة تراجعها وتصحّحها. لا تدخل أبداً رقم جواز السفر. يُرسل نصك إلى خدمة ذكاء اصطناعي تابعة لطرف ثالث لكتابة الرسالة ولا يحتفظ به خادمنا.",
  lang:"لغة الرسالة",purpose:"سبب السفر",prof:"وضعيتك",country:"بلد الوجهة",from:"تاريخ السفر المتوقع",to:"تاريخ العودة المتوقع",job:"المهنة والمؤجّر / المؤسسة",income:"الدخل الشهري (مثال: 1800 دينار)",budget:"ميزانية الرحلة (مثال: 1500 أورو)",lodging:"الإقامة (فندق، عند قريب…)",ties:"الروابط في تونس (عائلة، سكن، عمل…)",notes:"تفاصيل مفيدة (اختياري)",go:"إنشاء الرسالة",busy:"جارٍ الكتابة…",
  reqErr:"أدخل وضعيتك والبلد وتواريخ صحيحة (العودة بعد السفر).",auth:"انتهت صلاحية وصولك. أدخل رمزاً جديداً.",rate:"بلغتَ الحد اليومي. أعد المحاولة غداً.",fail:"فشل الإنشاء. أعد المحاولة بعد قليل.",resT:"رسالتك (مسودة بالذكاء الاصطناعي)",warn:"مسودة: تحقق من كل معلومة وأكمل ما بين [الأقواس] ووقّع بنفسك.",
  purposes:{tourism:"سياحة",family:"زيارة عائلية أو أصدقاء",business:"أعمال",medical:"علاج طبي"},profs:{employee:"موظف",self:"عمل حر",student:"طالب",retired:"متقاعد",other:"آخر"},copy:"نسخ",pdf:"حفظ بصيغة PDF"}};
@@ -2012,6 +2014,55 @@ document.addEventListener("click",function(e){
     aiShow();
   });
 });
+
+
+/* ===== Analyseur de lettre de refus (IA, via le Worker /analyze, réservé au pack) ===== */
+var ANALYZE_URL="https://visa-proxy.rabehfly.workers.dev/analyze";
+var ANS={reason:"",situation:"",busy:false,err:"",res:""};
+var ANX={
+fr:{title:"Analyseur de lettre de refus (IA)",intro:"Recopiez le motif de refus et décrivez votre situation : l'IA explique le motif, liste les pièces à corriger, propose un plan d'action et un brouillon de recours. Votre texte est envoyé à un service d'intelligence artificielle tiers ; notre serveur ne le conserve pas. N'écrivez jamais de numéro de passeport ni d'identité.",reason:"Motif de refus (comme sur le papier remis)",sit:"Votre situation en quelques lignes",go:"Analyser mon refus",busy:"Analyse en cours…",reqErr:"Indiquez le motif et votre situation (quelques mots suffisent).",auth:"Votre accès a expiré. Saisissez un nouveau code.",rate:"Limite du jour atteinte. Réessayez demain.",fail:"L'analyse a échoué. Réessayez dans un instant.",resT:"Votre analyse (brouillon IA)",warn:"Aide à la préparation, pas un avis juridique. Vérifiez chaque point. Aucun résultat n'est garanti : seul le consulat décide.",copy:"Copier"},
+en:{title:"Refusal letter analyzer (AI)",intro:"Copy the refusal reason and describe your situation: the AI explains the reason, lists documents to fix, suggests an action plan and an appeal draft. Your text is sent to a third-party artificial intelligence service; our server does not keep it. Never write a passport or ID number.",reason:"Refusal reason (as on the paper you received)",sit:"Your situation in a few lines",go:"Analyze my refusal",busy:"Analyzing…",reqErr:"Enter the reason and your situation (a few words are enough).",auth:"Your access has expired. Enter a new code.",rate:"Daily limit reached. Try again tomorrow.",fail:"Analysis failed. Try again shortly.",resT:"Your analysis (AI draft)",warn:"Preparation aid, not legal advice. Check every point. No result is guaranteed: only the consulate decides.",copy:"Copy"},
+ar:{title:"محلل رسالة الرفض (ذكاء اصطناعي)",intro:"انسخ سبب الرفض وصف وضعيتك: يشرح الذكاء الاصطناعي السبب ويحدد الوثائق التي يجب تصحيحها ويقترح خطة عمل ومسودة طعن. يُرسل نصك إلى خدمة ذكاء اصطناعي تابعة لطرف ثالث ولا يحتفظ به خادمنا. لا تكتب أبداً رقم جواز السفر أو الهوية.",reason:"سبب الرفض (كما في الورقة المسلّمة)",sit:"وضعيتك في بضعة أسطر",go:"حلّل رفضي",busy:"جارٍ التحليل…",reqErr:"أدخل السبب ووضعيتك (كلمات قليلة تكفي).",auth:"انتهت صلاحية وصولك. أدخل رمزاً جديداً.",rate:"بلغتَ الحد اليومي. أعد المحاولة غداً.",fail:"فشل التحليل. أعد المحاولة بعد قليل.",resT:"تحليلك (مسودة بالذكاء الاصطناعي)",warn:"مساعدة على التحضير وليست استشارة قانونية. تحقق من كل نقطة. لا نتيجة مضمونة: القنصلية وحدها تقرر.",copy:"نسخ"}};
+function anResHtml(){
+  var X=ANX[S.lang],h="";
+  if(ANS.err)h+='<p class="ag-err" role="alert">'+esc(ANS.err)+'</p>';
+  if(ANS.busy)h+='<p class="rf-sub" role="status">'+esc(X.busy)+'</p>';
+  if(ANS.res)h+='<p class="rf-sub">'+esc(X.warn)+'</p><details class="lt" open><summary>'+esc(X.resT)+'</summary><div class="lt-body"><pre class="letter" id="pk-an">'+esc(ANS.res)+'</pre><button type="button" class="cp" data-copy="an">'+esc(X.copy)+'</button></div></details>';
+  return h;
+}
+function anHtml(){
+  var X=ANX[S.lang];
+  return '<section class="aibox"><h2>'+esc(X.title)+'</h2><p class="rf-sub">'+esc(X.intro)+'</p>'
+   +'<label class="q-label" for="an-reason">'+esc(X.reason)+'</label><textarea class="sel" id="an-reason" data-an="reason" rows="3" maxlength="600">'+esc(ANS.reason)+'</textarea>'
+   +'<label class="q-label" for="an-sit">'+esc(X.sit)+'</label><textarea class="sel" id="an-sit" data-an="situation" rows="5" maxlength="1500">'+esc(ANS.situation)+'</textarea>'
+   +'<button type="button" class="pay" data-an-go="1"'+(ANS.busy?' disabled':'')+'>'+esc(X.go)+'</button><div id="an-res" role="status" aria-live="polite">'+anResHtml()+'</div></section>';
+}
+function anShow(){var el=$("an-res");if(el)el.innerHTML=anResHtml();var b=document.querySelector("[data-an-go]");if(b)b.disabled=ANS.busy}
+document.addEventListener("input",function(e){var k=e.target.dataset&&e.target.dataset.an;if(k&&ANS.hasOwnProperty(k))ANS[k]=e.target.value});
+document.addEventListener("click",function(e){
+  if(!(e.target.closest&&e.target.closest("[data-an-go]"))||ANS.busy)return;
+  var X=ANX[S.lang];
+  if(cleanTxt(ANS.reason).length<3||cleanTxt(ANS.situation).length<10){ANS.err=X.reqErr;anShow();return}
+  ANS.err="";ANS.res="";ANS.busy=true;anShow();
+  var body={lang:S.lang,reason:ANS.reason.slice(0,600),situation:ANS.situation.slice(0,1500)};
+  fetchJson(ANALYZE_URL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","Authorization":"Bearer "+S.tok},body:JSON.stringify(body)},40000).then(function(r){
+    ANS.busy=false;
+    if(r.ok&&r.data&&r.data.ok&&typeof r.data.analysis==="string")ANS.res=r.data.analysis;
+    else if(r.status===401){S.pack=false;S.tok="";PACK_STATE="expired";save();render();return}
+    else ANS.err=r.status===429?X.rate:X.fail;
+    anShow();
+  });
+});
+
+/* ===== Autres services : bientôt disponibles (aucun paiement possible) ===== */
+var SOONX={
+fr:{h:"Bientôt disponible",badge:"Bientôt",items:[["Relecture humaine de votre recours","Un conseiller relit votre lettre de recours et vous renvoie ses corrections.","45 DT"],["Vérification finale avant dépôt","Envoyez vos documents en photo : pièces manquantes ou incohérentes signalées.","15 DT"]]},
+en:{h:"Coming soon",badge:"Soon",items:[["Human review of your appeal","An advisor reads your appeal letter and sends back corrections.","45 DT"],["Final check before filing","Send your documents as photos: missing or inconsistent items are flagged.","15 DT"]]},
+ar:{h:"قريباً",badge:"قريباً",items:[["مراجعة بشرية لطعنك","يقرأ مستشار رسالة الطعن ويرسل لك التصحيحات.","45 دينار"],["تدقيق نهائي قبل الإيداع","أرسل وثائقك بالصور: يتم تنبيهك إلى الناقص أو غير المتناسق.","15 دينار"]]}};
+function soonHtml(){
+  var X=SOONX[S.lang];
+  return '<h2>'+esc(X.h)+'</h2><ul class="inc">'+X.items.map(function(i){return '<li><b>'+esc(i[0])+'</b> <span class="evtag">'+esc(X.badge)+'</span><br>'+esc(i[1])+' <b>'+esc(i[2])+'</b></li>'}).join("")+'</ul>';
+}
 
 function evCardHtml(){var x=EVT[S.lang];return '<button type="button" class="evcard" id="evbtn"><span class="evico">'+EVICON+'</span><span class="evtxt"><b>'+x.cardTitle+'</b><span>'+x.cardSub+'</span></span>'+EVARROW+'</button>'}
 function evListHtml(){
