@@ -1,10 +1,12 @@
 /* Visa Checker : Service Worker
    - Précache de la « coquille » de l'appli (HTML, manifeste, icônes).
    - Pages (navigation) : réseau d'abord, repli sur le cache, puis sur la page d'accueil hors-ligne.
-   - Fichiers statiques même origine + polices : cache d'abord, rafraîchi en arrière-plan.
+   - Fichiers locaux (dont partners/reviews/deals/rdv.json) : réseau d'abord (HTTP no-cache), repli sur le cache.
+   - version.json : toujours le réseau, jamais mis en cache (sert à détecter un déploiement).
+   - Polices : cache d'abord, rafraîchi en arrière-plan.
    - Jamais de cache pour les requêtes POST ni pour les API (Make, déblocage) : elles passent directement.
-   Changez VERSION à chaque déploiement : les anciens caches sont supprimés à l'activation. */
-const VERSION = "v5";
+   VERSION est estampillée par bump-version.mjs à chaque déploiement : les anciens caches sont supprimés à l'activation. */
+const VERSION = "2026.10.25.1"; /*@version*/
 const SHELL = "vc-shell-" + VERSION;
 const RUNTIME = "vc-runtime-" + VERSION;
 const NET_TIMEOUT = 4000; // au-delà, on sert le cache (réseau lent = « hors-ligne » pour l'utilisateur)
@@ -23,8 +25,8 @@ const PRECACHE = [
 self.addEventListener("install", (e) => {
   e.waitUntil(
     caches.open(SHELL)
-      // addAll échoue si UNE ressource échoue : on tolère les absences pour ne pas bloquer l'installation
-      .then((c) => Promise.all(PRECACHE.map((u) => c.add(u).catch(() => null))))
+      // addAll échoue si UNE ressource échoue : on tolère les absences ; cache:"reload" ignore le cache HTTP
+      .then((c) => Promise.all(PRECACHE.map((u) => c.add(new Request(u, { cache: "reload" })).catch(() => null))))
   );
   // pas de skipWaiting automatique : la nouvelle version attend un clic « Mettre à jour » (voir message SKIP_WAITING)
 });
@@ -52,7 +54,7 @@ function networkFirst(req, cacheName, preload) {
       const hit = await fromCache();
       if (hit && !settled) { settled = true; resolve(hit); }
     }, NET_TIMEOUT);
-    (preload ? Promise.resolve(preload).then((r) => r || fetch(req)) : fetch(req))
+    (preload ? Promise.resolve(preload).then((r) => r || fetch(req, { cache: "no-cache" })) : fetch(req, { cache: "no-cache" }))
       .then(async (res) => {
         clearTimeout(timer);
         if (res && res.ok) {
@@ -84,14 +86,16 @@ self.addEventListener("fetch", (e) => {
   if (req.method !== "GET") return;                    // POST (Make, déblocage) : jamais interceptés
   const url = new URL(req.url);
 
+  if (url.origin === self.location.origin && url.pathname.endsWith("/version.json")) {
+    e.respondWith(fetch(req, { cache: "no-store" }));  // détection de déploiement : jamais de cache
+    return;
+  }
   if (req.mode === "navigate") {                       // pages : réseau d'abord
     e.respondWith(networkFirst(req, SHELL, e.preloadResponse));
     return;
   }
-  if (url.origin === self.location.origin) {           // icônes, manifeste, scripts locaux
-    e.respondWith(
-      networkFirst(req, RUNTIME)
-    );
+  if (url.origin === self.location.origin) {           // icônes, manifeste, listes JSON, scripts locaux
+    e.respondWith(networkFirst(req, RUNTIME));
     return;
   }
   if (url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com") {
