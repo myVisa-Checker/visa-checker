@@ -318,7 +318,7 @@ body[data-step="0"] .side{grid-column:2;grid-row:1/3;align-self:start}
 body[data-step="0"] .photo{max-width:none;margin:0}
 body[data-step="0"] .side{margin-top:56px}
 body[data-step="0"] .why{grid-column:1/-1;margin-top:40px}
-body[data-step="0"] .sponsors,body[data-step="0"] footer{grid-column:1/-1}
+body[data-step="0"] .sponsors,body[data-step="0"] .avs,body[data-step="0"] footer{grid-column:1/-1}
 body{position:relative}
 .lang{position:absolute;top:26px;right:24px;z-index:6}
 body[data-step="0"] .lang{top:34px}
@@ -560,9 +560,10 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
 </style>
 <style>
 /* Avis voyageurs : n'affiche que les avis réels de reviews.json */
-.rv{margin-top:32px;display:flex;flex-direction:column;gap:18px}
+.avs{margin:32px auto 0;width:100%;max-width:760px;display:flex;flex-direction:column;gap:18px}
+.avs[hidden]{display:none}
 .rv-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px}
-.rv h2{margin:0;font-family:var(--f-display);font-size:1.6rem;line-height:1.15}
+.avs h2{margin:0;font-family:var(--f-display);font-size:1.6rem;line-height:1.15}
 .rv-sum{display:flex;align-items:center;gap:10px;font-weight:600}
 .rv-stars{color:var(--accent-2);letter-spacing:2px;font-size:20px;line-height:1;white-space:nowrap}
 .rv-stars i{font-style:normal;color:var(--line)}
@@ -574,17 +575,19 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
 .rv-nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .rv-nav button.rv-b{width:44px;height:44px;border-radius:50%;border:0;background:var(--accent);color:var(--on-accent);font-size:20px;cursor:pointer}
 .rv-nav .rv-cta{margin-inline-start:auto}
+.rv-nav.solo{justify-content:center}.rv-nav.solo .rv-cta{margin:0}
+.rv-empty{text-align:center}.avs.empty h2{text-align:center}
 .rv-empty{margin:0;color:var(--muted);font-size:15px}
-html[lang="ar"] .rv h2,html[lang="ar"] .rv-card{font-family:var(--f-ar)}
+html[lang="ar"] .avs h2,html[lang="ar"] .rv-card{font-family:var(--f-ar)}
 .ag-card.ag-anon{grid-template-columns:1fr;text-align:center}
 .ag-card.ag-anon .ag-body{align-items:center}
 .srv-sub{text-align:center}
-.srv-row{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
-.srv-row .ag-card.ag-anon{flex:1 1 180px;max-width:230px}
+.srv-row{display:flex;flex-direction:column;align-items:center;gap:14px}
+.srv-row .ag-card.ag-anon{width:100%;max-width:420px}
 footer{background:#000;color:#fff;padding:24px 22px;border-radius:var(--r-6)}
 footer p,footer .links a,footer .legal button,footer .legal button:hover{color:#fff}
 footer .reset{background:#fff;color:#000;border-color:#fff}
-#req .tiles{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:14px;width:100%;padding-bottom:12px}
+#req .tiles{display:flex;flex-wrap:wrap;justify-content:center;overflow-x:visible;gap:14px;width:100%;padding-bottom:12px}
 #req .tile{flex:0 0 96px}
 </style>
 </head>
@@ -640,7 +643,7 @@ footer .reset{background:#fff;color:#000;border-color:#fff}
   <div class="dock" id="dock" hidden></div>
 
   <button type="button" class="totop" id="totop" aria-label="Haut de page" title="Haut de page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
-  <section class="rv" id="reviews" aria-labelledby="rv-t" hidden></section>
+  <section class="avs" id="reviews" aria-labelledby="rv-t" hidden></section>
   <footer>
     <div class="links" id="links"></div>
     <p id="disc"></p>
@@ -1291,7 +1294,8 @@ function renderReviews(){
   var sig=S.lang+"|"+REVIEWS.length;if(sig===rvSig&&el.firstChild)return;rvSig=sig;
   var R=RVT[S.lang]||RVT.fr,L=S.lang,n=REVIEWS.length,h='';
   var mail=SITE.email?'<a class="pay rv-cta" href="mailto:'+SITE.email+'?subject='+encodeURIComponent(R.sub)+'&body='+encodeURIComponent(R.body)+'">'+R.cta+'</a>':'';
-  if(!n){el.innerHTML='<h2 id="rv-t">'+R.t+'</h2><p class="rv-empty">'+R.none+'</p><div class="rv-nav">'+mail+'</div>';return}
+  if(!n){el.classList.add("empty");el.innerHTML='<h2 id="rv-t">'+R.t+'</h2><p class="rv-empty">'+R.none+'</p><div class="rv-nav solo">'+mail+'</div>';return}
+  el.classList.remove("empty");
   var avg=REVIEWS.reduce(function(a,r){return a+r.rating},0)/n;
   h+='<div class="rv-head"><h2 id="rv-t">'+R.t+'</h2><div class="rv-sum">'+starsHtml(Math.round(avg))+'<span dir="ltr">'+avg.toFixed(1)+' '+R.of+'</span><span>· '+R.n(n)+'</span></div></div>';
   h+='<div class="rv-track" id="rv-track" tabindex="0">'+REVIEWS.map(function(r){
