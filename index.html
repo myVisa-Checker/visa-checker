@@ -155,8 +155,8 @@ section.group{margin-top:24px;display:flex;flex-direction:column;gap:10px}
 .book b{font-family:var(--f-display);font-size:1.05rem}
 .book p{margin:0;font-size:14px}
 .book .slot{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
-footer{margin-top:32px;display:flex;flex-direction:column;gap:12px;font-size:13px;color:var(--muted)}
-footer p{margin:0}
+footer{margin-top:32px;display:flex;flex-direction:column;gap:12px;font-size:13px;color:var(--ink)}
+footer p{margin:0;color:var(--ink);line-height:1.55}
 .links{display:flex;flex-wrap:wrap;gap:8px 16px}
 .links a{color:var(--ink);font-weight:600}
 .reset{align-self:flex-start;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 13px var(--f-body);padding:8px 14px;border-radius:var(--r-2);cursor:pointer;min-height:40px}
@@ -398,7 +398,7 @@ html[lang="ar"] .stt,html[lang="ar"] .legend,html[lang="ar"] .i-warn{font-family
 .needs .sp-chip svg{color:var(--hot-b);animation:bob 2.2s ease-in-out infinite}
 
 .legal{display:flex;flex-wrap:wrap;gap:6px 16px;margin:12px 0 4px}
-.legal button{background:none;border:0;padding:6px 0;font:500 13px var(--f-body);color:var(--muted);text-decoration:underline;cursor:pointer}
+.legal button{background:none;border:0;padding:6px 0;font:500 13px var(--f-body);color:var(--ink);text-decoration:underline;cursor:pointer}
 .legal button:hover{color:var(--ink)}
 dialog#lg{width:min(680px,calc(100% - 24px));max-height:calc(100dvh - 24px);padding:0;border:0;border-radius:var(--r-7);background:var(--surface);color:var(--ink);box-shadow:var(--shadow-modal)}
 html.modal-open{overflow:hidden}
@@ -1320,7 +1320,7 @@ var INTL=[{id:"intl-test",name:"Partenaire international (test)",test:1,svc:["fl
 var RQ={sending:false,tries:0,chan:"email",ln:"",fn:"",d1:"",d2:"",city:"",dest:"",cc:"+216",phone:"",tg:"",mail:"",consent:false,done:false,mode:"",failed:false,er:{}};
 var RT={
 fr:{svc:{flight:"Billet d'avion",hotel:"Réservation d'hôtel"},t8:"Choisissez votre agence",s8:"Choisissez l'une de nos agences, ou un partenaire international.",t9:"Vos informations",s9:"Saisissez-les comme sur votre passeport.",t10a:"Demande envoyée",t10b:"Dernière étape",s10a:"L'agence vous répond bientôt.",s10b:"Envoyez votre demande à l'agence.",
- tabL:"Agences locales",tabI:"Partenaires internationaux",choose:"Choisir cette agence",test:"Agence test",noLocal:"Pas encore d'agence locale pour ce service. Essayez un partenaire international.",anyWhere:"Où que vous soyez, vous recevez votre document. Choisissez l'une des agences ci-dessous.",agN:"Agence ",
+ tabL:"Agences locales",tabI:"Partenaires internationaux",choose:"Choisir cette agence",test:"Agence test",noLocal:"Pas encore d'agence locale pour ce service. Essayez un partenaire international.",anyWhere:"Où que vous soyez, vous recevez votre document. Choisissez l'une des agences ci-dessous.",agN:"Serveur ",
  selfT:"Vous préférez réserver vous-même ?",selfN:"Sites indépendants, sans lien avec Visa Checker. Pour le visa, prenez une réservation annulable.",you:"Agence choisie",
  ln:"Nom (comme sur le passeport)",fn:"Prénom(s) (comme sur le passeport)",d1f:"Date d'aller",d2f:"Date de retour",d1h:"Check-in (arrivée)",d2h:"Check-out (départ)",city:"Ville de destination",phone:"Numéro WhatsApp / téléphone",tg:"Identifiant Telegram (facultatif)",mail:"E-mail (facultatif)",chan:"Où recevoir le lien de paiement et le document ?",
  ch:{whatsapp:"WhatsApp",telegram:"Telegram",email:"E-mail",sms:"SMS"},
@@ -1331,7 +1331,7 @@ fr:{svc:{flight:"Billet d'avion",hotel:"Réservation d'hôtel"},t8:"Choisissez v
  manT:"Envoyez votre demande à l'agence",manTxt:"Cette page n'est pas encore reliée à un serveur (mode test). Utilisez un des boutons : l'agence vous répondra avec le lien de paiement.",failTxt:"L'envoi automatique a échoué. Utilisez un des boutons pour envoyer la demande à l'agence.",
  recap:"Récapitulatif",bWA:"Envoyer par WhatsApp",bMail:"Envoyer par e-mail",bTg:"Ouvrir Telegram (texte copié)",tgHint:"Le texte est copié : collez-le dans la conversation Telegram."},
 en:{svc:{flight:"Flight ticket",hotel:"Hotel booking"},t8:"Choose your agency",s8:"Choose one of our agencies, or an international partner.",t9:"Your details",s9:"Enter them exactly as in your passport.",t10a:"Request sent",t10b:"Last step",s10a:"The agency will reply soon.",s10b:"Send your request to the agency.",
- tabL:"Local agencies",tabI:"International partners",choose:"Choose this agency",test:"Test agency",noLocal:"No local agency for this service yet. Try an international partner.",anyWhere:"Wherever you are, you receive your document. Choose one of the agencies below.",agN:"Agency ",
+ tabL:"Local agencies",tabI:"International partners",choose:"Choose this agency",test:"Test agency",noLocal:"No local agency for this service yet. Try an international partner.",anyWhere:"Wherever you are, you receive your document. Choose one of the agencies below.",agN:"Server ",
  selfT:"Prefer to book yourself?",selfN:"Independent sites, not affiliated with Visa Checker. For the visa, choose a cancellable booking.",you:"Chosen agency",
  ln:"Last name (as in passport)",fn:"First name(s) (as in passport)",d1f:"Departure date",d2f:"Return date",d1h:"Check-in (arrival)",d2h:"Check-out (departure)",city:"Destination city (optional)",phone:"WhatsApp / phone number",tg:"Telegram username (optional)",mail:"E-mail (optional)",chan:"Where should we send the payment link and the document?",
  ch:{whatsapp:"WhatsApp",telegram:"Telegram",email:"E-mail",sms:"SMS"},
@@ -1342,7 +1342,7 @@ en:{svc:{flight:"Flight ticket",hotel:"Hotel booking"},t8:"Choose your agency",s
  manT:"Send your request to the agency",manTxt:"This page is not connected to a server yet (test mode). Use one of the buttons: the agency will reply with the payment link.",failTxt:"Automatic sending failed. Use one of the buttons to send the request to the agency.",
  recap:"Summary",bWA:"Send by WhatsApp",bMail:"Send by e-mail",bTg:"Open Telegram (text copied)",tgHint:"The text is copied: paste it into the Telegram chat."},
 ar:{svc:{flight:"تذكرة طيران",hotel:"حجز فندق"},t8:"اختر وكالتك",s8:"اختر إحدى وكالاتنا، أو شريكًا دوليًا.",t9:"بياناتك",s9:"اكتبها تمامًا كما في جواز سفرك.",t10a:"تم إرسال الطلب",t10b:"الخطوة الأخيرة",s10a:"ستردّ عليك الوكالة قريبًا.",s10b:"أرسل طلبك إلى الوكالة.",
- tabL:"وكالات محلية",tabI:"شركاء دوليون",choose:"اختر هذه الوكالة",test:"وكالة تجريبية",noLocal:"لا توجد وكالة محلية لهذه الخدمة بعد. جرّب شريكًا دوليًا.",anyWhere:"أينما كنت، ستستلم وثيقتك. اختر إحدى الوكالات أدناه.",agN:"الوكالة ",
+ tabL:"وكالات محلية",tabI:"شركاء دوليون",choose:"اختر هذه الوكالة",test:"وكالة تجريبية",noLocal:"لا توجد وكالة محلية لهذه الخدمة بعد. جرّب شريكًا دوليًا.",anyWhere:"أينما كنت، ستستلم وثيقتك. اختر إحدى الوكالات أدناه.",agN:"الخادم ",
  selfT:"تفضّل الحجز بنفسك؟",selfN:"مواقع مستقلة لا علاقة لها بـ Visa Checker. للتأشيرة، اختر حجزًا قابلًا للإلغاء.",you:"الوكالة المختارة",
  ln:"اللقب (كما في جواز السفر)",fn:"الاسم (كما في جواز السفر)",d1f:"تاريخ الذهاب",d2f:"تاريخ العودة",d1h:"الوصول (Check-in)",d2h:"المغادرة (Check-out)",city:"مدينة الوجهة (اختياري)",phone:"رقم واتساب / الهاتف",tg:"معرّف تيليغرام (اختياري)",mail:"البريد الإلكتروني (اختياري)",chan:"أين تريد استلام رابط الدفع والوثيقة؟",
  ch:{whatsapp:"واتساب",telegram:"تيليغرام",email:"بريد إلكتروني",sms:"رسالة SMS"},
@@ -1364,7 +1364,7 @@ var NS={fr:["L'agence reçoit votre demande","Vous recevez le lien de paiement",
 function stepper(n,labels){var Lb=labels||STP[S.lang];return '<ol class="stp" aria-label="'+Lb.join(", ")+'">'+Lb.map(function(x,i){return '<li class="'+(i+1<n?'dn':i+1===n?'on':'')+'"'+(i+1===n?' aria-current="step"':'')+'><i>'+(i+1<n?'✓':i+1)+'</i><span>'+x+'</span></li>'}).join("")+'</ol>'}
 function initials(n){return n.split(/\s+/).slice(0,2).map(function(w){return w.charAt(0)}).join("").toUpperCase()}
 function avHtml(p){return '<span class="av" aria-hidden="true">'+(p.logo?'<img src="'+p.logo+'" alt="">':initials(p.name))+'</span>'}
-function agentCard(p,R,n){return '<div class="ag-card ag-anon"><div class="ag-body"><span class="ag-no">'+R.agN+n+'</span><span class="ag-meta">'+(p.city?esc(p.city)+' · ':'')+p.what[S.lang]+'</span></div><button type="button" class="pay wide" data-agent="'+p.id+'">'+R.choose+'</button></div>'}
+function agentCard(p,R,n){return '<div class="ag-card ag-anon"><div class="ag-body"><span class="ag-no">'+R.agN+n+'</span><span class="ag-meta">'+p.what[S.lang]+'</span></div><button type="button" class="pay wide" data-agent="'+p.id+'">'+R.choose+'</button></div>'}
 function pickHtml(t){
   var R=RT[S.lang],L=S.lang,pt=S.pt==="intl"?"intl":"local";
   var svc=function(p){return p.svc.indexOf(S.need)>-1};
