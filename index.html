@@ -558,6 +558,11 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
  body.print-pack{background:var(--paper);color:var(--paper-ink)}
 }
 </style>
+<style>
+.ag-card.ag-anon{grid-template-columns:1fr}
+#req .tiles{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:14px;width:100%;padding-bottom:12px}
+#req .tile{flex:0 0 96px}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -1312,7 +1317,7 @@ var REQUEST_URL="https://visa-proxy.rabehfly.workers.dev";
 var REQUEST_MODE="cors";
 var REQUEST_TIMEOUT_MS=10000,REQUEST_RETRIES=1,REQUEST_COOLDOWN_MS=30000;
 var INTL=[{id:"intl-test",name:"Partenaire international (test)",test:1,svc:["flight","hotel"],what:{fr:"Billets d'avion et hôtels dans le monde",en:"Flights and hotels worldwide",ar:"تذاكر طيران وفنادق حول العالم"},email:"rabehfly@gmail.com",telegram:"rabehtlili",whatsapp:"21658986980"}];
-var RQ={sending:false,tries:0,chan:"email",ln:"",fn:"",d1:"",d2:"",city:"",cc:"+216",phone:"",tg:"",mail:"",consent:false,done:false,mode:"",failed:false,er:{}};
+var RQ={sending:false,tries:0,chan:"email",ln:"",fn:"",d1:"",d2:"",city:"",dest:"",cc:"+216",phone:"",tg:"",mail:"",consent:false,done:false,mode:"",failed:false,er:{}};
 var RT={
 fr:{svc:{flight:"Billet d'avion",hotel:"Réservation d'hôtel"},t8:"Choisissez votre agence",s8:"Choisissez l'une de nos agences, ou un partenaire international.",t9:"Vos informations",s9:"Saisissez-les comme sur votre passeport.",t10a:"Demande envoyée",t10b:"Dernière étape",s10a:"L'agence vous répond bientôt.",s10b:"Envoyez votre demande à l'agence.",
  tabL:"Agences locales",tabI:"Partenaires internationaux",choose:"Choisir cette agence",test:"Agence test",noLocal:"Pas encore d'agence locale pour ce service. Essayez un partenaire international.",anyWhere:"Où que vous soyez, vous recevez votre document. Choisissez l'une des agences ci-dessous.",agN:"Agence ",
@@ -1359,12 +1364,12 @@ var NS={fr:["L'agence reçoit votre demande","Vous recevez le lien de paiement",
 function stepper(n,labels){var Lb=labels||STP[S.lang];return '<ol class="stp" aria-label="'+Lb.join(", ")+'">'+Lb.map(function(x,i){return '<li class="'+(i+1<n?'dn':i+1===n?'on':'')+'"'+(i+1===n?' aria-current="step"':'')+'><i>'+(i+1<n?'✓':i+1)+'</i><span>'+x+'</span></li>'}).join("")+'</ol>'}
 function initials(n){return n.split(/\s+/).slice(0,2).map(function(w){return w.charAt(0)}).join("").toUpperCase()}
 function avHtml(p){return '<span class="av" aria-hidden="true">'+(p.logo?'<img src="'+p.logo+'" alt="">':initials(p.name))+'</span>'}
-function agentCard(p,R,n){return '<div class="ag-card">'+avHtml(p)+'<div class="ag-body">'+(n?'<span class="ag-no">'+R.agN+n+'</span>':'')+'<b>'+esc(p.name)+'</b><span class="ag-meta">'+(p.city?esc(p.city)+' · ':'')+p.what[S.lang]+'</span>'+(p.test?'<span class="tag">'+R.test+'</span>':'')+'</div><button type="button" class="pay wide" data-agent="'+p.id+'">'+R.choose+'</button></div>'}
+function agentCard(p,R,n){return '<div class="ag-card ag-anon"><div class="ag-body"><span class="ag-no">'+R.agN+n+'</span><span class="ag-meta">'+(p.city?esc(p.city)+' · ':'')+p.what[S.lang]+'</span></div><button type="button" class="pay wide" data-agent="'+p.id+'">'+R.choose+'</button></div>'}
 function pickHtml(t){
   var R=RT[S.lang],L=S.lang,pt=S.pt==="intl"?"intl":"local";
   var svc=function(p){return p.svc.indexOf(S.need)>-1};
   var h=stepper(2)+'<div class="panel"><span class="svc-pill">'+R.svc[S.need]+'</span><div class="chips seg" role="group" aria-label="'+R.svc[S.need]+'">'+[["local",R.tabL],["intl",R.tabI]].map(function(x){return '<button type="button" class="chip" data-pt="'+x[0]+'" aria-pressed="'+(pt===x[0])+'">'+x[1]+'</button>'}).join("")+'</div>';
-  if(pt==="intl"){h+=INTL.filter(svc).map(function(p){return agentCard(p,R)}).join("")}
+  if(pt==="intl"){h+=INTL.filter(svc).map(function(p,i){return agentCard(p,R,i+1)}).join("")}
   else{
     var seen={},list=[];Object.keys(PARTNERS).forEach(function(k){PARTNERS[k].forEach(function(p){if(!seen[p.id]&&svc(p)){seen[p.id]=1;list.push(p)}})});list=list.slice(0,3);
     h+=list.length?'<p class="ag-sub">'+R.anyWhere+'</p>'+list.map(function(p,i){return agentCard(p,R,i+1)}).join(""):'<p class="ag-none">'+R.noLocal+'</p>';
@@ -1380,16 +1385,18 @@ var A11Y={
   ar:{cons:"الموافقة",sum:function(n,l){return "عدد الحقول التي تحتاج تصحيحًا: "+n+" — "+l}}
 };
 function fErr(k){return (RQ.er&&RQ.er[k])||""}
-function phoneFld(R){var cc=RQ.cc||"+216";return '<div class="field"><label class="q-label" for="rq-phone">'+R.phone+'</label><div class="ph-row"><select class="sel ph-cc" id="rq-cc" data-f="cc" dir="ltr" aria-label="'+TXB[S.lang].cc+'" autocomplete="tel-country-code">'+DIAL.map(function(d){return '<option value="'+d[0]+'"'+(d[0]===cc?' selected':'')+'>'+d[1]+' '+d[0]+'</option>'}).join("")+'</select><input class="sel" id="rq-phone" data-f="phone" type="tel" inputmode="tel" dir="ltr" autocomplete="tel-national" placeholder="20 123 456" value="'+escA(RQ.phone)+'" aria-describedby="fe-phone" aria-required="true" aria-invalid="'+(fErr("phone")?"true":"false")+'"></div><span class="fe" id="fe-phone">'+esc(fErr("phone"))+'</span></div>'}
-function cityFld(R){var c=curC(),L=cityList(c.id)||[];return fld("city",TXB[S.lang].cityL(c.n[S.lang]),"text",'autocomplete="off" list="dl-city" placeholder="'+escA(TXB[S.lang].cityPh)+'"')+'<datalist id="dl-city">'+L.map(function(x){return '<option value="'+escA(x[0])+'"></option>'}).join("")+'</datalist>'}
+function phoneFld(R){var cc=RQ.cc||"+216";return '<div class="field"><label class="q-label" for="rq-phone">'+R.phone+'</label><div class="ph-row"><select class="sel ph-cc" id="rq-cc" data-f="cc" dir="ltr" aria-label="'+TXB[S.lang].cc+'" autocomplete="tel-country-code">'+DIAL.map(function(d){return '<option value="'+d[0]+'"'+(d[0]===cc?' selected':'')+'>'+d[0]+'</option>'}).join("")+'</select><input class="sel" id="rq-phone" data-f="phone" type="tel" inputmode="tel" dir="ltr" autocomplete="tel-national" placeholder="20 123 456" value="'+escA(RQ.phone)+'" aria-describedby="fe-phone" aria-required="true" aria-invalid="'+(fErr("phone")?"true":"false")+'"></div><span class="fe" id="fe-phone">'+esc(fErr("phone"))+'</span></div>'}
+function destName(){var c=COUNTRIES.filter(function(x){return x.id===RQ.dest})[0];return c?c.n.fr:""}
+function destFld(R){var L=S.lang,cmp=function(a,b){return nm(a).localeCompare(nm(b),L)};return '<div class="field"><label class="q-label" for="rq-dest">'+TXB[L].destL+'</label><select class="sel" id="rq-dest" data-f="dest" aria-describedby="fe-dest" aria-required="true" aria-invalid="'+(fErr("dest")?"true":"false")+'"><option value="">'+TXB[L].destPh+'</option>'+COUNTRIES.slice().sort(cmp).map(function(c){return '<option value="'+c.id+'"'+(c.id===RQ.dest?' selected':'')+'>'+esc(nm(c))+'</option>'}).join("")+'</select><span class="fe" id="fe-dest">'+esc(fErr("dest"))+'</span></div>'}
+function cityFld(R){var c=COUNTRIES.filter(function(x){return x.id===RQ.dest})[0],L=c?(cityList(c.id)||[]):[];return fld("city",c?TXB[S.lang].cityL(c.n[S.lang]):TXB[S.lang].cityG,"text",'autocomplete="off" list="dl-city" placeholder="'+escA(TXB[S.lang].cityPh)+'"'+(c?'':' disabled'))+'<datalist id="dl-city">'+L.map(function(x){return '<option value="'+escA(x[0])+'"></option>'}).join("")+'</datalist>'}
 function fld(id,label,type,extra){var req=/^(ln|fn|d1|d2|phone|city)$/.test(id);return '<div class="field"><label class="q-label" for="rq-'+id+'">'+label+'</label><input class="sel" id="rq-'+id+'" data-f="'+id+'" type="'+type+'" value="'+escA(RQ[id])+'" aria-describedby="fe-'+id+'" aria-invalid="'+(fErr(id)?"true":"false")+'"'+(req?' aria-required="true"':'')+' '+(extra||'')+'><span class="fe" id="fe-'+id+'">'+esc(fErr(id))+'</span></div>'}
 function formHtml(t){
   var R=RT[S.lang],a=findAgent(S.agent),hot=S.need==="hotel",td=today(),up='autocapitalize="characters" autocomplete="off" style="text-transform:uppercase"';
-  return stepper(3)+'<div class="panel"><div class="ag-card sel-ag"><span class="av" aria-hidden="true">'+initials(a.name)+'</span><div class="ag-body"><b>'+esc(a.name)+'</b><span class="ag-meta">'+R.svc[S.need]+'</span></div></div>'
+  return stepper(3)+'<div class="panel"><div class="ag-card sel-ag ag-anon"><div class="ag-body"><b>'+R.svc[S.need]+'</b></div></div>'
    +'<form class="req-form" id="rqform" novalidate>'
    +'<div class="f-row">'+fld("ln",R.ln,"text",up)+fld("fn",R.fn,"text",up)+'</div>'
    +'<div class="f-row">'+fld("d1",hot?R.d1h:R.d1f,"date",'min="'+td+'"')+fld("d2",hot?R.d2h:R.d2f,"date",'min="'+(RQ.d1||td)+'"')+'</div>'
-   +cityFld(R)
+   +destFld(R)+cityFld(R)
    +phoneFld(R)
    +fld("tg",R.tg,"text",'dir="ltr" placeholder="@" autocapitalize="off" autocomplete="off"')
    +fld("mail",R.mail,"email",'dir="ltr" autocomplete="email" autocapitalize="off"')
@@ -1446,9 +1453,9 @@ function cityList(id){var c=CITIES[id];return c?c.split(",").map(function(x){ret
 function cityMatch(id,v){var L=cityList(id);if(!L)return v;var n=normC(v),i,j;for(i=0;i<L.length;i++)for(j=0;j<L[i].length;j++)if(normC(L[i][j])===n)return L[i][0];return null}
 var DIAL=[["+216","TN"],["+213","DZ"],["+212","MA"],["+218","LY"],["+20","EG"],["+222","MR"],["+221","SN"],["+225","CI"],["+249","SD"],["+33","FR"],["+49","DE"],["+39","IT"],["+34","ES"],["+32","BE"],["+31","NL"],["+41","CH"],["+43","AT"],["+44","GB"],["+1","US/CA"],["+971","AE"],["+966","SA"],["+974","QA"],["+90","TR"],["+961","LB"],["+962","JO"]];
 var TXB={
- fr:{cc:"Indicatif du pays",cityL:function(c){return "Ville de destination ("+c+")"},cityBad:function(c){return "Choisissez une ville de "+c+" dans la liste proposée (la destination doit correspondre au pays du visa)."},cityPh:"Commencez à taper…"},
- en:{cc:"Country dialling code",cityL:function(c){return "Destination city ("+c+")"},cityBad:function(c){return "Choose a city in "+c+" from the list (the destination must match the visa country)."},cityPh:"Start typing…"},
- ar:{cc:"رمز الدولة",cityL:function(c){return "مدينة الوجهة ("+c+")"},cityBad:function(c){return "اختر مدينة في "+c+" من القائمة (يجب أن تطابق الوجهة بلد التأشيرة)."},cityPh:"ابدأ بالكتابة…"}
+ fr:{cc:"Indicatif du pays",cityL:function(c){return "Ville de destination ("+c+")"},cityBad:function(c){return "Choisissez une ville de "+c+" dans la liste proposée (la destination doit correspondre au pays du visa)."},cityPh:"Commencez à taper…",destL:"Pays de destination",destPh:"Choisir un pays",cityG:"Ville (choisissez d'abord le pays)"},
+ en:{cc:"Country dialling code",cityL:function(c){return "Destination city ("+c+")"},cityBad:function(c){return "Choose a city in "+c+" from the list (the destination must match the visa country)."},cityPh:"Start typing…",destL:"Destination country",destPh:"Choose a country",cityG:"City (choose the country first)"},
+ ar:{cc:"رمز الدولة",cityL:function(c){return "مدينة الوجهة ("+c+")"},cityBad:function(c){return "اختر مدينة في "+c+" من القائمة (يجب أن تطابق الوجهة بلد التأشيرة)."},cityPh:"ابدأ بالكتابة…",destL:"بلد الوجهة",destPh:"اختر بلداً",cityG:"المدينة (اختر البلد أولاً)"}
 };
 function normPhoneCC(cc,v){var d=String(v||"").replace(/[\s().\-]/g,"");if(!d)return "";if(/^00/.test(d))d="+"+d.slice(2);else if(d.charAt(0)!=="+")d=(cc||"+216")+d.replace(/^0+/,"");return /^\+[0-9]{8,15}$/.test(d)?d:""}
 function normPhone(v){var d=String(v||"").replace(/[\s().\-]/g,"");if(/^00/.test(d))d="+"+d.slice(2);if(/^216[0-9]{8}$/.test(d))d="+"+d;if(/^[0-9]{8}$/.test(d))d="+216"+d;return /^\+[0-9]{8,15}$/.test(d)?d:""}
@@ -1456,7 +1463,7 @@ function normTg(v){return String(v||"").trim().replace(/^https?:\/\/t\.me\//i,""
 var SVCFR={flight:"Billet d'avion",hotel:"Réservation d'hôtel"},CHFR={whatsapp:"WhatsApp",telegram:"Telegram",email:"E-mail",sms:"SMS"};
 function reqText(){
   var a=findAgent(S.agent),hot=S.need==="hotel",F=RQ;
-  var l=["Demande Visa Checker : "+SVCFR[S.need],"Agence : "+a.name,"Pays de destination : "+curC().n.fr,"Nom : "+F.ln,"Prénom(s) : "+F.fn,(hot?"Check-in : ":"Date d'aller : ")+fmtD(F.d1),(hot?"Check-out : ":"Date de retour : ")+fmtD(F.d2)];
+  var l=["Demande Visa Checker : "+SVCFR[S.need],"Agence : "+a.name,"Pays de destination : "+destName(),"Nom : "+F.ln,"Prénom(s) : "+F.fn,(hot?"Check-in : ":"Date d'aller : ")+fmtD(F.d1),(hot?"Check-out : ":"Date de retour : ")+fmtD(F.d2)];
   if(F.city)l.push("Ville : "+F.city);
   l.push("Téléphone / WhatsApp : "+F.phone);if(F.tg)l.push("Telegram : @"+F.tg);if(F.mail)l.push("E-mail : "+F.mail);
   l.push("Canal pour le paiement et le document : "+CHFR[F.chan]);
@@ -1505,8 +1512,10 @@ function validateRequest(F,need){
   if(!F.d1)er.d1=E.req;else if(!isoOk(F.d1))er.d1=X.date;else if(F.d1<td)er.d1=E.past;else if(F.d1>lim)er.d1=X.far;
   if(!F.d2)er.d2=E.req;else if(!isoOk(F.d2))er.d2=X.date;else if(F.d1&&isoOk(F.d1)){
     if(hot?F.d2<=F.d1:F.d2<F.d1)er.d2=hot?E.dHotel:E.dFlight;else if(dayDiff(F.d1,F.d2)>365)er.d2=X.stay}
-  var cmatch=city?cityMatch(curC().id,city):null;
-  if(!city)er.city=E.req;else if(city.length>60)er.city=X.long;else if(cmatch===null)er.city=TXB[S.lang].cityBad(curC().n[S.lang]);
+  var dc=COUNTRIES.filter(function(x){return x.id===F.dest})[0];
+  if(!dc)er.dest=E.req;
+  var cmatch=(city&&dc)?cityMatch(dc.id,city):null;
+  if(!city)er.city=E.req;else if(city.length>60)er.city=X.long;else if(dc&&cmatch===null)er.city=TXB[S.lang].cityBad(dc.n[S.lang]);
   if(!phone)er.phone=cleanTxt(F.phone)?E.phone:E.req;
   if(tg&&!/^[A-Za-z0-9_]{5,32}$/.test(tg))er.tg=E.tg;
   if(mail){if(mail.length>254)er.mail=X.mailLong;else if(!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(mail))er.mail=E.mail}
@@ -1546,11 +1555,11 @@ function submitReq(){
   if(RQ.sending)return;
   var R=RT[S.lang],X=ERX[S.lang],a=findAgent(S.agent),F=RQ,v=validateRequest(F,S.need),er=v.er,c=v.clean;
   RQ.er=er;
-  ["ln","fn","d1","d2","city","phone","tg","mail","consent"].forEach(function(k){var s=$("fe-"+k),i=$("rq-"+k);if(s)s.textContent=er[k]||"";if(i)i.setAttribute("aria-invalid",er[k]?"true":"false")});
+  ["ln","fn","d1","d2","dest","city","phone","tg","mail","consent"].forEach(function(k){var s=$("fe-"+k),i=$("rq-"+k);if(s)s.textContent=er[k]||"";if(i)i.setAttribute("aria-invalid",er[k]?"true":"false")});
   var form=$("fe-form");if(form)form.textContent="";
   var bad=Object.keys(er);
   if(bad.length){
-    var hot=S.need==="hotel",LB={ln:R.ln,fn:R.fn,d1:hot?R.d1h:R.d1f,d2:hot?R.d2h:R.d2f,city:TXB[S.lang].cityL(curC().n[S.lang]),phone:R.phone,tg:R.tg,mail:R.mail,consent:A11Y[S.lang].cons};
+    var hot=S.need==="hotel",LB={ln:R.ln,fn:R.fn,d1:hot?R.d1h:R.d1f,d2:hot?R.d2h:R.d2f,dest:TXB[S.lang].destL,city:TXB[S.lang].cityG,phone:R.phone,tg:R.tg,mail:R.mail,consent:A11Y[S.lang].cons};
     if(form)form.textContent=A11Y[S.lang].sum(bad.length,bad.map(function(k){return LB[k]}).join(", "));
     var f=$("rq-"+bad[0]);if(f)f.focus();return}
   RQ.er={};F.ln=c.ln;F.fn=c.fn;F.city=c.city;F.phone=c.phone;F.tg=c.tg;F.mail=c.mail;
@@ -1558,7 +1567,7 @@ function submitReq(){
   var hp=$("rq-website");if(hp&&hp.value){fin("sent");return}              /* champ piège rempli par un robot : on fait semblant */
   try{var last=+sessionStorage.getItem("vc-last-send")||0;if(Date.now()-last<REQUEST_COOLDOWN_MS){if(form)form.textContent=X.dup;return}}catch(e){}
   if(!REQUEST_URL){fin("manual");return}
-  var payload={requestId:newId(),service:S.need,destination:curC().n.fr,lastName:c.ln,firstName:c.fn,date1:F.d1,date2:F.d2,city:c.city,phone:c.phone,telegram:c.tg,email:c.mail,channel:F.chan,lang:S.lang,sentAt:new Date().toISOString(),
+  var payload={requestId:newId(),service:S.need,destination:destName(),lastName:c.ln,firstName:c.fn,date1:F.d1,date2:F.d2,city:c.city,phone:c.phone,telegram:c.tg,email:c.mail,channel:F.chan,lang:S.lang,sentAt:new Date().toISOString(),
     agency:{id:a.id,name:a.name,email:a.email||"",telegram:a.telegram||"",whatsapp:a.whatsapp||""},message:reqText()};
   var btn=$("rqsend");RQ.sending=true;btn.disabled=true;btn.setAttribute("aria-busy","true");btn.textContent=R.sending;
   postRequest(payload).then(function(r){
@@ -2289,7 +2298,7 @@ document.addEventListener("change",function(e){
     var again=document.querySelector('input[data-id="'+id+'"]');if(again)again.focus()}
 });
 document.addEventListener("click",function(e){var t=e.target;if(t&&t.tagName==="INPUT"&&t.type==="date"&&typeof t.showPicker==="function"){try{t.showPicker()}catch(x){}}});
-document.addEventListener("input",function(e){var f=e.target.dataset&&e.target.dataset.f;if(f){RQ[f]=e.target.type==="checkbox"?e.target.checked:e.target.value;
+document.addEventListener("input",function(e){var f=e.target.dataset&&e.target.dataset.f;if(f){RQ[f]=e.target.type==="checkbox"?e.target.checked:e.target.value;if(f==="dest"){RQ.city="";if(RQ.er){delete RQ.er.dest;delete RQ.er.city}render();var ds=$("rq-dest");if(ds)ds.focus();return}
   if(RQ.er&&RQ.er[f]){delete RQ.er[f];var se=$("fe-"+f);if(se)se.textContent="";e.target.setAttribute("aria-invalid","false");
     if(!Object.keys(RQ.er).length){var fm=$("fe-form");if(fm)fm.textContent=""}}}});
 document.addEventListener("submit",function(e){if(e.target.id==="rqform"){e.preventDefault();submitReq()}});
