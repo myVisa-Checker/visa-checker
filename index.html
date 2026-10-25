@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://visa-proxy.rabehfly.workers.dev; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://visa-proxy.rabehfly.workers.dev https://visa-chat.rabehfly.workers.dev; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Visa Checker : votre dossier visa vérifié avant le dépôt</title>
 <meta name="description" content="Checklist des documents de visa pour les voyageurs tunisiens (France et e-Visa), pack recours en cas de refus, billets d'avion et réservations d'hôtel via des agences partenaires. En français, anglais et arabe.">
@@ -2426,6 +2426,61 @@ render();
       navigator.serviceWorker.addEventListener("controllerchange",function(){if(reloaded||!had)return;reloaded=true;location.reload()});
     });
   }
+})();
+</script>
+
+
+<style>
+#vc-btn{position:fixed;inset-inline-end:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:var(--r-pill);background:var(--accent);color:var(--on-accent);border:0;font-size:26px;box-shadow:var(--shadow-lift);z-index:50;cursor:pointer}
+#vc-box{position:fixed;inset-inline-end:16px;bottom:calc(150px + env(safe-area-inset-bottom,0px));width:min(340px,calc(100vw - 32px));height:min(420px,calc(100vh - 220px));background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-5);box-shadow:var(--shadow-modal);display:none;flex-direction:column;overflow:hidden;z-index:50;font-family:var(--f-body)}
+#vc-head{background:var(--accent);color:var(--on-accent);padding:12px;font-weight:700}
+#vc-msgs{flex:1;overflow-y:auto;padding:10px;font-size:14px}
+.vc-m{margin:6px 0;padding:8px 10px;border-radius:var(--r-3);max-width:85%;white-space:pre-wrap;overflow-wrap:anywhere}
+.vc-u{background:var(--accent-soft);margin-inline-start:auto}
+.vc-a{background:var(--line)}
+#vc-form{display:flex;border-top:1px solid var(--line)}
+#vc-in{flex:1;min-width:0;border:0;padding:12px;font-size:16px;outline:none;background:var(--surface);color:var(--ink);font-family:inherit}
+#vc-send{border:0;background:var(--accent);color:var(--on-accent);padding:0 16px;cursor:pointer;font-family:inherit}
+</style>
+<button id="vc-btn" type="button" aria-label="Assistant">&#128172;</button>
+<div id="vc-box" role="dialog" aria-label="Assistant Visa Checker">
+  <div id="vc-head">Assistant Visa Checker</div>
+  <div id="vc-msgs" aria-live="polite"></div>
+  <div id="vc-form"><input id="vc-in" maxlength="500" autocomplete="off"><button id="vc-send" type="button"></button></div>
+</div>
+<script>
+(function(){
+  var CHAT_URL="https://visa-chat.rabehfly.workers.dev";
+  var T={
+    fr:{hi:"Bonjour ! Pose-moi ta question sur ton dossier de visa pour la France. Je ne remplace pas le consulat et je ne peux pas promettre un visa.",ph:"Pose ta question…",send:"Envoyer",err:"Erreur, réessaie.",net:"Connexion impossible, réessaie."},
+    en:{hi:"Hello! Ask me about your visa file for France. I don't replace the consulate and I can't promise a visa.",ph:"Ask your question…",send:"Send",err:"Error, please try again.",net:"Connection failed, please try again."},
+    ar:{hi:"مرحباً! اسألني عن ملف التأشيرة إلى فرنسا. أنا لا أحل محل القنصلية ولا أستطيع ضمان التأشيرة.",ph:"اكتب سؤالك…",send:"إرسال",err:"خطأ، حاول مرة أخرى.",net:"تعذر الاتصال، حاول مرة أخرى."}
+  };
+  function L(){var l=(document.documentElement.lang||"fr").slice(0,2);return T[l]||T.fr;}
+  var box=document.getElementById("vc-box"),msgs=document.getElementById("vc-msgs"),
+      inp=document.getElementById("vc-in"),sendBtn=document.getElementById("vc-send"),
+      hist=[],busy=false,last=0,greet=null;
+  function add(t,c){var d=document.createElement("div");d.className="vc-m "+c;d.textContent=t;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;}
+  function labels(){var l=L();inp.placeholder=l.ph;sendBtn.textContent=l.send;if(greet&&!hist.length)greet.textContent=l.hi;}
+  greet=add(L().hi,"vc-a");labels();
+  document.getElementById("vc-btn").onclick=function(){
+    var open=box.style.display==="flex";box.style.display=open?"none":"flex";
+    if(!open){labels();inp.focus();}
+  };
+  function send(){
+    var t=inp.value.trim();
+    if(!t||busy||Date.now()-last<2000)return;
+    last=Date.now();busy=true;inp.value="";
+    add(t,"vc-u");hist.push({role:"user",text:t});
+    var w=add("…","vc-a"),l=L();
+    fetch(CHAT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:hist})})
+      .then(function(r){return r.json();})
+      .then(function(j){w.textContent=j.reply||l.err;hist.push({role:"assistant",text:w.textContent});})
+      .catch(function(){w.textContent=l.net;hist.pop();})
+      .then(function(){busy=false;});
+  }
+  sendBtn.onclick=send;
+  inp.addEventListener("keydown",function(e){if(e.key==="Enter")send();});
 })();
 </script>
 
