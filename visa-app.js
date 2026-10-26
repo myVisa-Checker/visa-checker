@@ -862,7 +862,7 @@ fr:{svc:{flight:"Billet d'avion",hotel:"Réservation d'hôtel"},t8:"Choisissez v
  consent:"J'accepte que ces informations soient transmises à l'agence choisie pour traiter ma demande.",send:"Envoyer ma demande",sending:"Envoi en cours…",
  payNote:"Vous payez l'agence, pas Visa Checker. Le document vous est envoyé après paiement. Pour le visa, demandez une réservation annulable.",
  e:{req:"Champ obligatoire",name:"Écrivez en lettres latines, comme sur le passeport.",phone:"Numéro invalide : choisissez l\u2019indicatif du pays, puis saisissez le numéro (ex. 20 123 456).",tg:"Identifiant invalide (5 à 32 caractères : lettres, chiffres, _).",mail:"E-mail invalide.",needTg:"Ajoutez votre identifiant Telegram pour ce canal.",needMail:"Ajoutez votre e-mail pour ce canal.",past:"La date doit être aujourd'hui ou plus tard.",dFlight:"Le retour doit être le jour de l'aller ou après.",dHotel:"Le check-out doit être après le check-in.",consent:"Cochez la case pour continuer."},
- okT:function(a){return "Demande envoyée à "+a},okTxt:function(c,v){return "Vous recevrez le lien de paiement, puis votre document, par "+c+" ("+v+")."},
+ okT:function(a){return "Demande envoyée"},okTxt:function(c,v){return "Vous recevrez le lien de paiement, puis votre document, par "+c+" ("+v+")."},
  manT:"Envoyez votre demande à l'agence",manTxt:"Cette page n'est pas encore reliée à un serveur (mode test). Utilisez un des boutons : l'agence vous répondra avec le lien de paiement.",failTxt:"L'envoi automatique a échoué. Utilisez un des boutons pour envoyer la demande à l'agence.",
  recap:"Récapitulatif",bWA:"Envoyer par WhatsApp",bMail:"Envoyer par e-mail",bTg:"Ouvrir Telegram (texte copié)",tgHint:"Le texte est copié : collez-le dans la conversation Telegram."},
 en:{svc:{flight:"Flight ticket",hotel:"Hotel booking"},t8:"Choose your agency",s8:"Choose one of our agencies, or an international partner.",t9:"Your details",s9:"Enter them exactly as in your passport.",t10a:"Request sent",t10b:"Last step",s10a:"The agency will reply soon.",s10b:"Send your request to the agency.",
@@ -873,7 +873,7 @@ en:{svc:{flight:"Flight ticket",hotel:"Hotel booking"},t8:"Choose your agency",s
  consent:"I agree that this information is shared with the chosen agency to process my request.",send:"Send my request",sending:"Sending…",
  payNote:"You pay the agency, not Visa Checker. The document is sent after payment. For the visa, ask for a cancellable booking.",
  e:{req:"Required field",name:"Use Latin letters, as in your passport.",phone:"Invalid number: pick the country code, then type the number (e.g. 20 123 456).",tg:"Invalid username (5 to 32 characters: letters, digits, _).",mail:"Invalid e-mail.",needTg:"Add your Telegram username for this channel.",needMail:"Add your e-mail for this channel.",past:"The date must be today or later.",dFlight:"Return must be on or after the departure date.",dHotel:"Check-out must be after check-in.",consent:"Tick the box to continue."},
- okT:function(a){return "Request sent to "+a},okTxt:function(c,v){return "You will receive the payment link, then your document, by "+c+" ("+v+")."},
+ okT:function(a){return "Request sent"},okTxt:function(c,v){return "You will receive the payment link, then your document, by "+c+" ("+v+")."},
  manT:"Send your request to the agency",manTxt:"This page is not connected to a server yet (test mode). Use one of the buttons: the agency will reply with the payment link.",failTxt:"Automatic sending failed. Use one of the buttons to send the request to the agency.",
  recap:"Summary",bWA:"Send by WhatsApp",bMail:"Send by e-mail",bTg:"Open Telegram (text copied)",tgHint:"The text is copied: paste it into the Telegram chat."},
 ar:{svc:{flight:"تذكرة طيران",hotel:"حجز فندق"},t8:"اختر وكالتك",s8:"اختر إحدى وكالاتنا، أو شريكًا دوليًا.",t9:"بياناتك",s9:"اكتبها تمامًا كما في جواز سفرك.",t10a:"تم إرسال الطلب",t10b:"الخطوة الأخيرة",s10a:"ستردّ عليك الوكالة قريبًا.",s10b:"أرسل طلبك إلى الوكالة.",
@@ -884,7 +884,7 @@ ar:{svc:{flight:"تذكرة طيران",hotel:"حجز فندق"},t8:"اختر و
  consent:"أوافق على إرسال هذه المعلومات إلى الوكالة المختارة لمعالجة طلبي.",send:"أرسل طلبي",sending:"جارٍ الإرسال…",
  payNote:"تدفع للوكالة وليس لـ Visa Checker. تصلك الوثيقة بعد الدفع. للتأشيرة، اطلب حجزًا قابلًا للإلغاء.",
  e:{req:"حقل إلزامي",name:"اكتب بحروف لاتينية كما في جواز السفر.",phone:"رقم غير صالح: اختر رمز الدولة ثم اكتب الرقم (مثال: 20 123 456).",tg:"معرّف غير صالح (من 5 إلى 32 حرفًا: حروف وأرقام و _).",mail:"بريد إلكتروني غير صالح.",needTg:"أضف معرّف تيليغرام لهذه القناة.",needMail:"أضف بريدك الإلكتروني لهذه القناة.",past:"يجب أن يكون التاريخ اليوم أو بعده.",dFlight:"يجب أن تكون العودة في يوم الذهاب أو بعده.",dHotel:"يجب أن تكون المغادرة بعد الوصول.",consent:"علّم المربع للمتابعة."},
- okT:function(a){return "تم إرسال الطلب إلى "+a},okTxt:function(c,v){return "ستصلك رسالة برابط الدفع ثم وثيقتك عبر "+c+" ("+v+")."},
+ okT:function(a){return "تم إرسال الطلب"},okTxt:function(c,v){return "ستصلك رسالة برابط الدفع ثم وثيقتك عبر "+c+" ("+v+")."},
  manT:"أرسل طلبك إلى الوكالة",manTxt:"هذه الصفحة غير مرتبطة بخادم بعد (وضع تجريبي). استعمل أحد الأزرار: ستردّ عليك الوكالة برابط الدفع.",failTxt:"فشل الإرسال التلقائي. استعمل أحد الأزرار لإرسال الطلب إلى الوكالة.",
  recap:"الملخص",bWA:"أرسل عبر واتساب",bMail:"أرسل بالبريد الإلكتروني",bTg:"افتح تيليغرام (تم نسخ النص)",tgHint:"تم نسخ النص: الصقه في محادثة تيليغرام."}
 };
@@ -1013,7 +1013,7 @@ function contactFor(){return RQ.chan==="telegram"?"@"+RQ.tg:RQ.chan==="email"?RQ
 function doneHtml(t){
   var R=RT[S.lang],a=findAgent(S.agent),txt=reqText(),hot=S.need==="hotel",F=RQ,L=S.lang;
   var sh=function(x){return x.replace(/\s*\(.*?\)/g,'')},CHL={fr:'Canal',en:'Channel',ar:'القناة'};
-  var rows=[[R.svc[S.need],a.name],[sh(R.ln),F.ln],[sh(R.fn),F.fn],[sh(hot?R.d1h:R.d1f),fmtD(F.d1)],[sh(hot?R.d2h:R.d2f),fmtD(F.d2)],[R.phone,F.phone]];
+  var rows=[[STP[L][0],R.svc[S.need]],[sh(R.ln),F.ln],[sh(R.fn),F.fn],[sh(hot?R.d1h:R.d1f),fmtD(F.d1)],[sh(hot?R.d2h:R.d2f),fmtD(F.d2)],[R.phone,F.phone]];
   if(F.tg)rows.push([sh(R.tg),"@"+F.tg]);if(F.mail)rows.push([sh(R.mail),F.mail]);rows.push([CHL[L],R.ch[F.chan]]);
   var h=stepper(4);
   if(F.mode==="sent"){
