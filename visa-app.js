@@ -711,11 +711,11 @@ document.addEventListener("click",function(e){var b=e.target.closest&&e.target.c
   navigator.geolocation.getCurrentPosition(function(p){TRS.pos=[p.coords.latitude,p.coords.longitude];TRS.posErr=false;trSig="";renderTrans()},function(){TRS.posErr=true;trSig="";renderTrans()},{timeout:8000,maximumAge:600000})});
 
 /* Bons plans : les offres viennent uniquement de deals.json (accords réels). Une offre expirée disparaît toute seule. */
-var DEALS=[],BPN={cat:""},bpnSig="";
+var DEALS=[],BPN={cat:"",open:false},bpnSig="";
 var BPT={
- fr:{t:"Bons plans et réductions partenaires",sub:"Des avantages négociés pour les utilisateurs de Visa Checker : agences de voyages locales, hôtels partenaires, transferts d'argent et cartes pour voyager.",all:"Tout",cat:{agence:"Agences de voyages",hotel:"Hôtels",transfert:"Transferts d'argent",carte:"Cartes et eSIM"},tag:{agence:"Agence",hotel:"Hôtel",transfert:"Transfert",carte:"Carte"},none:"Les premiers bons plans arrivent bientôt. Revenez nous voir !",noneCat:"Aucune offre dans cette catégorie pour le moment.",code:"Code promo",copy:"Copier",copied:"Copié ✓",go:"Profiter de l'offre",until:"Valable jusqu'au ",aff:"Lien partenaire : Visa Checker peut recevoir une commission, sans frais pour vous.",join:"Vous êtes une agence, un hôtel ou un service pour voyageurs ? Devenez partenaire.",joinBtn:"Devenir partenaire",jsub:"Visa Checker - Devenir partenaire",jbody:"Nom de l'établissement : \nVille / pays : \nType (agence, hôtel, transfert d'argent, carte) : \nOffre proposée aux utilisateurs : \nContact : "},
- en:{t:"Partner deals and discounts",sub:"Benefits negotiated for Visa Checker users: local travel agencies, partner hotels, money transfers and travel cards.",all:"All",cat:{agence:"Travel agencies",hotel:"Hotels",transfert:"Money transfers",carte:"Cards and eSIM"},tag:{agence:"Agency",hotel:"Hotel",transfert:"Transfer",carte:"Card"},none:"The first deals are coming soon. Check back!",noneCat:"No offers in this category for now.",code:"Promo code",copy:"Copy",copied:"Copied ✓",go:"Get the offer",until:"Valid until ",aff:"Partner link: Visa Checker may earn a commission, at no cost to you.",join:"Are you an agency, a hotel or a service for travellers? Become a partner.",joinBtn:"Become a partner",jsub:"Visa Checker - Become a partner",jbody:"Business name: \nCity / country: \nType (agency, hotel, money transfer, card): \nOffer for users: \nContact: "},
- ar:{t:"عروض وتخفيضات الشركاء",sub:"مزايا متفاوض عليها لمستخدمي Visa Checker: وكالات سفر محلية، فنادق شريكة، تحويل الأموال وبطاقات السفر.",all:"الكل",cat:{agence:"وكالات السفر",hotel:"الفنادق",transfert:"تحويل الأموال",carte:"البطاقات وeSIM"},tag:{agence:"وكالة",hotel:"فندق",transfert:"تحويل",carte:"بطاقة"},none:"أولى العروض قادمة قريبًا. عُد لزيارتنا!",noneCat:"لا توجد عروض في هذه الفئة حاليًا.",code:"رمز الخصم",copy:"نسخ",copied:"تم النسخ ✓",go:"استفد من العرض",until:"صالح حتى ",aff:"رابط شريك: قد يتلقى Visa Checker عمولة دون أي كلفة عليك.",join:"هل أنت وكالة أو فندق أو خدمة للمسافرين؟ كن شريكًا.",joinBtn:"كن شريكًا",jsub:"Visa Checker - كن شريكًا",jbody:"اسم المؤسسة: \nالمدينة / البلد: \nالنوع (وكالة، فندق، تحويل أموال، بطاقة): \nالعرض المقدَّم للمستخدمين: \nجهة الاتصال: "}
+ fr:{t:"Bons plans et réductions partenaires",sub:"Des avantages négociés pour les utilisateurs de Visa Checker : agences de voyages locales, hôtels partenaires, transferts d'argent et cartes pour voyager.",all:"Tout",cat:{agence:"Agences de voyages",hotel:"Hôtels",transfert:"Transferts d'argent",carte:"Cartes et eSIM"},tag:{agence:"Agence",hotel:"Hôtel",transfert:"Transfert",carte:"Carte"},none:"Les premiers bons plans arrivent bientôt. Revenez nous voir !",noneCat:"Aucune offre dans cette catégorie pour le moment.",code:"Code promo",copy:"Copier",copied:"Copié ✓",go:"Profiter de l'offre",until:"Valable jusqu'au ",aff:"Lien partenaire : Visa Checker peut recevoir une commission, sans frais pour vous.",join:"Vous êtes une agence, un hôtel ou un service pour voyageurs ? Devenez partenaire.",joinBtn:"Devenir partenaire",disc:"Découvrir les bons plans",ptop:"Vous êtes une agence, un hôtel, un service ? ",jsub:"Visa Checker - Devenir partenaire",jbody:"Nom de l'établissement : \nVille / pays : \nType (agence, hôtel, transfert d'argent, carte) : \nOffre proposée aux utilisateurs : \nContact : "},
+ en:{t:"Partner deals and discounts",sub:"Benefits negotiated for Visa Checker users: local travel agencies, partner hotels, money transfers and travel cards.",all:"All",cat:{agence:"Travel agencies",hotel:"Hotels",transfert:"Money transfers",carte:"Cards and eSIM"},tag:{agence:"Agency",hotel:"Hotel",transfert:"Transfer",carte:"Card"},none:"The first deals are coming soon. Check back!",noneCat:"No offers in this category for now.",code:"Promo code",copy:"Copy",copied:"Copied ✓",go:"Get the offer",until:"Valid until ",aff:"Partner link: Visa Checker may earn a commission, at no cost to you.",join:"Are you an agency, a hotel or a service for travellers? Become a partner.",joinBtn:"Become a partner",disc:"Discover the deals",ptop:"Agency, hotel or service? ",jsub:"Visa Checker - Become a partner",jbody:"Business name: \nCity / country: \nType (agency, hotel, money transfer, card): \nOffer for users: \nContact: "},
+ ar:{t:"عروض وتخفيضات الشركاء",sub:"مزايا متفاوض عليها لمستخدمي Visa Checker: وكالات سفر محلية، فنادق شريكة، تحويل الأموال وبطاقات السفر.",all:"الكل",cat:{agence:"وكالات السفر",hotel:"الفنادق",transfert:"تحويل الأموال",carte:"البطاقات وeSIM"},tag:{agence:"وكالة",hotel:"فندق",transfert:"تحويل",carte:"بطاقة"},none:"أولى العروض قادمة قريبًا. عُد لزيارتنا!",noneCat:"لا توجد عروض في هذه الفئة حاليًا.",code:"رمز الخصم",copy:"نسخ",copied:"تم النسخ ✓",go:"استفد من العرض",until:"صالح حتى ",aff:"رابط شريك: قد يتلقى Visa Checker عمولة دون أي كلفة عليك.",join:"هل أنت وكالة أو فندق أو خدمة للمسافرين؟ كن شريكًا.",joinBtn:"كن شريكًا",disc:"اكتشف العروض",ptop:"وكالة أو فندق أو خدمة؟ ",jsub:"Visa Checker - كن شريكًا",jbody:"اسم المؤسسة: \nالمدينة / البلد: \nالنوع (وكالة، فندق، تحويل أموال، بطاقة): \nالعرض المقدَّم للمستخدمين: \nجهة الاتصال: "}
 };
 function cleanDeals(j){
   if(!j||!Array.isArray(j.deals))return [];
@@ -747,18 +747,26 @@ function bpnCards(){
       '<div class="bpn-foot"><span>'+(d.until?R.until+bpnDate(d.until,L):'')+'</span>'+(d.url?'<a class="pay" href="'+escA(d.url)+'" target="_blank" rel="noopener sponsored">'+R.go+'</a>':'')+'</div></article>'}).join("");
 }
 function renderBpn(){
+  renderPtop();
   var el=$("bpn");if(!el)return;
   var on=S.step===0;el.hidden=!on;if(!on)return;
-  var sig=S.lang+"|"+DEALS.length;if(sig===bpnSig&&el.firstChild){var r0=$("bpn-res");if(r0)r0.innerHTML=bpnCards();return}bpnSig=sig;
+  var sig=S.lang+"|"+DEALS.length+"|"+BPN.open;if(sig===bpnSig&&el.firstChild){var r0=$("bpn-res");if(r0)r0.innerHTML=bpnCards();return}bpnSig=sig;
   var R=BPT[S.lang]||BPT.fr;
-  var join=SITE.email?'<p class="bpn-note">'+R.join+'</p><a class="pay bpn-cta" href="mailto:'+SITE.email+'?subject='+encodeURIComponent(R.jsub)+'&body='+encodeURIComponent(R.jbody)+'">'+R.joinBtn+'</a>':'';
+  var join="";
   var h='<h2>'+R.t+'</h2><p class="bpn-sub">'+R.sub+'</p>';
   if(!DEALS.length){el.innerHTML=h+'<p class="bpn-note">'+R.none+'</p>'+join;return}
+  if(!BPN.open){el.innerHTML=h+'<button type="button" class="pay bpn-cta bpn-disc" data-bpn-open="1">'+R.disc+'</button>';return}
   var cats=["agence","hotel","transfert","carte"].filter(function(c){return DEALS.some(function(d){return d.cat===c})});
   if(cats.indexOf(BPN.cat)<0)BPN.cat="";
   h+='<div class="bpn-tiles" role="group" aria-label="'+R.t+'">'+cats.map(function(c){return '<button type="button" class="bpn-tile" data-c="'+c+'" data-bpn="'+c+'" aria-pressed="'+(BPN.cat===c)+'"><span class="bpn-ic">'+BPI[c]+'</span>'+R.cat[c]+'</button>'}).join("")+'</div>';
   h+='<div class="bpn-res" id="bpn-res" aria-live="polite">'+bpnCards()+'</div>'+join;
   el.innerHTML=h;
+}
+function renderPtop(){
+  var el=$("ptop");if(!el)return;
+  var on=S.step===0&&SITE.email;el.hidden=!on;if(!on)return;
+  var R=BPT[S.lang]||BPT.fr,sig=S.lang;if(el.dataset.sig===sig&&el.firstChild)return;el.dataset.sig=sig;
+  el.innerHTML='<span class="ptop-t">'+R.ptop+'</span><a class="ptop-b" data-ptop="1" href="mailto:'+SITE.email+'?subject='+encodeURIComponent(R.jsub)+'&body='+encodeURIComponent(R.jbody)+'">'+R.joinBtn+'</a>';
 }
 function bpnSync(){document.querySelectorAll(".bpn-tile").forEach(function(t){t.setAttribute("aria-pressed",String(t.dataset.bpn===BPN.cat))});var rs=$("bpn-res");if(rs)rs.innerHTML=bpnCards()}
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&BPN.cat){BPN.cat="";bpnSync()}});
@@ -767,6 +775,8 @@ function loadDeals(){
     fetch("deals.json",{signal:c.signal,cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(function(j){clearTimeout(tm);DEALS=cleanDeals(j);bpnSig="";renderBpn()}).catch(function(){})}catch(e){}
 }
 document.addEventListener("click",function(e){
+  var po=e.target.closest&&e.target.closest("[data-bpn-open]");if(po){BPN.open=true;bpnSig="";renderBpn();var tl=document.querySelector(".bpn-tiles");if(tl&&tl.scrollIntoView)tl.scrollIntoView({block:"center",behavior:"smooth"});return}
+  var pt=e.target.closest&&e.target.closest("[data-ptop]");if(pt){try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(SITE.email)}catch(x){}var o=pt.textContent;pt.textContent="✓ "+SITE.email;setTimeout(function(){pt.textContent=o},3500);return}
   var f=e.target.closest&&e.target.closest("[data-bpn]");if(f){BPN.cat=(BPN.cat===f.dataset.bpn)?"":f.dataset.bpn;bpnSync();return}
   if(BPN.cat&&!(e.target.closest&&e.target.closest(".bpn-card"))){BPN.cat="";bpnSync();return}
   var b=e.target.closest&&e.target.closest("[data-bcopy]");if(!b)return;
