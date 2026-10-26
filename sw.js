@@ -6,7 +6,7 @@
    - Polices : cache d'abord, rafraîchi en arrière-plan.
    - Jamais de cache pour les requêtes POST ni pour les API (Make, déblocage) : elles passent directement.
    VERSION est estampillée par bump-version.mjs à chaque déploiement : les anciens caches sont supprimés à l'activation. */
-const VERSION = "2026.10.25.1"; /*@version*/
+const VERSION = "2026.10.26.2210"; /*@version*/
 const SHELL = "vc-shell-" + VERSION;
 const RUNTIME = "vc-runtime-" + VERSION;
 const NET_TIMEOUT = 4000; // au-delà, on sert le cache (réseau lent = « hors-ligne » pour l'utilisateur)
