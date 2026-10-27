@@ -775,6 +775,7 @@ function loadDeals(){
     fetch("deals.json",{signal:c.signal,cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(function(j){clearTimeout(tm);DEALS=cleanDeals(j);bpnSig="";renderBpn()}).catch(function(){})}catch(e){}
 }
 document.addEventListener("click",function(e){
+  var sc=e.target.closest&&e.target.closest("[data-spc]");if(sc){var q=sc.dataset.spc.split(":");SPSEL[q[0]]=SPSEL[q[0]]===q[1]?"":q[1];spSync();return}
   var po=e.target.closest&&e.target.closest("[data-bpn-open]");if(po){BPN.open=true;bpnSig="";renderBpn();var tl=document.querySelector(".bpn-tiles");if(tl&&tl.scrollIntoView)tl.scrollIntoView({block:"center",behavior:"smooth"});return}
   var pt=e.target.closest&&e.target.closest("[data-ptop]");if(pt){try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(SITE.email)}catch(x){}var o=pt.textContent;pt.textContent="✓ "+SITE.email;setTimeout(function(){pt.textContent=o},3500);return}
   var f=e.target.closest&&e.target.closest("[data-bpn]");if(f){BPN.cat=(BPN.cat===f.dataset.bpn)?"":f.dataset.bpn;bpnSync();return}
@@ -852,6 +853,7 @@ function tileHtml(x){
 function tilesHtml(list){return '<div class="tiles">'+list.map(tileHtml).join("")+'</div>'}
 var SPT={
  local:{fr:"Partenaires locaux",en:"Local partners",ar:"شركاء محليون"},
+ sAg:{fr:"Agences de voyages",en:"Travel agencies",ar:"وكالات السفر"},sIns:{fr:"Assurance voyage",en:"Travel insurance",ar:"تأمين السفر"},sCar:{fr:"Location de voiture",en:"Car rental",ar:"تأجير السيارات"},pick:{fr:"Touchez une catégorie pour voir la liste",en:"Tap a category to see the list",ar:"اختر فئة لعرض القائمة"},soon:{fr:"Bientôt disponible",en:"Coming soon",ar:"قريبًا"},
  cIns:{fr:"Assurance voyage",en:"Travel insurance",ar:"تأمين السفر"},cAg:{fr:"Agences de voyages",en:"Travel agencies",ar:"وكالات السفر"},cCar:{fr:"Location de voiture et transferts aéroport",en:"Car rental and airport transfers",ar:"تأجير السيارات والنقل من المطار"},cFh:{fr:"Vols et hôtels",en:"Flights and hotels",ar:"طيران وفنادق"},
  world:{fr:"Partenaires internationaux",en:"International partners",ar:"شركاء دوليون"},
  note:{fr:"Liens pratiques vers des sites indépendants. Certains sont des liens partenaires : Visa Checker peut recevoir une commission, sans frais pour vous. Pour le visa, choisissez des réservations annulables.",en:"Handy links to independent sites. Some are partner links: Visa Checker may earn a commission at no cost to you. For the visa, choose cancellable bookings.",ar:"روابط مفيدة لمواقع مستقلة. بعضها روابط شركاء: قد يحصل Visa Checker على عمولة دون أي تكلفة عليك. للتأشيرة، اختر حجوزات قابلة للإلغاء."}
@@ -1138,10 +1140,27 @@ function submitReq(){
   });
 }
 function needsHtml(t){return '<div class="needs"><h2 class="hot">'+t.needTitle+'</h2><p class="ag-sub">'+t.needSub+'</p><div class="sp-chips"><button type="button" class="sp-chip" data-need="flight">'+ICONS.plane+t.needFlight+'</button><button type="button" class="sp-chip" data-need="hotel">'+ICONS.bed+t.needHotel+'</button></div>'+'</div>'}
+var SPSEL={local:"",world:""};
+function spGroups(){return [
+ {id:"local",title:SPT.local,cats:[["ag",SPT.sAg,SPT.cAg],["ins",SPT.sIns,SPT.cIns],["car",SPT.sCar,SPT.cCar]],list:LOCAL},
+ {id:"world",title:SPT.world,cats:[["car",SPT.sCar,SPT.cCar],["fh",SPT.cFh,SPT.cFh]],list:WORLD}]}
+function spResult(g){
+  var L=S.lang,sel=SPSEL[g.id],c=g.cats.filter(function(x){return x[0]===sel})[0];
+  if(!c)return '<p class="sp-hint"><i aria-hidden="true">\uD83D\uDC46</i>'+SPT.pick[L]+'</p>';
+  var arr=g.list.filter(function(x){return x.g===sel});
+  return '<p class="sp-cat">'+c[2][L]+'</p>'+(arr.length?tilesHtml(arr):'<p class="sp-hint">'+SPT.soon[L]+'</p>');
+}
 function groupsHtml(){
-  var L=S.lang,T=SPT;
-  function sect(title,cats,list){var h='<h3 class="sp-grp c">'+title+'</h3>';cats.forEach(function(c){var arr=list.filter(function(x){return x.g===c[0]});if(arr.length)h+='<p class="sp-cat">'+c[1][L]+'</p>'+tilesHtml(arr)});return h}
-  return sect(T.local[L],[["ins",T.cIns],["ag",T.cAg],["car",T.cCar]],LOCAL)+sect(T.world[L],[["car",T.cCar],["fh",T.cFh]],WORLD);
+  var L=S.lang;
+  return spGroups().map(function(g){
+    return '<div class="spg" data-g="'+g.id+'"><div class="spg-head"><h3 class="sp-grp">'+g.title[L]+'</h3><div class="sp-cats" role="group" aria-label="'+g.title[L]+'">'
+      +g.cats.map(function(c){return '<button type="button" class="sp-cb" data-spc="'+g.id+':'+c[0]+'" aria-pressed="'+(SPSEL[g.id]===c[0])+'">'+c[1][L]+'</button>'}).join("")
+      +'</div></div><div class="sp-res" id="spr-'+g.id+'" aria-live="polite">'+spResult(g)+'</div></div>';
+  }).join("");
+}
+function spSync(){
+  document.querySelectorAll(".sp-cb").forEach(function(b){var p=b.dataset.spc.split(":");b.setAttribute("aria-pressed",String(SPSEL[p[0]]===p[1]))});
+  spGroups().forEach(function(g){var el=$("spr-"+g.id);if(el)el.innerHTML=spResult(g)});
 }
 function renderSponsors(t){
   var h=(S.step>0&&S.step!==7?needsHtml(t):'')+'<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();

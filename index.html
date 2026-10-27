@@ -533,7 +533,18 @@ html[lang="ar"] .tile-n,html[lang="ar"] .tile-k{font-family:var(--f-ar)}
 button.sp-chip{font:600 15px var(--f-body);cursor:pointer;color:var(--ink)}
 html[lang="ar"] .fe,html[lang="ar"] button.sp-chip{font-family:var(--f-ar)}
 
-#sp-h{color:var(--danger-text)}
+#sp-h{font-family:var(--f-display);font-weight:800;font-size:2.15rem;line-height:1.1;letter-spacing:-.02em;margin:6px 0 2px;background:linear-gradient(90deg,#e8590c,#f59e0b,#e8590c);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:hue 4s linear infinite}
+html[lang="ar"] #sp-h{font-family:var(--f-ar);letter-spacing:0}
+.spg{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.spg-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 12px}
+.spg .sp-grp{margin:0;font:800 1.2rem var(--f-display);letter-spacing:0;text-transform:none;color:var(--accent)}
+.sp-cats{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.sp-cb{appearance:none;cursor:pointer;border:2px solid var(--accent);background:var(--surface);color:var(--accent);border-radius:var(--r-pill);min-height:44px;padding:8px 16px;font:800 14px var(--f-body);transition:transform .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease}
+@media (hover:hover){.sp-cb:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift)}}
+.sp-cb[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.sp-res{width:100%}.sp-res .tiles{animation:bpnCard .4s ease both}
+.sp-hint{margin:0;text-align:center;color:var(--muted);font-size:14px}
+html[lang="ar"] .sp-cb,html[lang="ar"] .spg .sp-grp{font-family:var(--f-ar)}
 .totop{position:fixed;inset-inline-start:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));width:48px;height:48px;border-radius:var(--r-pill);border:1px solid var(--danger-line);background:var(--danger);color:var(--on-danger);box-shadow:var(--shadow-lift);z-index:50;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s}
 .totop.on{opacity:1;visibility:visible;transform:none}
 .totop:hover{background:var(--danger-hover)}
