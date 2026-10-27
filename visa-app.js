@@ -24,7 +24,7 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  s_pass:"Passeport",passName:"Tunisie",s_dest:"Destination",s_motive:"Motif du voyage",
  motive:{medical:"Visite médicale",other:"Autre motif"},motiveHint:{medical:"Soins, consultation ou opération",other:"Tourisme, famille, affaires"},
  start:"Commencer",back:"Retour",next:"Continuer",stepWord:function(n){return "Étape "+n+" sur 2"},stepNames:["Motif","Profil","Documents","Aide en plus"],
- pTitle:"Votre profil",pSub:"Quelques réponses pour adapter la liste à votre situation.",dTitle:"Vos documents",dSub:"Cochez chaque document au fur et à mesure.",hTitle:"Un coup de pouce",hSub:"Conseiller et aide en cas de refus.",
+ pTitle:"Votre profil",pSub:"Quelques réponses pour adapter la liste à votre situation.",dTitle:"Vos documents",dSub:"Cochez chaque document au fur et à mesure.",hTitle:"Analyse IA",hSub:"Faites analyser votre dossier ou votre refus.",
  medNote:"Visite médicale : le consulat veut voir un rendez-vous réel en France, le coût des soins et la preuve que vous pouvez les payer.",gMed:"Votre visite médicale",
  destTitle:"Votre voyage",destSub:"Pourquoi voyagez-vous ?",
  sloganA:"Votre dossier visa, vérifié",sloganB:"avant le dépôt",homeSub2:"Votre conseiller visa : nous vérifions que rien ne manque. Nous ne déposons pas votre demande."
@@ -34,11 +34,11 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  needTitle:"Besoin de documents de voyage ?",needSub:"Billet d'avion, réservation d'hôtel… Pour le visa, prenez des réservations annulables",needFlight:"Billet d'avion",needHotel:"Réservation d'hôtel",spTitle:"Nos partenaires",spSub:"Agences de voyage locales et partenaires dans le monde.",spLocal:"Agence de voyage locale",spWorld:"Partenaire dans le monde",spSlot:"Espace disponible",spTag:"Sponsorisé",spJoin:"Devenir partenaire",spSoon:"Contact à venir",
  s_purpose:"Type de visa",purpose:{tourism:"Tourisme",family:"Visite familiale ou amicale",business:"Affaires"},
  reunTitle:"Visa de long séjour",reunText:"Procédure différente d'un voyage touristique : la personne qui vit en France dépose d'abord la demande de regroupement familial auprès de l'OFII. Cette liste est générale. Confirmez les pièces sur France-Visas et auprès du consulat, car elles varient selon votre cas.",
- rfTitle:"Visa refusé ? Reprenez votre dossier",rfSub:"Un refus n'est pas définitif. Le pack contient ce qu'il faut pour contester ou redéposer.",
+ rfTitle:"Analyse IA de votre dossier",rfSub:"Décrivez votre situation ou votre refus : l'IA vous aide à voir ce qu'il faut corriger et prépare vos lettres.",
  rfWarn:"Le délai pour contester est court, environ 30 jours après la notification. Lisez dès aujourd'hui le motif indiqué sur votre formulaire de refus.",
- rfInc:["Lettre de recours à compléter","Conseils pour redéposer, étape par étape","4 lettres de motivation modèles : salarié, indépendant, étudiant, retraité","Le tout en PDF, à télécharger ou à recevoir par e-mail"],
- refHint:"Visa refusé ? Aide en cas de refus : 20 DT (lettre de recours et modèles de motivation).",rfPrice:"Pack complet : 20 DT",rfPriceSub:"Payé à l'avance. Vous recevez tout de suite le pack : à télécharger en PDF ou à recevoir par e-mail.",
- caseLabel:"Votre cas, en bref",casePh:"Ex. : moyens de subsistance insuffisants",caseHint:"Écrivez le motif de refus comme indiqué sur le papier remis lors du refus (ou votre question).",advMail:"Écrire par e-mail",advWA:"Écrire sur WhatsApp",advSubject:"demande de conseil",advDest:"Destination",advCase:"Mon cas",pdfBtn:"Télécharger le pack en PDF",pdfHint:"Dans la fenêtre qui s'ouvre, choisissez « Enregistrer au format PDF ».",pdfMail:"Recevoir par e-mail",rfPay:"Payer 20 DT",rfAdvTitle:"Conseils pour redéposer",rfLetTitle:"Lettres à copier",
+ rfInc:["Analyse IA de votre cas : motif expliqué, pièces à corriger, plan d'action","Lettre de motivation ou de recours préparée par l'IA, à modifier","Conseils pour redéposer, étape par étape","4 lettres de motivation modèles : salarié, indépendant, étudiant, retraité","Le tout en PDF, à télécharger ou à recevoir par e-mail"],
+ refHint:"Analyse IA de votre dossier ou de votre refus, avec lettres prêtes à modifier.",rfPrice:"Un seul prix, annoncé bientôt",rfPriceSub:"Paiement unique, à l'avance. Vous recevez tout de suite l'analyse et le pack : à télécharger en PDF ou à recevoir par e-mail.",
+ caseLabel:"Votre cas, en bref",casePh:"Ex. : moyens de subsistance insuffisants",caseHint:"Écrivez le motif de refus comme indiqué sur le papier remis lors du refus (ou votre question).",advMail:"Écrire par e-mail",advWA:"Écrire sur WhatsApp",advSubject:"demande de conseil",advDest:"Destination",advCase:"Mon cas",pdfBtn:"Télécharger le pack en PDF",pdfHint:"Dans la fenêtre qui s'ouvre, choisissez « Enregistrer au format PDF ».",pdfMail:"Recevoir par e-mail",rfPay:"Payer",rfAdvTitle:"Conseils pour redéposer",rfLetTitle:"Lettres à copier",
  rfNote:"Les lettres sont en français, car elles sont adressées aux autorités françaises. Remplacez tout ce qui est entre [crochets]. Collez le texte dans Word ou Google Docs, puis imprimez.",
  rfNoGuar:"Ces modèles aident à présenter votre dossier. Ils ne garantissent pas le visa.",copy:"Copier le texte",copied:"Copié",selected:"Texte sélectionné, copiez-le",
  adv:["Lisez le formulaire de refus. La case cochée indique le motif à corriger.","Choisissez : un recours (délai court, indiqué sur la notification) ou une nouvelle demande, qui entraîne de nouveaux frais.","Corrigez le motif avec des preuves nouvelles. Moyens financiers : relevés réguliers, sans gros dépôt soudain. Objet du séjour : programme clair et réservations réelles. Retour en Tunisie : preuves d'attaches (emploi, famille, logement).","Restez cohérent avec la première demande. Le consulat garde votre dossier : dates, emploi et revenus doivent être identiques.","Il n'existe pas de délai légal d'attente avant de redéposer, mais ne redéposez pas le même dossier sans changement.","Aucun intermédiaire ne peut promettre un visa. Un faux document peut entraîner de graves conséquences, dont une interdiction d'entrée."]},
@@ -64,7 +64,7 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  s_pass:"Passport",passName:"Tunisia",s_dest:"Destination",s_motive:"Reason for travel",
  motive:{medical:"Medical visit",other:"Other reason"},motiveHint:{medical:"Treatment, consultation or surgery",other:"Tourism, family, business"},
  start:"Start",back:"Back",next:"Continue",stepWord:function(n){return "Step "+n+" of 2"},stepNames:["Reason","Profile","Documents","Extra help"],
- pTitle:"Your profile",pSub:"A few answers to fit the list to your situation.",dTitle:"Your documents",dSub:"Tick each document as you collect it.",hTitle:"A helping hand",hSub:"Advisor and help after a refusal.",
+ pTitle:"Your profile",pSub:"A few answers to fit the list to your situation.",dTitle:"Your documents",dSub:"Tick each document as you collect it.",hTitle:"AI analysis",hSub:"Have your file or refusal analysed.",
  medNote:"Medical visit: the consulate wants a real appointment in France, the cost of care and proof you can pay for it.",gMed:"Your medical visit",
  destTitle:"Your trip",destSub:"Why are you travelling?",
  sloganA:"Your visa file, checked",sloganB:"before you apply",homeSub2:"Your visa advisor: we check that nothing is missing. We do not file your application."
@@ -74,11 +74,11 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  needTitle:"Need travel documents?",needSub:"Flight ticket, hotel booking… For the visa, choose cancellable bookings",needFlight:"Flight ticket",needHotel:"Hotel booking",spTitle:"Our partners",spSub:"Local travel agencies and partners around the world.",spLocal:"Local travel agency",spWorld:"Partner worldwide",spSlot:"Space available",spTag:"Sponsored",spJoin:"Become a partner",spSoon:"Contact coming soon",
  s_purpose:"Visa type",purpose:{tourism:"Tourism",family:"Family or friends visit",business:"Business"},
  reunTitle:"Long-stay visa",reunText:"This is a different procedure from a tourist trip: the person living in France first files the family reunification request with the OFII. This list is general. Confirm the documents on France-Visas and with the consulate, because they vary by case.",
- rfTitle:"Visa refused? Rebuild your file",rfSub:"A refusal is not final. The pack has what you need to appeal or apply again.",
+ rfTitle:"AI analysis of your file",rfSub:"Describe your situation or your refusal: the AI helps you see what to fix and prepares your letters.",
  rfWarn:"The time to appeal is short, about 30 days after you are notified. Read the reason on your refusal form today.",
- rfInc:["Appeal letter to complete","Advice for applying again, step by step","4 sample motivation letters: employee, self-employed, student, retired","All in PDF, to download or receive by e-mail"],
- refHint:"Visa refused? Refusal help: 20 TND (appeal letter and sample motivation letters).",rfPrice:"Full pack: 20 TND",rfPriceSub:"Paid in advance. You get the pack at once: download it as a PDF or receive it by e-mail.",
- caseLabel:"Your case, in brief",casePh:"E.g.: insufficient means of subsistence",caseHint:"Write the refusal reason as shown on the paper you received with the refusal (or your question).",advMail:"Write by e-mail",advWA:"Write on WhatsApp",advSubject:"advice request",advDest:"Destination",advCase:"My case",pdfBtn:"Download the pack as PDF",pdfHint:"In the window that opens, choose \"Save as PDF\".",pdfMail:"Receive by e-mail",rfPay:"Pay 20 TND",rfAdvTitle:"Advice for applying again",rfLetTitle:"Letters to copy",
+ rfInc:["AI analysis of your case: reason explained, documents to fix, action plan","Motivation or appeal letter drafted by the AI, ready to edit","Advice for applying again, step by step","4 sample motivation letters: employee, self-employed, student, retired","All in PDF, to download or receive by e-mail"],
+ refHint:"AI analysis of your file or refusal, with letters ready to edit.",rfPrice:"One price, announced soon",rfPriceSub:"One payment, in advance. You get the analysis and the pack at once: download as a PDF or receive by e-mail.",
+ caseLabel:"Your case, in brief",casePh:"E.g.: insufficient means of subsistence",caseHint:"Write the refusal reason as shown on the paper you received with the refusal (or your question).",advMail:"Write by e-mail",advWA:"Write on WhatsApp",advSubject:"advice request",advDest:"Destination",advCase:"My case",pdfBtn:"Download the pack as PDF",pdfHint:"In the window that opens, choose \"Save as PDF\".",pdfMail:"Receive by e-mail",rfPay:"Pay",rfAdvTitle:"Advice for applying again",rfLetTitle:"Letters to copy",
  rfNote:"The letters are in French because they go to the French authorities. Replace everything in [brackets]. Paste the text into Word or Google Docs, then print.",
  rfNoGuar:"These models help you present your file. They do not guarantee a visa.",copy:"Copy the text",copied:"Copied",selected:"Text selected, copy it",
  adv:["Read the refusal form. The ticked box shows the reason to fix.","Choose: an appeal (short deadline, shown on the notification) or a new application, which means new fees.","Fix the reason with new evidence. Funds: regular statements, no sudden large deposit. Purpose of stay: a clear plan and real bookings. Return to Tunisia: proof of ties (job, family, home).","Stay consistent with your first application. The consulate keeps your file: dates, job and income must be identical.","There is no legal waiting period before you apply again, but do not resubmit the same file unchanged.","No intermediary can promise a visa. A false document can have serious consequences, including an entry ban."]},
@@ -104,7 +104,7 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  s_pass:"جواز السفر",passName:"تونس",s_dest:"الوجهة",s_motive:"سبب السفر",
  motive:{medical:"زيارة طبية",other:"سبب آخر"},motiveHint:{medical:"علاج أو استشارة أو عملية",other:"سياحة أو عائلة أو أعمال"},
  start:"ابدأ",back:"رجوع",next:"متابعة",stepWord:function(n){return "الخطوة "+n+" من 2"},stepNames:["السبب","ملفك","الوثائق","مساعدة"],
- pTitle:"ملفك",pSub:"بضعة أجوبة لملاءمة القائمة مع وضعك.",dTitle:"وثائقك",dSub:"علّم كل وثيقة بعد تجهيزها.",hTitle:"مساعدة إضافية",hSub:"مستشار ومساعدة في حال الرفض.",
+ pTitle:"ملفك",pSub:"بضعة أجوبة لملاءمة القائمة مع وضعك.",dTitle:"وثائقك",dSub:"علّم كل وثيقة بعد تجهيزها.",hTitle:"تحليل بالذكاء الاصطناعي",hSub:"حلّل ملفك أو سبب الرفض.",
  medNote:"زيارة طبية: تريد القنصلية موعدًا حقيقيًا في فرنسا وتكلفة العلاج وإثبات قدرتك على دفعها.",gMed:"زيارتك الطبية",
  destTitle:"رحلتك",destSub:"ما سبب سفرك؟",
  sloganA:"ملف تأشيرتك، مُراجَع",sloganB:"قبل تقديمه",homeSub2:"مستشارك للتأشيرة: نتحقق من أنه لا ينقصك شيء. نحن لا نودع طلبك."
@@ -114,11 +114,11 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  needTitle:"تحتاج وثائق السفر؟",needSub:"تذكرة طيران، حجز فندق… للتأشيرة، اختر حجوزات قابلة للإلغاء",needFlight:"تذكرة طيران",needHotel:"حجز فندق",spTitle:"شركاؤنا",spSub:"وكالات سفر محلية وشركاء حول العالم.",spLocal:"وكالة سفر محلية",spWorld:"شريك حول العالم",spSlot:"مساحة متاحة",spTag:"برعاية",spJoin:"كن شريكًا",spSoon:"بيانات الاتصال قريبًا",
  s_purpose:"نوع التأشيرة",purpose:{tourism:"سياحة",family:"زيارة عائلية أو للأصدقاء",business:"أعمال"},
  reunTitle:"تأشيرة الإقامة الطويلة",reunText:"الإجراء يختلف عن السفر السياحي: يقدّم الشخص المقيم في فرنسا أولًا طلب لمّ الشمل لدى المكتب الفرنسي للهجرة والاندماج (OFII). هذه القائمة عامة. تأكد من الوثائق على موقع France-Visas ولدى القنصلية لأنها تختلف حسب حالتك.",
- rfTitle:"رُفضت التأشيرة؟ أعد بناء ملفك",rfSub:"الرفض ليس نهائيًا. تجد في الحزمة ما تحتاجه للطعن أو لإعادة التقديم.",
+ rfTitle:"تحليل ملفك بالذكاء الاصطناعي",rfSub:"صِف وضعك أو سبب الرفض: يساعدك الذكاء الاصطناعي على معرفة ما يجب تصحيحه ويحضّر رسائلك.",
  rfWarn:"مهلة الطعن قصيرة، نحو 30 يومًا بعد التبليغ. اقرأ اليوم سبب الرفض المكتوب في استمارة الرفض.",
- rfInc:["رسالة طعن جاهزة للتعبئة","نصائح لإعادة التقديم خطوة بخطوة","4 رسائل تحفيز نموذجية: موظف، عمل حر، طالب، متقاعد","كل ذلك بصيغة PDF، للتحميل أو الاستلام عبر البريد"],
- refHint:"تم رفض التأشيرة؟ المساعدة بعد الرفض: 20 د.ت (رسالة طعن ونماذج رسائل تحفيز).",rfPrice:"الحزمة الكاملة: 20 د.ت",rfPriceSub:"تُدفع مسبقًا. تحصل فورًا على الحزمة: تحميل بصيغة PDF أو استلام عبر البريد.",
- caseLabel:"حالتك باختصار",casePh:"مثال: عدم كفاية وسائل العيش",caseHint:"اكتب سبب الرفض كما هو مذكور في الورقة المسلّمة لك عند الرفض (أو سؤالك).",advMail:"راسل عبر البريد",advWA:"راسل عبر واتساب",advSubject:"طلب نصيحة",advDest:"الوجهة",advCase:"حالتي",pdfBtn:"تحميل الحزمة بصيغة PDF",pdfHint:"في النافذة التي تُفتح، اختر «حفظ بصيغة PDF».",pdfMail:"استلام عبر البريد",rfPay:"ادفع 20 د.ت",rfAdvTitle:"نصائح لإعادة التقديم",rfLetTitle:"رسائل للنسخ",
+ rfInc:["تحليل حالتك بالذكاء الاصطناعي: شرح السبب، وثائق يجب تصحيحها، خطة عمل","رسالة تحفيز أو طعن يحضّرها الذكاء الاصطناعي وقابلة للتعديل","نصائح لإعادة التقديم خطوة بخطوة","4 رسائل تحفيز نموذجية: موظف، عمل حر، طالب، متقاعد","كل ذلك بصيغة PDF، للتحميل أو الاستلام عبر البريد"],
+ refHint:"تحليل ملفك أو رفضك بالذكاء الاصطناعي، مع رسائل جاهزة للتعديل.",rfPrice:"سعر واحد، يُعلن قريبًا",rfPriceSub:"دفعة واحدة مسبقًا. تحصل فورًا على التحليل والحزمة: تحميل بصيغة PDF أو استلام عبر البريد.",
+ caseLabel:"حالتك باختصار",casePh:"مثال: عدم كفاية وسائل العيش",caseHint:"اكتب سبب الرفض كما هو مذكور في الورقة المسلّمة لك عند الرفض (أو سؤالك).",advMail:"راسل عبر البريد",advWA:"راسل عبر واتساب",advSubject:"طلب نصيحة",advDest:"الوجهة",advCase:"حالتي",pdfBtn:"تحميل الحزمة بصيغة PDF",pdfHint:"في النافذة التي تُفتح، اختر «حفظ بصيغة PDF».",pdfMail:"استلام عبر البريد",rfPay:"ادفع",rfAdvTitle:"نصائح لإعادة التقديم",rfLetTitle:"رسائل للنسخ",
  rfNote:"الرسائل بالفرنسية لأنها موجهة إلى السلطات الفرنسية. عوّض كل ما بين [أقواس]. الصق النص في Word أو Google Docs ثم اطبعه.",
  rfNoGuar:"هذه النماذج تساعدك على عرض ملفك ولا تضمن الحصول على التأشيرة.",copy:"نسخ النص",copied:"تم النسخ",selected:"تم تحديد النص، انسخه",
  adv:["اقرأ استمارة الرفض. الخانة المعلّمة تبيّن السبب الذي يجب إصلاحه.","اختر: الطعن (مهلة قصيرة مذكورة في التبليغ) أو تقديم طلب جديد، وهو يتطلب رسومًا جديدة.","أصلح السبب بإثباتات جديدة. الموارد المالية: كشوف منتظمة دون إيداع كبير مفاجئ. غرض الإقامة: برنامج واضح وحجوزات حقيقية. العودة إلى تونس: إثباتات الارتباط (عمل، عائلة، سكن).","حافظ على الانسجام مع الطلب الأول. القنصلية تحتفظ بملفك: يجب أن تتطابق التواريخ والعمل والدخل.","لا توجد مدة انتظار قانونية قبل إعادة التقديم، لكن لا تقدّم الملف نفسه دون تغيير.","لا يستطيع أي وسيط أن يعد بتأشيرة. الوثيقة المزوّرة قد تؤدي إلى عواقب خطيرة منها المنع من الدخول."]}
@@ -452,13 +452,13 @@ function loadPack(){
     if(r.ok&&r.data&&Array.isArray(r.data.pack)){PACK=r.data.pack.filter(function(p){return p&&typeof p.id==="string"&&p.t&&typeof p.body==="string"});PACK_STATE="ok"}
     else if(r.status===401||r.status===403){S.pack=false;S.tok="";PACK_STATE="expired";save()}
     else PACK_STATE="err";
-    if(S.step===5&&S.mode==="appeal")render();
+    if(S.step===5)render();
   });
 }
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 function renderRefus(t){
   var L=S.lang,h='<h2>'+t.rfTitle+'</h2><p class="rf-sub">'+t.rfSub+'</p>';
-  h+='<div class="book"><p>'+t.rfWarn+'</p></div>';
+  if(S.mode==="appeal")h+='<div class="book"><p>'+t.rfWarn+'</p></div>';
   if(!S.pack){
     if(PACK_STATE==="expired")h+='<p class="ag-err" role="alert">'+PKX[L].exp+'</p>';
     h+='<ul class="inc">'+t.rfInc.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>';
@@ -476,7 +476,6 @@ function renderRefus(t){
       h+='<details class="lt"><summary>'+p.t[L]+'</summary><div class="lt-body"><pre class="letter" id="pk-'+p.id+'">'+esc(p.body)+'</pre><button type="button" class="cp" data-copy="'+p.id+'">'+t.copy+'</button> <button type="button" class="cp" data-pdf="'+p.id+'">'+({fr:"Enregistrer en PDF",en:"Save as PDF",ar:"حفظ بصيغة PDF"})[L]+'</button></div></details>';
     });
   }
-  h+=soonHtml();
   h+='<p class="ag-note">'+t.rfNoGuar+'</p>';
   $("refus").innerHTML=h;
 }
@@ -1801,7 +1800,7 @@ function render(){
   $("dest").hidden=st!==2;if(st===2)$("dest").innerHTML=destHtml(t);
   $("panel").hidden=st!==3;if(st===3)$("panel").innerHTML=panelHtml(t);
   $("req").hidden=st<8||st>10;$("tools").hidden=st<11;if(st>=11)$("tools").innerHTML=toolsHtml(t);if(st===8)$("req").innerHTML=pickHtml(t);if(st===9)$("req").innerHTML=formHtml(t);if(st===10)$("req").innerHTML=doneHtml(t);$("evisa").hidden=st<6||st>7;if(st===6)$("evisa").innerHTML=evListHtml();if(st===7)$("evisa").innerHTML=evDetailHtml(t);
-  $("docs").hidden=st!==4;$("help").hidden=st!==5;$("agency").hidden=S.mode==="appeal";$("refus").hidden=S.mode!=="appeal";
+  $("docs").hidden=st!==4;$("help").hidden=st!==5;$("agency").hidden=true;$("refus").hidden=false;
   if(st===4){
     var vis=(e==="reunion"?RITEMS:ITEMS).filter(function(i){return i.w(Object.assign({},S,{purpose:e}))});
     var req=vis.filter(function(i){return !i.opt}),doneReq=req.filter(function(i){return S.done[i.id]}).length;
@@ -1830,7 +1829,7 @@ function render(){
     var legend='<ul class="legend" aria-label="'+X.legend+'"><li><i class="lg ok"></i>'+X.ok+'</li><li><i class="lg warn"></i>'+X.warn+'</li><li><i class="lg todo"></i>'+X.todo+'</li></ul>';
     $("list").innerHTML=adaptHtml(t)+legend+h;
   }
-  if(st===5){if(S.mode==="appeal"){renderRefus(t)}else{renderAgency(t)}}
+  if(st===5){renderRefus(t)}
   renderSponsors(t);$("sponsors").hidden=st>=8;
   $("dock").hidden=!(st===0&&ready);
   if(st===0&&ready)$("dock").innerHTML='<div class="dock-in"><span class="flag">'+flag("tn")+'</span><span class="arrow" aria-hidden="true">\u2192</span><span class="flag">'+flag(cur.id)+'</span><span class="dname">'+nm(cur)+'</span><button type="button" class="pay" data-go="1">'+t.start+'</button></div>';
