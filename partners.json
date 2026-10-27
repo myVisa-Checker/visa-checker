@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-10-24",
+ "updated": "2026-10-27",
  "partners": {
   "nabeul": [
    {
@@ -23,6 +23,80 @@
     },
     "contact": "",
     "email": "despinatravelandevents@gmail.com",
+    "telegram": "",
+    "whatsapp": ""
+   }
+  ],
+  "a-venir": [
+   {
+    "id": "cyrine-voyage",
+    "name": "Cyrine Voyage",
+    "city": "",
+    "svc": [
+     "flight",
+     "hotel"
+    ],
+    "soon": true,
+    "what": {
+     "fr": "Réservations d'hôtel et de vol",
+     "en": "Hotel and flight reservations",
+     "ar": "حجوزات الفنادق والطيران"
+    },
+    "adv": {
+     "fr": "Conseil pour votre dossier de visa",
+     "en": "Advice on your visa file",
+     "ar": "نصائح لملف التأشيرة"
+    },
+    "contact": "",
+    "email": "",
+    "telegram": "",
+    "whatsapp": ""
+   },
+   {
+    "id": "link-tour",
+    "name": "Link Tour",
+    "city": "",
+    "svc": [
+     "flight",
+     "hotel"
+    ],
+    "soon": true,
+    "what": {
+     "fr": "Réservations d'hôtel et de vol",
+     "en": "Hotel and flight reservations",
+     "ar": "حجوزات الفنادق والطيران"
+    },
+    "adv": {
+     "fr": "Conseil pour votre dossier de visa",
+     "en": "Advice on your visa file",
+     "ar": "نصائح لملف التأشيرة"
+    },
+    "contact": "",
+    "email": "",
+    "telegram": "",
+    "whatsapp": ""
+   },
+   {
+    "id": "flyaway",
+    "name": "Flyaway Travel and Events",
+    "city": "",
+    "svc": [
+     "flight",
+     "hotel"
+    ],
+    "soon": true,
+    "what": {
+     "fr": "Réservations d'hôtel et de vol",
+     "en": "Hotel and flight reservations",
+     "ar": "حجوزات الفنادق والطيران"
+    },
+    "adv": {
+     "fr": "Conseil pour votre dossier de visa",
+     "en": "Advice on your visa file",
+     "ar": "نصائح لملف التأشيرة"
+    },
+    "contact": "",
+    "email": "",
     "telegram": "",
     "whatsapp": ""
    }
