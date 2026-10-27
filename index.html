@@ -542,6 +542,13 @@ html[lang="ar"] #sp-h{font-family:var(--f-ar);letter-spacing:0}
 .sp-cb{appearance:none;cursor:pointer;border:2px solid var(--accent);background:var(--surface);color:var(--accent);border-radius:var(--r-pill);min-height:44px;padding:8px 16px;font:800 14px var(--f-body);transition:transform .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease}
 @media (hover:hover){.sp-cb:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift)}}
 .sp-cb[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.spg-head{flex-direction:column}
+#needsTop:empty{display:none}#needsTop .needs{margin:8px 0 20px}
+.sp-cb{display:inline-flex;align-items:center;gap:8px;border:2px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(90deg,var(--accent),var(--hot-b),var(--hot-c)) border-box;color:var(--ink);animation:glow 2.4s ease-in-out infinite}
+.sp-cb:nth-child(2){animation-delay:.8s}.sp-cb:nth-child(3){animation-delay:1.6s}
+.sp-cb .sp-ico{width:18px;height:18px;color:var(--hot-b);animation:bob 2.2s ease-in-out infinite}
+.sp-cb[aria-pressed="true"]{background:linear-gradient(90deg,var(--accent),var(--hot-b)) padding-box,linear-gradient(90deg,var(--accent),var(--hot-b),var(--hot-c)) border-box;color:var(--on-accent);animation:none}
+.sp-cb[aria-pressed="true"] .sp-ico{color:var(--on-accent);animation:none}
 .sp-res{width:100%}.sp-res .tiles{animation:bpnCard .4s ease both}
 .sp-hint{margin:0;text-align:center;color:var(--muted);font-size:14px}
 html[lang="ar"] .sp-cb,html[lang="ar"] .spg .sp-grp{font-family:var(--f-ar)}
@@ -726,6 +733,8 @@ html[lang="ar"] .ptop,html[lang="ar"] .ptop-b{font-family:var(--f-ar)}
     <h1 id="h1" tabindex="-1"></h1>
     <p class="sub" id="sub"></p>
   </header>
+
+  <div id="needsTop"></div>
 
   <div class="hero" id="home"></div>
 

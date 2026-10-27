@@ -859,6 +859,9 @@ var SPT={
 };
 var ICONS={
  bed:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20V6M3 16h18v4M21 16v-3a3 3 0 0 0-3-3h-7v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+ car:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17v-5l2-5h14l2 5v5h-3M6 17H3M9 17h6M3 12h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7.5" cy="17.5" r="1.8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16.5" cy="17.5" r="1.8" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+ shield:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6zM8.5 12l2.5 2.5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ agency:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
  plane:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>'
 };
 /* ===== Demande de documents de voyage (billet d'avion / hôtel) =====
@@ -1153,7 +1156,7 @@ function groupsHtml(){
   var L=S.lang;
   return spGroups().map(function(g){
     return '<div class="spg" data-g="'+g.id+'"><div class="spg-head"><h3 class="sp-grp">'+g.title[L]+'</h3><div class="sp-cats" role="group" aria-label="'+g.title[L]+'">'
-      +g.cats.map(function(c){return '<button type="button" class="sp-cb" data-spc="'+g.id+':'+c[0]+'" aria-pressed="'+(SPSEL[g.id]===c[0])+'">'+c[1][L]+'</button>'}).join("")
+      +g.cats.map(function(c){var CI={ag:ICONS.agency,ins:ICONS.shield,car:ICONS.car,fh:ICONS.plane+ICONS.bed};return '<button type="button" class="sp-cb" data-spc="'+g.id+':'+c[0]+'" aria-pressed="'+(SPSEL[g.id]===c[0])+'">'+(CI[c[0]]||'')+c[1][L]+'</button>'}).join("")
       +'</div></div><div class="sp-res" id="spr-'+g.id+'" aria-live="polite">'+spResult(g)+'</div></div>';
   }).join("");
 }
@@ -1162,7 +1165,8 @@ function spSync(){
   spGroups().forEach(function(g){var el=$("spr-"+g.id);if(el)el.innerHTML=spResult(g)});
 }
 function renderSponsors(t){
-  var h=(S.step>0&&S.step!==7?needsHtml(t):'')+'<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
+  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t):'');
+  var h='<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
   h+='<p class="sp-join c">'+SPT.note[S.lang]+'</p>';
   $("sponsors").innerHTML=h;
 }
@@ -1822,7 +1826,6 @@ function render(){
           +(i.opt?'<span class="stt rec">'+X.rec+'</span>':'')
           +'<span class="i-title">'+c[0]+'</span>'+(c[1]?'<span class="'+(warn?'i-warn':'i-note')+'">'+c[1]+'</span>':'')+'</span></label>';
       });
-      if(g==="stay"){h+='<div class="book"><span class="slot">'+t.bookSlot+'</span><b>'+t.bookTitle+'</b><p>'+t.bookText+'</p></div>'}
       h+='</section>';
     });
     var X=STX[S.lang];
