@@ -862,7 +862,7 @@ var REQUEST_URL="https://visa-proxy.rabehfly.workers.dev";
                   "cors"   = envoi JSON et lecture du statut HTTP (le serveur doit renvoyer les en-têtes CORS : voir ARCHITECTURE-SECURITE.md). */
 var REQUEST_MODE="cors";
 var REQUEST_TIMEOUT_MS=10000,REQUEST_RETRIES=1,REQUEST_COOLDOWN_MS=30000;
-var INTL=[{id:"intl-test",name:"Partenaire international (test)",test:1,svc:["flight","hotel"],what:{fr:"Billets d'avion et hôtels dans le monde",en:"Flights and hotels worldwide",ar:"تذاكر طيران وفنادق حول العالم"},email:"rabehfly@gmail.com",telegram:"rabehtlili",whatsapp:"21658986980"}];
+var INTL=[{id:"intl-test",name:"Partenaire international (test)",test:1,svc:["flight","hotel"],what:{fr:"Billets d'avion et hôtels dans le monde",en:"Flights and hotels worldwide",ar:"تذاكر طيران وفنادق حول العالم"},email:"",telegram:"rabehtlili",whatsapp:"21658986980"}];
 var RQ={sending:false,tries:0,chan:"email",ln:"",fn:"",d1:"",d2:"",city:"",dest:"",cc:"+216",phone:"",tg:"",mail:"",consent:false,done:false,mode:"",failed:false,er:{}};
 var RT={
 fr:{svc:{flight:"Billet d'avion",hotel:"Réservation d'hôtel"},t8:"Choisissez votre agence",s8:"Choisissez l'une de nos agences, ou un partenaire international.",t9:"Vos informations",s9:"Saisissez-les comme sur votre passeport.",t10a:"Demande envoyée",t10b:"Dernière étape",s10a:"L'agence vous répond bientôt.",s10b:"Envoyez votre demande à l'agence.",
@@ -1857,7 +1857,7 @@ document.addEventListener("submit",function(e){if(e.target.id==="rqform"){e.prev
 
 /* ===== Pages légales ===== */
 /* À COMPLÉTER avant le lancement : laissez vide ce que vous ne voulez pas afficher. */
-var SITE={name:"Visa Checker",owner:"",status:"",address:"",email:"rabehfly@gmail.com",phone:"",domain:"",host:""};
+var SITE={name:"Visa Checker",owner:"",status:"",address:"",email:"",phone:"",domain:"",host:""};
 var LGL={
 fr:{m:"Mentions légales",c:"Confidentialité",x:"Fermer",d:"Dernière mise à jour : octobre 2026. Ce texte est un modèle de bonne foi, pas un avis juridique : faites-le relire par un professionnel avant le lancement.",
  mt:[["Éditeur du site",function(){return L(["Site : "+SITE.name+(SITE.domain?" ("+SITE.domain+")":""),SITE.owner&&"Responsable : "+SITE.owner,SITE.status&&"Statut : "+SITE.status,SITE.address&&"Adresse : "+SITE.address,SITE.email&&"E-mail : "+SITE.email,SITE.phone&&"Téléphone : "+SITE.phone,SITE.host&&"Hébergeur : "+SITE.host])}],
