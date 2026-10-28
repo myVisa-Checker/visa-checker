@@ -38,20 +38,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg,#fff);color:var(--ink,#000)}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
-.toolcards{display:grid;gap:10px;margin-top:10px}
-.evcard.toolcard{background:var(--surface);border-color:var(--line)}
-.evcard.toolcard:hover{background:var(--accent-soft);border-color:var(--accent)}
-.tool .sc-list{display:flex;flex-direction:column;gap:10px}
-.tool .sc-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
-.tool .sc-row label,.tool .sc-plan{display:flex;flex-direction:column;gap:4px;font:500 13px var(--f-body);color:var(--muted)}
-.tool .sc-res{display:flex;flex-direction:column;gap:8px;padding-top:4px}
-.tool .sc-res p{margin:0}.aibox{display:flex;flex-direction:column;gap:6px;margin-block:16px;padding:16px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface)}.aibox .pay{align-self:flex-start;margin-top:8px}.tool .sc-ok{color:var(--ok);font-weight:600}
-.tool .faq{display:flex;flex-direction:column;gap:8px}
-.tool .faq details{border:1px solid var(--line);border-radius:var(--r-2);padding:10px 14px;background:var(--bg)}
-.tool .faq summary{cursor:pointer;font-weight:600;min-height:28px}
-.tool .faq p{margin:8px 0 0;color:var(--muted)}
-.tool .pay{align-self:flex-start}
-.tool .sc-row input{min-width:0;padding-inline:8px}.tool .sc-row .reset{min-width:44px;padding:8px 10px}
+.aibox{display:flex;flex-direction:column;gap:6px;margin-block:16px;padding:16px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface)}.aibox .pay{align-self:flex-start;margin-top:8px}.tool .sc-ok{color:var(--ok);font-weight:600}
 </style>
 <style>
 /* Layout: one narrow column, phone first. Situation chips on top, sticky progress strip, checklist grouped by purpose. FR / EN / AR (RTL). */
@@ -544,6 +531,13 @@ html[lang="ar"] #sp-h{font-family:var(--f-ar);letter-spacing:0}
 .sp-cb[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
 .spg-head{flex-direction:column}
 .iv{margin-top:24px}
+.needs .sp-chip.iv-cta{border:0;color:#fff;background:linear-gradient(100deg,var(--accent),var(--hot-b) 55%,var(--hot-c));padding:10px 22px 10px 10px;gap:12px;font-size:1.05rem;font-weight:800;box-shadow:0 10px 26px rgba(232,89,12,.38);position:relative;overflow:hidden;animation:ivpulse 2.6s ease-in-out infinite}
+.iv-cta .iv-ico{flex:none;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55)}
+.iv-cta .iv-ico svg{width:30px;height:30px}
+.iv-cta::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:ivshine 3.2s ease-in-out infinite;pointer-events:none}
+@keyframes ivpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+@keyframes ivshine{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+@media (prefers-reduced-motion:reduce){.needs .sp-chip.iv-cta,.iv-cta::after{animation:none}}
 .us-h{margin:18px 0 8px;font-size:1rem}
 .us-warn{margin:18px 0;padding:12px 14px;border:2px solid var(--accent);border-radius:var(--r-3);background:var(--bg)}
 .us-warn p{margin:6px 0 0}
