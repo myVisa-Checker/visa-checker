@@ -817,7 +817,7 @@ function homeHtml(t){
   if(!cur.ready){h+='<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+t.soonText+'</p></div>'}
   h+=evCardHtml();
   h+='</div>';
-  h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+needsHtml(t)+'</div>';
+  h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+needsHtml(t)+ivCardHtml()+'</div>';
   h+='<section class="why"><h2>'+t.whyTitle+'</h2><ul class="ticks">'+t.why.map(function(x){return '<li><svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" style="stroke:var(--surface)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>'+x+'</span></li>'}).join("")+'</ul><p class="ag-note">'+t.whyNote+'</p></section>';
   return h;
 }
@@ -1174,8 +1174,18 @@ function interviewHtml(){
   X.secs.forEach(function(sc){h+='<b>'+esc(sc[0])+'</b><ul class="adv">'+sc[1].map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ul>'});
   return h+'<p class="ag-note">'+esc(X.n)+'</p></div></details>';
 }
+/* ===== Carte « Entraînement à l'entretien » : juste sous « Besoin de documents de voyage ? » ===== */
+var IVC={
+ fr:{t:"Préparez votre entretien",s:"Une IA joue le consulat et vous pose les questions, avec un retour sur chaque réponse. Surtout utile pour les États-Unis.",b:"Entraînement à l'entretien",n:"Accès par code · aucun visa garanti"},
+ en:{t:"Prepare for your interview",s:"An AI plays the consulate and asks you questions, with feedback on each answer. Most useful for the United States.",b:"Interview practice",n:"Access by code · no visa guaranteed"},
+ ar:{t:"حضّر مقابلتك",s:"ذكاء اصطناعي يلعب دور القنصلية ويطرح عليك الأسئلة مع تعليق على كل إجابة. مفيد خصوصاً للولايات المتحدة.",b:"التدريب على المقابلة",n:"الدخول برمز · لا ضمان للتأشيرة"}};
+function ivCardHtml(){
+  var X=IVC[S.lang]||IVC.fr;
+  return '<div class="needs ivn"><h2 class="hot">'+X.t+'</h2><p class="ag-sub">'+X.s+'</p><div class="sp-chips"><button type="button" class="sp-chip" data-iv-open><svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+X.b+'</button></div><p class="ag-sub">'+X.n+'</p></div>';
+}
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-iv-open]");if(b&&window.__vcInterview)window.__vcInterview()});
 function renderSponsors(t){
-  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t):'');
+  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t)+ivCardHtml():'');
   var h='<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
   h+='<p class="sp-join c">'+SPT.note[S.lang]+'</p>';
   $("sponsors").innerHTML=h;
