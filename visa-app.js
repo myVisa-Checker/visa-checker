@@ -496,7 +496,7 @@ var COUNTRIES=[
  C("lu","Luxembourg","Luxembourg","لوكسمبورغ"),C("hr","Croatie","Croatia","كرواتيا"),C("si","Slovénie","Slovenia","سلوفينيا"),C("sk","Slovaquie","Slovakia","سلوفاكيا"),
  C("lt","Lituanie","Lithuania","ليتوانيا"),C("lv","Lettonie","Latvia","لاتفيا"),C("ee","Estonie","Estonia","إستونيا"),C("is","Islande","Iceland","آيسلندا"),
  C("li","Liechtenstein","Liechtenstein","ليختنشتاين"),C("bg","Bulgarie","Bulgaria","بلغاريا"),C("ro","Roumanie","Romania","رومانيا"),
- C("ca","Canada","Canada","كندا"),C("us","États-Unis","United States","الولايات المتحدة"),C("gb","Royaume-Uni","United Kingdom","المملكة المتحدة"),
+ C("ca","Canada","Canada","كندا"),C("us","États-Unis","United States","الولايات المتحدة",true),C("gb","Royaume-Uni","United Kingdom","المملكة المتحدة"),
  C("ae","Émirats arabes unis","United Arab Emirates","الإمارات العربية المتحدة"),C("sa","Arabie saoudite","Saudi Arabia","السعودية"),
  C("jp","Japon","Japan","اليابان"),C("au","Australie","Australia","أستراليا"),C("nz","Nouvelle-Zélande","New Zealand","نيوزيلندا"),C("cn","Chine","China","الصين")
 ];
@@ -1184,8 +1184,23 @@ function ivCardHtml(){
   return '<div class="needs ivn"><h2 class="hot">'+X.t+'</h2><p class="ag-sub">'+X.s+'</p><div class="sp-chips"><button type="button" class="sp-chip" data-iv-open><svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+X.b+'</button></div><p class="ag-sub">'+X.n+'</p></div>';
 }
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-iv-open]");if(b&&window.__vcInterview)window.__vcInterview()});
+/* ===== États-Unis : pas de liste de pièces, tout se joue à l'entretien ===== */
+var USX={
+ fr:{t:"États-Unis : tout se joue à l'entretien",i:"Pour le visa visiteur (B1/B2), il n'y a pas de liste de pièces justificatives comme pour Schengen. Votre dossier repose sur le formulaire DS-160 et surtout sur l'entretien à l'ambassade de Tunis.",sh:"Les étapes",st:["Remplir le formulaire DS-160 en ligne.","Payer les frais de visa (le montant est sur le site officiel).","Prendre rendez-vous sur le site officiel de l'ambassade.","Venir à l'entretien."],bh:"À apporter le jour de l'entretien",b:["La confirmation du rendez-vous","La confirmation du formulaire DS-160","Le reçu de paiement des frais de visa","Le passeport actuel et les anciens passeports","Une photo","Une lettre expliquant le motif du voyage et l'itinéraire"],wh:"Attention : la caution",w:"Le consul peut demander une caution remboursable de 5 000 à 15 000 $. Elle se paie seulement après l'entretien, sur demande du consul. Ne payez rien avant et ne passez pas par un intermédiaire.",btn:"S'entraîner à l'entretien",link:"Site officiel (ustraveldocs Tunisie)",n:"Aucun visa n'est garanti : la décision revient au consul. Vérifiez toujours les règles sur le site officiel."},
+ en:{t:"United States: everything is decided at the interview",i:"For the visitor visa (B1/B2), there is no list of supporting documents like for Schengen. Your case rests on the DS-160 form and above all on the interview at the Tunis embassy.",sh:"The steps",st:["Fill in the DS-160 form online.","Pay the visa fee (the amount is on the official website).","Book an appointment on the embassy's official website.","Attend the interview."],bh:"What to bring on interview day",b:["Your appointment confirmation","Your DS-160 confirmation","The visa fee payment receipt","Your current and previous passports","A photo","A letter explaining the purpose of your trip and your itinerary"],wh:"Warning: the bond",w:"The consul may ask for a refundable bond of $5,000 to $15,000. It is paid only after the interview, when the consul asks for it. Do not pay anything before that and do not go through an intermediary.",btn:"Practise for the interview",link:"Official website (ustraveldocs Tunisia)",n:"No visa is guaranteed: the consul decides. Always check the rules on the official website."},
+ ar:{t:"الولايات المتحدة: كل شيء يُحسم في المقابلة",i:"بالنسبة لتأشيرة الزيارة (B1/B2)، لا توجد قائمة وثائق ثبوتية كما في شنغن. يعتمد ملفك على استمارة DS-160 وخاصة على المقابلة في سفارة تونس.",sh:"المراحل",st:["املأ استمارة DS-160 عبر الإنترنت.","ادفع رسوم التأشيرة (المبلغ على الموقع الرسمي).","احجز موعداً عبر الموقع الرسمي للسفارة.","احضر المقابلة."],bh:"ما يجب إحضاره يوم المقابلة",b:["تأكيد الموعد","تأكيد استمارة DS-160","وصل دفع رسوم التأشيرة","جواز السفر الحالي وجوازات السفر السابقة","صورة","رسالة تشرح الغرض من السفر والبرنامج"],wh:"تنبيه: الكفالة المالية",w:"قد يطلب منك القنصل كفالة مالية قابلة للاسترجاع بين 5000 و15000 دولار. تُدفع فقط بعد المقابلة وبطلب من القنصل. لا تدفع شيئاً قبل ذلك ولا تلجأ إلى وسيط.",btn:"التدرّب على المقابلة",link:"الموقع الرسمي (ustraveldocs تونس)",n:"لا ضمان للتأشيرة: القرار يعود إلى القنصل. تحقق دائماً من القواعد على الموقع الرسمي."}};
+function usHtml(){
+  var X=USX[S.lang]||USX.fr,ul=function(a){return '<ul class="adv">'+a.map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ul>'};
+  return '<section class="group"><div class="g-head"><h2>'+esc(X.t)+'</h2></div><p class="ag-sub">'+esc(X.i)+'</p>'
+   +'<h3 class="us-h">'+esc(X.sh)+'</h3><ol class="adv">'+X.st.map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ol>'
+   +'<h3 class="us-h">'+esc(X.bh)+'</h3>'+ul(X.b)
+   +'<div class="us-warn"><b>'+esc(X.wh)+'</b><p>'+esc(X.w)+'</p></div>'
+   +'<div class="needs ivn"><div class="sp-chips"><button type="button" class="sp-chip" data-iv-open><svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+esc(X.btn)+'</button></div></div>'
+   +'<p class="ag-sub"><a href="https://ustraveldocs.com/tn/index.html" target="_blank" rel="noopener noreferrer">'+esc(X.link)+'</a></p>'
+   +'<p class="ag-note">'+esc(X.n)+'</p></section>';
+}
 function renderSponsors(t){
-  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t)+ivCardHtml():'');
+  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t)+(curC().id==="us"?'':ivCardHtml()):'');
   var h='<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
   h+='<p class="sp-join c">'+SPT.note[S.lang]+'</p>';
   $("sponsors").innerHTML=h;
@@ -1804,7 +1819,7 @@ function focusStepHeading(){
 }
 function render(){
   var cur=curC(),ready=cur.ready;
-  var t=applyCountry(UI[S.lang]);
+  var t=applyCountry(UI[S.lang]);document.body.dataset.cn=cur.id;
   if(cur.id!=="fr"&&S.mode==="appeal")S.mode="check";
   if(!ready&&S.step>0&&S.step<6)S.step=0;if(S.step===2||S.step===3)S.step=4;
   if(S.step===7&&!evFind(S.evc))S.step=6;if(S.step>13||S.step<0)S.step=0;if(S.step>=8&&S.step<=10&&!S.need)S.step=0;if(S.step>=9&&S.step<=10&&!findAgent(S.agent))S.step=8;if(S.step===10&&!RQ.done)S.step=9;
@@ -1816,7 +1831,7 @@ function render(){
   $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10),TLS[S.lang].s11,TLS[S.lang].s12,TLS[S.lang].s13][st];document.body.dataset.step=st;
   $("disc").textContent=t.disc;renderLegal();renderBpn();renderTrans();renderReviews();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
-  $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
+  $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal"||cur.id==="us")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
   if(showSt){$("stepper").innerHTML='<div class="st-row"><span class="st-num">'+STX[S.lang].step(st-2)+' · '+t.stepNames[st-2]+'</span><span class="pill"><span class="flag">'+flag(cur.id)+'</span>'+nm(cur)+(S.motive==="medical"?' · '+t.motive.medical:'')+'</span></div>'+stepper(st-2,[t.stepNames[0],t.stepNames[2],t.stepNames[3]])}
   $("home").hidden=st!==0;if(st===0)$("home").innerHTML=homeHtml(t);
@@ -1851,13 +1866,14 @@ function render(){
     var X=STX[S.lang];
     var legend='<ul class="legend" aria-label="'+X.legend+'"><li><i class="lg ok"></i>'+X.ok+'</li><li><i class="lg warn"></i>'+X.warn+'</li><li><i class="lg todo"></i>'+X.todo+'</li></ul>';
     $("list").innerHTML=adaptHtml(t)+legend+h+interviewHtml();
+    if(cur.id==="us")$("list").innerHTML=usHtml();
   }
   if(st===5){renderRefus(t)}
   renderSponsors(t);$("sponsors").hidden=st>=8;
   $("dock").hidden=!(st===0&&ready);
   if(st===0&&ready)$("dock").innerHTML='<div class="dock-in"><span class="flag">'+flag("tn")+'</span><span class="arrow" aria-hidden="true">\u2192</span><span class="flag">'+flag(cur.id)+'</span><span class="dname">'+nm(cur)+'</span><button type="button" class="pay" data-go="1">'+t.start+'</button></div>';
   $("nav").hidden=st===0;
-  if(st>0){$("nav").innerHTML='<button type="button" class="reset" data-go="-1">'+t.back+'</button>'+(st===4?'<button type="button" class="pay" data-go="1">'+t.next+'</button>':'')}
+  if(st>0){$("nav").innerHTML='<button type="button" class="reset" data-go="-1">'+t.back+'</button>'+(st===4&&cur.id!=="us"?'<button type="button" class="pay" data-go="1">'+t.next+'</button>':'')}
   if(typeof prevStep==="number"&&prevStep!==S.step)focusStepHeading();
   prevStep=S.step;
 }
