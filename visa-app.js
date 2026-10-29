@@ -348,7 +348,7 @@ function sanitizeState(o){
   if(typeof o.refus==="string")r.refus=o.refus.slice(0,300);
   if(typeof o.tok==="string"&&o.tok.length<=1024)r.tok=o.tok;
   ["paid","pack"].forEach(function(k){if(typeof o[k]==="boolean")r[k]=o[k]});
-  ["step","back"].forEach(function(k){var n=o[k];if(typeof n==="number"&&isFinite(n)&&Math.floor(n)===n&&n>=0&&n<=10)r[k]=n});
+  ["step","back"].forEach(function(k){var n=o[k];if(typeof n==="number"&&isFinite(n)&&Math.floor(n)===n&&n>=0&&n<=13)r[k]=n});
   if(o.done&&typeof o.done==="object"&&!Array.isArray(o.done)){var c=0,id;for(id in o.done){if(/^[A-Za-z0-9_]{1,32}$/.test(id)&&o.done[id]===true&&c<300){r.done[id]=true;c++}}}
   if(["fr","en","ar"].indexOf(r.lang)<0)r.lang="fr";
   if(["check","appeal"].indexOf(r.mode)<0)r.mode="check";
@@ -496,7 +496,7 @@ var COUNTRIES=[
  C("lu","Luxembourg","Luxembourg","لوكسمبورغ"),C("hr","Croatie","Croatia","كرواتيا"),C("si","Slovénie","Slovenia","سلوفينيا"),C("sk","Slovaquie","Slovakia","سلوفاكيا"),
  C("lt","Lituanie","Lithuania","ليتوانيا"),C("lv","Lettonie","Latvia","لاتفيا"),C("ee","Estonie","Estonia","إستونيا"),C("is","Islande","Iceland","آيسلندا"),
  C("li","Liechtenstein","Liechtenstein","ليختنشتاين"),C("bg","Bulgarie","Bulgaria","بلغاريا"),C("ro","Roumanie","Romania","رومانيا"),
- C("ca","Canada","Canada","كندا"),C("us","États-Unis","United States","الولايات المتحدة",true),C("gb","Royaume-Uni","United Kingdom","المملكة المتحدة"),
+ C("ca","Canada","Canada","كندا"),C("us","États-Unis","United States","الولايات المتحدة"),C("gb","Royaume-Uni","United Kingdom","المملكة المتحدة"),
  C("ae","Émirats arabes unis","United Arab Emirates","الإمارات العربية المتحدة"),C("sa","Arabie saoudite","Saudi Arabia","السعودية"),
  C("jp","Japon","Japan","اليابان"),C("au","Australie","Australia","أستراليا"),C("nz","Nouvelle-Zélande","New Zealand","نيوزيلندا"),C("cn","Chine","China","الصين")
 ];
@@ -817,7 +817,7 @@ function homeHtml(t){
   if(!cur.ready){h+='<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+t.soonText+'</p></div>'}
   h+=evCardHtml();
   h+='</div>';
-  h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+needsHtml(t)+ivCardHtml()+'</div>';
+  h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+needsHtml(t)+'</div>';
   h+='<section class="why"><h2>'+t.whyTitle+'</h2><ul class="ticks">'+t.why.map(function(x){return '<li><svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" style="stroke:var(--surface)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>'+x+'</span></li>'}).join("")+'</ul><p class="ag-note">'+t.whyNote+'</p></section>';
   return h;
 }
@@ -859,9 +859,6 @@ var SPT={
 };
 var ICONS={
  bed:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20V6M3 16h18v4M21 16v-3a3 3 0 0 0-3-3h-7v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
- car:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17v-5l2-5h14l2 5v5h-3M6 17H3M9 17h6M3 12h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7.5" cy="17.5" r="1.8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16.5" cy="17.5" r="1.8" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
- shield:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6zM8.5 12l2.5 2.5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
- agency:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
  plane:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>'
 };
 /* ===== Demande de documents de voyage (billet d'avion / hôtel) =====
@@ -1156,7 +1153,7 @@ function groupsHtml(){
   var L=S.lang;
   return spGroups().map(function(g){
     return '<div class="spg" data-g="'+g.id+'"><div class="spg-head"><h3 class="sp-grp">'+g.title[L]+'</h3><div class="sp-cats" role="group" aria-label="'+g.title[L]+'">'
-      +g.cats.map(function(c){var CI={ag:ICONS.agency,ins:ICONS.shield,car:ICONS.car,fh:ICONS.plane+ICONS.bed};return '<button type="button" class="sp-cb" data-spc="'+g.id+':'+c[0]+'" aria-pressed="'+(SPSEL[g.id]===c[0])+'">'+(CI[c[0]]||'')+c[1][L]+'</button>'}).join("")
+      +g.cats.map(function(c){return '<button type="button" class="sp-cb" data-spc="'+g.id+':'+c[0]+'" aria-pressed="'+(SPSEL[g.id]===c[0])+'">'+c[1][L]+'</button>'}).join("")
       +'</div></div><div class="sp-res" id="spr-'+g.id+'" aria-live="polite">'+spResult(g)+'</div></div>';
   }).join("");
 }
@@ -1164,45 +1161,8 @@ function spSync(){
   document.querySelectorAll(".sp-cb").forEach(function(b){var p=b.dataset.spc.split(":");b.setAttribute("aria-pressed",String(SPSEL[p[0]]===p[1]))});
   spGroups().forEach(function(g){var el=$("spr-"+g.id);if(el)el.innerHTML=spResult(g)});
 }
-/* ===== Préparer l'entretien (si convoqué) : bloc repliable sur la liste des pièces ===== */
-var IVT={"fr": {"t": "Préparer mon entretien (si je suis convoqué)", "s": "Une convocation n'est pas un refus : le consulat veut simplement vérifier certains points de votre dossier.", "secs": [["Avant l'entretien", ["Relisez tout votre dossier : dates, montants, adresses et noms doivent être identiques partout.", "Emportez le passeport, la convocation, les originaux et une copie de chaque pièce, classés dans l'ordre.", "Préparez les justificatifs de vos attaches en Tunisie : travail, études, famille, biens.", "Arrivez en avance et habillez-vous simplement."]], ["Questions fréquentes", ["Quel est le but de votre voyage ?", "Combien de temps restez-vous et où logerez-vous ?", "Qui paie le voyage ? Quelles sont vos ressources ?", "Que faites-vous dans la vie, et qui vous attend en Tunisie ?", "Avez-vous déjà voyagé ? Avez-vous déjà eu un refus ?", "Connaissez-vous quelqu'un dans le pays de destination ?", "Quand rentrez-vous en Tunisie ?"]], ["Comment répondre", ["Dites la vérité, avec des réponses courtes et claires.", "Vos réponses doivent correspondre exactement à votre dossier.", "N'apprenez pas de texte par cœur : parlez naturellement.", "Si vous ne comprenez pas la question, demandez de la répéter.", "N'inventez jamais : une contradiction est plus grave qu'une réponse simple."]], ["À éviter", ["Un document falsifié ou modifié, même légèrement.", "Des réponses différentes de ce qui est écrit dans votre dossier.", "Une réservation que vous ne pouvez pas expliquer ou justifier.", "Les conseils d'un intermédiaire qui vous dicte quoi répondre."]]], "n": "Ces conseils aident à se préparer. Ils ne garantissent pas l'obtention du visa : la décision revient au consulat."}, "en": {"t": "Prepare for your interview (if you are called)", "s": "Being called in is not a refusal: the consulate just wants to check some points of your file.", "secs": [["Before the interview", ["Reread your whole file: dates, amounts, addresses and names must match everywhere.", "Bring your passport, the summons, the originals and one copy of each document, in order.", "Prepare proof of your ties to Tunisia: job, studies, family, property.", "Arrive early and dress simply."]], ["Frequent questions", ["What is the purpose of your trip?", "How long will you stay and where will you stay?", "Who pays for the trip? What are your resources?", "What do you do for a living, and who is waiting for you in Tunisia?", "Have you travelled before? Have you ever been refused?", "Do you know anyone in the destination country?", "When will you return to Tunisia?"]], ["How to answer", ["Tell the truth, with short and clear answers.", "Your answers must match your file exactly.", "Do not memorise a script: speak naturally.", "If you do not understand a question, ask for it to be repeated.", "Never invent anything: a contradiction is worse than a simple answer."]], ["What to avoid", ["A forged or altered document, even slightly.", "Answers that differ from what your file says.", "A booking you cannot explain or justify.", "Advice from an intermediary who tells you what to answer."]]], "n": "These tips help you prepare. They do not guarantee a visa: the decision belongs to the consulate."}, "ar": {"t": "التحضير للمقابلة (في حال تمت دعوتي)", "s": "الدعوة إلى مقابلة لا تعني الرفض: القنصلية تريد فقط التحقق من بعض نقاط ملفك.", "secs": [["قبل المقابلة", ["أعد قراءة ملفك كاملاً: يجب أن تتطابق التواريخ والمبالغ والعناوين والأسماء في كل الوثائق.", "أحضر جواز السفر ورسالة الاستدعاء والوثائق الأصلية ونسخة من كل وثيقة، مرتبة.", "جهّز ما يثبت ارتباطك بتونس: العمل أو الدراسة أو العائلة أو الممتلكات.", "احضر مبكراً وارتدِ ملابس بسيطة ومرتبة."]], ["الأسئلة الشائعة", ["ما هو الغرض من سفرك؟", "كم ستبقى وأين ستقيم؟", "من يتحمّل تكاليف السفر؟ وما هي مواردك؟", "ما عملك، ومن ينتظرك في تونس؟", "هل سافرت من قبل؟ وهل سبق أن رُفض طلبك؟", "هل تعرف أحداً في بلد الوجهة؟", "متى ستعود إلى تونس؟"]], ["كيف تجيب", ["قل الحقيقة بإجابات قصيرة وواضحة.", "يجب أن تتوافق إجاباتك تماماً مع ملفك.", "لا تحفظ نصاً عن ظهر قلب: تحدّث بشكل طبيعي.", "إن لم تفهم السؤال فاطلب إعادته.", "لا تختلق شيئاً أبداً: التناقض أخطر من إجابة بسيطة."]], ["ما يجب تجنّبه", ["وثيقة مزوّرة أو معدّلة، ولو بشكل بسيط.", "إجابات تختلف عمّا هو مكتوب في ملفك.", "حجز لا تستطيع شرحه أو تبريره.", "نصائح وسيط يخبرك بما يجب أن تقوله."]]], "n": "هذه النصائح تساعدك على التحضير ولا تضمن الحصول على التأشيرة: القرار يعود إلى القنصلية."}};
-var IVOPEN=false;
-document.addEventListener("toggle",function(e){if(e.target&&e.target.id==="iv-d")IVOPEN=e.target.open},true);
-function interviewHtml(){
-  var X=IVT[S.lang]||IVT.fr;
-  var h='<details class="lt iv" id="iv-d"'+(IVOPEN?' open':'')+'><summary>'+esc(X.t)+'</summary><div class="lt-body"><p class="ag-sub">'+esc(X.s)+'</p>';
-  X.secs.forEach(function(sc){h+='<b>'+esc(sc[0])+'</b><ul class="adv">'+sc[1].map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ul>'});
-  return h+'<p class="ag-note">'+esc(X.n)+'</p></div></details>';
-}
-/* ===== Carte « Entraînement à l'entretien » : juste sous « Besoin de documents de voyage ? » ===== */
-var IVICON='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 7a4 4 0 0 1 4-4h11a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-7l-4 3.5V17a4 4 0 0 1-4-4z" fill="#fff"/><path d="M10.6 7.8a2.2 2.2 0 1 1 3.4 1.8c-.9.6-1.2 1-1.2 1.9" fill="none" stroke="#E8590C" stroke-width="2" stroke-linecap="round"/><circle cx="12.8" cy="14" r="1.1" fill="#E8590C"/><path d="M16 18a3.5 3.5 0 0 1 3.5-3.5H26a3.5 3.5 0 0 1 3.5 3.5v4.5a3.5 3.5 0 0 1-3.5 3.5h-1v3.5l-4.5-3.5h-1A3.5 3.5 0 0 1 16 22.5z" fill="#FFD43B"/><path d="M19.5 20.5l2.2 2.2 4.3-4.4" fill="none" stroke="#7C2D12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-var IVC={
- fr:{t:"Préparez votre entretien",s:"Une IA joue le consulat et vous pose les questions, avec un retour sur chaque réponse. Surtout utile pour les États-Unis.",b:"Entraînement à l'entretien",n:"Accès par code · aucun visa garanti"},
- en:{t:"Prepare for your interview",s:"An AI plays the consulate and asks you questions, with feedback on each answer. Most useful for the United States.",b:"Interview practice",n:"Access by code · no visa guaranteed"},
- ar:{t:"حضّر مقابلتك",s:"ذكاء اصطناعي يلعب دور القنصلية ويطرح عليك الأسئلة مع تعليق على كل إجابة. مفيد خصوصاً للولايات المتحدة.",b:"التدريب على المقابلة",n:"الدخول برمز · لا ضمان للتأشيرة"}};
-function ivCardHtml(){
-  var X=IVC[S.lang]||IVC.fr;
-  return '<div class="needs ivn"><h2 class="hot">'+X.t+'</h2><p class="ag-sub">'+X.s+'</p><div class="sp-chips"><button type="button" class="sp-chip iv-cta" data-iv-open><span class="iv-ico">'+IVICON+'</span><span class="iv-lbl">'+X.b+'</span></button></div><p class="ag-sub">'+X.n+'</p></div>';
-}
-document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-iv-open]");if(b&&window.__vcInterview)window.__vcInterview()});
-/* ===== États-Unis : pas de liste de pièces, tout se joue à l'entretien ===== */
-var USX={
- fr:{t:"États-Unis : tout se joue à l'entretien",i:"Pour le visa visiteur (B1/B2), il n'y a pas de liste de pièces justificatives comme pour Schengen. Votre dossier repose sur le formulaire DS-160 et surtout sur l'entretien à l'ambassade de Tunis.",sh:"Les étapes",st:["Remplir le formulaire DS-160 en ligne.","Payer les frais de visa (le montant est sur le site officiel).","Prendre rendez-vous sur le site officiel de l'ambassade.","Venir à l'entretien."],bh:"À apporter le jour de l'entretien",b:["La confirmation du rendez-vous","La confirmation du formulaire DS-160","Le reçu de paiement des frais de visa","Le passeport actuel et les anciens passeports","Une photo","Une lettre expliquant le motif du voyage et l'itinéraire"],wh:"Attention : la caution",w:"Le consul peut demander une caution remboursable de 5 000 à 15 000 $. Elle se paie seulement après l'entretien, sur demande du consul. Ne payez rien avant et ne passez pas par un intermédiaire.",btn:"S'entraîner à l'entretien",link:"Site officiel (ustraveldocs Tunisie)",n:"Aucun visa n'est garanti : la décision revient au consul. Vérifiez toujours les règles sur le site officiel."},
- en:{t:"United States: everything is decided at the interview",i:"For the visitor visa (B1/B2), there is no list of supporting documents like for Schengen. Your case rests on the DS-160 form and above all on the interview at the Tunis embassy.",sh:"The steps",st:["Fill in the DS-160 form online.","Pay the visa fee (the amount is on the official website).","Book an appointment on the embassy's official website.","Attend the interview."],bh:"What to bring on interview day",b:["Your appointment confirmation","Your DS-160 confirmation","The visa fee payment receipt","Your current and previous passports","A photo","A letter explaining the purpose of your trip and your itinerary"],wh:"Warning: the bond",w:"The consul may ask for a refundable bond of $5,000 to $15,000. It is paid only after the interview, when the consul asks for it. Do not pay anything before that and do not go through an intermediary.",btn:"Practise for the interview",link:"Official website (ustraveldocs Tunisia)",n:"No visa is guaranteed: the consul decides. Always check the rules on the official website."},
- ar:{t:"الولايات المتحدة: كل شيء يُحسم في المقابلة",i:"بالنسبة لتأشيرة الزيارة (B1/B2)، لا توجد قائمة وثائق ثبوتية كما في شنغن. يعتمد ملفك على استمارة DS-160 وخاصة على المقابلة في سفارة تونس.",sh:"المراحل",st:["املأ استمارة DS-160 عبر الإنترنت.","ادفع رسوم التأشيرة (المبلغ على الموقع الرسمي).","احجز موعداً عبر الموقع الرسمي للسفارة.","احضر المقابلة."],bh:"ما يجب إحضاره يوم المقابلة",b:["تأكيد الموعد","تأكيد استمارة DS-160","وصل دفع رسوم التأشيرة","جواز السفر الحالي وجوازات السفر السابقة","صورة","رسالة تشرح الغرض من السفر والبرنامج"],wh:"تنبيه: الكفالة المالية",w:"قد يطلب منك القنصل كفالة مالية قابلة للاسترجاع بين 5000 و15000 دولار. تُدفع فقط بعد المقابلة وبطلب من القنصل. لا تدفع شيئاً قبل ذلك ولا تلجأ إلى وسيط.",btn:"التدرّب على المقابلة",link:"الموقع الرسمي (ustraveldocs تونس)",n:"لا ضمان للتأشيرة: القرار يعود إلى القنصل. تحقق دائماً من القواعد على الموقع الرسمي."}};
-function usHtml(){
-  var X=USX[S.lang]||USX.fr,ul=function(a){return '<ul class="adv">'+a.map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ul>'};
-  return '<section class="group"><div class="g-head"><h2>'+esc(X.t)+'</h2></div><p class="ag-sub">'+esc(X.i)+'</p>'
-   +'<h3 class="us-h">'+esc(X.sh)+'</h3><ol class="adv">'+X.st.map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ol>'
-   +'<h3 class="us-h">'+esc(X.bh)+'</h3>'+ul(X.b)
-   +'<div class="us-warn"><b>'+esc(X.wh)+'</b><p>'+esc(X.w)+'</p></div>'
-   +'<div class="needs ivn"><div class="sp-chips"><button type="button" class="sp-chip iv-cta" data-iv-open><span class="iv-ico">'+IVICON+'</span><span class="iv-lbl">'+esc(X.btn)+'</span></button></div></div>'
-   +'<p class="ag-sub"><a href="https://ustraveldocs.com/tn/index.html" target="_blank" rel="noopener noreferrer">'+esc(X.link)+'</a></p>'
-   +'<p class="ag-note">'+esc(X.n)+'</p></section>';
-}
 function renderSponsors(t){
-  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t)+(curC().id==="us"?'':ivCardHtml()):'');
-  var h='<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
+  var h=(S.step>0&&S.step!==7?needsHtml(t):'')+'<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
   h+='<p class="sp-join c">'+SPT.note[S.lang]+'</p>';
   $("sponsors").innerHTML=h;
 }
@@ -1397,6 +1357,223 @@ function evKey(c,L){var n=c.n[L];if(L==="ar"){n=n.replace(/^ال(?=.)/,"").repla
 function evFind(id){for(var i=0;i<EV.length;i++){if(EV[i].id===id)return EV[i]}return null}
 function evEmoji(cc){return cc.replace(/./g,function(ch){return String.fromCodePoint(127397+ch.toUpperCase().charCodeAt(0))})}
 function evFlag(cc){return flag(cc)}
+/* ===== Outils : calculateur Schengen 90/180 (étape 11), FAQ (12), planning de dépôt + rappels .ics (13) ===== */
+var TLS={
+fr:{
+ t11:"Calculateur Schengen 90/180",s11:"Combien de jours vous reste-t-il dans l'espace Schengen ?",
+ t12:"Questions fréquentes",s12:"Réponses courtes, par pays de destination.",
+ t13:"Planifier mon dépôt",s13:"Dates clés, délai de rendez-vous et rappels dans votre agenda.",
+ c11:"Calculateur 90/180",d11:"Jours restants dans l'espace Schengen",c12:"Questions fréquentes",d12:"Réponses par pays",c13:"Planifier mon dépôt",d13:"Dates clés et rappels .ics",
+ rule:"Règle : sur toute période de 180 jours glissants, 90 jours de séjour maximum (jours d'entrée et de sortie compris). Calcul indicatif : seul le garde-frontière fait foi. Vos dates restent sur cet appareil.",
+ stays:"Mes séjours passés ou en cours",inL:"Entrée",outL:"Sortie",add:"Ajouter un séjour",del:"Supprimer ce séjour",plan:"Date d'entrée prévue",
+ used:"Jours déjà utilisés sur les 180 derniers jours : {n}",left:"Jours restants à cette date : {n}",
+ max:"Séjour maximal à partir du {d} : {n} jours. Sortie au plus tard le {e}.",
+ none:"Aucun jour disponible à cette date. Prochaine entrée possible le {d} (séjour de {n} jours maximum).",
+ over:"Attention : vos séjours dépassent 90 jours sur 180 (dépassement constaté le {d}).",
+ bad:"Une date de sortie précède son entrée.",need:"Renseignez au moins la date d'entrée prévue.",
+ faqC:"Pays de destination",faqG:"Général",
+ trav:"Date de départ prévue",ctry:"Pays de destination",
+ win:"Dépôt possible dès le {d} (6 mois avant le départ).",late:"Dernier jour conseillé pour déposer : {d} (15 jours avant le départ).",
+ rdv:"Délai de rendez-vous constaté : environ {n} jours (mis à jour le {u}). Prenez rendez-vous au plus tard le {d}.",
+ rdv0:"Délai de rendez-vous non renseigné pour ce pays. Consultez le site de {p}.",
+ past:"La date de départ est trop proche ou passée : vérifiez les délais d'urgence.",
+ ics:"Télécharger les rappels (.ics)",icsNote:"Les rappels s'ajoutent à votre agenda (téléphone, Google, Outlook). Il n'y a pas de notification envoyée par le site.",
+ evOpen:"Ouverture possible des dépôts",evLate:"Dernier jour conseillé pour déposer",evRdv:"Prendre rendez-vous (visa {c})",evChk:"Vérifier les créneaux de rendez-vous ({c})",
+ site:"Site officiel",back:"Retour"
+},
+en:{
+ t11:"Schengen 90/180 calculator",s11:"How many days do you have left in the Schengen area?",
+ t12:"Frequently asked questions",s12:"Short answers, by destination country.",
+ t13:"Plan my application",s13:"Key dates, appointment delay and calendar reminders.",
+ c11:"90/180 calculator",d11:"Days left in the Schengen area",c12:"FAQ",d12:"Answers by country",c13:"Plan my application",d13:"Key dates and .ics reminders",
+ rule:"Rule: in any rolling 180-day period you may stay up to 90 days (entry and exit days count). Indicative only: the border officer's decision prevails. Your dates stay on this device.",
+ stays:"My past or current stays",inL:"Entry",outL:"Exit",add:"Add a stay",del:"Remove this stay",plan:"Planned entry date",
+ used:"Days already used in the last 180 days: {n}",left:"Days left on that date: {n}",
+ max:"Maximum stay from {d}: {n} days. Leave by {e} at the latest.",
+ none:"No day available on that date. Next possible entry: {d} (maximum stay {n} days).",
+ over:"Warning: your stays exceed 90 days in 180 (overstay found on {d}).",
+ bad:"An exit date is before its entry date.",need:"Enter at least the planned entry date.",
+ faqC:"Destination country",faqG:"General",
+ trav:"Planned departure date",ctry:"Destination country",
+ win:"You can apply from {d} (6 months before departure).",late:"Last recommended day to apply: {d} (15 days before departure).",
+ rdv:"Observed appointment delay: about {n} days (updated {u}). Book by {d} at the latest.",
+ rdv0:"Appointment delay not available for this country. Check the {p} website.",
+ past:"The departure date is too close or in the past: check urgent-processing options.",
+ ics:"Download reminders (.ics)",icsNote:"Reminders are added to your calendar (phone, Google, Outlook). The site does not send notifications.",
+ evOpen:"Applications may open",evLate:"Last recommended day to apply",evRdv:"Book appointment ({c} visa)",evChk:"Check appointment slots ({c})",
+ site:"Official website",back:"Back"
+},
+ar:{
+ t11:"حاسبة شنغن 90/180",s11:"كم يوماً بقي لك في فضاء شنغن؟",
+ t12:"الأسئلة الشائعة",s12:"إجابات قصيرة حسب بلد الوجهة.",
+ t13:"خطّط لتقديم ملفك",s13:"التواريخ المهمة وأجل الموعد وتذكيرات في تقويمك.",
+ c11:"حاسبة 90/180",d11:"الأيام المتبقية في فضاء شنغن",c12:"الأسئلة الشائعة",d12:"إجابات حسب البلد",c13:"خطّط لتقديم ملفك",d13:"تواريخ مهمة وتذكيرات .ics",
+ rule:"القاعدة: خلال أي فترة 180 يوماً متحركة يمكنك الإقامة 90 يوماً كحد أقصى (يُحتسب يوما الدخول والخروج). الحساب إرشادي فقط والقرار لعون الحدود. تبقى تواريخك على هذا الجهاز.",
+ stays:"إقاماتي السابقة أو الحالية",inL:"الدخول",outL:"الخروج",add:"إضافة إقامة",del:"حذف هذه الإقامة",plan:"تاريخ الدخول المتوقع",
+ used:"الأيام المستعملة خلال آخر 180 يوماً: {n}",left:"الأيام المتبقية في هذا التاريخ: {n}",
+ max:"أقصى مدة إقامة ابتداءً من {d}: {n} يوماً. المغادرة في {e} على الأكثر.",
+ none:"لا توجد أيام متاحة في هذا التاريخ. أقرب دخول ممكن: {d} (أقصى إقامة {n} يوماً).",
+ over:"تنبيه: إقاماتك تتجاوز 90 يوماً خلال 180 يوماً (تجاوز بتاريخ {d}).",
+ bad:"تاريخ خروج يسبق تاريخ دخوله.",need:"أدخل على الأقل تاريخ الدخول المتوقع.",
+ faqC:"بلد الوجهة",faqG:"عام",
+ trav:"تاريخ السفر المتوقع",ctry:"بلد الوجهة",
+ win:"يمكنك التقديم ابتداءً من {d} (6 أشهر قبل السفر).",late:"آخر يوم مُوصى به للتقديم: {d} (15 يوماً قبل السفر).",
+ rdv:"أجل الموعد المُلاحَظ: حوالي {n} يوماً (آخر تحديث {u}). احجز في {d} على الأكثر.",
+ rdv0:"أجل الموعد غير متوفر لهذا البلد. راجع موقع {p}.",
+ past:"تاريخ السفر قريب جداً أو انقضى: راجع خيارات المعالجة المستعجلة.",
+ ics:"تنزيل التذكيرات (.ics)",icsNote:"تُضاف التذكيرات إلى تقويمك (الهاتف، Google، Outlook). الموقع لا يرسل إشعارات.",
+ evOpen:"بداية إمكانية إيداع الملف",evLate:"آخر يوم مُوصى به للإيداع",evRdv:"حجز موعد (تأشيرة {c})",evChk:"تفقّد مواعيد متاحة ({c})",
+ site:"الموقع الرسمي",back:"رجوع"
+}};
+var FAQG={
+fr:[["Quand déposer ma demande ?","Au plus tôt 6 mois avant le départ et idéalement au moins 15 jours avant. Ajoutez le délai d'attente du rendez-vous."],
+ ["Où déposer mon dossier ?","Dans le pays qui est votre destination principale (séjour le plus long) ou, à durée égale, le premier pays d'entrée. Le dépôt se fait auprès du consulat ou de son prestataire."],
+ ["Quel est le délai de traitement ?","En règle générale jusqu'à 15 jours calendaires, pouvant aller jusqu'à 45 jours dans certains cas. Ne réservez rien de non remboursable avant la décision."],
+ ["Quels sont les frais ?","Le tarif consulaire Schengen est de 90 € pour un adulte, 45 € pour un enfant de 6 à 11 ans, gratuit en dessous de 6 ans. Le prestataire ajoute ses propres frais de service."],
+ ["Quelle assurance voyage ?","Une assurance couvrant au minimum 30 000 € de frais médicaux et de rapatriement, valable dans tout l'espace Schengen pour toute la durée du séjour."],
+ ["Quelles conditions pour le passeport ?","Valable au moins 3 mois après la date de sortie prévue, délivré depuis moins de 10 ans, avec au moins 2 pages vierges."],
+ ["Que faire en cas de refus ?","Lisez les motifs sur la lettre de refus. Un recours est possible avec un délai souvent de 15 à 30 jours selon le pays : respectez la date indiquée sur votre lettre."]],
+en:[["When should I apply?","No earlier than 6 months before departure, ideally at least 15 days before. Add the appointment waiting time."],
+ ["Where do I apply?","In the country that is your main destination (longest stay) or, if equal, your first country of entry. Applications go through the consulate or its service provider."],
+ ["How long does processing take?","Usually up to 15 calendar days, up to 45 days in some cases. Do not book anything non-refundable before the decision."],
+ ["What are the fees?","The Schengen consular fee is €90 for adults, €45 for children aged 6 to 11, free under 6. The service provider adds its own service fee."],
+ ["Which travel insurance?","Cover of at least €30,000 for medical costs and repatriation, valid across the Schengen area for the whole stay."],
+ ["Passport requirements?","Valid at least 3 months after your planned exit date, issued within the last 10 years, with at least 2 blank pages."],
+ ["What if I am refused?","Read the reasons on the refusal letter. An appeal is possible, often within 15 to 30 days depending on the country: follow the date on your letter."]],
+ar:[["متى أقدّم طلبي؟","قبل السفر بستة أشهر كحد أقصى، والأفضل 15 يوماً على الأقل. أضف مدة انتظار الموعد."],
+ ["أين أقدّم ملفي؟","في بلد وجهتك الرئيسية (أطول إقامة) أو عند التساوي أول بلد تدخله. يتم الإيداع لدى القنصلية أو مزوّد الخدمة."],
+ ["كم تستغرق المعالجة؟","عادة حتى 15 يوماً، وقد تصل إلى 45 يوماً في بعض الحالات. لا تحجز شيئاً غير قابل للاسترجاع قبل القرار."],
+ ["ما هي الرسوم؟","رسوم شنغن القنصلية 90 أورو للبالغ، 45 أورو للطفل من 6 إلى 11 سنة، ومجانية دون 6 سنوات. ويضيف مزوّد الخدمة رسوم خدمته."],
+ ["أي تأمين سفر؟","تأمين لا يقل عن 30 000 أورو للمصاريف الطبية والإعادة إلى الوطن، صالح في كامل فضاء شنغن طوال الإقامة."],
+ ["شروط جواز السفر؟","صالح 3 أشهر على الأقل بعد تاريخ الخروج المتوقع، صادر منذ أقل من 10 سنوات، وبه صفحتان فارغتان على الأقل."],
+ ["ماذا لو رُفض طلبي؟","اقرأ أسباب الرفض في الرسالة. الطعن ممكن وغالباً خلال 15 إلى 30 يوماً حسب البلد: التزم بالتاريخ المذكور في رسالتك."]]
+};
+var SCH={trips:[],plan:"",loaded:false},PLN={trav:"",c:"",rdv:null,rdvTried:false};
+var SCH_KEY="sch-trips-v1";
+function schLoad(){if(SCH.loaded)return;SCH.loaded=true;try{var a=JSON.parse(localStorage.getItem(SCH_KEY)||"[]");if(Array.isArray(a))SCH.trips=a.filter(function(x){return x&&typeof x.a==="string"&&typeof x.b==="string"}).slice(0,40).map(function(x){return{a:isoOk(x.a)?x.a:"",b:isoOk(x.b)?x.b:""}})}catch(e){}if(!SCH.trips.length)SCH.trips=[{a:"",b:""}];SCH.plan=today()}
+function schSave(){try{localStorage.setItem(SCH_KEY,JSON.stringify(SCH.trips))}catch(e){}}
+function dnum(v){return Math.round(Date.parse(v+"T00:00:00Z")/864e5)}
+function dstr(n){return new Date(n*864e5).toISOString().slice(0,10)}
+function tFill(s,o){return s.replace(/\{(\w+)\}/g,function(m,k){return o[k]!=null?o[k]:m})}
+function schCalc(){
+  var L=TLS[S.lang],days={},bad=false,i,t,d;
+  SCH.trips.forEach(function(x){if(x.a&&x.b&&isoOk(x.a)&&isoOk(x.b)){var a=dnum(x.a),b=dnum(x.b);if(b<a){bad=true;return}if(b-a>3650)return;for(d=a;d<=b;d++)days[d]=1}else if((x.a&&!x.b)||(!x.a&&x.b)){}});
+  function cnt(e){var c=0,k;for(k=e-179;k<=e;k++)if(days[k])c++;return c}
+  var over=null,keys=Object.keys(days).map(Number).sort(function(a,b){return a-b});
+  for(i=0;i<keys.length;i++){if(cnt(keys[i])>90){over=keys[i];break}}
+  if(!SCH.plan||!isoOk(SCH.plan))return{bad:bad,over:over,need:true};
+  var E=dnum(SCH.plan),used=cnt(E-1);
+  function maxFrom(e){var k,n=0,c;var add={};for(k=0;k<181;k++){var day=e+k;add[day]=1;c=0;var j;for(j=day-179;j<=day;j++)if(days[j]||add[j])c++;if(c>90)break;n++}return n}
+  var m=maxFrom(E),r={bad:bad,over:over,used:used,left:Math.max(0,90-used),max:m};
+  if(m>0)r.exit=dstr(E+m-1);else{for(i=1;i<=400;i++){var mm=maxFrom(E+i);if(mm>0){r.next=dstr(E+i);r.nextMax=mm;break}}}
+  return r;
+}
+function schHtml(L){
+  schLoad();var r=schCalc(),h='<div class="panel tool"><p class="ag-note">'+esc(L.rule)+'</p>';
+  h+='<div class="q-label" id="sc-h">'+esc(L.stays)+'</div><div role="group" aria-labelledby="sc-h" class="sc-list">';
+  SCH.trips.forEach(function(x,i){
+    h+='<div class="sc-row"><label>'+esc(L.inL)+'<input type="date" class="sel" data-sc="a" data-i="'+i+'" value="'+escA(x.a)+'"></label><label>'+esc(L.outL)+'<input type="date" class="sel" data-sc="b" data-i="'+i+'" value="'+escA(x.b)+'"></label>'
+     +'<button type="button" class="reset" data-sc-del="'+i+'" aria-label="'+escA(L.del)+'">\u2715</button></div>'});
+  h+='</div><button type="button" class="reset" data-sc-add="1">+ '+esc(L.add)+'</button>';
+  h+='<label class="sc-plan">'+esc(L.plan)+'<input type="date" class="sel" id="sc-plan" value="'+escA(SCH.plan)+'"></label>';
+  h+='<div id="sc-res" class="sc-res" role="status" aria-live="polite">'+schResHtml(L,r)+'</div></div>';
+  return h;
+}
+function schResHtml(L,r){
+  var h="";
+  if(r.bad)h+='<p class="i-warn">\u26A0 '+esc(L.bad)+'</p>';
+  if(r.over!=null)h+='<p class="i-warn">\u26A0 '+esc(tFill(L.over,{d:fmtD(dstr(r.over))}))+'</p>';
+  if(r.need)return h+'<p class="ag-note">'+esc(L.need)+'</p>';
+  var pct=Math.min(100,Math.round(r.used/90*100));
+  h+='<div class="bar'+(r.left===0?"":" done")+'" role="progressbar" aria-valuemin="0" aria-valuemax="90" aria-valuenow="'+Math.min(90,r.used)+'" aria-label="'+escA(tFill(L.used,{n:r.used}))+'"><i style="width:'+pct+'%"></i></div>';
+  h+='<p><b><bdi dir="ltr">'+esc(tFill(L.used,{n:r.used}))+'</bdi></b></p><p><b>'+esc(tFill(L.left,{n:r.left}))+'</b></p>';
+  if(r.max>0)h+='<p class="sc-ok">\u2713 '+esc(tFill(L.max,{d:fmtD(SCH.plan),n:r.max,e:fmtD(r.exit)}))+'</p>';
+  else h+='<p class="i-warn">\u26A0 '+esc(r.next?tFill(L.none,{d:fmtD(r.next),n:r.nextMax}):L.none.split(".")[0]+".")+'</p>';
+  return h;
+}
+function faqHtml(L){
+  var id=PLN.c||(curC().ready?curC().id:"fr"),G=FAQG[S.lang],h='<div class="panel tool"><label class="q-label" for="faq-c">'+esc(L.faqC)+'</label><select class="sel" id="faq-c">';
+  COUNTRIES.filter(function(c){return c.ready}).forEach(function(c){h+='<option value="'+c.id+'"'+(c.id===id?' selected':'')+'>'+esc(nm(c))+'</option>'});
+  h+='</select>';
+  var p=id==="fr"?{prov:"France-Visas / TLScontact",site:"https://france-visas.gouv.fr/tunisie"}:(PROF[id]||null);
+  var items=G.slice();
+  if(p){var q={fr:["Où et comment déposer pour ce pays ?","Via "+p.prov+". Consultez toujours le site officiel pour la liste à jour des pièces et des tarifs."],en:["Where and how do I apply for this country?","Through "+p.prov+". Always check the official website for the current document list and fees."],ar:["أين وكيف أقدّم لهذا البلد؟","عبر "+p.prov+". راجع دائماً الموقع الرسمي للقائمة والرسوم المحدّثة."]}[S.lang];items.unshift(q)}
+  h+='<div class="faq">';
+  items.forEach(function(x,i){h+='<details class="lt"><summary>'+esc(x[0])+'</summary><p>'+esc(x[1])+'</p></details>'});
+  h+='</div>';
+  if(p&&p.site)h+='<p><a href="'+escA(p.site)+'" target="_blank" rel="noopener noreferrer">'+esc(L.site)+' \u2197</a></p>';
+  return h+'</div>';
+}
+function rdvLoad(){if(PLN.rdvTried)return;PLN.rdvTried=true;try{var c=new AbortController(),tm=setTimeout(function(){c.abort()},6000);fetch("rdv.json",{signal:c.signal,cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(function(j){clearTimeout(tm);if(j&&typeof j==="object"&&j.items&&typeof j.items==="object"){PLN.rdv=j;if(S.step===13)planRes()}}).catch(function(){})}catch(e){}}
+function planData(){
+  var L=TLS[S.lang],id=PLN.c||(curC().ready?curC().id:"fr");
+  if(!PLN.trav||!isoOk(PLN.trav))return null;
+  var T=dnum(PLN.trav),o={id:id,T:T,open:dstr(T-183),late:dstr(T-15),past:T-dnum(today())<15};
+  var it=PLN.rdv&&PLN.rdv.items&&PLN.rdv.items[id];
+  if(it&&typeof it.days==="number"&&it.days>=0&&it.days<400){o.days=Math.round(it.days);o.upd=String(PLN.rdv.updated||"").slice(0,10);o.book=dstr(T-15-o.days)}
+  return o;
+}
+function planRes(){var el=$("plan-res");if(el)el.innerHTML=planResHtml(TLS[S.lang])}
+function planResHtml(L){
+  var o=planData();if(!o)return '<p class="ag-note">'+esc({fr:"Renseignez votre date de départ prévue.",en:"Enter your planned departure date.",ar:"أدخل تاريخ السفر المتوقع."}[S.lang])+'</p>';
+  var c=COUNTRIES.filter(function(x){return x.id===o.id})[0],p=o.id==="fr"?{prov:"TLScontact"}:(PROF[o.id]||{prov:"?"}),h="";
+  h+='<p>'+esc(tFill(L.win,{d:fmtD(o.open)}))+'</p><p>'+esc(tFill(L.late,{d:fmtD(o.late)}))+'</p>';
+  if(o.days!=null)h+='<p><b>'+esc(tFill(L.rdv,{n:o.days,u:fmtD(o.upd),d:fmtD(o.book)}))+'</b></p>';else h+='<p class="ag-note">'+esc(tFill(L.rdv0,{p:p.prov}))+'</p>';
+  if(o.past)h+='<p class="i-warn">\u26A0 '+esc(L.past)+'</p>';
+  h+='<button type="button" class="pay" data-ics="1">'+esc(L.ics)+'</button><p class="ag-note">'+esc(L.icsNote)+'</p>';
+  return h;
+}
+function planHtml(L){
+  rdvLoad();var id=PLN.c||(curC().ready?curC().id:"fr");
+  var h='<div class="panel tool"><label class="q-label" for="pl-c">'+esc(L.ctry)+'</label><select class="sel" id="pl-c">';
+  COUNTRIES.filter(function(c){return c.ready}).forEach(function(c){h+='<option value="'+c.id+'"'+(c.id===id?' selected':'')+'>'+esc(nm(c))+'</option>'});
+  h+='</select><label class="q-label" for="pl-t">'+esc(L.trav)+'</label><input type="date" class="sel" id="pl-t" value="'+escA(PLN.trav)+'" min="'+today()+'">';
+  h+='<div id="plan-res" class="sc-res" role="status" aria-live="polite">'+planResHtml(L)+'</div></div>';
+  return h;
+}
+function toolsHtml(t){var L=TLS[S.lang];return S.step===11?schHtml(L):S.step===12?faqHtml(L):planHtml(L)}
+var TICON={11:'<path d="M5 4h14v16H5z M8 8h8 M8 12h3 M13 12h3 M8 16h3 M13 16h3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',12:'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9.5 9.5a2.5 2.5 0 115 0c0 1.6-2.5 2-2.5 3.5M12 17h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',13:'<rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'};
+function toolsCardsHtml(){var L=TLS[S.lang],h='<div class="toolcards">';[11,12,13].forEach(function(n){h+='<button type="button" class="evcard toolcard" data-tool="'+n+'"><span class="evico"><svg viewBox="0 0 24 24" aria-hidden="true">'+TICON[n]+'</svg></span><span class="evtxt"><b>'+L["c"+n]+'</b><span>'+L["d"+n]+'</span></span>'+EVARROW+'</button>'});return h+'</div>'}
+function icsEsc(s){return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\;").replace(/,/g,"\\,").replace(/\r?\n/g,"\\n")}
+function icsDl(){
+  var o=planData();if(!o)return;var L=TLS[S.lang],c=COUNTRIES.filter(function(x){return x.id===o.id})[0],cn=nm(c),stamp=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
+  var ev=[[o.open,L.evOpen,0],[o.late,L.evLate,1]];
+  if(o.days!=null)ev.push([o.book,tFill(L.evRdv,{c:cn}),2]);
+  var out=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Visa Checker//FR","CALSCALE:GREGORIAN"];
+  ev.forEach(function(e,i){
+    var d=e[0].replace(/-/g,""),nx=dstr(dnum(e[0])+1).replace(/-/g,"");
+    out.push("BEGIN:VEVENT","UID:vc-"+o.id+"-"+d+"-"+i+"@visa-checker","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+d,"DTEND;VALUE=DATE:"+nx,"SUMMARY:"+icsEsc("Visa Checker - "+e[1]),
+      "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+icsEsc(e[1]),"TRIGGER:PT9H","END:VALARM","END:VEVENT")});
+  var s=Math.max(dnum(today())+1,dnum(o.late)-13),e2=dnum(o.late);
+  if(e2>=dnum(today())){var cnt=Math.min(30,Math.max(1,e2-s+1));
+    out.push("BEGIN:VEVENT","UID:vc-"+o.id+"-chk@visa-checker","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+dstr(s).replace(/-/g,""),"DTEND;VALUE=DATE:"+dstr(s+1).replace(/-/g,""),"RRULE:FREQ=DAILY;COUNT="+cnt,"SUMMARY:"+icsEsc("Visa Checker - "+tFill(L.evChk,{c:cn})),
+      "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+icsEsc(tFill(L.evChk,{c:cn})),"TRIGGER:PT9H","END:VALARM","END:VEVENT")}
+  out.push("END:VCALENDAR");
+  var blob=new Blob([out.join("\r\n")+"\r\n"],{type:"text/calendar;charset=utf-8"}),a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download="visa-rappels-"+o.id+".ics";document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);
+}
+document.addEventListener("click",function(e){
+  var t=e.target.closest&&e.target.closest("[data-tool]");
+  if(t){S.step=+t.dataset.tool;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
+  if(S.step<11)return;
+  if(e.target.closest("[data-ics]")){icsDl();return}
+  if(e.target.closest("[data-sc-add]")){if(SCH.trips.length<40){SCH.trips.push({a:"",b:""});schSave();render();var ins=document.querySelectorAll('[data-sc="a"]');if(ins.length)ins[ins.length-1].focus()}return}
+  var d=e.target.closest("[data-sc-del]");
+  if(d){SCH.trips.splice(+d.dataset.scDel,1);if(!SCH.trips.length)SCH.trips=[{a:"",b:""}];schSave();render();return}
+});
+document.addEventListener("input",function(e){
+  var el=e.target;if(S.step<11||!el.dataset)return;
+  if(el.dataset.sc){var i=+el.dataset.i;if(SCH.trips[i]){SCH.trips[i][el.dataset.sc]=isoOk(el.value)?el.value:"";schSave();var r=$("sc-res");if(r)r.innerHTML=schResHtml(TLS[S.lang],schCalc())}return}
+  if(el.id==="sc-plan"){SCH.plan=isoOk(el.value)?el.value:"";var r2=$("sc-res");if(r2)r2.innerHTML=schResHtml(TLS[S.lang],schCalc());return}
+  if(el.id==="pl-t"){PLN.trav=isoOk(el.value)?el.value:"";planRes();return}
+});
+document.addEventListener("change",function(e){
+  var el=e.target;if(S.step<11)return;
+  if(el.id==="faq-c"||el.id==="pl-c"){PLN.c=el.value;render();var n=$(el.id);if(n)n.focus()}
+});
+
+
 /* ===== Générateur de lettre sur mesure (IA, via le Worker /letter, réservé au pack) ===== */
 var LETTER_URL="https://visa-proxy.rabehfly.workers.dev/letter";
 var AIS={f:{language:"fr",purpose:"tourism",profile:"employee",country:"",dateFrom:"",dateTo:"",job:"",income:"",budget:"",lodging:"",ties:"",notes:""},busy:false,err:"",res:""};
@@ -1603,26 +1780,26 @@ function focusStepHeading(){
 }
 function render(){
   var cur=curC(),ready=cur.ready;
-  var t=applyCountry(UI[S.lang]);document.body.dataset.cn=cur.id;
+  var t=applyCountry(UI[S.lang]);
   if(cur.id!=="fr"&&S.mode==="appeal")S.mode="check";
   if(!ready&&S.step>0&&S.step<6)S.step=0;if(S.step===2||S.step===3)S.step=4;
-  if(S.step===7&&!evFind(S.evc))S.step=6;if(S.step>10||S.step<0)S.step=0;if(S.step>=8&&S.step<=10&&!S.need)S.step=0;if(S.step>=9&&S.step<=10&&!findAgent(S.agent))S.step=8;if(S.step===10&&!RQ.done)S.step=9;
+  if(S.step===7&&!evFind(S.evc))S.step=6;if(S.step>13||S.step<0)S.step=0;if(S.step>=8&&S.step<=10&&!S.need)S.step=0;if(S.step>=9&&S.step<=10&&!findAgent(S.agent))S.step=8;if(S.step===10&&!RQ.done)S.step=9;
   var st=S.step,e=eff();
   document.documentElement.lang=S.lang;
   document.documentElement.dir=S.lang==="ar"?"rtl":"ltr";
   setLogo(st>=8&&st<=10?(S.need==="flight"?"plane":S.need==="hotel"?"bed":"check"):"check");$("stamp").hidden=true;
-  if(st===0){$("h1").innerHTML=t.sloganA+'<span class="acc">'+t.sloganB+'</span>'}else{$("h1").textContent=[0,t.modeTitle,t.destTitle,t.pTitle,t.dTitle,S.mode==="appeal"?t.apTitle:t.hTitle,EVT[S.lang].listTitle,evTitle(),rq(8),rq(9),rq(10)][st]}
-  $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10)][st];document.body.dataset.step=st;
+  if(st===0){$("h1").innerHTML=t.sloganA+'<span class="acc">'+t.sloganB+'</span>'}else{$("h1").textContent=[0,t.modeTitle,t.destTitle,t.pTitle,t.dTitle,S.mode==="appeal"?t.apTitle:t.hTitle,EVT[S.lang].listTitle,evTitle(),rq(8),rq(9),rq(10),TLS[S.lang].t11,TLS[S.lang].t12,TLS[S.lang].t13][st]}
+  $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10),TLS[S.lang].s11,TLS[S.lang].s12,TLS[S.lang].s13][st];document.body.dataset.step=st;
   $("disc").textContent=t.disc;renderLegal();renderBpn();renderTrans();renderReviews();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
-  $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal"||cur.id==="us")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
+  $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
   if(showSt){$("stepper").innerHTML='<div class="st-row"><span class="st-num">'+STX[S.lang].step(st-2)+' · '+t.stepNames[st-2]+'</span><span class="pill"><span class="flag">'+flag(cur.id)+'</span>'+nm(cur)+(S.motive==="medical"?' · '+t.motive.medical:'')+'</span></div>'+stepper(st-2,[t.stepNames[0],t.stepNames[2],t.stepNames[3]])}
   $("home").hidden=st!==0;if(st===0)$("home").innerHTML=homeHtml(t);
   $("mode").hidden=st!==1;if(st===1)$("mode").innerHTML=modeHtml(t);
   $("dest").hidden=st!==2;if(st===2)$("dest").innerHTML=destHtml(t);
   $("panel").hidden=st!==3;if(st===3)$("panel").innerHTML=panelHtml(t);
-  $("req").hidden=st<8||st>10;$("tools").hidden=true;if(st===8)$("req").innerHTML=pickHtml(t);if(st===9)$("req").innerHTML=formHtml(t);if(st===10)$("req").innerHTML=doneHtml(t);$("evisa").hidden=st<6||st>7;if(st===6)$("evisa").innerHTML=evListHtml();if(st===7)$("evisa").innerHTML=evDetailHtml(t);
+  $("req").hidden=st<8||st>10;$("tools").hidden=st<11;if(st>=11)$("tools").innerHTML=toolsHtml(t);if(st===8)$("req").innerHTML=pickHtml(t);if(st===9)$("req").innerHTML=formHtml(t);if(st===10)$("req").innerHTML=doneHtml(t);$("evisa").hidden=st<6||st>7;if(st===6)$("evisa").innerHTML=evListHtml();if(st===7)$("evisa").innerHTML=evDetailHtml(t);
   $("docs").hidden=st!==4;$("help").hidden=st!==5;$("agency").hidden=true;$("refus").hidden=false;
   if(st===4){
     var vis=(e==="reunion"?RITEMS:ITEMS).filter(function(i){return i.w(Object.assign({},S,{purpose:e}))});
@@ -1645,19 +1822,19 @@ function render(){
           +(i.opt?'<span class="stt rec">'+X.rec+'</span>':'')
           +'<span class="i-title">'+c[0]+'</span>'+(c[1]?'<span class="'+(warn?'i-warn':'i-note')+'">'+c[1]+'</span>':'')+'</span></label>';
       });
+      
       h+='</section>';
     });
     var X=STX[S.lang];
     var legend='<ul class="legend" aria-label="'+X.legend+'"><li><i class="lg ok"></i>'+X.ok+'</li><li><i class="lg warn"></i>'+X.warn+'</li><li><i class="lg todo"></i>'+X.todo+'</li></ul>';
-    $("list").innerHTML=adaptHtml(t)+legend+h+interviewHtml();
-    if(cur.id==="us")$("list").innerHTML=usHtml();
+    $("list").innerHTML=adaptHtml(t)+legend+h;
   }
   if(st===5){renderRefus(t)}
   renderSponsors(t);$("sponsors").hidden=st>=8;
   $("dock").hidden=!(st===0&&ready);
   if(st===0&&ready)$("dock").innerHTML='<div class="dock-in"><span class="flag">'+flag("tn")+'</span><span class="arrow" aria-hidden="true">\u2192</span><span class="flag">'+flag(cur.id)+'</span><span class="dname">'+nm(cur)+'</span><button type="button" class="pay" data-go="1">'+t.start+'</button></div>';
   $("nav").hidden=st===0;
-  if(st>0){$("nav").innerHTML='<button type="button" class="reset" data-go="-1">'+t.back+'</button>'+(st===4&&cur.id!=="us"?'<button type="button" class="pay" data-go="1">'+t.next+'</button>':'')}
+  if(st>0){$("nav").innerHTML='<button type="button" class="reset" data-go="-1">'+t.back+'</button>'+(st===4?'<button type="button" class="pay" data-go="1">'+t.next+'</button>':'')}
   if(typeof prevStep==="number"&&prevStep!==S.step)focusStepHeading();
   prevStep=S.step;
 }
@@ -1723,7 +1900,7 @@ fr:{m:"Mentions légales",c:"Confidentialité",x:"Fermer",d:"Dernière mise à j
  ["Pourquoi ?","Uniquement pour traiter votre demande, la transmettre à l'agence choisie et vous envoyer le lien de paiement puis le document. Nous ne vendons pas vos données."],
  ["Qui les reçoit ?","L'agence que vous choisissez, et les services techniques qui acheminent la demande : Cloudflare (serveur relais) puis Make (automatisation, serveurs situés dans l'Union européenne). Ces destinataires ne les utilisent que pour exécuter votre demande. Si vous utilisez le générateur de lettre, les informations saisies sont envoyées à Anthropic (service d'IA) pour rédiger le texte ; notre serveur ne les conserve pas."],
  ["Combien de temps ?","Le temps nécessaire au traitement de votre demande et à nos obligations légales, puis suppression. Vous pouvez demander la suppression plus tôt."],
- ["Stockage sur votre appareil et services tiers","Le site n'utilise pas de cookies publicitaires. Votre progression est enregistrée sur votre appareil (stockage local) et ne sont pas envoyées. Un code de déblocage saisi est vérifié par notre serveur, qui conserve seulement son empreinte chiffrée. Les polices et certaines icônes de partenaires sont chargées depuis des serveurs tiers (par exemple Google), qui voient alors votre adresse IP."],
+ ["Stockage sur votre appareil et services tiers","Le site n'utilise pas de cookies publicitaires. Votre progression et, si vous les saisissez, les dates du calculateur Schengen sont enregistrées sur votre appareil (stockage local) et ne sont pas envoyées. Un code de déblocage saisi est vérifié par notre serveur, qui conserve seulement son empreinte chiffrée. Les polices et certaines icônes de partenaires sont chargées depuis des serveurs tiers (par exemple Google), qui voient alors votre adresse IP."],
  ["Vos droits","Vous pouvez demander l'accès, la rectification, la suppression de vos données ou vous opposer à leur traitement en nous écrivant"+" (voir l'e-mail dans les mentions légales). En Tunisie, ces droits sont encadrés par la loi organique n° 2004-63 du 27 juillet 2004 ; vous pouvez aussi saisir l'Instance nationale de protection des données personnelles (INPDP)."]]},
 en:{m:"Legal notice",c:"Privacy",x:"Close",d:"Last updated: October 2026. This text is a good-faith template, not legal advice: have a professional review it before launch.",
  mt:[["Site publisher",function(){return L(["Site: "+SITE.name+(SITE.domain?" ("+SITE.domain+")":""),SITE.owner&&"Responsible: "+SITE.owner,SITE.status&&"Status: "+SITE.status,SITE.address&&"Address: "+SITE.address,SITE.email&&"E-mail: "+SITE.email,SITE.phone&&"Phone: "+SITE.phone,SITE.host&&"Host: "+SITE.host])}],
@@ -1737,7 +1914,7 @@ en:{m:"Legal notice",c:"Privacy",x:"Close",d:"Last updated: October 2026. This t
  ["Why?","Only to process your request, pass it to the chosen agency and send you the payment link and then the document. We do not sell your data."],
  ["Who receives it?","The agency you choose, and the technical services that route the request: Cloudflare (relay server) then Make (automation, servers in the European Union). They use it only to carry out your request. If you use the letter generator, what you type is sent to Anthropic (AI service) to write the text; our server does not keep it."],
  ["How long?","As long as needed to process your request and meet our legal duties, then deletion. You can ask for earlier deletion."],
- ["Storage on your device and third-party services","The site uses no advertising cookies. Your progress is saved on your device (local storage) and are never sent. An unlock code you enter is checked by our server, which keeps only its encrypted fingerprint. Fonts and some partner icons load from third-party servers (for example Google), which then see your IP address."],
+ ["Storage on your device and third-party services","The site uses no advertising cookies. Your progress and, if you enter them, the Schengen calculator dates are saved on your device (local storage) and are never sent. An unlock code you enter is checked by our server, which keeps only its encrypted fingerprint. Fonts and some partner icons load from third-party servers (for example Google), which then see your IP address."],
  ["Your rights","You can ask for access, correction or deletion of your data, or object to its processing, by writing to us (see the e-mail in the legal notice). In Tunisia these rights are governed by Organic Law No. 2004-63 of 27 July 2004; you may also contact the national personal data protection authority (INPDP)."]]},
 ar:{m:"الإشعار القانوني",c:"الخصوصية",x:"إغلاق",d:"آخر تحديث: أكتوبر 2026. هذا النص نموذج بحسن نية وليس استشارة قانونية: اطلب من مختص مراجعته قبل الإطلاق.",
  mt:[["ناشر الموقع",function(){return L(["الموقع: "+SITE.name+(SITE.domain?" ("+SITE.domain+")":""),SITE.owner&&"المسؤول: "+SITE.owner,SITE.status&&"الصفة: "+SITE.status,SITE.address&&"العنوان: "+SITE.address,SITE.email&&"البريد الإلكتروني: "+SITE.email,SITE.phone&&"الهاتف: "+SITE.phone,SITE.host&&"الاستضافة: "+SITE.host])}],
@@ -1751,7 +1928,7 @@ ar:{m:"الإشعار القانوني",c:"الخصوصية",x:"إغلاق",d:"�
  ["لماذا؟","فقط لمعالجة طلبك وإرساله إلى الوكالة المختارة وإرسال رابط الدفع ثم الوثيقة إليك. لا نبيع بياناتك."],
  ["من يستلمها؟","الوكالة التي تختارها، والخدمات التقنية التي تنقل الطلب: Cloudflare (خادم وسيط) ثم Make (الأتمتة، خوادم داخل الاتحاد الأوروبي). لا تستعملها إلا لتنفيذ طلبك. وإذا استعملت مولّد الرسائل فإن ما تدخله يُرسل إلى Anthropic (خدمة ذكاء اصطناعي) لكتابة النص ولا يحتفظ به خادمنا."],
  ["كم المدة؟","المدة اللازمة لمعالجة طلبك وللوفاء بالتزاماتنا القانونية، ثم تُحذف. يمكنك طلب الحذف قبل ذلك."],
- ["التخزين على جهازك والخدمات الخارجية","لا يستعمل الموقع ملفات تعريف ارتباط إعلانية. يُحفظ تقدّمك على جهازك (التخزين المحلي) ولا تُرسل أبداً. يتحقق خادمنا من رمز الفتح الذي تدخله ولا يحتفظ إلا ببصمته المشفّرة. تُحمَّل الخطوط وبعض أيقونات الشركاء من خوادم خارجية (مثل Google) ترى عنوان IP الخاص بك."],
+ ["التخزين على جهازك والخدمات الخارجية","لا يستعمل الموقع ملفات تعريف ارتباط إعلانية. يُحفظ تقدّمك وتواريخ حاسبة شنغن (إن أدخلتها) على جهازك (التخزين المحلي) ولا تُرسل أبداً. يتحقق خادمنا من رمز الفتح الذي تدخله ولا يحتفظ إلا ببصمته المشفّرة. تُحمَّل الخطوط وبعض أيقونات الشركاء من خوادم خارجية (مثل Google) ترى عنوان IP الخاص بك."],
  ["حقوقك","يمكنك طلب الاطلاع على بياناتك أو تصحيحها أو حذفها أو الاعتراض على معالجتها بمراسلتنا (انظر البريد في الإشعار القانوني). في تونس تنظّم هذه الحقوق القانون الأساسي عدد 63 لسنة 2004 المؤرخ في 27 جويلية 2004، ويمكنك أيضًا اللجوء إلى الهيئة الوطنية لحماية المعطيات الشخصية (INPDP)."]]}
 };
 var HOMEL={fr:"Accueil",en:"Home",ar:"الرئيسية"};
