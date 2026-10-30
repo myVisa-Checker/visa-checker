@@ -1685,17 +1685,36 @@ var EVCN={
  en:{eu:"Europe / Caucasus",af:"Africa",ame:"Americas and Caribbean",as:"Asia"},
  ar:{eu:"أوروبا / القوقاز",af:"أفريقيا",ame:"الأمريكتان ومنطقة الكاريبي",as:"آسيا"}
 };
+var evk="";
+var EVCI={
+ eu:'<path d="M3 20h18M5 20V10M9.5 20V10M14.5 20V10M19 20V10M3 10l9-6 9 6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+ af:'<circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+ ame:'<path d="M2 20l6-10 4 6 3-4 7 8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+ as:'<path d="M12 3l-3 4h6zM7 7h10M8 11h8M5 11h14M6 11v9M18 11v9M3 20h18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
+};
+var EVCX={
+ fr:{back:"Tous les continents",soon:"Aucun pays e-Visa dans cette région pour le moment. La liste sera complétée.",pick:"Choisissez un continent, puis un pays (ordre alphabétique).",n:["pays","pays"]},
+ en:{back:"All continents",soon:"No e-Visa country in this region yet. The list will be completed.",pick:"Pick a continent, then a country (alphabetical order).",n:["country","countries"]},
+ ar:{back:"كل القارات",soon:"لا توجد دول للتأشيرة الإلكترونية في هذه المنطقة حاليًا. ستُستكمل القائمة.",pick:"اختر قارة ثم دولة (بالترتيب الأبجدي).",n:["دولة","دول"]}
+};
 function evListHtml(){
-  var x=EVT[S.lang],L=S.lang;
+  var x=EVT[S.lang],L=S.lang,X=EVCX[L];
   var h='<div class="evwrap"><div class="book"><p>'+x.listWarn+'</p></div>';
-  ["eu","af","ame","as"].forEach(function(k){
-    var list=EV.filter(function(c){return EVCONT[c.id]===k}).sort(function(a,b){return evKey(a,L).localeCompare(evKey(b,L),L)});
-    if(!list.length)return;
-    h+='<h2 style="margin:22px 0 8px;font-size:1.1rem">'+EVCN[L][k]+'</h2><ul class="evlist">';
-    list.forEach(function(c){h+='<li><button type="button" class="evrow" data-ev="'+c.id+'"><span class="flag">'+evFlag(c.id)+'</span><span class="cn">'+c.n[L]+'</span><span class="evtag'+(c.type==="check"?' warn':'')+'">'+x.type[c.type]+'</span>'+EVARROW+'</button></li>'});
-    h+='</ul>';
-  });
-  return h+'<p class="ag-note">'+x.notListed+'</p></div>';
+  if(!evk||!EVCN[L][evk]){
+    h+='<p class="ag-sub">'+X.pick+'</p><div class="toolcards">';
+    ["eu","af","ame","as"].forEach(function(k){
+      var n=EV.filter(function(c){return EVCONT[c.id]===k}).length;
+      h+='<button type="button" class="evcard toolcard" data-evk="'+k+'"><span class="evico"><svg viewBox="0 0 24 24" aria-hidden="true">'+EVCI[k]+'</svg></span><span class="evtxt"><b>'+EVCN[L][k]+'</b><span>'+(n?n+" "+X.n[n>1?1:0]:"—")+'</span></span>'+EVARROW+'</button>';
+    });
+    return h+'</div><p class="ag-note">'+x.notListed+'</p></div>';
+  }
+  var list=EV.filter(function(c){return EVCONT[c.id]===evk}).sort(function(a,b){return evKey(a,L).localeCompare(evKey(b,L),L)});
+  h+='<p><button type="button" class="evrow" data-evk="" style="max-width:100%"><span class="cn">'+X.back+'</span></button></p>';
+  h+='<h2 style="margin:14px 0 8px;font-size:1.1rem">'+EVCN[L][evk]+'</h2>';
+  if(!list.length)return h+'<p class="ag-sub">'+X.soon+'</p><p class="ag-note">'+x.notListed+'</p></div>';
+  h+='<ul class="evlist">';
+  list.forEach(function(c){h+='<li><button type="button" class="evrow" data-ev="'+c.id+'"><span class="flag">'+evFlag(c.id)+'</span><span class="cn">'+c.n[L]+'</span><span class="evtag'+(c.type==="check"?' warn':'')+'">'+x.type[c.type]+'</span>'+EVARROW+'</button></li>'});
+  return h+'</ul><p class="ag-note">'+x.notListed+'</p></div>';
 }
 function evDetailHtml(t){
   var x=EVT[S.lang],L=S.lang,c=evFind(S.evc);
@@ -1867,7 +1886,9 @@ document.addEventListener("click",function(e){
   var gb=e.target.closest("[data-go]");
   if(gb){go(parseInt(gb.dataset.go,10));return}
   if(e.target.closest("#start")){go(1);return}
-  if(e.target.closest("#evbtn")){S.step=6;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
+  if(e.target.closest("#evbtn")){evk="";S.step=6;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
+  var ek=e.target.closest("[data-evk]");
+  if(ek){evk=ek.dataset.evk;render();window.scrollTo(0,0);return}
   var evr=e.target.closest(".evrow");
   if(evr){S.evc=evr.dataset.ev;S.step=7;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
   if(e.target.closest("#destbtn")){open=!open;render();$("destbtn").focus();return}
