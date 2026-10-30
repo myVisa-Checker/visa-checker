@@ -1679,12 +1679,23 @@ function soonHtml(){
 }
 
 function evCardHtml(){var x=EVT[S.lang];return '<button type="button" class="evcard" id="evbtn"><span class="evico">'+EVICON+'</span><span class="evtxt"><b>'+x.cardTitle+'</b><span>'+x.cardSub+'</span></span>'+EVARROW+'</button>'}
+var EVCONT={al:"eu",am:"eu",az:"eu",ge:"eu",bh:"as",kg:"as",kr:"as",lk:"as",om:"as",pk:"as",qa:"as",ae:"as",uz:"as",vn:"as"};
+var EVCN={
+ fr:{eu:"Europe / Caucase",af:"Afrique",ame:"Amériques et Caraïbes",as:"Asie"},
+ en:{eu:"Europe / Caucasus",af:"Africa",ame:"Americas and Caribbean",as:"Asia"},
+ ar:{eu:"أوروبا / القوقاز",af:"أفريقيا",ame:"الأمريكتان ومنطقة الكاريبي",as:"آسيا"}
+};
 function evListHtml(){
   var x=EVT[S.lang],L=S.lang;
-  var list=EV.slice().sort(function(a,b){return evKey(a,L).localeCompare(evKey(b,L),L)});
-  var h='<div class="evwrap"><div class="book"><p>'+x.listWarn+'</p></div><ul class="evlist">';
-  list.forEach(function(c){h+='<li><button type="button" class="evrow" data-ev="'+c.id+'"><span class="flag">'+evFlag(c.id)+'</span><span class="cn">'+c.n[L]+'</span><span class="evtag'+(c.type==="check"?' warn':'')+'">'+x.type[c.type]+'</span>'+EVARROW+'</button></li>'});
-  return h+'</ul><p class="ag-note">'+x.notListed+'</p></div>';
+  var h='<div class="evwrap"><div class="book"><p>'+x.listWarn+'</p></div>';
+  ["eu","af","ame","as"].forEach(function(k){
+    var list=EV.filter(function(c){return EVCONT[c.id]===k}).sort(function(a,b){return evKey(a,L).localeCompare(evKey(b,L),L)});
+    if(!list.length)return;
+    h+='<h2 style="margin:22px 0 8px;font-size:1.1rem">'+EVCN[L][k]+'</h2><ul class="evlist">';
+    list.forEach(function(c){h+='<li><button type="button" class="evrow" data-ev="'+c.id+'"><span class="flag">'+evFlag(c.id)+'</span><span class="cn">'+c.n[L]+'</span><span class="evtag'+(c.type==="check"?' warn':'')+'">'+x.type[c.type]+'</span>'+EVARROW+'</button></li>'});
+    h+='</ul>';
+  });
+  return h+'<p class="ag-note">'+x.notListed+'</p></div>';
 }
 function evDetailHtml(t){
   var x=EVT[S.lang],L=S.lang,c=evFind(S.evc);
@@ -2020,6 +2031,23 @@ document.addEventListener("input",function(e){if(e.target.id==="refcase"){S.refu
   new MutationObserver(function(){var n=document.body.dataset.step;if(n!==last){last=n;h.classList.remove("enter");void h.offsetWidth}}).observe(document.body,{attributes:true,attributeFilter:["data-step"]});
   scan();
 })();
+/* Menu des destinations : taper A, B, E... saute au premier pays qui commence par cette lettre */
+var jumpBuf="",jumpTm;
+document.addEventListener("keydown",function(e){
+  if(!open||e.ctrlKey||e.metaKey||e.altKey||e.key.length!==1)return;
+  if(e.key===" "&&!jumpBuf)return;
+  var a=document.activeElement;
+  if(!a||!(a.id==="destbtn"||(a.closest&&a.closest(".clist"))))return;
+  function nz(v){return String(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()}
+  jumpBuf+=e.key;clearTimeout(jumpTm);jumpTm=setTimeout(function(){jumpBuf=""},700);
+  var q=nz(jumpBuf);if(!q)return;
+  var rows=document.querySelectorAll(".clist .crow");
+  for(var i=0;i<rows.length;i++){
+    if(nz(rows[i].querySelector(".cn").textContent).indexOf(q)===0){
+      rows[i].focus();rows[i].scrollIntoView({block:"nearest"});e.preventDefault();break;
+    }
+  }
+});
 ["fr","en","ar"].forEach(function(l){$("l-"+l).onclick=function(){S.lang=l;save();render()}});
 $("reset").onclick=function(){S.done={};save();render()};
 loadPartners();loadReviews();loadDeals();
