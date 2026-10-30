@@ -1,0 +1,29 @@
+VISA CHECKER - mise à jour e-Visa (30 octobre 2026)
+
+Ce dossier contient 3 fichiers. Remplace-les dans ton dépôt GitHub "visa-checker"
+(même nom, même endroit : à la racine, à côté de index.html) :
+
+  1. visa-app.js   (le principal : 37 nouveaux pays e-Visa, drapeaux, icônes)
+  2. sw.js         (nouveau numéro de version pour que les visiteurs reçoivent la mise à jour)
+  3. version.json  (même numéro de version : 2026.10.30.2200)
+
+index.html n'a PAS changé : ne le touche pas.
+
+Comment faire sur GitHub :
+  - Ouvre le dépôt, clique sur "Add file" puis "Upload files".
+  - Glisse les 3 fichiers (ils remplacent les anciens du même nom).
+  - Clique sur "Commit changes". Attends 1 à 2 minutes.
+  - Ouvre le site et fais Ctrl + F5 (ou ferme et rouvre l'appli) pour voir le résultat.
+
+Ce qui est ajouté :
+  - Afrique : 26 pays. Amériques et Caraïbes : 11 pays.
+  - Textes en français, anglais et arabe, drapeaux intégrés, icônes de continents.
+  - 9 pays ont un lien officiel direct (Éthiopie, Ouganda, Tanzanie, Botswana, Togo,
+    Zimbabwe, Mozambique, Zambie, Rwanda). Les autres ont un bouton
+    "Chercher le portail officiel" tant que l'adresse n'est pas vérifiée.
+  - Pour ajouter une adresse officielle plus tard : dans visa-app.js, cherche le pays
+    (ex. E("ao","evisa",null,null,) et remplace les deux "null" par "https://adresse"
+    et "adresse" (sans https://).
+
+Si quelque chose ne va pas : dans GitHub, ouvre le fichier, clique sur "History" et
+restaure la version précédente.
