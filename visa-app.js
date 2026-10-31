@@ -397,6 +397,49 @@ var PAY_URL2="";
 var UNLOCK_URL="https://visa-proxy.rabehfly.workers.dev/unlock";
 var PACK_URL="https://visa-proxy.rabehfly.workers.dev/pack";
 var UNLOCK_TIMEOUT_MS=8000;
+/* ===== Paiement manuel D17 (sans compte marchand) =====
+   D17.num : VOTRE numéro D17 ; D17.name : votre nom tel qu'il apparaît dans D17.
+   Tant que D17.num est vide, le bouton reste « bientôt » : aucun paiement n'est proposé. */
+var D17={num:"",name:"",tg:"rabehtlili",mail:"visacheckercontact@gmail.com"};
+var D17O="";
+var D17X={
+fr:{btn:"Payer par D17",title:"Payer avec D17",s1:"Montant exact :",s2:"Envoyez-le par D17 au numéro",s3:"Écrivez cette référence dans le message du transfert :",s4:"Puis appuyez sur « J'ai payé ». Nous vérifions dans notre application D17 et vous envoyons votre code, à saisir ci-dessous.",tg:"J'ai payé (Telegram)",mail:"J'ai payé (e-mail)",copy:"Copier",ok:"Copié ✓",warn:"Nous ne demandons jamais votre code PIN ni les données de votre carte. Aucun code n'est envoyé avant la réception réelle du paiement : une capture d'écran ne suffit pas. Payez uniquement au numéro affiché ici, sur le site officiel.",msg:"J'ai payé par D17. Référence : ",cur:"DT",hold:"Titulaire :"},
+en:{btn:"Pay with D17",title:"Pay with D17",s1:"Exact amount:",s2:"Send it through D17 to the number",s3:"Write this reference in the transfer message:",s4:"Then tap “I have paid”. We check our D17 app and send you your code, to enter below.",tg:"I have paid (Telegram)",mail:"I have paid (e-mail)",copy:"Copy",ok:"Copied ✓",warn:"We never ask for your PIN or card details. No code is sent before the payment has really arrived: a screenshot is not enough. Pay only to the number shown here, on the official site.",msg:"I paid with D17. Reference: ",cur:"TND",hold:"Account holder:"},
+ar:{btn:"ادفع عبر D17",title:"الدفع عبر D17",s1:"المبلغ بالضبط:",s2:"أرسله عبر D17 إلى الرقم",s3:"اكتب هذا المرجع في رسالة التحويل:",s4:"ثم اضغط «دفعت». نتحقق في تطبيق D17 لدينا ونرسل لك الرمز لتدخله بالأسفل.",tg:"دفعت (تيليغرام)",mail:"دفعت (بريد إلكتروني)",copy:"نسخ",ok:"تم النسخ ✓",warn:"لا نطلب أبدًا رمز PIN ولا بيانات بطاقتك. لا يُرسل أي رمز قبل وصول الدفعة فعلًا: لقطة الشاشة لا تكفي. ادفع فقط إلى الرقم المعروض هنا في الموقع الرسمي.",msg:"دفعت عبر D17. المرجع: ",cur:"د.ت",hold:"صاحب الحساب:"}
+};
+function d17Ref(k){
+  var key="vcref"+k,r="";
+  try{r=sessionStorage.getItem(key)||""}catch(x){}
+  if(!r){
+    var n;
+    try{var a=new Uint32Array(1);crypto.getRandomValues(a);n=a[0]%9000+1000}catch(x){n=Math.floor(Math.random()*9000)+1000}
+    r="VC-"+(k==="adv"?"A":"P")+"-"+n;
+    try{sessionStorage.setItem(key,r)}catch(x){}
+  }
+  return r;
+}
+function d17Html(k,amt){
+  var L=S.lang,x=D17X[L]||D17X.fr,on=D17O===k;
+  if(!D17.num)return '<span class="pay off" aria-disabled="true">'+UI[L].payWait+'</span>';
+  var h='<button type="button" class="pay" data-d17="'+k+'" aria-expanded="'+on+'">'+x.btn+'</button>';
+  if(!on)return h;
+  var r=d17Ref(k),m=encodeURIComponent(x.msg+r);
+  h+='<div class="d17" role="region" aria-label="'+x.title+'"><b class="d17-t">'+x.title+'</b><ol>';
+  h+='<li>'+x.s1+' <b>'+amt+' '+x.cur+'</b></li>';
+  h+='<li>'+x.s2+' <b dir="ltr">'+D17.num+'</b>'+(D17.name?' ('+x.hold+' '+D17.name+')':'')+' <button type="button" class="d17-c" data-d17c="'+D17.num+'">'+x.copy+'</button></li>';
+  h+='<li>'+x.s3+' <b dir="ltr" class="d17-ref">'+r+'</b> <button type="button" class="d17-c" data-d17c="'+r+'">'+x.copy+'</button></li>';
+  h+='<li>'+x.s4+'</li></ol>';
+  h+='<a class="pay wide" href="https://t.me/'+D17.tg+'?text='+m+'" target="_blank" rel="noopener">'+x.tg+'</a>';
+  h+='<a class="pay wide" href="mailto:'+D17.mail+'?subject='+encodeURIComponent("D17 "+r)+'&body='+m+'">'+x.mail+'</a>';
+  h+='<p class="ag-note">'+x.warn+'</p></div>';
+  return h;
+}
+document.addEventListener("click",function(e){
+  var c=e.target.closest&&e.target.closest("[data-d17c]");
+  if(c){var v=c.dataset.d17c;try{navigator.clipboard.writeText(v)}catch(x){}var o=c.textContent;c.textContent=(D17X[S.lang]||D17X.fr).ok;setTimeout(function(){c.textContent=o},1800);return}
+  var d=e.target.closest&&e.target.closest("[data-d17]");
+  if(d){D17O=D17O===d.dataset.d17?"":d.dataset.d17;render()}
+});
 var UNLOCK_DEV_MODE=false;
 var UNLOCK_DEV_HASHES={advisors:[],pack:[]};
 var UNX={
@@ -463,7 +506,7 @@ function renderRefus(t){
     if(PACK_STATE==="expired")h+='<p class="ag-err" role="alert">'+PKX[L].exp+'</p>';
     h+='<ul class="inc">'+t.rfInc.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>';
     h+='<div><div class="price">'+t.rfPrice+'</div><p class="rf-sub">'+t.rfPriceSub+'</p></div>';
-    h+=PAY_URL2?'<a class="pay" href="'+PAY_URL2+'" target="_blank" rel="noopener">'+t.rfPay+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
+    h+=PAY_URL2?'<a class="pay" href="'+PAY_URL2+'" target="_blank" rel="noopener">'+t.rfPay+'</a>':d17Html("pack",20);
     h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off" aria-describedby="err2" aria-invalid="false"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
   }else{
     h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
@@ -1191,7 +1234,7 @@ function renderAgency(t){
     });
   }else{
     h+='<div class="locked"><b>'+t.agCount(list.length)+'</b><i></i><i></i></div>';
-    h+=PAY_URL?'<a class="pay" href="'+PAY_URL+'" target="_blank" rel="noopener">'+t.payBtn+'</a>':'<span class="pay off" aria-disabled="true">'+t.payWait+'</span>';
+    h+=PAY_URL?'<a class="pay" href="'+PAY_URL+'" target="_blank" rel="noopener">'+t.payBtn+'</a>':d17Html("adv",10);
     h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off" aria-describedby="err" aria-invalid="false"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>';
   }
   h+='<p class="ag-note">'+t.agNote+'</p>';
