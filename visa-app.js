@@ -403,9 +403,9 @@ var UNLOCK_TIMEOUT_MS=8000;
 var D17={num:"+216 58 986 980",name:"RT",tg:"rabehtlili",mail:"visacheckercontact@gmail.com"};
 var D17O="";
 var D17X={
-fr:{btn:"Payer par D17",title:"Payer avec D17",s1:"Montant exact :",s2:"Envoyez-le par D17 au numéro",s3:"Écrivez cette référence dans le message du transfert :",s4:"Puis appuyez sur « J'ai payé ». Nous vérifions dans notre application D17 et vous envoyons votre code, à saisir ci-dessous.",tg:"J'ai payé (Telegram)",mail:"J'ai payé (e-mail)",copy:"Copier",ok:"Copié ✓",warn:"Nous ne demandons jamais votre code PIN ni les données de votre carte. Aucun code n'est envoyé avant la réception réelle du paiement : une capture d'écran ne suffit pas. Payez uniquement au numéro affiché ici, sur le site officiel.",msg:"J'ai payé par D17. Référence : ",cur:"DT",hold:"Titulaire :"},
-en:{btn:"Pay with D17",title:"Pay with D17",s1:"Exact amount:",s2:"Send it through D17 to the number",s3:"Write this reference in the transfer message:",s4:"Then tap “I have paid”. We check our D17 app and send you your code, to enter below.",tg:"I have paid (Telegram)",mail:"I have paid (e-mail)",copy:"Copy",ok:"Copied ✓",warn:"We never ask for your PIN or card details. No code is sent before the payment has really arrived: a screenshot is not enough. Pay only to the number shown here, on the official site.",msg:"I paid with D17. Reference: ",cur:"TND",hold:"Account holder:"},
-ar:{btn:"ادفع عبر D17",title:"الدفع عبر D17",s1:"المبلغ بالضبط:",s2:"أرسله عبر D17 إلى الرقم",s3:"اكتب هذا المرجع في رسالة التحويل:",s4:"ثم اضغط «دفعت». نتحقق في تطبيق D17 لدينا ونرسل لك الرمز لتدخله بالأسفل.",tg:"دفعت (تيليغرام)",mail:"دفعت (بريد إلكتروني)",copy:"نسخ",ok:"تم النسخ ✓",warn:"لا نطلب أبدًا رمز PIN ولا بيانات بطاقتك. لا يُرسل أي رمز قبل وصول الدفعة فعلًا: لقطة الشاشة لا تكفي. ادفع فقط إلى الرقم المعروض هنا في الموقع الرسمي.",msg:"دفعت عبر D17. المرجع: ",cur:"د.ت",hold:"صاحب الحساب:"}
+fr:{btn:"Payer par D17",title:"Payer avec D17",s1:"Montant exact :",s2:"Envoyez-le par D17 au numéro",s3:"Écrivez cette référence dans le message du transfert :",s4:"Puis appuyez sur « J'ai payé ». Nous vérifions dans notre application D17 et vous envoyons votre code, à saisir ci-dessous.",tg:"J'ai payé (Telegram)",mail:"J'ai payé (e-mail)",copy:"Copier",ok:"Copié ✓",warn:"Nous ne demandons jamais votre code PIN ni les données de votre carte. Aucun code n'est envoyé avant la réception réelle du paiement : une capture d'écran ne suffit pas. Payez uniquement au numéro affiché ici, sur le site officiel.",msg:"J'ai payé par D17. Référence : ",cur:"DT",hold:"Titulaire :",lt:"Paiement par D17",ln:"L'agence vous indique le montant exact. Payez alors par D17 au numéro ci-dessous, en écrivant cette référence dans le message du transfert. Le document vous est envoyé après réception du paiement.",lw:"Ne payez qu'au numéro affiché ici, et jamais avant d'avoir reçu le montant de l'agence. Nous ne demandons jamais votre code PIN."},
+en:{btn:"Pay with D17",title:"Pay with D17",s1:"Exact amount:",s2:"Send it through D17 to the number",s3:"Write this reference in the transfer message:",s4:"Then tap “I have paid”. We check our D17 app and send you your code, to enter below.",tg:"I have paid (Telegram)",mail:"I have paid (e-mail)",copy:"Copy",ok:"Copied ✓",warn:"We never ask for your PIN or card details. No code is sent before the payment has really arrived: a screenshot is not enough. Pay only to the number shown here, on the official site.",msg:"I paid with D17. Reference: ",cur:"TND",hold:"Account holder:",lt:"Payment with D17",ln:"The agency tells you the exact amount. Then pay with D17 to the number below, writing this reference in the transfer message. Your document is sent once the payment has arrived.",lw:"Pay only to the number shown here, and never before the agency has given you the amount. We never ask for your PIN."},
+ar:{btn:"ادفع عبر D17",title:"الدفع عبر D17",s1:"المبلغ بالضبط:",s2:"أرسله عبر D17 إلى الرقم",s3:"اكتب هذا المرجع في رسالة التحويل:",s4:"ثم اضغط «دفعت». نتحقق في تطبيق D17 لدينا ونرسل لك الرمز لتدخله بالأسفل.",tg:"دفعت (تيليغرام)",mail:"دفعت (بريد إلكتروني)",copy:"نسخ",ok:"تم النسخ ✓",warn:"لا نطلب أبدًا رمز PIN ولا بيانات بطاقتك. لا يُرسل أي رمز قبل وصول الدفعة فعلًا: لقطة الشاشة لا تكفي. ادفع فقط إلى الرقم المعروض هنا في الموقع الرسمي.",msg:"دفعت عبر D17. المرجع: ",cur:"د.ت",hold:"صاحب الحساب:",lt:"الدفع عبر D17",ln:"ستخبرك الوكالة بالمبلغ بالضبط. ادفع بعدها عبر D17 إلى الرقم أدناه واكتب هذا المرجع في رسالة التحويل. يُرسل لك المستند بعد وصول الدفعة.",lw:"ادفع فقط إلى الرقم المعروض هنا، وليس قبل أن تعطيك الوكالة المبلغ. لا نطلب أبدًا رمز PIN."}
 };
 function d17Ref(k){
   var key="vcref"+k,r="";
@@ -417,6 +417,11 @@ function d17Ref(k){
     try{sessionStorage.setItem(key,r)}catch(x){}
   }
   return r;
+}
+function d17Later(){
+  if(!D17.num)return "";
+  var x=D17X[S.lang]||D17X.fr,r=d17Ref("req");
+  return '<div class="d17" role="region" aria-label="'+x.lt+'"><b class="d17-t">'+x.lt+'</b><p>'+x.ln+'</p><p><b dir="ltr">'+D17.num+'</b>'+(D17.name?' ('+x.hold+' '+D17.name+')':'')+' <button type="button" class="d17-c" data-d17c="'+D17.num+'">'+x.copy+'</button></p><p><b dir="ltr" class="d17-ref">'+r+'</b> <button type="button" class="d17-c" data-d17c="'+r+'">'+x.copy+'</button></p><p class="ag-note">'+x.lw+'</p></div>';
 }
 function d17Html(k,amt){
   var L=S.lang,x=D17X[L]||D17X.fr,on=D17O===k;
@@ -1089,6 +1094,7 @@ function doneHtml(t){
   if(F.mode==="sent"){
     h+='<div class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+esc(R.okT(a.name))+'</b><p>'+esc(R.okTxt(R.ch[F.chan],contactFor()))+'</p></div>'
      +'<ol class="nxt">'+NS[L].map(function(x,i){return '<li class="'+(i===0?'dn':'')+'"><i>'+(i===0?'✓':i+1)+'</i><span>'+x+'</span></li>'}).join("")+'</ol>';
+    h+=d17Later();
   }else{
     var enc=encodeURIComponent(txt),b='';
     if(a.email)b+='<a class="pay wide" href="mailto:'+a.email+'?subject='+encodeURIComponent("Visa Checker : "+SVCFR[S.need])+'&body='+enc+'">'+R.bMail+'</a>';
