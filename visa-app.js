@@ -413,7 +413,7 @@ function d17Ref(k){
   if(!r){
     var n;
     try{var a=new Uint32Array(1);crypto.getRandomValues(a);n=a[0]%9000+1000}catch(x){n=Math.floor(Math.random()*9000)+1000}
-    r="VC-"+(k==="adv"?"A":"P")+"-"+n;
+    r="VC-"+(k==="adv"?"A":k==="req"?"R":"P")+"-"+n;
     try{sessionStorage.setItem(key,r)}catch(x){}
   }
   return r;
@@ -1067,7 +1067,16 @@ function reqText(){
   l.push("Canal pour le paiement et le document : "+CHFR[F.chan]);
   /* Lien de réponse en un clic pour l'agence, selon le canal choisi par le client */
   var reply=F.chan==="whatsapp"&&F.phone?"https://wa.me/"+F.phone.replace(/[^\d]/g,""):F.chan==="telegram"&&F.tg?"https://t.me/"+F.tg:F.chan==="email"&&F.mail?"mailto:"+F.mail:"";
-  if(reply)l.push("Répondre au client (lien de paiement) : "+reply);
+  if(D17.num){
+    /* Paiement D17 : message prêt à envoyer au client, avec le numéro et une référence */
+    var rf=d17Ref("req"),pm="Bonjour, pour payer par D17 envoyez le montant au "+D17.num+(D17.name?" ("+D17.name+")":"")+" avec la référence "+rf+" dans le message. Merci.";
+    l.push("Paiement D17 (à demander au client) : "+D17.num+(D17.name?" ("+D17.name+")":"")+", référence "+rf);
+    if(reply){
+      var q=encodeURIComponent(pm);
+      reply+=reply.indexOf("mailto:")===0?"?subject="+encodeURIComponent("Paiement D17 "+rf)+"&body="+q:"?text="+q;
+    }
+  }
+  if(reply)l.push("Répondre au client "+(D17.num?"(message de paiement D17 prêt)":"(lien de paiement)")+" : "+reply);
   return l.join("\n");
 }
 function contactFor(){return RQ.chan==="telegram"?"@"+RQ.tg:RQ.chan==="email"?RQ.mail:RQ.phone}
