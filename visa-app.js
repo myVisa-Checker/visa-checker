@@ -418,10 +418,15 @@ function d17Ref(k){
   }
   return r;
 }
-function d17Later(){
-  if(!D17.num)return "";
-  var x=D17X[S.lang]||D17X.fr,r=d17Ref("req");
-  return '<div class="d17" role="region" aria-label="'+x.lt+'"><b class="d17-t">'+x.lt+'</b><p>'+x.ln+'</p><p><b dir="ltr">'+D17.num+'</b>'+(D17.name?' ('+x.hold+' '+D17.name+')':'')+' <button type="button" class="d17-c" data-d17c="'+D17.num+'">'+x.copy+'</button></p><p><b dir="ltr" class="d17-ref">'+r+'</b> <button type="button" class="d17-c" data-d17c="'+r+'">'+x.copy+'</button></p><p class="ag-note">'+x.lw+'</p></div>';
+var N48={fr:"Modification possible pendant 48 h maximum après la demande, uniquement sur les dates. Le nom et le prénom ne sont jamais modifiables. Passé ce délai, faites une nouvelle demande.",en:"Changes are possible for 48 hours maximum after your request, dates only. First and last name can never be changed. After that, make a new request.",ar:"يمكن التعديل خلال 48 ساعة كحد أقصى بعد الطلب، وللتواريخ فقط. لا يمكن أبدًا تعديل الاسم واللقب. بعد هذه المدة قدّم طلبًا جديدًا."};
+function n48(){return '<p class="n48" role="note">'+(N48[S.lang]||N48.fr)+'</p>'}
+function d17Of(a){return {num:(a&&a.d17)||D17.num,name:(a&&a.d17name)||D17.name}}
+function d17Later(a){
+  var dx=d17Of(a);
+  if(!dx.num)return "";
+  var x=D17X[S.lang]||D17X.fr,r=d17Ref("req"),m=encodeURIComponent(x.msg+r);
+  return '<div class="d17" role="region" aria-label="'+x.lt+'"><b class="d17-t">'+x.lt+'</b><p>'+x.ln+'</p><p><b dir="ltr">'+dx.num+'</b>'+(dx.name?' ('+x.hold+' '+dx.name+')':'')+' <button type="button" class="d17-c" data-d17c="'+dx.num+'">'+x.copy+'</button></p><p><b dir="ltr" class="d17-ref">'+r+'</b> <button type="button" class="d17-c" data-d17c="'+r+'">'+x.copy+'</button></p>'
+   +'<a class="pay wide" href="mailto:'+D17.mail+'?subject='+encodeURIComponent("D17 "+r)+'&body='+m+'">'+x.mail+'</a><p class="ag-note">'+x.lw+'</p></div>';
 }
 function d17Html(k,amt){
   var L=S.lang,x=D17X[L]||D17X.fr,on=D17O===k;
@@ -1006,7 +1011,7 @@ function formHtml(t){
    +'<div class="q"><span class="q-label">'+R.chan+'</span><div class="chips chgrid" role="group" aria-label="'+R.chan+'">'+["email","whatsapp","telegram"].map(function(c){return '<button type="button" class="chip" data-chan="'+c+'" aria-pressed="'+(RQ.chan===c)+'">'+R.ch[c]+'</button>'}).join("")+'</div></div>'
    +'<div class="field"><label class="item"><input type="checkbox" data-f="consent" id="rq-consent" aria-required="true" aria-describedby="fe-consent" aria-invalid="'+(fErr("consent")?"true":"false")+'"'+(RQ.consent?' checked':'')+'><span class="i-body"><span class="i-title">'+R.consent+'</span></span></label><span class="fe" id="fe-consent">'+esc(fErr("consent"))+'</span></div>'
    +'<div class="hp" aria-hidden="true"><label for="rq-website">Website</label><input type="text" id="rq-website" name="website" tabindex="-1" autocomplete="off"></div>'+'<p class="ag-note">'+R.payNote+'</p><span class="fe" id="fe-form" role="alert"></span>'
-   +'<button type="submit" class="pay wide" id="rqsend">'+R.send+'</button></form></div>';
+   +n48()+'<button type="submit" class="pay wide" id="rqsend">'+R.send+'</button></form></div>';
 }
 
 /* ===== Villes de destination par pays du visa (la ville doit appartenir au pays choisi). Variantes séparées par « | » ; la première s'affiche.
@@ -1072,16 +1077,18 @@ function reqText(){
   l.push("Canal pour le paiement et le document : "+CHFR[F.chan]);
   /* Lien de réponse en un clic pour l'agence, selon le canal choisi par le client */
   var reply=F.chan==="whatsapp"&&F.phone?"https://wa.me/"+F.phone.replace(/[^\d]/g,""):F.chan==="telegram"&&F.tg?"https://t.me/"+F.tg:F.chan==="email"&&F.mail?"mailto:"+F.mail:"";
-  if(D17.num){
+  var dx=d17Of(a);
+  if(dx.num){
     /* Paiement D17 : message prêt à envoyer au client, avec le numéro et une référence */
-    var rf=d17Ref("req"),pm="Bonjour, pour payer par D17 envoyez le montant au "+D17.num+(D17.name?" ("+D17.name+")":"")+" avec la référence "+rf+" dans le message. Merci.";
-    l.push("Paiement D17 (à demander au client) : "+D17.num+(D17.name?" ("+D17.name+")":"")+", référence "+rf);
+    var rf=d17Ref("req"),pm="Bonjour, pour payer par D17 envoyez le montant au "+dx.num+(dx.name?" ("+dx.name+")":"")+" avec la référence "+rf+" dans le message. Merci.";
+    l.push("Paiement D17 (à demander au client) : "+dx.num+(dx.name?" ("+dx.name+")":"")+", référence "+rf);
     if(reply){
       var q=encodeURIComponent(pm);
       reply+=reply.indexOf("mailto:")===0?"?subject="+encodeURIComponent("Paiement D17 "+rf)+"&body="+q:"?text="+q;
     }
   }
-  if(reply)l.push("Répondre au client "+(D17.num?"(message de paiement D17 prêt)":"(lien de paiement)")+" : "+reply);
+  l.push("Modification : 48 h maximum, dates uniquement, jamais le nom ni le prénom.");
+  if(reply)l.push("Répondre au client "+(dx.num?"(message de paiement D17 prêt)":"(lien de paiement)")+" : "+reply);
   return l.join("\n");
 }
 function contactFor(){return RQ.chan==="telegram"?"@"+RQ.tg:RQ.chan==="email"?RQ.mail:RQ.phone}
@@ -1094,7 +1101,7 @@ function doneHtml(t){
   if(F.mode==="sent"){
     h+='<div class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+esc(R.okT(a.name))+'</b><p>'+esc(R.okTxt(R.ch[F.chan],contactFor()))+'</p></div>'
      +'<ol class="nxt">'+NS[L].map(function(x,i){return '<li class="'+(i===0?'dn':'')+'"><i>'+(i===0?'✓':i+1)+'</i><span>'+x+'</span></li>'}).join("")+'</ol>';
-    h+=d17Later();
+    h+=d17Later(a);
   }else{
     var enc=encodeURIComponent(txt),b='';
     if(a.email)b+='<a class="pay wide" href="mailto:'+a.email+'?subject='+encodeURIComponent("Visa Checker : "+SVCFR[S.need])+'&body='+enc+'">'+R.bMail+'</a>';
@@ -1102,6 +1109,7 @@ function doneHtml(t){
     if(a.telegram)b+='<a class="pay wide alt" data-tgcopy="1" href="https://t.me/'+a.telegram+'" target="_blank" rel="noopener noreferrer">'+R.bTg+'</a><p class="rf-sub">'+R.tgHint+'</p>';
     h+='<div class="book"><b>'+R.manT+'</b><p>'+(F.failed?R.failTxt:R.manTxt)+'</p></div><div class="act">'+b+'</div>';
   }
+  h+=n48();
   h+='<div class="recap"><h2>'+R.recap+'</h2><dl>'+rows.map(function(r){return '<div><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>'}).join("")+'</dl></div>';
   return h;
 }
