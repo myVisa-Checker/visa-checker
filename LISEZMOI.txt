@@ -1,31 +1,24 @@
-VISA CHECKER - mise à jour e-Visa (31 octobre 2026)
+VISA CHECKER - mise à jour v3 : nouveau logo + icônes de continents (31 octobre 2026)
 
-Ce dossier contient 3 fichiers. Remplace-les dans ton dépôt GitHub "visa-checker"
-(même nom, même endroit : à la racine, à côté de index.html) :
+Remplace dans ton dépôt GitHub "visa-checker" :
 
-  1. visa-app.js   (le principal : 49 nouveaux pays e-Visa, drapeaux, icônes)
-  2. sw.js         (nouveau numéro de version pour que les visiteurs reçoivent la mise à jour)
-  3. version.json  (même numéro de version : 2026.10.30.2200)
+  À LA RACINE (à côté de l'ancien index.html) :
+    1. index.html
+    2. visa-app.js
+    3. sw.js
+    4. version.json
+  DANS LE DOSSIER icons/ (remplace les 4 images du même nom) :
+    5. icons/icon-192.png
+    6. icons/icon-512.png
+    7. icons/maskable-512.png
+    8. icons/apple-touch-icon.png
 
-index.html n'a PAS changé : ne le touche pas.
+Sur GitHub :
+  - Pour la racine : "Add file" > "Upload files", glisse les 4 fichiers, "Commit changes".
+  - Pour icons/ : ouvre le dossier icons, "Add file" > "Upload files", glisse les 4 images, "Commit changes".
+  - Attends 1 à 2 minutes, puis Ctrl + F5 sur le site.
+  - Sur téléphone, l'icône de l'appli installée peut mettre un peu de temps à changer.
 
-Comment faire sur GitHub :
-  - Ouvre le dépôt, clique sur "Add file" puis "Upload files".
-  - Glisse les 3 fichiers (ils remplacent les anciens du même nom).
-  - Clique sur "Commit changes". Attends 1 à 2 minutes.
-  - Ouvre le site et fais Ctrl + F5 (ou ferme et rouvre l'appli) pour voir le résultat.
-
-Ce qui est ajouté :
-  - Afrique : 26 pays. Amériques et Caraïbes : 11 pays. Asie : 9 pays de plus (19 au total).
-    Europe : 2 pays de plus (6 au total). Océanie : nouveau continent (Papouasie-Nouvelle-Guinée).
-  - Textes en français, anglais et arabe, drapeaux intégrés, icônes de continents.
-  - 15 pays ont un lien officiel direct (Éthiopie, Ouganda, Tanzanie, Botswana, Togo,
-    Zimbabwe, Mozambique, Zambie, Rwanda, Cambodge, Indonésie, Laos, Népal, Kazakhstan,
-    Moldavie). Les autres ont un bouton
-    "Chercher le portail officiel" tant que l'adresse n'est pas vérifiée.
-  - Pour ajouter une adresse officielle plus tard : dans visa-app.js, cherche le pays
-    (ex. E("ao","evisa",null,null,) et remplace les deux "null" par "https://adresse"
-    et "adresse" (sans https://).
-
-Si quelque chose ne va pas : dans GitHub, ouvre le fichier, clique sur "History" et
-restaure la version précédente.
+Contenu : nouveau logo (cercle orange, arc, avion, coche) dans l'en-tête et l'onglet du navigateur ;
+icônes de continents pleines, sur tuiles dégradées orange ; tout le reste du site est inchangé.
+Retour arrière : GitHub > fichier > History > restaurer.
