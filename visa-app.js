@@ -400,7 +400,7 @@ var UNLOCK_TIMEOUT_MS=8000;
 /* ===== Paiement manuel D17 (sans compte marchand) =====
    D17.num : VOTRE numéro D17 ; D17.name : votre nom tel qu'il apparaît dans D17.
    Tant que D17.num est vide, le bouton reste « bientôt » : aucun paiement n'est proposé. */
-var D17={num:"",name:"",tg:"rabehtlili",mail:"visacheckercontact@gmail.com"};
+var D17={num:"+216 58 986 980",name:"RT",tg:"rabehtlili",mail:"visacheckercontact@gmail.com"};
 var D17O="";
 var D17X={
 fr:{btn:"Payer par D17",title:"Payer avec D17",s1:"Montant exact :",s2:"Envoyez-le par D17 au numéro",s3:"Écrivez cette référence dans le message du transfert :",s4:"Puis appuyez sur « J'ai payé ». Nous vérifions dans notre application D17 et vous envoyons votre code, à saisir ci-dessous.",tg:"J'ai payé (Telegram)",mail:"J'ai payé (e-mail)",copy:"Copier",ok:"Copié ✓",warn:"Nous ne demandons jamais votre code PIN ni les données de votre carte. Aucun code n'est envoyé avant la réception réelle du paiement : une capture d'écran ne suffit pas. Payez uniquement au numéro affiché ici, sur le site officiel.",msg:"J'ai payé par D17. Référence : ",cur:"DT",hold:"Titulaire :"},
