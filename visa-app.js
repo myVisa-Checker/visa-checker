@@ -419,12 +419,12 @@ function d17Ref(k){
   return r;
 }
 var N48={fr:"Modification possible pendant 48 h maximum après la demande, uniquement sur les dates. Le nom et le prénom ne sont jamais modifiables. Passé ce délai, faites une nouvelle demande.",en:"Changes are possible for 48 hours maximum after your request, dates only. First and last name can never be changed. After that, make a new request.",ar:"يمكن التعديل خلال 48 ساعة كحد أقصى بعد الطلب، وللتواريخ فقط. لا يمكن أبدًا تعديل الاسم واللقب. بعد هذه المدة قدّم طلبًا جديدًا."};
-function n48(){return '<p class="n48" role="note">'+(N48[S.lang]||N48.fr)+'</p>'}
+function n48(l){l=l||S.lang;return '<p class="n48" role="note">'+(N48[l]||N48.fr)+'</p>'}
 function d17Of(a){return {num:(a&&a.d17)||D17.num,name:(a&&a.d17name)||D17.name}}
 function d17Later(a){
   var dx=d17Of(a);
   if(!dx.num)return "";
-  var x=D17X[S.lang]||D17X.fr,r=d17Ref("req"),m=encodeURIComponent(x.msg+r);
+  var x=D17X[S.lang]||D17X.fr,r=ordRef(RQ.rid),m=encodeURIComponent(x.msg+r);
   return '<div class="d17" role="region" aria-label="'+x.lt+'"><b class="d17-t">'+x.lt+'</b><p>'+x.ln+'</p><p><b dir="ltr">'+dx.num+'</b>'+(dx.name?' ('+x.hold+' '+dx.name+')':'')+' <button type="button" class="d17-c" data-d17c="'+dx.num+'">'+x.copy+'</button></p><p><b dir="ltr" class="d17-ref">'+r+'</b> <button type="button" class="d17-c" data-d17c="'+r+'">'+x.copy+'</button></p>'
    +'<a class="pay wide" href="mailto:'+D17.mail+'?subject='+encodeURIComponent("D17 "+r)+'&body='+m+'">'+x.mail+'</a><p class="ag-note">'+x.lw+'</p></div>';
 }
@@ -450,6 +450,89 @@ document.addEventListener("click",function(e){
   var d=e.target.closest&&e.target.closest("[data-d17]");
   if(d){D17O=D17O===d.dataset.d17?"":d.dataset.d17;render()}
 });
+
+/* ===== Page « Ma demande » : liens du mail client (Confirmer et payer / Modifier mes dates) =====
+   Le Worker garde la demande et vérifie le délai de 48 h : cette page ne fait qu'afficher et envoyer. */
+var ORDER_URL=UNLOCK_URL.replace(/\/unlock$/,"/order");
+function ordRef(id){return "VC-"+String(id||"").replace(/[^A-Za-z0-9]/g,"").slice(0,6).toUpperCase()}
+var OV={id:"",k:"",L:"fr",od:null};
+var OVX={
+fr:{loading:"Chargement…",bad:"Lien invalide ou expiré. Faites une nouvelle demande.",payT:"Confirmer et payer",editT:"Modifier mes dates",recap:"Votre demande",left:function(h){return "Il vous reste environ "+h+" h pour modifier vos dates."},expired:"Les 48 h sont dépassées : la modification n'est plus possible. Faites une nouvelle demande.",newReq:"Faire une nouvelle demande",save:"Enregistrer mes dates",saving:"Envoi…",saved:"Dates modifiées. L'agence a été prévenue.",err:"Dates invalides ou envoi impossible. Vérifiez puis réessayez.",goPay:"Continuer vers le paiement",goEdit:"Modifier mes dates",noPay:"L'agence vous communique ses coordonnées de paiement.",locked:"Le nom et le prénom ne sont pas modifiables.",check:"Vérifiez vos informations, puis payez l'agence."},
+en:{loading:"Loading…",bad:"Invalid or expired link. Please make a new request.",payT:"Confirm and pay",editT:"Change my dates",recap:"Your request",left:function(h){return "You have about "+h+" h left to change your dates."},expired:"The 48 hours have passed: changes are no longer possible. Please make a new request.",newReq:"Make a new request",save:"Save my dates",saving:"Sending…",saved:"Dates changed. The agency has been informed.",err:"Invalid dates or sending failed. Check and try again.",goPay:"Continue to payment",goEdit:"Change my dates",noPay:"The agency will send you its payment details.",locked:"First and last name cannot be changed.",check:"Check your details, then pay the agency."},
+ar:{loading:"جارٍ التحميل…",bad:"رابط غير صالح أو منتهي. قدّم طلبًا جديدًا.",payT:"تأكيد ودفع",editT:"تعديل التواريخ",recap:"طلبك",left:function(h){return "بقي لك حوالي "+h+" ساعة لتعديل التواريخ."},expired:"انقضت الـ 48 ساعة: لم يعد التعديل ممكنًا. قدّم طلبًا جديدًا.",newReq:"تقديم طلب جديد",save:"حفظ التواريخ",saving:"جارٍ الإرسال…",saved:"تم تعديل التواريخ وإبلاغ الوكالة.",err:"تواريخ غير صالحة أو تعذّر الإرسال. تحقق وأعد المحاولة.",goPay:"المتابعة إلى الدفع",goEdit:"تعديل التواريخ",noPay:"ستزودك الوكالة بمعلومات الدفع.",locked:"لا يمكن تعديل الاسم واللقب.",check:"تحقق من بياناتك ثم ادفع للوكالة."}
+};
+function ordShell(L,inner){
+  var o=$("ordv");
+  if(!o){o=document.createElement("div");o.id="ordv";o.className="ordv";document.body.appendChild(o)}
+  o.setAttribute("dir",L==="ar"?"rtl":"ltr");o.setAttribute("lang",L);
+  o.innerHTML='<div class="ordv-in">'+inner+'</div>';o.scrollTop=0;
+  document.documentElement.classList.add("modal-open");
+}
+function ordClose(){
+  var o=$("ordv");if(o&&o.parentNode)o.parentNode.removeChild(o);
+  document.documentElement.classList.remove("modal-open");
+  try{history.replaceState(null,"",location.pathname)}catch(e){}
+}
+function ordRecap(L,od){
+  var R=RT[L]||RT.fr,X=OVX[L],hot=od.svc==="hotel",sh=function(x){return String(x).replace(/\s*\(.*?\)/g,"")};
+  var rows=[[(R.svc&&R.svc[od.svc])||od.svc,od.dest+(od.city?" · "+od.city:"")],[sh(R.ln),od.ln],[sh(R.fn),od.fn],[sh(hot?R.d1h:R.d1f),fmtD(od.d1)],[sh(hot?R.d2h:R.d2f),od.d2?fmtD(od.d2):"-"]];
+  return '<div class="recap"><h2>'+X.recap+'</h2><dl>'+rows.map(function(r){return '<div><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>'}).join("")+'</dl></div>';
+}
+function ordPayView(){
+  var L=OV.L,X=OVX[L],x=D17X[L]||D17X.fr,od=OV.od,dx=d17Of(findAgent(od.ag)),r=od.ref,m=encodeURIComponent(x.msg+r);
+  var h='<h1>'+X.payT+'</h1><p class="rf-sub">'+X.check+'</p>'+ordRecap(L,od)+n48(L);
+  if(dx.num){
+    h+='<div class="d17" role="region" aria-label="'+x.lt+'"><b class="d17-t">'+x.lt+'</b><p>'+x.ln+'</p><p><b dir="ltr">'+esc(dx.num)+'</b>'+(dx.name?' ('+x.hold+' '+esc(dx.name)+')':'')+' <button type="button" class="d17-c" data-d17c="'+esc(dx.num)+'">'+x.copy+'</button></p><p><b dir="ltr" class="d17-ref">'+esc(r)+'</b> <button type="button" class="d17-c" data-d17c="'+esc(r)+'">'+x.copy+'</button></p>'
+     +'<a class="pay wide" href="mailto:'+D17.mail+'?subject='+encodeURIComponent("D17 "+r)+'&body='+m+'">'+x.mail+'</a><p class="ag-note">'+x.lw+'</p></div>';
+  }else h+='<p class="ag-note">'+X.noPay+'</p>';
+  if(od.canEdit)h+='<button type="button" class="reset wide" data-ovedit>'+X.goEdit+'</button>';
+  return ordShell(L,h);
+}
+function ordEditView(msg){
+  var L=OV.L,X=OVX[L],R=RT[L]||RT.fr,od=OV.od,hot=od.svc==="hotel",sh=function(x){return String(x).replace(/\s*\(.*?\)/g,"")};
+  if(!od.canEdit)return ordShell(L,'<h1>'+X.editT+'</h1><p class="n48" role="alert">'+X.expired+'</p>'+ordRecap(L,od)+'<button type="button" class="pay wide" data-ovnew>'+X.newReq+'</button>');
+  var h='<h1>'+X.editT+'</h1><p class="rf-sub">'+X.left(od.hoursLeft)+'</p>'+ordRecap(L,od)+'<p class="ag-note">'+X.locked+'</p>'+n48(L)
+   +'<div class="f-row"><div class="field"><label class="q-label" for="ov-d1">'+sh(hot?R.d1h:R.d1f)+'</label><input class="sel" id="ov-d1" type="date" min="'+today()+'" value="'+esc(od.d1)+'"></div>'
+   +(od.d2?'<div class="field"><label class="q-label" for="ov-d2">'+sh(hot?R.d2h:R.d2f)+'</label><input class="sel" id="ov-d2" type="date" min="'+today()+'" value="'+esc(od.d2)+'"></div>':'')+'</div>'
+   +'<span class="fe" id="ov-err" role="alert">'+(msg||"")+'</span><button type="button" class="pay wide" id="ov-save" data-ovsave>'+X.save+'</button>'
+   +'<button type="button" class="reset wide" data-ovpay>'+X.goPay+'</button>';
+  return ordShell(L,h);
+}
+function ordLoad(a){
+  OV.L=OV.L||S.lang;
+  fetch(ORDER_URL+"?id="+encodeURIComponent(OV.id)+"&k="+encodeURIComponent(OV.k),{cache:"no-store"}).then(function(r){return r.json().catch(function(){return {}})}).then(function(j){
+    if(!j||!j.ok||!j.order){ordShell(OV.L,'<h1>Visa Checker</h1><p class="n48" role="alert">'+OVX[OV.L].bad+'</p><button type="button" class="pay wide" data-ovnew>'+OVX[OV.L].newReq+'</button>');return}
+    OV.od=j.order;if(OVX[j.order.lang])OV.L=j.order.lang;
+    if(a==="edit")ordEditView();else ordPayView();
+  },function(){ordShell(OV.L,'<p class="n48" role="alert">'+OVX[OV.L].bad+'</p><button type="button" class="pay wide" data-ovnew>'+OVX[OV.L].newReq+'</button>')});
+}
+function orderInit(){
+  var q;try{q=new URLSearchParams(location.search)}catch(e){return}
+  var id=q.get("order"),k=q.get("k");
+  if(!id||!k||!/^[A-Za-z0-9_-]{8,64}$/.test(id)||!/^[a-f0-9]{16,64}$/.test(k))return;
+  OV.id=id;OV.k=k;OV.L=S.lang;
+  ordShell(OV.L,'<p>'+OVX[OV.L].loading+'</p>');
+  ordLoad(q.get("a")==="edit"?"edit":"pay");
+}
+document.addEventListener("click",function(e){
+  var t=e.target.closest&&e.target.closest("[data-ovnew],[data-ovedit],[data-ovpay],[data-ovsave]");
+  if(!t)return;
+  var X=OVX[OV.L];
+  if(t.hasAttribute("data-ovnew")){ordClose();return}
+  if(t.hasAttribute("data-ovedit")){ordEditView();return}
+  if(t.hasAttribute("data-ovpay")){ordPayView();return}
+  var d1=$("ov-d1"),d2=$("ov-d2"),er=$("ov-err");
+  t.disabled=true;t.textContent=X.saving;
+  fetch(ORDER_URL+"/edit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:OV.id,k:OV.k,date1:d1?d1.value:"",date2:d2?d2.value:""})})
+   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {s:r.status,j:j}})})
+   .then(function(x){
+     if(x.s===410){OV.od.canEdit=false;ordEditView();return}
+     if(x.j&&x.j.ok){OV.od.d1=x.j.d1;OV.od.d2=x.j.d2;ordShell(OV.L,'<h1>'+X.editT+'</h1><p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.saved+'</b></p>'+ordRecap(OV.L,OV.od)+'<button type="button" class="pay wide" data-ovpay>'+X.goPay+'</button>');return}
+     ordEditView(X.err);
+   },function(){ordEditView(X.err)});
+});
+setTimeout(orderInit,0);
+
 var UNLOCK_DEV_MODE=false;
 var UNLOCK_DEV_HASHES={advisors:[],pack:[]};
 var UNX={
@@ -1080,7 +1163,7 @@ function reqText(){
   var dx=d17Of(a);
   if(dx.num){
     /* Paiement D17 : message prêt à envoyer au client, avec le numéro et une référence */
-    var rf=d17Ref("req"),pm="Bonjour, pour payer par D17 envoyez le montant au "+dx.num+(dx.name?" ("+dx.name+")":"")+" avec la référence "+rf+" dans le message. Merci.";
+    var rf=ordRef(RQ.rid),pm="Bonjour, pour payer par D17 envoyez le montant au "+dx.num+(dx.name?" ("+dx.name+")":"")+" avec la référence "+rf+" dans le message. Merci.";
     l.push("Paiement D17 (à demander au client) : "+dx.num+(dx.name?" ("+dx.name+")":"")+", référence "+rf);
     if(reply){
       var q=encodeURIComponent(pm);
@@ -1191,7 +1274,8 @@ function submitReq(){
   var hp=$("rq-website");if(hp&&hp.value){fin("sent");return}              /* champ piège rempli par un robot : on fait semblant */
   try{var last=+sessionStorage.getItem("vc-last-send")||0;if(Date.now()-last<REQUEST_COOLDOWN_MS){if(form)form.textContent=X.dup;return}}catch(e){}
   if(!REQUEST_URL){fin("manual");return}
-  var payload={requestId:newId(),service:S.need,destination:destName(),lastName:c.ln,firstName:c.fn,date1:F.d1,date2:F.d2,city:c.city,phone:c.phone,telegram:c.tg,email:c.mail,channel:F.chan,lang:S.lang,sentAt:new Date().toISOString(),
+  F.rid=newId();
+  var payload={requestId:F.rid,service:S.need,destination:destName(),lastName:c.ln,firstName:c.fn,date1:F.d1,date2:F.d2,city:c.city,phone:c.phone,telegram:c.tg,email:c.mail,channel:F.chan,lang:S.lang,sentAt:new Date().toISOString(),
     agency:{id:a.id,name:a.name,email:a.email||"",telegram:a.telegram||"",whatsapp:a.whatsapp||""},message:reqText()};
   var btn=$("rqsend");RQ.sending=true;btn.disabled=true;btn.setAttribute("aria-busy","true");btn.textContent=R.sending;
   postRequest(payload).then(function(r){

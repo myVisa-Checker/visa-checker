@@ -1,5 +1,6 @@
-VISA CHECKER v4 : continents en icônes rondes disposées en cercle.
+VISA CHECKER v5 : liens « Confirmer et payer » / « Modifier mes dates » (48 h).
 
-Remplace à la racine du dépôt GitHub (Add file > Upload files > Commit changes) :
-  visa-app.js, index.html, sw.js, version.json
-Les images du dossier icons/ ne changent pas. Ensuite Ctrl + F5 sur le site.
+1) Cloudflare > Workers > visa-proxy > Edit code : remplacer TOUT par le contenu de worker.js > Deploy.
+   (la liaison KV et les secrets existants ne changent pas)
+2) GitHub (Add file > Upload files > Commit) : visa-app.js, index.html, sw.js, version.json. Puis Ctrl+F5.
+3) Make : mettre à jour le mail du client (voir les explications dans le chat).
