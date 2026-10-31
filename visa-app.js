@@ -1900,10 +1900,12 @@ function evListHtml(){
   var x=EVT[S.lang],L=S.lang,X=EVCX[L];
   var h='<div class="evwrap"><div class="book"><p>'+x.listWarn+'</p></div>';
   if(!evk||!EVCN[L][evk]){
-    h+='<p class="ag-sub">'+X.pick+'</p><div class="toolcards">';
-    ["eu","af","ame","as","oc"].forEach(function(k){
+    var SH={fr:{eu:"Europe",af:"Afrique",ame:"Amériques",as:"Asie",oc:"Océanie"},en:{eu:"Europe",af:"Africa",ame:"Americas",as:"Asia",oc:"Oceania"},ar:{eu:"أوروبا",af:"أفريقيا",ame:"الأمريكتان",as:"آسيا",oc:"أوقيانوسيا"}};
+    var tot=EV.length;
+    h+='<p class="ag-sub c">'+X.pick+'</p><div class="cring" role="group" aria-label="'+x.cardTitle+'"><div class="chub"><b>'+x.cardTitle+'</b><small>'+tot+' '+X.n[tot>1?1:0]+'</small></div>';
+    ["eu","af","ame","as","oc"].forEach(function(k,i){
       var n=EV.filter(function(c){return EVCONT[c.id]===k}).length;
-      h+='<button type="button" class="evcard toolcard" data-evk="'+k+'"><span class="evico"><svg viewBox="0 0 24 24" aria-hidden="true">'+EVCI[k]+'</svg></span><span class="evtxt"><b>'+EVCN[L][k]+'</b><span>'+(n?n+" "+X.n[n>1?1:0]:"—")+'</span></span>'+EVARROW+'</button>';
+      h+='<button type="button" class="cring-b" data-evk="'+k+'" data-k="'+k+'" style="--i:'+i+'" aria-label="'+EVCN[L][k]+(n?', '+n+' '+X.n[n>1?1:0]:'')+'"><svg viewBox="0 0 24 24" aria-hidden="true">'+EVCI[k]+'</svg><span>'+SH[L][k]+'</span>'+(n?'<i class="cbadge">'+n+'</i>':'')+'</button>';
     });
     return h+'</div><p class="ag-note">'+x.notListed+'</p></div>';
   }

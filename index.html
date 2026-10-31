@@ -714,6 +714,21 @@ footer .reset{background:#fff;color:#000;border-color:#fff}
 .bpn-disc{min-height:52px;padding-inline:28px;background:linear-gradient(90deg,var(--accent),var(--hot-b),var(--hot-c));color:#fff;animation:glow 2.4s ease-in-out infinite}
 html[lang="ar"] .ptop,html[lang="ar"] .ptop-b{font-family:var(--f-ar)}
 </style>
+<style>
+/* Continents e-Visa : 5 icônes rondes en cercle */
+.cring{--s:min(92px,23vw);--r:min(124px,31vw);position:relative;width:calc(var(--r)*2 + var(--s) + 16px);height:calc(var(--r)*2 + var(--s) + 16px);margin:14px auto 8px;direction:ltr}
+.cring::before{content:"";position:absolute;inset:calc(var(--s)/2 + 8px);border-radius:50%;border:2px dashed var(--accent-wash)}
+.chub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(var(--r)*1.15);height:calc(var(--r)*1.15);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--surface);box-shadow:var(--shadow-card);color:var(--accent-ink);padding:8px}
+.chub b{font:800 1.25rem var(--f-display)}.chub small{font-size:12px;color:var(--muted);margin-top:2px}
+.cring-b{--c1:#ff8a2b;--c2:#e8590c;position:absolute;top:50%;left:50%;width:var(--s);height:var(--s);margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2);transform:rotate(calc(var(--i)*72deg - 90deg)) translate(var(--r)) rotate(calc(var(--i)*-72deg + 90deg));border:0;border-radius:50%;cursor:pointer;color:#fff;font-family:inherit;background:radial-gradient(circle at 30% 25%,var(--c1),var(--c2) 75%);box-shadow:0 8px 18px -6px var(--c2),inset 0 2px 0 rgba(255,255,255,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0;transition:filter .15s,box-shadow .15s}
+.cring-b[data-k="af"]{--c1:#34d399;--c2:#15803d}.cring-b[data-k="ame"]{--c1:#38bdf8;--c2:#0369a1}.cring-b[data-k="as"]{--c1:#a78bfa;--c2:#6d28d9}.cring-b[data-k="oc"]{--c1:#f472b6;--c2:#be185d}
+.cring-b svg{width:38%;height:38%;color:#fff}
+.cring-b span{font-size:clamp(10px,2.9vw,12px);font-weight:700;line-height:1.1;max-width:92%;overflow-wrap:anywhere}
+.cring-b:hover,.cring-b:focus-visible{filter:brightness(1.08);box-shadow:0 10px 22px -6px var(--c2),0 0 0 4px var(--accent-wash);outline:0}
+.cring-b:active{filter:brightness(.94)}
+.cbadge{position:absolute;top:-2px;right:-2px;min-width:24px;height:24px;border-radius:12px;background:#fff;color:#14212b;font:800 12px var(--f-body);font-style:normal;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-pop);padding:0 6px}
+.ag-sub.c{text-align:center}
+</style>
 </head>
 <body>
 <div class="wrap">

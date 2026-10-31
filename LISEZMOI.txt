@@ -1,4 +1,4 @@
-VISA CHECKER v4 : icônes de continents recentrées et agrandies.
+VISA CHECKER v4 : continents en icônes rondes disposées en cercle.
 
 Remplace à la racine du dépôt GitHub (Add file > Upload files > Commit changes) :
   visa-app.js, index.html, sw.js, version.json
