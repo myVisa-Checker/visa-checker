@@ -698,6 +698,12 @@ var STX={
  en:{ok:"Ready",warn:"Watch out",todo:"To do",rec:"Advised",legend:"Legend",att:function(n){return n+(n>1?" points to watch":" point to watch")},step:function(n){return "Step "+n+" of 3"},prog:"File progress"},
  ar:{ok:"جاهز",warn:"انتبه",todo:"للإنجاز",rec:"مُستحسن",legend:"دليل الألوان",att:function(n){return n+" نقاط للانتباه"},step:function(n){return "الخطوة "+n+" من 3"},prog:"تقدّم الملف"}
 };
+/* Avertissement général (accueil, e-Visa, billets/hôtels) : ne cite aucun site propre à la France. */
+var GENDISC={
+  fr:"Les conditions d'entrée peuvent évoluer. Confirmez toujours les informations sur le site officiel du pays concerné. Cet outil aide à préparer le dossier et ne garantit pas l'obtention du visa. Il n'est lié à aucune ambassade. Passez uniquement par le portail officiel et méfiez-vous des intermédiaires qui promettent des facilités.",
+  en:"Entry requirements can change. Always confirm the information on the official website of the country concerned. This tool helps you prepare your file and does not guarantee a visa. It is not affiliated with any embassy. Use the official portal only, and be wary of intermediaries who promise shortcuts.",
+  ar:"قد تتغير شروط الدخول. تأكد دائمًا من المعلومات على الموقع الرسمي للبلد المعني. هذه الأداة تساعدك على تحضير ملفك ولا تضمن الحصول على التأشيرة، وهي غير تابعة لأي سفارة. اعتمد البوابة الرسمية فقط واحذر من الوسطاء الذين يعدون بتسهيلات."
+};
 function applyCountry(t){
   var cur=curC(),P=PROF[cur.id],L=S.lang,i;
   ["fv","appt","fee"].forEach(function(id){for(i=0;i<ITEMS.length;i++){if(ITEMS[i].id===id){if(!ITEM0[id])ITEM0[id]={fr:ITEMS[i].fr,en:ITEMS[i].en,ar:ITEMS[i].ar}}}});
@@ -2172,7 +2178,7 @@ function render(){
   setLogo(st>=8&&st<=10?(S.need==="flight"?"plane":S.need==="hotel"?"bed":"check"):"check");$("stamp").hidden=true;
   if(st===0){$("h1").innerHTML=t.sloganA+'<span class="acc">'+t.sloganB+'</span>'}else{$("h1").textContent=[0,t.modeTitle,t.destTitle,t.pTitle,t.dTitle,S.mode==="appeal"?t.apTitle:t.hTitle,EVT[S.lang].listTitle,evTitle(),rq(8),rq(9),rq(10),TLS[S.lang].t11,TLS[S.lang].t12,TLS[S.lang].t13][st]}
   $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10),TLS[S.lang].s11,TLS[S.lang].s12,TLS[S.lang].s13][st];document.body.dataset.step=st;
-  $("disc").textContent=t.disc;renderLegal();renderBpn();renderTrans();renderReviews();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
+  $("disc").textContent=(st===0||st>=6)?GENDISC[S.lang]:t.disc;renderLegal();renderBpn();renderTrans();renderReviews();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
   $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;

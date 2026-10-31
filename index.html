@@ -340,9 +340,10 @@ body[data-step="0"] .lang{top:34px}
 .evarrow{width:22px;height:22px;flex:none;color:var(--accent-ink)}
 .evwrap{display:flex;flex-direction:column;gap:14px;margin-top:16px}
 .evlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.evrow{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 14px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface);color:var(--ink);font:500 17px var(--f-body);text-align:start;cursor:pointer}
+.evrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;width:100%;min-height:56px;padding:8px 14px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface);color:var(--ink);font:500 17px var(--f-body);text-align:start;cursor:pointer}
 .evrow:hover{border-color:var(--accent)}
-.evrow .cn{flex:1;min-width:0;overflow-wrap:anywhere}
+.evrow .cn{flex:1 1 9em;min-width:9em;overflow-wrap:break-word;word-break:normal;hyphens:auto}
+.evrow .evarrow{margin-inline-start:auto}
 .evtag{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);border:1px solid var(--accent);border-radius:var(--r-1);padding:2px 6px;white-space:nowrap;align-self:center}
 .evhd .evtag{align-self:flex-start}
 .evtag.warn{background:var(--accent-soft);color:var(--accent-deep);font-weight:500}
