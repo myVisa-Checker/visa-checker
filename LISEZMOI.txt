@@ -1,24 +1,5 @@
-VISA CHECKER - mise à jour v3 : nouveau logo + icônes de continents (31 octobre 2026)
+VISA CHECKER v4 : icônes de continents recentrées et agrandies.
 
-Remplace dans ton dépôt GitHub "visa-checker" :
-
-  À LA RACINE (à côté de l'ancien index.html) :
-    1. index.html
-    2. visa-app.js
-    3. sw.js
-    4. version.json
-  DANS LE DOSSIER icons/ (remplace les 4 images du même nom) :
-    5. icons/icon-192.png
-    6. icons/icon-512.png
-    7. icons/maskable-512.png
-    8. icons/apple-touch-icon.png
-
-Sur GitHub :
-  - Pour la racine : "Add file" > "Upload files", glisse les 4 fichiers, "Commit changes".
-  - Pour icons/ : ouvre le dossier icons, "Add file" > "Upload files", glisse les 4 images, "Commit changes".
-  - Attends 1 à 2 minutes, puis Ctrl + F5 sur le site.
-  - Sur téléphone, l'icône de l'appli installée peut mettre un peu de temps à changer.
-
-Contenu : nouveau logo (cercle orange, arc, avion, coche) dans l'en-tête et l'onglet du navigateur ;
-icônes de continents pleines, sur tuiles dégradées orange ; tout le reste du site est inchangé.
-Retour arrière : GitHub > fichier > History > restaurer.
+Remplace à la racine du dépôt GitHub (Add file > Upload files > Commit changes) :
+  visa-app.js, index.html, sw.js, version.json
+Les images du dossier icons/ ne changent pas. Ensuite Ctrl + F5 sur le site.
