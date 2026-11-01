@@ -439,7 +439,6 @@ function d17Html(k,amt){
   h+='<li>'+x.s2+' <b dir="ltr">'+D17.num+'</b>'+(D17.name?' ('+x.hold+' '+D17.name+')':'')+' <button type="button" class="d17-c" data-d17c="'+D17.num+'">'+x.copy+'</button></li>';
   h+='<li>'+x.s3+' <b dir="ltr" class="d17-ref">'+r+'</b> <button type="button" class="d17-c" data-d17c="'+r+'">'+x.copy+'</button></li>';
   h+='<li>'+x.s4+'</li></ol>';
-  h+='<a class="pay wide" href="https://t.me/'+D17.tg+'?text='+m+'" target="_blank" rel="noopener">'+x.tg+'</a>';
   h+='<a class="pay wide" href="mailto:'+D17.mail+'?subject='+encodeURIComponent("D17 "+r)+'&body='+m+'">'+x.mail+'</a>';
   h+='<p class="ag-note">'+x.warn+'</p></div>';
   return h;
@@ -1095,9 +1094,8 @@ function formHtml(t){
    +'<div class="f-row">'+fld("d1",hot?R.d1h:R.d1f,"date",'min="'+td+'"')+fld("d2",hot?R.d2h:R.d2f,"date",'min="'+(RQ.d1||td)+'"')+'</div>'
    +destFld(R)+cityFld(R)
    +phoneFld(R)
-   +fld("tg",R.tg,"text",'dir="ltr" placeholder="@" autocapitalize="off" autocomplete="off"')
    +fld("mail",R.mail,"email",'dir="ltr" autocomplete="email" autocapitalize="off"')
-   +'<div class="q"><span class="q-label">'+R.chan+'</span><div class="chips chgrid" role="group" aria-label="'+R.chan+'">'+["email","whatsapp","telegram"].map(function(c){return '<button type="button" class="chip" data-chan="'+c+'" aria-pressed="'+(RQ.chan===c)+'">'+R.ch[c]+'</button>'}).join("")+'</div></div>'
+   +'<div class="q"><span class="q-label">'+R.chan+'</span><div class="chips chgrid" role="group" aria-label="'+R.chan+'">'+["email","whatsapp"].map(function(c){return '<button type="button" class="chip" data-chan="'+c+'" aria-pressed="'+(RQ.chan===c)+'">'+R.ch[c]+'</button>'}).join("")+'</div></div>'
    +'<div class="field"><label class="item"><input type="checkbox" data-f="consent" id="rq-consent" aria-required="true" aria-describedby="fe-consent" aria-invalid="'+(fErr("consent")?"true":"false")+'"'+(RQ.consent?' checked':'')+'><span class="i-body"><span class="i-title">'+R.consent+'</span></span></label><span class="fe" id="fe-consent">'+esc(fErr("consent"))+'</span></div>'
    +'<div class="hp" aria-hidden="true"><label for="rq-website">Website</label><input type="text" id="rq-website" name="website" tabindex="-1" autocomplete="off"></div>'+'<p class="ag-note">'+R.payNote+'</p><span class="fe" id="fe-form" role="alert"></span>'
    +n48()+'<button type="submit" class="pay wide" id="rqsend">'+R.send+'</button></form></div>';
@@ -1195,7 +1193,6 @@ function doneHtml(t){
     var enc=encodeURIComponent(txt),b='';
     if(a.email)b+='<a class="pay wide" href="mailto:'+a.email+'?subject='+encodeURIComponent("Visa Checker : "+SVCFR[S.need])+'&body='+enc+'">'+R.bMail+'</a>';
     if(a.whatsapp)b+='<a class="pay wide alt" href="https://wa.me/'+a.whatsapp+'?text='+enc+'" target="_blank" rel="noopener noreferrer">'+R.bWA+'</a>';
-    if(a.telegram)b+='<a class="pay wide alt" data-tgcopy="1" href="https://t.me/'+a.telegram+'" target="_blank" rel="noopener noreferrer">'+R.bTg+'</a><p class="rf-sub">'+R.tgHint+'</p>';
     h+='<div class="book"><b>'+R.manT+'</b><p>'+(F.failed?R.failTxt:R.manTxt)+'</p></div><div class="act">'+b+'</div>';
   }
   h+=n48();
@@ -2293,7 +2290,7 @@ fr:{m:"Mentions légales",c:"Confidentialité",x:"Fermer",d:"Dernière mise à j
  ["Propriété intellectuelle","Les noms, logos et marques des tiers cités appartiennent à leurs propriétaires et sont utilisés uniquement pour les identifier. Le contenu et le code du site sont protégés ; toute reprise nécessite notre accord."],
  ["Responsabilité","Les informations sont données à titre indicatif et peuvent évoluer. Nous ne pouvons être tenus responsables d'un refus de visa, d'une erreur de saisie du client ou d'un changement de règle des autorités."]],
  ct:[["Qui est responsable de vos données ?",function(){return "Le responsable est l'éditeur indiqué dans les mentions légales."+(SITE.email?" Contact : "+SITE.email+".":"")}],
- ["Quelles données collectons-nous ?","Quand vous demandez un billet d'avion ou une réservation : nom et prénom comme sur le passeport, dates de voyage, ville de destination, numéro de téléphone ou WhatsApp (avec l'indicatif du pays), identifiant Telegram et e-mail si vous les donnez, et le canal choisi pour recevoir le paiement et le document. N'envoyez jamais de copie de passeport ni de numéro de carte bancaire par ce formulaire."],
+ ["Quelles données collectons-nous ?","Quand vous demandez un billet d'avion ou une réservation : nom et prénom comme sur le passeport, dates de voyage, ville de destination, numéro de téléphone ou WhatsApp (avec l'indicatif du pays) et e-mail si vous le donnez, et le canal choisi pour recevoir le paiement et le document. N'envoyez jamais de copie de passeport ni de numéro de carte bancaire par ce formulaire."],
  ["Pourquoi ?","Uniquement pour traiter votre demande, la transmettre à l'agence choisie et vous envoyer le lien de paiement puis le document. Nous ne vendons pas vos données."],
  ["Qui les reçoit ?","L'agence que vous choisissez, et les services techniques qui acheminent la demande : Cloudflare (serveur relais) puis Make (automatisation, serveurs situés dans l'Union européenne). Ces destinataires ne les utilisent que pour exécuter votre demande. Si vous utilisez le générateur de lettre, les informations saisies sont envoyées à Anthropic (service d'IA) pour rédiger le texte ; notre serveur ne les conserve pas."],
  ["Combien de temps ?","Le temps nécessaire au traitement de votre demande et à nos obligations légales, puis suppression. Vous pouvez demander la suppression plus tôt."],
@@ -2307,7 +2304,7 @@ en:{m:"Legal notice",c:"Privacy",x:"Close",d:"Last updated: October 2026. This t
  ["Intellectual property","Third-party names, logos and trademarks belong to their owners and are used only to identify them. The site's content and code are protected; any reuse needs our consent."],
  ["Liability","Information is indicative and may change. We cannot be held responsible for a visa refusal, a data-entry error by the client, or a rule change by the authorities."]],
  ct:[["Who is responsible for your data?",function(){return "The controller is the publisher named in the legal notice."+(SITE.email?" Contact: "+SITE.email+".":"")}],
- ["What data do we collect?","When you request a flight ticket or hotel booking: first and last name as in your passport, travel dates, destination city, phone or WhatsApp number, Telegram username and e-mail if you provide them, and the channel chosen to receive payment and the document. Never send a passport copy or card number through this form."],
+ ["What data do we collect?","When you request a flight ticket or hotel booking: first and last name as in your passport, travel dates, destination city, phone or WhatsApp number and e-mail if you provide it, and the channel chosen to receive payment and the document. Never send a passport copy or card number through this form."],
  ["Why?","Only to process your request, pass it to the chosen agency and send you the payment link and then the document. We do not sell your data."],
  ["Who receives it?","The agency you choose, and the technical services that route the request: Cloudflare (relay server) then Make (automation, servers in the European Union). They use it only to carry out your request. If you use the letter generator, what you type is sent to Anthropic (AI service) to write the text; our server does not keep it."],
  ["How long?","As long as needed to process your request and meet our legal duties, then deletion. You can ask for earlier deletion."],
@@ -2321,7 +2318,7 @@ ar:{m:"الإشعار القانوني",c:"الخصوصية",x:"إغلاق",d:"�
  ["الملكية الفكرية","أسماء الجهات الأخرى وشعاراتها وعلاماتها ملك لأصحابها وتُستعمل للتعريف بها فقط. محتوى الموقع وشيفرته محميان، وأي استعمال يتطلب موافقتنا."],
  ["المسؤولية","المعلومات إرشادية وقد تتغير. لا نتحمل مسؤولية رفض التأشيرة أو خطأ في إدخال بيانات العميل أو تغيير القواعد من السلطات."]],
  ct:[["من المسؤول عن بياناتك؟",function(){return "المسؤول هو ناشر الموقع المذكور في الإشعار القانوني."+(SITE.email?" للتواصل: "+SITE.email+".":"")}],
- ["ما البيانات التي نجمعها؟","عند طلب تذكرة طيران أو حجز فندق: الاسم واللقب كما في جواز السفر، وتواريخ السفر، ومدينة الوجهة، ورقم الهاتف أو واتساب، ومعرّف تيليغرام والبريد الإلكتروني إن قدّمتهما، والقناة المختارة لاستلام الدفع والوثيقة. لا ترسل أبدًا نسخة من الجواز أو رقم بطاقة بنكية عبر هذا النموذج."],
+ ["ما البيانات التي نجمعها؟","عند طلب تذكرة طيران أو حجز فندق: الاسم واللقب كما في جواز السفر، وتواريخ السفر، ومدينة الوجهة، ورقم الهاتف أو واتساب والبريد الإلكتروني إن قدّمته، والقناة المختارة لاستلام الدفع والوثيقة. لا ترسل أبدًا نسخة من الجواز أو رقم بطاقة بنكية عبر هذا النموذج."],
  ["لماذا؟","فقط لمعالجة طلبك وإرساله إلى الوكالة المختارة وإرسال رابط الدفع ثم الوثيقة إليك. لا نبيع بياناتك."],
  ["من يستلمها؟","الوكالة التي تختارها، والخدمات التقنية التي تنقل الطلب: Cloudflare (خادم وسيط) ثم Make (الأتمتة، خوادم داخل الاتحاد الأوروبي). لا تستعملها إلا لتنفيذ طلبك. وإذا استعملت مولّد الرسائل فإن ما تدخله يُرسل إلى Anthropic (خدمة ذكاء اصطناعي) لكتابة النص ولا يحتفظ به خادمنا."],
  ["كم المدة؟","المدة اللازمة لمعالجة طلبك وللوفاء بالتزاماتنا القانونية، ثم تُحذف. يمكنك طلب الحذف قبل ذلك."],
