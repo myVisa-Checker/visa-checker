@@ -420,17 +420,12 @@ function d17Ref(k){
 }
 var N48={fr:"Modification possible pendant 48 h maximum après la demande, uniquement sur les dates. Le nom et le prénom ne sont jamais modifiables. Passé ce délai, faites une nouvelle demande.",en:"Changes are possible for 48 hours maximum after your request, dates only. First and last name can never be changed. After that, make a new request.",ar:"يمكن التعديل خلال 48 ساعة كحد أقصى بعد الطلب، وللتواريخ فقط. لا يمكن أبدًا تعديل الاسم واللقب. بعد هذه المدة قدّم طلبًا جديدًا."};
 function n48(l){l=l||S.lang;return '<p class="n48" role="note">'+(N48[l]||N48.fr)+'</p>'}
-function d17Of(a){return {num:(a&&a.d17)||D17.num,name:(a&&a.d17name)||D17.name}}
+function d17Of(a){return {num:D17.num,name:D17.name}}  /* le client paie Visa Checker, jamais l'agence directement */
 /* Prix de la demande billet d'avion / réservation d'hôtel (en dinars). Une seule valeur à changer. */
 var SVC_PRICE=15;
 function d17Amt(txt,x){return String(txt).split("{A}").join(SVC_PRICE+" "+(x.cur||"DT"))}
-function d17Later(a){
-  var dx=d17Of(a);
-  if(!dx.num)return "";
-  var x=D17X[S.lang]||D17X.fr,r=ordRef(RQ.rid),m=encodeURIComponent(x.msg+r);
-  return '<div class="d17" role="region" aria-label="'+x.lt+'"><b class="d17-t">'+x.lt+'</b><p>'+d17Amt(x.ln,x)+'</p><p><b dir="ltr">'+dx.num+'</b>'+(dx.name?' ('+x.hold+' '+dx.name+')':'')+' <button type="button" class="d17-c" data-d17c="'+dx.num+'">'+x.copy+'</button></p><p><b dir="ltr" class="d17-ref">'+r+'</b> <button type="button" class="d17-c" data-d17c="'+r+'">'+x.copy+'</button></p>'
-   +'<a class="pay wide" href="mailto:'+D17.mail+'?subject='+encodeURIComponent("D17 "+r)+'&body='+m+'">'+x.mail+'</a><p class="ag-note">'+x.lw+'</p></div>';
-}
+var NXT={fr:"Étape suivante : ouvrez l'e-mail que nous venons de vous envoyer et touchez « Confirmer et payer ». Vous y trouverez aussi « Modifier mes dates ».",en:"Next step: open the e-mail we just sent you and tap “Confirm and pay”. You will also find “Change my dates” there.",ar:"الخطوة التالية: افتح الرسالة التي أرسلناها لك واضغط «تأكيد ودفع». ستجد فيها أيضًا «تعديل التواريخ»."};
+function d17Later(a){return '<div class="d17" role="region"><p>'+(NXT[S.lang]||NXT.fr)+'</p></div>'}
 function d17Html(k,amt){
   var L=S.lang,x=D17X[L]||D17X.fr,on=D17O===k;
   if(!D17.num)return '<span class="pay off" aria-disabled="true">'+UI[L].payWait+'</span>';
@@ -453,15 +448,15 @@ document.addEventListener("click",function(e){
   if(d){D17O=D17O===d.dataset.d17?"":d.dataset.d17;render()}
 });
 
-/* ===== Page « Ma demande » : liens du mail client (Confirmer et payer / Modifier mes dates) =====
-   Le Worker garde la demande et vérifie le délai de 48 h : cette page ne fait qu'afficher et envoyer. */
+/* ===== Pages « Ma demande » : liens des mails (client, agence, Visa Checker) =====
+   Le Worker garde la demande, vérifie le délai de 48 h et les droits de chaque lien : ces pages affichent et envoient. */
 var ORDER_URL=UNLOCK_URL.replace(/\/unlock$/,"/order");
 function ordRef(id){return "VC-"+String(id||"").replace(/[^A-Za-z0-9]/g,"").slice(0,6).toUpperCase()}
-var OV={id:"",k:"",L:"fr",od:null};
+var OV={id:"",k:"",a:"pay",role:"",L:"fr",od:null};
 var OVX={
-fr:{loading:"Chargement…",bad:"Lien invalide ou expiré. Faites une nouvelle demande.",payT:"Confirmer et payer",editT:"Modifier mes dates",recap:"Votre demande",left:function(h){return "Il vous reste environ "+h+" h pour modifier vos dates."},expired:"Les 48 h sont dépassées : la modification n'est plus possible. Faites une nouvelle demande.",newReq:"Faire une nouvelle demande",save:"Enregistrer mes dates",saving:"Envoi…",saved:"Dates modifiées. L'agence a été prévenue.",err:"Dates invalides ou envoi impossible. Vérifiez puis réessayez.",goPay:"Continuer vers le paiement",goEdit:"Modifier mes dates",noPay:"Visa Checker vous communique ses coordonnées de paiement.",locked:"Le nom et le prénom ne sont pas modifiables.",check:"Vérifiez vos informations, puis payez par D17."},
-en:{loading:"Loading…",bad:"Invalid or expired link. Please make a new request.",payT:"Confirm and pay",editT:"Change my dates",recap:"Your request",left:function(h){return "You have about "+h+" h left to change your dates."},expired:"The 48 hours have passed: changes are no longer possible. Please make a new request.",newReq:"Make a new request",save:"Save my dates",saving:"Sending…",saved:"Dates changed. The agency has been informed.",err:"Invalid dates or sending failed. Check and try again.",goPay:"Continue to payment",goEdit:"Change my dates",noPay:"Visa Checker will send you its payment details.",locked:"First and last name cannot be changed.",check:"Check your details, then pay with D17."},
-ar:{loading:"جارٍ التحميل…",bad:"رابط غير صالح أو منتهي. قدّم طلبًا جديدًا.",payT:"تأكيد ودفع",editT:"تعديل التواريخ",recap:"طلبك",left:function(h){return "بقي لك حوالي "+h+" ساعة لتعديل التواريخ."},expired:"انقضت الـ 48 ساعة: لم يعد التعديل ممكنًا. قدّم طلبًا جديدًا.",newReq:"تقديم طلب جديد",save:"حفظ التواريخ",saving:"جارٍ الإرسال…",saved:"تم تعديل التواريخ وإبلاغ الوكالة.",err:"تواريخ غير صالحة أو تعذّر الإرسال. تحقق وأعد المحاولة.",goPay:"المتابعة إلى الدفع",goEdit:"تعديل التواريخ",noPay:"ستزودك Visa Checker بمعلومات الدفع.",locked:"لا يمكن تعديل الاسم واللقب.",check:"تحقق من بياناتك ثم ادفع عبر D17."}
+fr:{loading:"Chargement…",bad:"Lien invalide ou expiré. Faites une nouvelle demande.",payT:"Confirmer et payer",editT:"Modifier mes dates",recap:"Votre demande",left:function(h){return "Il vous reste environ "+h+" h pour modifier vos dates."},expired:"Les 48 h sont dépassées : la modification n'est plus possible. Faites une nouvelle demande.",newReq:"Faire une nouvelle demande",save:"Enregistrer mes dates",saving:"Envoi…",saved:"Dates modifiées. L'agence a été prévenue.",err:"Dates invalides ou envoi impossible. Vérifiez puis réessayez.",goPay:"Continuer vers le paiement",goEdit:"Modifier mes dates",locked:"Le nom et le prénom ne sont pas modifiables.",check:"Vérifiez vos informations, puis payez.",wait:"Votre demande est bien reçue. L'agence fixe le prix : vous recevrez un e-mail dès qu'il est prêt.",amt:"Montant à payer",paid:"J'ai payé",claimed:"Paiement signalé. Nous vérifions et vous prévenons par e-mail.",ok:"Paiement confirmé ✓ L'agence prépare votre document.",sent:"Document envoyé ✓ Vérifiez vos e-mails."},
+en:{loading:"Loading…",bad:"Invalid or expired link. Please make a new request.",payT:"Confirm and pay",editT:"Change my dates",recap:"Your request",left:function(h){return "You have about "+h+" h left to change your dates."},expired:"The 48 hours have passed: changes are no longer possible. Please make a new request.",newReq:"Make a new request",save:"Save my dates",saving:"Sending…",saved:"Dates changed. The agency has been informed.",err:"Invalid dates or sending failed. Check and try again.",goPay:"Continue to payment",goEdit:"Change my dates",locked:"First and last name cannot be changed.",check:"Check your details, then pay.",wait:"Your request has been received. The agency sets the price: you will get an e-mail as soon as it is ready.",amt:"Amount to pay",paid:"I have paid",claimed:"Payment reported. We are checking and will e-mail you.",ok:"Payment confirmed ✓ The agency is preparing your document.",sent:"Document sent ✓ Check your e-mails."},
+ar:{loading:"جارٍ التحميل…",bad:"رابط غير صالح أو منتهي. قدّم طلبًا جديدًا.",payT:"تأكيد ودفع",editT:"تعديل التواريخ",recap:"طلبك",left:function(h){return "بقي لك حوالي "+h+" ساعة لتعديل التواريخ."},expired:"انقضت الـ 48 ساعة: لم يعد التعديل ممكنًا. قدّم طلبًا جديدًا.",newReq:"تقديم طلب جديد",save:"حفظ التواريخ",saving:"جارٍ الإرسال…",saved:"تم تعديل التواريخ وإبلاغ الوكالة.",err:"تواريخ غير صالحة أو تعذّر الإرسال. تحقق وأعد المحاولة.",goPay:"المتابعة إلى الدفع",goEdit:"تعديل التواريخ",locked:"لا يمكن تعديل الاسم واللقب.",check:"تحقق من بياناتك ثم ادفع.",wait:"تم استلام طلبك. تحدد الوكالة السعر وستصلك رسالة بريد فور جاهزيته.",amt:"المبلغ المطلوب",paid:"دفعت",claimed:"تم الإبلاغ عن الدفع. نتحقق وسنراسلك بالبريد.",ok:"تم تأكيد الدفع ✓ الوكالة تجهّز وثيقتك.",sent:"تم إرسال الوثيقة ✓ راجع بريدك."}
 };
 function ordShell(L,inner){
   var o=$("ordv");
@@ -476,58 +471,98 @@ function ordClose(){
   try{history.replaceState(null,"",location.pathname)}catch(e){}
 }
 function ordRecap(L,od){
-  var R=RT[L]||RT.fr,X=OVX[L],hot=od.svc==="hotel",sh=function(x){return String(x).replace(/\s*\(.*?\)/g,"")};
+  var R=RT[L]||RT.fr,X=OVX[L]||OVX.fr,hot=od.svc==="hotel",sh=function(x){return String(x).replace(/\s*\(.*?\)/g,"")};
   var rows=[[(R.svc&&R.svc[od.svc])||od.svc,od.dest+(od.city?" · "+od.city:"")],[sh(R.ln),od.ln],[sh(R.fn),od.fn],[sh(hot?R.d1h:R.d1f),fmtD(od.d1)],[sh(hot?R.d2h:R.d2f),od.d2?fmtD(od.d2):"-"]];
+  rows.push([X.amt,SVC_PRICE+" DT"]);
+  rows.push(["Réf.",od.ref]);
   return '<div class="recap"><h2>'+X.recap+'</h2><dl>'+rows.map(function(r){return '<div><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>'}).join("")+'</dl></div>';
 }
+function ordBad(){ordShell(OV.L,'<h1>Visa Checker</h1><p class="n48" role="alert">'+(OVX[OV.L]||OVX.fr).bad+'</p><button type="button" class="pay wide" data-ovnew>'+(OVX[OV.L]||OVX.fr).newReq+'</button>')}
+/* ---- client : confirmer et payer ---- */
 function ordPayView(){
-  var L=OV.L,X=OVX[L],x=D17X[L]||D17X.fr,od=OV.od,dx=d17Of(findAgent(od.ag)),r=od.ref,m=encodeURIComponent(x.msg+r);
+  var L=OV.L,X=OVX[L],x=D17X[L]||D17X.fr,od=OV.od,r=od.ref;
   var h='<h1>'+X.payT+'</h1><p class="rf-sub">'+X.check+'</p>'+ordRecap(L,od)+n48(L);
-  if(dx.num){
-    h+='<div class="d17" role="region" aria-label="'+x.lt+'"><b class="d17-t">'+x.lt+'</b><p>'+d17Amt(x.ln,x)+'</p><p><b dir="ltr">'+esc(dx.num)+'</b>'+(dx.name?' ('+x.hold+' '+esc(dx.name)+')':'')+' <button type="button" class="d17-c" data-d17c="'+esc(dx.num)+'">'+x.copy+'</button></p><p><b dir="ltr" class="d17-ref">'+esc(r)+'</b> <button type="button" class="d17-c" data-d17c="'+esc(r)+'">'+x.copy+'</button></p>'
-     +'<a class="pay wide" href="mailto:'+D17.mail+'?subject='+encodeURIComponent("D17 "+r)+'&body='+m+'">'+x.mail+'</a><p class="ag-note">'+x.lw+'</p></div>';
-  }else h+='<p class="ag-note">'+X.noPay+'</p>';
+  if(od.status==="sent"){h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.sent+'</b></p>'}
+  else if(od.status==="paid"){h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.ok+'</b></p>'}
+  else{
+    h+='<div class="d17" role="region" aria-label="'+x.lt+'"><b class="d17-t">'+x.lt+'</b><p>'+d17Amt(x.ln,x)+'</p><p><b dir="ltr">'+esc(D17.num)+'</b>'+(D17.name?' ('+x.hold+' '+esc(D17.name)+')':'')+' <button type="button" class="d17-c" data-d17c="'+esc(D17.num)+'">'+x.copy+'</button></p><p><b dir="ltr" class="d17-ref">'+esc(r)+'</b> <button type="button" class="d17-c" data-d17c="'+esc(r)+'">'+x.copy+'</button></p>';
+    h+=od.status==="claimed"?'<p class="ok-hero"><b>'+X.claimed+'</b></p>':'<button type="button" class="pay wide" data-ovact="claim">'+X.paid+'</button>';
+    h+='<p class="ag-note">'+x.lw+'</p></div>';
+  }
   if(od.canEdit)h+='<button type="button" class="reset wide" data-ovedit>'+X.goEdit+'</button>';
-  return ordShell(L,h);
+  ordShell(L,h);
 }
+/* ---- client : modifier les dates ---- */
 function ordEditView(msg){
   var L=OV.L,X=OVX[L],R=RT[L]||RT.fr,od=OV.od,hot=od.svc==="hotel",sh=function(x){return String(x).replace(/\s*\(.*?\)/g,"")};
   if(!od.canEdit)return ordShell(L,'<h1>'+X.editT+'</h1><p class="n48" role="alert">'+X.expired+'</p>'+ordRecap(L,od)+'<button type="button" class="pay wide" data-ovnew>'+X.newReq+'</button>');
   var h='<h1>'+X.editT+'</h1><p class="rf-sub">'+X.left(od.hoursLeft)+'</p>'+ordRecap(L,od)+'<p class="ag-note">'+X.locked+'</p>'+n48(L)
    +'<div class="f-row"><div class="field"><label class="q-label" for="ov-d1">'+sh(hot?R.d1h:R.d1f)+'</label><input class="sel" id="ov-d1" type="date" min="'+today()+'" value="'+esc(od.d1)+'"></div>'
    +(od.d2?'<div class="field"><label class="q-label" for="ov-d2">'+sh(hot?R.d2h:R.d2f)+'</label><input class="sel" id="ov-d2" type="date" min="'+today()+'" value="'+esc(od.d2)+'"></div>':'')+'</div>'
-   +'<span class="fe" id="ov-err" role="alert">'+(msg||"")+'</span><button type="button" class="pay wide" id="ov-save" data-ovsave>'+X.save+'</button>'
+   +'<span class="fe" id="ov-err" role="alert">'+(msg||"")+'</span><button type="button" class="pay wide" data-ovsave>'+X.save+'</button>'
    +'<button type="button" class="reset wide" data-ovpay>'+X.goPay+'</button>';
-  return ordShell(L,h);
+  ordShell(L,h);
 }
-function ordLoad(a){
-  OV.L=OV.L||S.lang;
+function ordSentView(){
+  var od=OV.od,h='<h1>Document envoyé ?</h1>'+ordRecap("fr",od);
+  if(od.status==="sent")h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>Document déjà marqué comme envoyé.</b></p>';
+  else if(od.status==="paid")h+='<p class="rf-sub">Le paiement est confirmé. Envoyez le document au client, puis cliquez.</p><button type="button" class="pay wide" data-ovact="sent">J\'ai envoyé le document</button>';
+  else h+='<p class="n48" role="alert">Le paiement n\'est pas encore confirmé : n\'envoyez pas le document.</p>';
+  ordShell("fr",h);
+}
+/* ---- Visa Checker : paiement reçu ---- */
+function ordConfirmView(){
+  var od=OV.od,h='<h1>Paiement reçu ?</h1>'+ordRecap("fr",od);
+  if(od.status==="paid"||od.status==="sent")h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>Paiement déjà confirmé.</b></p>';
+  else h+='<p class="rf-sub">Ouvre ton app D17 : le montant ('+SVC_PRICE+' DT) et la référence '+esc(od.ref)+' doivent apparaître.</p><button type="button" class="pay wide" data-ovact="paid">Oui, j\'ai vu l\'argent : paiement reçu</button>';
+  ordShell("fr",h);
+}
+function ordView(){
+  var r=OV.role,a=OV.a;
+  if(r==="a")return ordSentView();
+  if(r==="v")return ordConfirmView();
+  return a==="edit"?ordEditView():ordPayView();
+}
+function ordLoad(){
   fetch(ORDER_URL+"?id="+encodeURIComponent(OV.id)+"&k="+encodeURIComponent(OV.k),{cache:"no-store"}).then(function(r){return r.json().catch(function(){return {}})}).then(function(j){
-    if(!j||!j.ok||!j.order){ordShell(OV.L,'<h1>Visa Checker</h1><p class="n48" role="alert">'+OVX[OV.L].bad+'</p><button type="button" class="pay wide" data-ovnew>'+OVX[OV.L].newReq+'</button>');return}
-    OV.od=j.order;if(OVX[j.order.lang])OV.L=j.order.lang;
-    if(a==="edit")ordEditView();else ordPayView();
-  },function(){ordShell(OV.L,'<p class="n48" role="alert">'+OVX[OV.L].bad+'</p><button type="button" class="pay wide" data-ovnew>'+OVX[OV.L].newReq+'</button>')});
+    if(!j||!j.ok||!j.order){ordBad();return}
+    OV.od=j.order;OV.role=j.role||"c";if(OV.role==="c"&&OVX[j.order.lang])OV.L=j.order.lang;
+    ordView();
+  },ordBad);
 }
 function orderInit(){
   var q;try{q=new URLSearchParams(location.search)}catch(e){return}
   var id=q.get("order"),k=q.get("k");
   if(!id||!k||!/^[A-Za-z0-9_-]{8,64}$/.test(id)||!/^[a-f0-9]{16,64}$/.test(k))return;
-  OV.id=id;OV.k=k;OV.L=S.lang;
-  ordShell(OV.L,'<p>'+OVX[OV.L].loading+'</p>');
-  ordLoad(q.get("a")==="edit"?"edit":"pay");
+  OV.id=id;OV.k=k;OV.L=S.lang;OV.a=q.get("a")||"pay";
+  ordShell(OV.L,'<p>'+(OVX[OV.L]||OVX.fr).loading+'</p>');
+  ordLoad();
+}
+function ordPost(path,body){
+  body.id=OV.id;body.k=OV.k;
+  return fetch(ORDER_URL+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
+   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {s:r.status,j:j}})});
 }
 document.addEventListener("click",function(e){
-  var t=e.target.closest&&e.target.closest("[data-ovnew],[data-ovedit],[data-ovpay],[data-ovsave]");
+  var t=e.target.closest&&e.target.closest("[data-ovnew],[data-ovedit],[data-ovpay],[data-ovsave],[data-ovact]");
   if(!t)return;
-  var X=OVX[OV.L];
+  var X=OVX[OV.L]||OVX.fr;
   if(t.hasAttribute("data-ovnew")){ordClose();return}
   if(t.hasAttribute("data-ovedit")){ordEditView();return}
   if(t.hasAttribute("data-ovpay")){ordPayView();return}
-  var d1=$("ov-d1"),d2=$("ov-d2"),er=$("ov-err");
+  if(t.hasAttribute("data-ovact")){
+    var act=t.getAttribute("data-ovact"),body={},er=$("ov-err");
+    t.disabled=true;
+    ordPost("/"+act,body).then(function(x){
+      if(x.j&&x.j.ok){ordLoad();return}
+      t.disabled=false;if(er)er.textContent="Action impossible. Rechargez la page.";
+      if(!er)ordLoad();
+    },function(){t.disabled=false;if(er)er.textContent="Pas de connexion. Réessayez."});
+    return;
+  }
+  var d1=$("ov-d1"),d2=$("ov-d2");
   t.disabled=true;t.textContent=X.saving;
-  fetch(ORDER_URL+"/edit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:OV.id,k:OV.k,date1:d1?d1.value:"",date2:d2?d2.value:""})})
-   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {s:r.status,j:j}})})
-   .then(function(x){
+  ordPost("/edit",{date1:d1?d1.value:"",date2:d2?d2.value:""}).then(function(x){
      if(x.s===410){OV.od.canEdit=false;ordEditView();return}
      if(x.j&&x.j.ok){OV.od.d1=x.j.d1;OV.od.d2=x.j.d2;ordShell(OV.L,'<h1>'+X.editT+'</h1><p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.saved+'</b></p>'+ordRecap(OV.L,OV.od)+'<button type="button" class="pay wide" data-ovpay>'+X.goPay+'</button>');return}
      ordEditView(X.err);
@@ -634,7 +669,7 @@ var COUNTRIES=[
  C("lu","Luxembourg","Luxembourg","لوكسمبورغ"),C("hr","Croatie","Croatia","كرواتيا"),C("si","Slovénie","Slovenia","سلوفينيا"),C("sk","Slovaquie","Slovakia","سلوفاكيا"),
  C("lt","Lituanie","Lithuania","ليتوانيا"),C("lv","Lettonie","Latvia","لاتفيا"),C("ee","Estonie","Estonia","إستونيا"),C("is","Islande","Iceland","آيسلندا"),
  C("li","Liechtenstein","Liechtenstein","ليختنشتاين"),C("bg","Bulgarie","Bulgaria","بلغاريا"),C("ro","Roumanie","Romania","رومانيا"),
- C("ca","Canada","Canada","كندا"),C("us","États-Unis","United States","الولايات المتحدة"),C("gb","Royaume-Uni","United Kingdom","المملكة المتحدة"),
+ C("ca","Canada","Canada","كندا"),C("us","États-Unis","United States","الولايات المتحدة",true),C("gb","Royaume-Uni","United Kingdom","المملكة المتحدة"),
  C("ae","Émirats arabes unis","United Arab Emirates","الإمارات العربية المتحدة"),C("sa","Arabie saoudite","Saudi Arabia","السعودية"),
  C("jp","Japon","Japan","اليابان"),C("au","Australie","Australia","أستراليا"),C("nz","Nouvelle-Zélande","New Zealand","نيوزيلندا"),C("cn","Chine","China","الصين")
 ];
@@ -961,7 +996,7 @@ function homeHtml(t){
   if(!cur.ready){h+='<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+t.soonText+'</p></div>'}
   h+=evCardHtml();
   h+='</div>';
-  h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+needsHtml(t)+'</div>';
+  h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+needsHtml(t)+ivCardHtml()+'</div>';
   h+='<section class="why"><h2>'+t.whyTitle+'</h2><ul class="ticks">'+t.why.map(function(x){return '<li><svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" style="stroke:var(--surface)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>'+x+'</span></li>'}).join("")+'</ul><p class="ag-note">'+t.whyNote+'</p></section>';
   return h;
 }
@@ -1167,18 +1202,9 @@ function reqText(){
   l.push("Canal pour le paiement et le document : "+CHFR[F.chan]);
   /* Lien de réponse en un clic pour l'agence, selon le canal choisi par le client */
   var reply=F.chan==="whatsapp"&&F.phone?"https://wa.me/"+F.phone.replace(/[^\d]/g,""):F.chan==="telegram"&&F.tg?"https://t.me/"+F.tg:F.chan==="email"&&F.mail?"mailto:"+F.mail:"";
-  var dx=d17Of(a);
-  if(dx.num){
-    /* Paiement D17 : message prêt à envoyer au client, avec le numéro et une référence */
-    var rf=ordRef(RQ.rid),pm="Bonjour, pour payer par D17 envoyez le montant au "+dx.num+(dx.name?" ("+dx.name+")":"")+" avec la référence "+rf+" dans le message. Merci.";
-    l.push("Paiement D17 (à demander au client) : "+dx.num+(dx.name?" ("+dx.name+")":"")+", référence "+rf);
-    if(reply){
-      var q=encodeURIComponent(pm);
-      reply+=reply.indexOf("mailto:")===0?"?subject="+encodeURIComponent("Paiement D17 "+rf)+"&body="+q:"?text="+q;
-    }
-  }
+  l.push("Paiement : le client paie Visa Checker par D17 (référence "+ordRef(RQ.rid)+"). N'envoyez le document qu'après le message « Paiement confirmé ».");
   l.push("Modification : 48 h maximum, dates uniquement, jamais le nom ni le prénom.");
-  if(reply)l.push("Répondre au client "+(dx.num?"(message de paiement D17 prêt)":"(lien de paiement)")+" : "+reply);
+  if(reply)l.push("Répondre au client "+"(pour toute question)"+" : "+reply);
   return l.join("\n");
 }
 function contactFor(){return RQ.chan==="telegram"?"@"+RQ.tg:RQ.chan==="email"?RQ.mail:RQ.phone}
@@ -1324,8 +1350,45 @@ function spSync(){
   document.querySelectorAll(".sp-cb").forEach(function(b){var p=b.dataset.spc.split(":");b.setAttribute("aria-pressed",String(SPSEL[p[0]]===p[1]))});
   spGroups().forEach(function(g){var el=$("spr-"+g.id);if(el)el.innerHTML=spResult(g)});
 }
+/* ===== Préparer l'entretien (si convoqué) : bloc repliable sur la liste des pièces ===== */
+var IVT={"fr": {"t": "Préparer mon entretien (si je suis convoqué)", "s": "Une convocation n'est pas un refus : le consulat veut simplement vérifier certains points de votre dossier.", "secs": [["Avant l'entretien", ["Relisez tout votre dossier : dates, montants, adresses et noms doivent être identiques partout.", "Emportez le passeport, la convocation, les originaux et une copie de chaque pièce, classés dans l'ordre.", "Préparez les justificatifs de vos attaches en Tunisie : travail, études, famille, biens.", "Arrivez en avance et habillez-vous simplement."]], ["Questions fréquentes", ["Quel est le but de votre voyage ?", "Combien de temps restez-vous et où logerez-vous ?", "Qui paie le voyage ? Quelles sont vos ressources ?", "Que faites-vous dans la vie, et qui vous attend en Tunisie ?", "Avez-vous déjà voyagé ? Avez-vous déjà eu un refus ?", "Connaissez-vous quelqu'un dans le pays de destination ?", "Quand rentrez-vous en Tunisie ?"]], ["Comment répondre", ["Dites la vérité, avec des réponses courtes et claires.", "Vos réponses doivent correspondre exactement à votre dossier.", "N'apprenez pas de texte par cœur : parlez naturellement.", "Si vous ne comprenez pas la question, demandez de la répéter.", "N'inventez jamais : une contradiction est plus grave qu'une réponse simple."]], ["À éviter", ["Un document falsifié ou modifié, même légèrement.", "Des réponses différentes de ce qui est écrit dans votre dossier.", "Une réservation que vous ne pouvez pas expliquer ou justifier.", "Les conseils d'un intermédiaire qui vous dicte quoi répondre."]]], "n": "Ces conseils aident à se préparer. Ils ne garantissent pas l'obtention du visa : la décision revient au consulat."}, "en": {"t": "Prepare for your interview (if you are called)", "s": "Being called in is not a refusal: the consulate just wants to check some points of your file.", "secs": [["Before the interview", ["Reread your whole file: dates, amounts, addresses and names must match everywhere.", "Bring your passport, the summons, the originals and one copy of each document, in order.", "Prepare proof of your ties to Tunisia: job, studies, family, property.", "Arrive early and dress simply."]], ["Frequent questions", ["What is the purpose of your trip?", "How long will you stay and where will you stay?", "Who pays for the trip? What are your resources?", "What do you do for a living, and who is waiting for you in Tunisia?", "Have you travelled before? Have you ever been refused?", "Do you know anyone in the destination country?", "When will you return to Tunisia?"]], ["How to answer", ["Tell the truth, with short and clear answers.", "Your answers must match your file exactly.", "Do not memorise a script: speak naturally.", "If you do not understand a question, ask for it to be repeated.", "Never invent anything: a contradiction is worse than a simple answer."]], ["What to avoid", ["A forged or altered document, even slightly.", "Answers that differ from what your file says.", "A booking you cannot explain or justify.", "Advice from an intermediary who tells you what to answer."]]], "n": "These tips help you prepare. They do not guarantee a visa: the decision belongs to the consulate."}, "ar": {"t": "التحضير للمقابلة (في حال تمت دعوتي)", "s": "الدعوة إلى مقابلة لا تعني الرفض: القنصلية تريد فقط التحقق من بعض نقاط ملفك.", "secs": [["قبل المقابلة", ["أعد قراءة ملفك كاملاً: يجب أن تتطابق التواريخ والمبالغ والعناوين والأسماء في كل الوثائق.", "أحضر جواز السفر ورسالة الاستدعاء والوثائق الأصلية ونسخة من كل وثيقة، مرتبة.", "جهّز ما يثبت ارتباطك بتونس: العمل أو الدراسة أو العائلة أو الممتلكات.", "احضر مبكراً وارتدِ ملابس بسيطة ومرتبة."]], ["الأسئلة الشائعة", ["ما هو الغرض من سفرك؟", "كم ستبقى وأين ستقيم؟", "من يتحمّل تكاليف السفر؟ وما هي مواردك؟", "ما عملك، ومن ينتظرك في تونس؟", "هل سافرت من قبل؟ وهل سبق أن رُفض طلبك؟", "هل تعرف أحداً في بلد الوجهة؟", "متى ستعود إلى تونس؟"]], ["كيف تجيب", ["قل الحقيقة بإجابات قصيرة وواضحة.", "يجب أن تتوافق إجاباتك تماماً مع ملفك.", "لا تحفظ نصاً عن ظهر قلب: تحدّث بشكل طبيعي.", "إن لم تفهم السؤال فاطلب إعادته.", "لا تختلق شيئاً أبداً: التناقض أخطر من إجابة بسيطة."]], ["ما يجب تجنّبه", ["وثيقة مزوّرة أو معدّلة، ولو بشكل بسيط.", "إجابات تختلف عمّا هو مكتوب في ملفك.", "حجز لا تستطيع شرحه أو تبريره.", "نصائح وسيط يخبرك بما يجب أن تقوله."]]], "n": "هذه النصائح تساعدك على التحضير ولا تضمن الحصول على التأشيرة: القرار يعود إلى القنصلية."}};
+var IVOPEN=false;
+document.addEventListener("toggle",function(e){if(e.target&&e.target.id==="iv-d")IVOPEN=e.target.open},true);
+function interviewHtml(){
+  var X=IVT[S.lang]||IVT.fr;
+  var h='<details class="lt iv" id="iv-d"'+(IVOPEN?' open':'')+'><summary>'+esc(X.t)+'</summary><div class="lt-body"><p class="ag-sub">'+esc(X.s)+'</p>';
+  X.secs.forEach(function(sc){h+='<b>'+esc(sc[0])+'</b><ul class="adv">'+sc[1].map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ul>'});
+  return h+'<p class="ag-note">'+esc(X.n)+'</p></div></details>';
+}
+/* ===== Carte « Entraînement à l'entretien » : juste sous « Besoin de documents de voyage ? » ===== */
+var IVICON='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 7a4 4 0 0 1 4-4h11a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-7l-4 3.5V17a4 4 0 0 1-4-4z" fill="#fff"/><path d="M10.6 7.8a2.2 2.2 0 1 1 3.4 1.8c-.9.6-1.2 1-1.2 1.9" fill="none" stroke="#E8590C" stroke-width="2" stroke-linecap="round"/><circle cx="12.8" cy="14" r="1.1" fill="#E8590C"/><path d="M16 18a3.5 3.5 0 0 1 3.5-3.5H26a3.5 3.5 0 0 1 3.5 3.5v4.5a3.5 3.5 0 0 1-3.5 3.5h-1v3.5l-4.5-3.5h-1A3.5 3.5 0 0 1 16 22.5z" fill="#FFD43B"/><path d="M19.5 20.5l2.2 2.2 4.3-4.4" fill="none" stroke="#7C2D12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var IVC={
+ fr:{t:"Préparez votre entretien",s:"Une IA joue le consulat et vous pose les questions, avec un retour sur chaque réponse. Surtout utile pour les États-Unis.",b:"Entraînement à l'entretien",n:"Accès par code · aucun visa garanti"},
+ en:{t:"Prepare for your interview",s:"An AI plays the consulate and asks you questions, with feedback on each answer. Most useful for the United States.",b:"Interview practice",n:"Access by code · no visa guaranteed"},
+ ar:{t:"حضّر مقابلتك",s:"ذكاء اصطناعي يلعب دور القنصلية ويطرح عليك الأسئلة مع تعليق على كل إجابة. مفيد خصوصاً للولايات المتحدة.",b:"التدريب على المقابلة",n:"الدخول برمز · لا ضمان للتأشيرة"}};
+function ivCardHtml(){
+  var X=IVC[S.lang]||IVC.fr;
+  return '<div class="needs ivn"><h2 class="hot">'+X.t+'</h2><p class="ag-sub">'+X.s+'</p><div class="sp-chips"><button type="button" class="sp-chip iv-cta" data-iv-open><span class="iv-ico">'+IVICON+'</span><span class="iv-lbl">'+X.b+'</span></button></div><p class="ag-sub">'+X.n+'</p></div>';
+}
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-iv-open]");if(b&&window.__vcInterview)window.__vcInterview()});
+/* ===== États-Unis : pas de liste de pièces, tout se joue à l'entretien ===== */
+var USX={
+ fr:{t:"États-Unis : tout se joue à l'entretien",i:"Pour le visa visiteur (B1/B2), il n'y a pas de liste de pièces justificatives comme pour Schengen. Votre dossier repose sur le formulaire DS-160 et surtout sur l'entretien à l'ambassade de Tunis.",sh:"Les étapes",st:["Remplir le formulaire DS-160 en ligne.","Payer les frais de visa (le montant est sur le site officiel).","Prendre rendez-vous sur le site officiel de l'ambassade.","Venir à l'entretien."],bh:"À apporter le jour de l'entretien",b:["La confirmation du rendez-vous","La confirmation du formulaire DS-160","Le reçu de paiement des frais de visa","Le passeport actuel et les anciens passeports","Une photo","Une lettre expliquant le motif du voyage et l'itinéraire"],wh:"Attention : la caution",w:"Le consul peut demander une caution remboursable de 5 000 à 15 000 $. Elle se paie seulement après l'entretien, sur demande du consul. Ne payez rien avant et ne passez pas par un intermédiaire.",btn:"S'entraîner à l'entretien",link:"Site officiel (ustraveldocs Tunisie)",n:"Aucun visa n'est garanti : la décision revient au consul. Vérifiez toujours les règles sur le site officiel."},
+ en:{t:"United States: everything is decided at the interview",i:"For the visitor visa (B1/B2), there is no list of supporting documents like for Schengen. Your case rests on the DS-160 form and above all on the interview at the Tunis embassy.",sh:"The steps",st:["Fill in the DS-160 form online.","Pay the visa fee (the amount is on the official website).","Book an appointment on the embassy's official website.","Attend the interview."],bh:"What to bring on interview day",b:["Your appointment confirmation","Your DS-160 confirmation","The visa fee payment receipt","Your current and previous passports","A photo","A letter explaining the purpose of your trip and your itinerary"],wh:"Warning: the bond",w:"The consul may ask for a refundable bond of $5,000 to $15,000. It is paid only after the interview, when the consul asks for it. Do not pay anything before that and do not go through an intermediary.",btn:"Practise for the interview",link:"Official website (ustraveldocs Tunisia)",n:"No visa is guaranteed: the consul decides. Always check the rules on the official website."},
+ ar:{t:"الولايات المتحدة: كل شيء يُحسم في المقابلة",i:"بالنسبة لتأشيرة الزيارة (B1/B2)، لا توجد قائمة وثائق ثبوتية كما في شنغن. يعتمد ملفك على استمارة DS-160 وخاصة على المقابلة في سفارة تونس.",sh:"المراحل",st:["املأ استمارة DS-160 عبر الإنترنت.","ادفع رسوم التأشيرة (المبلغ على الموقع الرسمي).","احجز موعداً عبر الموقع الرسمي للسفارة.","احضر المقابلة."],bh:"ما يجب إحضاره يوم المقابلة",b:["تأكيد الموعد","تأكيد استمارة DS-160","وصل دفع رسوم التأشيرة","جواز السفر الحالي وجوازات السفر السابقة","صورة","رسالة تشرح الغرض من السفر والبرنامج"],wh:"تنبيه: الكفالة المالية",w:"قد يطلب منك القنصل كفالة مالية قابلة للاسترجاع بين 5000 و15000 دولار. تُدفع فقط بعد المقابلة وبطلب من القنصل. لا تدفع شيئاً قبل ذلك ولا تلجأ إلى وسيط.",btn:"التدرّب على المقابلة",link:"الموقع الرسمي (ustraveldocs تونس)",n:"لا ضمان للتأشيرة: القرار يعود إلى القنصل. تحقق دائماً من القواعد على الموقع الرسمي."}};
+function usHtml(){
+  var X=USX[S.lang]||USX.fr,ul=function(a){return '<ul class="adv">'+a.map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ul>'};
+  return '<section class="group"><div class="g-head"><h2>'+esc(X.t)+'</h2></div><p class="ag-sub">'+esc(X.i)+'</p>'
+   +'<h3 class="us-h">'+esc(X.sh)+'</h3><ol class="adv">'+X.st.map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ol>'
+   +'<h3 class="us-h">'+esc(X.bh)+'</h3>'+ul(X.b)
+   +'<div class="us-warn"><b>'+esc(X.wh)+'</b><p>'+esc(X.w)+'</p></div>'
+   +'<div class="needs ivn"><div class="sp-chips"><button type="button" class="sp-chip iv-cta" data-iv-open><span class="iv-ico">'+IVICON+'</span><span class="iv-lbl">'+esc(X.btn)+'</span></button></div></div>'
+   +'<p class="ag-sub"><a href="https://ustraveldocs.com/tn/index.html" target="_blank" rel="noopener noreferrer">'+esc(X.link)+'</a></p>'
+   +'<p class="ag-note">'+esc(X.n)+'</p></section>';
+}
 function renderSponsors(t){
-  var h=(S.step>0&&S.step!==7?needsHtml(t):'')+'<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
+  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t)+(curC().id==="us"?'':ivCardHtml()):'');
+  var h='<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
   h+='<p class="sp-join c">'+SPT.note[S.lang]+'</p>';
   $("sponsors").innerHTML=h;
 }
@@ -2217,19 +2280,19 @@ function render(){
           +(i.opt?'<span class="stt rec">'+X.rec+'</span>':'')
           +'<span class="i-title">'+c[0]+'</span>'+(c[1]?'<span class="'+(warn?'i-warn':'i-note')+'">'+c[1]+'</span>':'')+'</span></label>';
       });
-      
       h+='</section>';
     });
     var X=STX[S.lang];
     var legend='<ul class="legend" aria-label="'+X.legend+'"><li><i class="lg ok"></i>'+X.ok+'</li><li><i class="lg warn"></i>'+X.warn+'</li><li><i class="lg todo"></i>'+X.todo+'</li></ul>';
-    $("list").innerHTML=adaptHtml(t)+legend+h;
+    $("list").innerHTML=adaptHtml(t)+legend+h+interviewHtml();
+    if(cur.id==="us")$("list").innerHTML=usHtml();
   }
   if(st===5){renderRefus(t)}
   renderSponsors(t);$("sponsors").hidden=st>=8;
   $("dock").hidden=!(st===0&&ready);
   if(st===0&&ready)$("dock").innerHTML='<div class="dock-in"><span class="flag">'+flag("tn")+'</span><span class="arrow" aria-hidden="true">\u2192</span><span class="flag">'+flag(cur.id)+'</span><span class="dname">'+nm(cur)+'</span><button type="button" class="pay" data-go="1">'+t.start+'</button></div>';
   $("nav").hidden=st===0;
-  if(st>0){$("nav").innerHTML='<button type="button" class="reset" data-go="-1">'+t.back+'</button>'+(st===4?'<button type="button" class="pay" data-go="1">'+t.next+'</button>':'')}
+  if(st>0){$("nav").innerHTML='<button type="button" class="reset" data-go="-1">'+t.back+'</button>'+(st===4&&cur.id!=="us"?'<button type="button" class="pay" data-go="1">'+t.next+'</button>':'')}
   if(typeof prevStep==="number"&&prevStep!==S.step)focusStepHeading();
   prevStep=S.step;
 }
