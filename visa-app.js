@@ -1123,12 +1123,12 @@ function radarHtml(){
   var key=rdKey(),st=RD.st&&RD.st[key],tag=X.unk,cls="";
   if(st){if(st.open){tag=X.open;cls=" on"}else{tag=X.closed}if(st.at)tag+=" · "+X.ago(Math.max(0,Math.round((Date.now()-st.at)/60000)))}
   var dn=function(id){return nm(COUNTRIES.filter(function(c){return c.id===id})[0]||{n:{fr:id,en:id,ar:id}})};
-  return '<div class="needs rdr"><h2 class="rdr-h"><img src="icons/radar-rdv.webp" alt="'+esc(X.t)+'" width="511" height="548" loading="lazy" style="display:block;width:100%;max-width:420px;height:auto;margin:0 auto"></h2><p class="ag-sub">'+X.s+'</p>'
+  return '<div class="needs rdr"><div class="rdr-grid"><h2 class="rdr-h"><img src="icons/radar-rdv.webp" alt="'+esc(X.t)+'" width="511" height="548" loading="lazy" style="display:block;width:100%;max-width:420px;height:auto;margin:0 auto"></h2><div class="rdr-body"><p class="ag-sub">'+X.s+'</p>'
    +'<div class="f-row"><div class="field"><label class="q-label" for="rd-c">'+X.c+'</label><select class="sel" id="rd-c">'+cs.map(function(c){return '<option value="'+c[0]+'"'+(c[0]===RD.c?' selected':'')+'>'+c[1]+'</option>'}).join("")+'</select></div>'
    +'<div class="field"><label class="q-label" for="rd-d">'+X.d+'</label><select class="sel" id="rd-d">'+RDD.map(function(d){return '<option value="'+d+'"'+(d===RD.d?' selected':'')+'>'+dn(d)+'</option>'}).join("")+'</select></div></div>'
    +'<p class="rd-st'+cls+'" role="status">'+tag+'</p>'
    +'<div class="field"><label class="q-label" for="rd-m">'+X.m+'</label><input class="sel" id="rd-m" type="email" inputmode="email" autocomplete="email" dir="ltr" value="'+esc(RD.mail)+'"></div>'
-   +'<span class="fe" id="rd-msg" role="status">'+esc(RD.msg)+'</span><button type="button" class="pay wide" id="rd-go">'+X.b+'</button><p class="ag-note">'+X.n+'</p></div>';
+   +'<span class="fe" id="rd-msg" role="status">'+esc(RD.msg)+'</span><button type="button" class="pay wide" id="rd-go">'+X.b+'</button><p class="ag-note">'+X.n+'</p></div></div></div>';
 }
 function rdrPaint(){var e=$("rdr");if(e&&!e.contains(document.activeElement))e.innerHTML=radarHtml()}
 function rdrLoad(){
@@ -1162,8 +1162,8 @@ function homeHtml(t){
   h+='</div>';
   if(!cur.ready){h+='<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+(S.origin==='tn'?t.soonText:ORI_SOON[S.origin][L])+'</p></div>'}
   h+=evCardHtml();
-  h+='<div id="rdr">'+radarHtml()+'</div>';
   h+='</div>';
+  h+='<div id="rdr" class="rdw">'+radarHtml()+'</div>';
   h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+(S.origin==='tn'?needsHtml(t):'')+ivCardHtml()+'</div>';
   h+='<section class="why"><h2>'+t.whyTitle+'</h2><ul class="ticks">'+t.why.map(function(x){return '<li><svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" style="stroke:var(--surface)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>'+x+'</span></li>'}).join("")+'</ul><p class="ag-note">'+t.whyNote+'</p></section>';
   return h;
