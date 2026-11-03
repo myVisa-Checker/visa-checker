@@ -1106,6 +1106,49 @@ document.addEventListener("change",function(e){
   var o=b.value;if(o===S.origin||["tn","ma","dz"].indexOf(o)<0)return;
   S.origin=o;S.country="fr";S.step=0;applyOrigin();save();render();
 });
+/* ===== Radar de rendez-vous : alerte par e-mail quand des créneaux s'ouvrent (le robot signale au Worker, le site inscrit) ===== */
+var RADAR_URL=UNLOCK_URL.replace(/\/unlock$/,"/radar");
+var RDC={tn:[["tunis","Tunis"],["sfax","Sfax"]],ma:[["casablanca","Casablanca"],["rabat","Rabat"],["tanger","Tanger"],["marrakech","Marrakech"],["fes","Fès"],["agadir","Agadir"],["oujda","Oujda"],["nador","Nador"],["tetouan","Tétouan"]],dz:[["alger","Alger"],["oran","Oran"],["annaba","Annaba"],["constantine","Constantine"]]};
+var RDD=["fr","es","it"];
+var RDT={
+ fr:{t:"Radar de rendez-vous",s:"Fini de rafraîchir la page toute la journée. Dites-nous où vous déposez : nous surveillons les créneaux et vous prévenons par e-mail dès qu'ils s'ouvrent. Nous ne réservons rien à votre place.",c:"Centre de dépôt",d:"Destination",m:"Votre e-mail",b:"Me prévenir",ok:"C'est noté. Vous serez prévenu par e-mail pendant 30 jours.",err:"Envoi impossible. Vérifiez l'e-mail et réessayez.",open:"Créneaux détectés",closed:"Aucun créneau pour le moment",unk:"Surveillance en préparation pour ce centre",ago:function(m){return "Dernière vérification il y a "+m+" min"},n:"Gratuit · pour vous désinscrire, répondez STOP à un e-mail d'alerte."},
+ en:{t:"Appointment radar",s:"No more refreshing the page all day. Tell us where you apply: we watch the slots and email you the moment they open. We never book anything for you.",c:"Application centre",d:"Destination",m:"Your email",b:"Alert me",ok:"Done. You will be alerted by email for 30 days.",err:"Could not send. Check the email and try again.",open:"Slots detected",closed:"No slots right now",unk:"Monitoring is being set up for this centre",ago:function(m){return "Last checked "+m+" min ago"},n:"Free · to unsubscribe, reply STOP to an alert email."},
+ ar:{t:"رادار المواعيد",s:"لا مزيد من تحديث الصفحة طوال اليوم. أخبرنا أين تقدّم ملفك: نراقب المواعيد ونرسل لك بريدًا فور فتحها. لا نحجز أي شيء نيابةً عنك.",c:"مركز الإيداع",d:"الوجهة",m:"بريدك الإلكتروني",b:"نبّهني",ok:"تم. ستصلك التنبيهات بالبريد لمدة 30 يومًا.",err:"تعذّر الإرسال. تحقق من البريد وأعد المحاولة.",open:"تم رصد مواعيد",closed:"لا مواعيد حاليًا",unk:"المراقبة قيد الإعداد لهذا المركز",ago:function(m){return "آخر فحص منذ "+m+" دقيقة"},n:"مجاني · لإلغاء الاشتراك أجب بكلمة STOP على بريد التنبيه."}
+};
+var RD={c:"",d:"fr",mail:"",msg:"",st:null};
+function rdKey(){var c=RD.c||(RDC[S.origin]||RDC.tn)[0][0];return S.origin+"-"+RD.d+"-"+c}
+function radarHtml(){
+  var X=RDT[S.lang]||RDT.fr,L=S.lang,cs=RDC[S.origin]||RDC.tn;
+  if(!cs.some(function(c){return c[0]===RD.c}))RD.c=cs[0][0];
+  var key=rdKey(),st=RD.st&&RD.st[key],tag=X.unk,cls="";
+  if(st){if(st.open){tag=X.open;cls=" on"}else{tag=X.closed}if(st.at)tag+=" · "+X.ago(Math.max(0,Math.round((Date.now()-st.at)/60000)))}
+  var dn=function(id){return nm(COUNTRIES.filter(function(c){return c.id===id})[0]||{n:{fr:id,en:id,ar:id}})};
+  return '<div class="needs rdr"><h2 class="hot">'+X.t+'</h2><p class="ag-sub">'+X.s+'</p>'
+   +'<div class="f-row"><div class="field"><label class="q-label" for="rd-c">'+X.c+'</label><select class="sel" id="rd-c">'+cs.map(function(c){return '<option value="'+c[0]+'"'+(c[0]===RD.c?' selected':'')+'>'+c[1]+'</option>'}).join("")+'</select></div>'
+   +'<div class="field"><label class="q-label" for="rd-d">'+X.d+'</label><select class="sel" id="rd-d">'+RDD.map(function(d){return '<option value="'+d+'"'+(d===RD.d?' selected':'')+'>'+dn(d)+'</option>'}).join("")+'</select></div></div>'
+   +'<p class="rd-st'+cls+'" role="status">'+tag+'</p>'
+   +'<div class="field"><label class="q-label" for="rd-m">'+X.m+'</label><input class="sel" id="rd-m" type="email" inputmode="email" autocomplete="email" dir="ltr" value="'+esc(RD.mail)+'"></div>'
+   +'<span class="fe" id="rd-msg" role="status">'+esc(RD.msg)+'</span><button type="button" class="pay wide" id="rd-go">'+X.b+'</button><p class="ag-note">'+X.n+'</p></div>';
+}
+function rdrPaint(){var e=$("rdr");if(e&&!e.contains(document.activeElement))e.innerHTML=radarHtml()}
+function rdrLoad(){
+  if(RD.t&&Date.now()-RD.t<60000)return;RD.t=Date.now();
+  fetch(RADAR_URL+"/status",{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok){RD.st=j.centers||{};rdrPaint()}}).catch(function(){});
+}
+document.addEventListener("change",function(e){
+  var t=e.target;if(!t)return;
+  if(t.id==="rd-c"||t.id==="rd-d"){if(t.id==="rd-c")RD.c=t.value;else RD.d=t.value;RD.msg="";var e2=$("rdr");if(e2)e2.innerHTML=radarHtml()}
+});
+document.addEventListener("input",function(e){if(e.target&&e.target.id==="rd-m")RD.mail=e.target.value.trim()});
+document.addEventListener("click",function(e){
+  var b=e.target.closest&&e.target.closest("#rd-go");if(!b)return;
+  var X=RDT[S.lang]||RDT.fr,m=$("rd-m")?$("rd-m").value.trim():RD.mail;RD.mail=m;
+  var say=function(t){RD.msg=t;var q=$("rd-msg");if(q)q.textContent=t};
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)){say(X.err);return}
+  b.disabled=true;
+  fetch(RADAR_URL+"/sub",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:rdKey(),email:m,lang:S.lang})})
+   .then(function(r){return r.json().catch(function(){return {}})}).then(function(j){b.disabled=false;say(j&&j.ok?X.ok:X.err)},function(){b.disabled=false;say(X.err)});
+});
 function homeHtml(t){
   var cur=curC(),L=S.lang;
   var h='<div class="panel hcard"><div class="ask"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg><span>'+t.ask+'</span></div>';
@@ -1119,6 +1162,7 @@ function homeHtml(t){
   h+='</div>';
   if(!cur.ready){h+='<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+(S.origin==='tn'?t.soonText:ORI_SOON[S.origin][L])+'</p></div>'}
   h+=evCardHtml();
+  h+='<div id="rdr">'+radarHtml()+'</div>';
   h+='</div>';
   h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+(S.origin==='tn'?needsHtml(t):'')+ivCardHtml()+'</div>';
   h+='<section class="why"><h2>'+t.whyTitle+'</h2><ul class="ticks">'+t.why.map(function(x){return '<li><svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" style="stroke:var(--surface)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>'+x+'</span></li>'}).join("")+'</ul><p class="ag-note">'+t.whyNote+'</p></section>';
@@ -2381,7 +2425,7 @@ function render(){
   $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+oriLink(cur)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
   if(showSt){$("stepper").innerHTML='<div class="st-row"><span class="st-num">'+STX[S.lang].step(st-2)+' · '+t.stepNames[st-2]+'</span><span class="pill"><span class="flag">'+flag(cur.id)+'</span>'+nm(cur)+(S.motive==="medical"?' · '+t.motive.medical:'')+'</span></div>'+stepper(st-2,[t.stepNames[0],t.stepNames[2],t.stepNames[3]])}
-  $("home").hidden=st!==0;if(st===0)$("home").innerHTML=homeHtml(t);
+  $("home").hidden=st!==0;if(st===0){$("home").innerHTML=homeHtml(t);rdrLoad()}
   $("mode").hidden=st!==1;if(st===1)$("mode").innerHTML=modeHtml(t);
   $("dest").hidden=st!==2;if(st===2)$("dest").innerHTML=destHtml(t);
   $("panel").hidden=st!==3;if(st===3)$("panel").innerHTML=panelHtml(t);
