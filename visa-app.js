@@ -742,7 +742,7 @@ var GENDISC={
   en:"Entry requirements can change. Always confirm the information on the official website of the country concerned. This tool helps you prepare your file and does not guarantee a visa. It is not affiliated with any embassy. Use the official portal only, and be wary of intermediaries who promise shortcuts.",
   ar:"قد تتغير شروط الدخول. تأكد دائمًا من المعلومات على الموقع الرسمي للبلد المعني. هذه الأداة تساعدك على تحضير ملفك ولا تضمن الحصول على التأشيرة، وهي غير تابعة لأي سفارة. اعتمد البوابة الرسمية فقط واحذر من الوسطاء الذين يعدون بتسهيلات."
 };
-function applyCountry(t){
+function applyCountry0(t){
   var cur=curC(),P=PROF[cur.id],L=S.lang,i;
   ["fv","appt","fee"].forEach(function(id){for(i=0;i<ITEMS.length;i++){if(ITEMS[i].id===id){if(!ITEM0[id])ITEM0[id]={fr:ITEMS[i].fr,en:ITEMS[i].en,ar:ITEMS[i].ar}}}});
   var by={};ITEMS.forEach(function(it){by[it.id]=it});
@@ -986,9 +986,115 @@ function photoHtml(){
 /* ===== Pays du passeport (Tunisie, Maroc, Algérie) =====
    ORI_READY : destinations dont la liste de pièces est prête pour chaque pays de départ. Maroc et Algérie : vides tant que les listes ne sont pas vérifiées sur sources officielles. */
 var ORIS=[{id:"tn",n:{fr:"Tunisie",en:"Tunisia",ar:"تونس"}},{id:"ma",n:{fr:"Maroc",en:"Morocco",ar:"المغرب"}},{id:"dz",n:{fr:"Algérie",en:"Algeria",ar:"الجزائر"}}];
-var ORI_READY={ma:[],dz:[]};
+var ORI_READY={ma:["fr","es","it"],dz:["fr","es","it"]};
 var ORI_SOON={ma:{fr:"La liste des pièces pour les voyageurs marocains est en préparation : France, Espagne et Italie arrivent en premier.",en:"The document list for Moroccan travellers is being prepared: France, Spain and Italy come first.",ar:"قائمة الوثائق للمسافرين المغاربة قيد الإعداد: فرنسا وإسبانيا وإيطاليا أولاً."},dz:{fr:"La liste des pièces pour les voyageurs algériens est en préparation : France, Espagne et Italie arrivent en premier.",en:"The document list for Algerian travellers is being prepared: France, Spain and Italy come first.",ar:"قائمة الوثائق للمسافرين الجزائريين قيد الإعداد: فرنسا وإسبانيا وإيطاليا أولاً."}};
 var TN_READY=COUNTRIES.filter(function(c){return c.ready}).map(function(c){return c.id});
+/* ===== Listes de pièces par pays du passeport (Maroc, Algérie) : France, Espagne, Italie =====
+   Établi le 03/11/2026 d'après les sites officiels (France-Visas, Capago, TLScontact, BLS Espagne, VFS Global, ambassades d'Italie à Rabat et Alger).
+   Pas de montants ici : les frais changent, on renvoie au site officiel. À re-vérifier régulièrement. */
+var ORI_DATE="03/11/2026";
+var ORI_SITE={
+ ma:{fr:"https://france-visas.gouv.fr/maroc",es:"https://blsspainmorocco.com/",it:"https://ambrabat.esteri.it/"},
+ dz:{fr:"https://france-visas.gouv.fr/algerie",es:"https://algeria.blsspainvisa.com/",it:"https://visa.vfsglobal.com/dza/fr/ita"}
+};
+var ORI_NOTE={
+ fr:"Liste établie le "+ORI_DATE+" d'après les sites officiels (France-Visas, centres de dépôt, ambassades). Les règles et les frais changent : confirmez-les avant de déposer. Visa Checker ne garantit pas l'obtention du visa.",
+ en:"List prepared on "+ORI_DATE+" from official sources (France-Visas, application centres, embassies). Rules and fees change: confirm them before you apply. Visa Checker does not guarantee the visa.",
+ ar:"أُعدّت القائمة بتاريخ "+ORI_DATE+" اعتمادًا على المواقع الرسمية (France-Visas ومراكز الإيداع والسفارات). القواعد والرسوم تتغير: تأكد منها قبل التقديم. لا يضمن Visa Checker الحصول على التأشيرة."
+};
+var ORI_ITEMS={
+ ma:{
+  fr:{appt:{
+   fr:["Rendez-vous TLScontact (Agadir, Casablanca, Fès, Marrakech, Oujda, Rabat ou Tanger) et confirmation imprimée","Réservez vous-même sur le site de TLScontact, un rendez-vous par personne. Dépôt en personne, avec relevé des empreintes. De 6 mois à 15 jours avant le départ. Vérifiez sur France-Visas le centre dont vous dépendez."],
+   en:["TLScontact appointment (Agadir, Casablanca, Fès, Marrakech, Oujda, Rabat or Tangier) and printed confirmation","Book it yourself on the TLScontact website, one appointment per person. Submit in person, with fingerprints. From 6 months to 15 days before departure. Check on France-Visas which centre applies to you."],
+   ar:["موعد في TLScontact (أكادير أو الدار البيضاء أو فاس أو مراكش أو وجدة أو الرباط أو طنجة) وتأكيد مطبوع","احجز بنفسك على موقع TLScontact، موعد لكل شخص. الإيداع حضوريًا مع أخذ البصمات. من 6 أشهر إلى 15 يومًا قبل السفر. تحقق في France-Visas من المركز الذي يتبع له ملفك."]},
+   fee:{
+   fr:["Frais de visa en dirhams (MAD) et frais de service TLScontact","Le visa se paie en dirhams selon le taux en vigueur. Ces frais ne sont pas remboursés en cas de refus. Les montants changent : confirmez-les sur France-Visas et TLScontact."],
+   en:["Visa fee in dirhams (MAD) and TLScontact service fee","The visa is paid in dirhams at the current rate. These fees are not refunded if the visa is refused. Amounts change: confirm them on France-Visas and TLScontact."],
+   ar:["رسوم التأشيرة بالدرهم (MAD) ورسوم خدمة TLScontact","تُدفع رسوم التأشيرة بالدرهم حسب السعر المعمول به، ولا تُسترجع في حالة الرفض. المبالغ تتغير: تأكد منها على France-Visas وTLScontact."]}},
+  es:{appt:{
+   fr:["Rendez-vous BLS Espagne (Agadir, Casablanca, Nador, Rabat, Tanger ou Tétouan) et confirmation imprimée","Réservez sur le site de BLS Espagne au Maroc. Dépôt en personne, avec photo et empreintes. À déposer au plus tard 15 jours avant le départ ; l'attente est souvent longue, prévoyez 1 à 3 mois."],
+   en:["BLS Spain appointment (Agadir, Casablanca, Nador, Rabat, Tangier or Tetouan) and printed confirmation","Book on the BLS Spain Morocco website. Submit in person, with photo and fingerprints. Apply at least 15 days before departure; waits are often long, plan 1 to 3 months."],
+   ar:["موعد في BLS إسبانيا (أكادير أو الدار البيضاء أو الناظور أو الرباط أو طنجة أو تطوان) وتأكيد مطبوع","احجز على موقع BLS إسبانيا في المغرب. الإيداع حضوريًا مع الصورة والبصمات. قدّم قبل السفر بـ15 يومًا على الأقل؛ الانتظار طويل غالبًا، فاحسب شهرًا إلى 3 أشهر."]},
+   fee:{
+   fr:["Frais de visa en dirhams (MAD) et frais de service BLS","Ils se paient généralement en espèces au centre et ne sont pas remboursés en cas de refus. Les montants changent selon le taux de l'euro : confirmez-les sur le site de BLS."],
+   en:["Visa fee in dirhams (MAD) and BLS service fee","They are usually paid in cash at the centre and are not refunded if the visa is refused. Amounts change with the euro rate: confirm them on the BLS website."],
+   ar:["رسوم التأشيرة بالدرهم (MAD) ورسوم خدمة BLS","تُدفع عادة نقدًا في المركز ولا تُسترجع في حالة الرفض. المبالغ تتغير حسب سعر الأورو: تأكد منها على موقع BLS."]}},
+  it:{appt:{
+   fr:["Dépôt auprès du prestataire désigné par l'Italie au Maroc, rendez-vous et confirmation imprimée","Le prestataire et les lieux de dépôt ont changé ces dernières années : vérifiez-les sur le site de l'ambassade d'Italie à Rabat avant de réserver. Dépôt en personne."],
+   en:["Submission through the provider appointed by Italy in Morocco, appointment and printed confirmation","The provider and submission places have changed in recent years: check the website of the Italian Embassy in Rabat before booking. Submit in person."],
+   ar:["الإيداع لدى المزوّد الذي عيّنته إيطاليا في المغرب، موعد وتأكيد مطبوع","تغيّر المزوّد وأماكن الإيداع في السنوات الأخيرة: تحقق من موقع سفارة إيطاليا في الرباط قبل الحجز. الإيداع حضوريًا."]},
+   fee:{
+   fr:["Frais de visa et frais de service du prestataire","Les montants changent : confirmez-les sur le site de l'ambassade d'Italie à Rabat et du prestataire. Non remboursés en cas de refus."],
+   en:["Visa fee and provider service fee","Amounts change: confirm them on the Italian Embassy in Rabat website and the provider's website. Not refunded if the visa is refused."],
+   ar:["رسوم التأشيرة ورسوم خدمة المزوّد","المبالغ تتغير: تأكد منها على موقع سفارة إيطاليا في الرباط وموقع المزوّد. لا تُسترجع في حالة الرفض."]}},
+  all:{
+   cin:{fr:["Copie de la carte nationale d'identité électronique (CNIE)",""],en:["Copy of the national electronic ID card (CNIE)",""],ar:["نسخة من بطاقة التعريف الوطنية الإلكترونية (CNIE)",""]},
+   emp_cnss:{fr:["Attestation CNSS (ou carte CNOPS pour un fonctionnaire)","Montre une activité déclarée et stable."],en:["CNSS certificate (or CNOPS card for a civil servant)","Shows a declared and stable job."],ar:["شهادة الضمان الاجتماعي CNSS (أو بطاقة CNOPS للموظف العمومي)","تثبت نشاطًا مصرّحًا به ومستقرًا."]},
+   self_reg:{fr:["Extrait du registre du commerce (modèle 7), statuts et attestation fiscale","Selon votre activité : ajoutez la déclaration fiscale et l'attestation de paiement des impôts."],en:["Trade register extract (model 7), articles of association and tax certificate","Depending on your activity: add the tax return and the tax payment certificate."],ar:["مستخرج السجل التجاري (نموذج 7) والقانون الأساسي وشهادة ضريبية","حسب نشاطك: أضف التصريح الضريبي وشهادة أداء الضرائب."]},
+   med_file:{fr:["Dossier médical et rapport de votre médecin au Maroc","Diagnostic et raison du déplacement. Traduction assermentée si le document est en arabe."],en:["Medical file and report from your doctor in Morocco","Diagnosis and reason for travelling. Sworn translation if the document is in Arabic."],ar:["الملف الطبي وتقرير طبيبك في المغرب","التشخيص وسبب السفر. ترجمة محلّفة إن كانت الوثيقة بالعربية."]},
+   transl:{
+    fr:{fr:["Traduction française des documents en arabe","Exigée pour les pièces rédigées en arabe ; faites-la faire par un traducteur assermenté, c'est la solution la plus sûre."],en:["French translation of documents in Arabic","Required for documents written in Arabic; have it done by a sworn translator, which is the safest option."],ar:["ترجمة فرنسية للوثائق المكتوبة بالعربية","مطلوبة للوثائق بالعربية؛ اطلبها من مترجم محلّف، فهذا أضمن."]},
+    es:{fr:["Traduction française ou espagnole des documents en arabe","Les documents doivent être en français ou en espagnol : joignez l'original arabe et sa traduction, faite de préférence par un traducteur assermenté."],en:["French or Spanish translation of documents in Arabic","Documents must be in French or Spanish: attach the Arabic original and its translation, preferably by a sworn translator."],ar:["ترجمة فرنسية أو إسبانية للوثائق بالعربية","يجب أن تكون الوثائق بالفرنسية أو الإسبانية: أرفق الأصل العربي وترجمته، ويُفضّل أن يقوم بها مترجم محلّف."]},
+    it:{fr:["Traduction en italien des documents en arabe, apostilles si demandées","Selon la liste de l'ambassade d'Italie à Rabat : documents apostillés et pièces en arabe traduites en italien par un traducteur reconnu. Vérifiez la liste à jour avant de déposer."],en:["Italian translation of documents in Arabic, apostilles if requested","According to the Italian Embassy in Rabat list: apostilled documents and Arabic documents translated into Italian by a recognised translator. Check the current list before applying."],ar:["ترجمة إلى الإيطالية للوثائق بالعربية، مع الأبوستيل إن طُلب","حسب قائمة سفارة إيطاليا في الرباط: وثائق مصادق عليها بالأبوستيل ووثائق عربية مترجمة إلى الإيطالية من مترجم معتمد. تحقق من القائمة الحالية قبل التقديم."]}}}
+ },
+ dz:{
+  fr:{appt:{
+   fr:["Rendez-vous Capago (Alger, Oran, Annaba ou Constantine) et confirmation imprimée","Depuis avril 2025, Capago remplace VFS Global et TLScontact en Algérie pour la France. Réservez vous-même sur le site officiel de Capago : les intermédiaires n'ont aucun accès privilégié aux rendez-vous. Le centre dépend de votre lieu de résidence."],
+   en:["Capago appointment (Algiers, Oran, Annaba or Constantine) and printed confirmation","Since April 2025, Capago replaces VFS Global and TLScontact in Algeria for France. Book yourself on the official Capago website: intermediaries have no privileged access to appointments. The centre depends on where you live."],
+   ar:["موعد في Capago (الجزائر العاصمة أو وهران أو عنابة أو قسنطينة) وتأكيد مطبوع","منذ أفريل 2025 حلّت Capago محل VFS Global وTLScontact في الجزائر بخصوص فرنسا. احجز بنفسك على الموقع الرسمي لـCapago: الوسطاء لا يملكون أي أولوية في المواعيد. يتبع المركز مكان إقامتك."]},
+   fee:{
+   fr:["Frais de visa et frais de service Capago, en dinars algériens (DZD)","Les frais de visa ne sont pas remboursés en cas de refus. Les montants changent : confirmez-les sur France-Visas et sur le site de Capago avant le rendez-vous."],
+   en:["Visa fee and Capago service fee, in Algerian dinars (DZD)","Visa fees are not refunded if the visa is refused. Amounts change: confirm them on France-Visas and the Capago website before your appointment."],
+   ar:["رسوم التأشيرة ورسوم خدمة Capago بالدينار الجزائري (DZD)","رسوم التأشيرة لا تُسترجع في حالة الرفض. المبالغ تتغير: تأكد منها على France-Visas وموقع Capago قبل موعدك."]}},
+  es:{appt:{
+   fr:["Rendez-vous BLS Espagne (Alger ou Oran) et confirmation imprimée","Réservez sur le site de BLS Espagne en Algérie. Dépôt en personne uniquement, si vous voyagez dans les 90 prochains jours, au moins 15 jours avant le départ. Le centre dépend de votre lieu de résidence."],
+   en:["BLS Spain appointment (Algiers or Oran) and printed confirmation","Book on the BLS Spain Algeria website. In-person submission only, if you travel within the next 90 days and at least 15 days before departure. The centre depends on where you live."],
+   ar:["موعد في BLS إسبانيا (الجزائر العاصمة أو وهران) وتأكيد مطبوع","احجز على موقع BLS إسبانيا في الجزائر. الإيداع حضوريًا فقط، إذا كان سفرك خلال 90 يومًا القادمة وقبل 15 يومًا على الأقل من السفر. يتبع المركز مكان إقامتك."]},
+   fee:{
+   fr:["Frais de visa et frais de service BLS, en dinars algériens (DZD)","Paiement en espèces au centre, non remboursés en cas de refus. Les montants changent : confirmez-les sur le site de BLS."],
+   en:["Visa fee and BLS service fee, in Algerian dinars (DZD)","Paid in cash at the centre, not refunded if the visa is refused. Amounts change: confirm them on the BLS website."],
+   ar:["رسوم التأشيرة ورسوم خدمة BLS بالدينار الجزائري (DZD)","تُدفع نقدًا في المركز ولا تُسترجع في حالة الرفض. المبالغ تتغير: تأكد منها على موقع BLS."]}},
+  it:{appt:{
+   fr:["Rendez-vous VFS Global (Alger, Annaba, Constantine, Oran, Ghardaïa ou Tindouf) et confirmation imprimée","L'ambassade d'Italie indique que la demande se dépose chez VFS Global, en personne. Réservation en ligne sur le site de VFS Global (24 h/24) ou par téléphone au centre d'appels."],
+   en:["VFS Global appointment (Algiers, Annaba, Constantine, Oran, Ghardaia or Tindouf) and printed confirmation","The Italian Embassy states the application is submitted at VFS Global, in person. Book online on the VFS Global website (24/7) or by phone with the call centre."],
+   ar:["موعد في VFS Global (الجزائر العاصمة أو عنابة أو قسنطينة أو وهران أو غرداية أو تندوف) وتأكيد مطبوع","تذكر سفارة إيطاليا أن الطلب يُودع لدى VFS Global حضوريًا. الحجز عبر الإنترنت على موقع VFS Global (على مدار الساعة) أو هاتفيًا عبر مركز الاتصال."]},
+   fee:{
+   fr:["Frais de visa et frais de service VFS Global, en dinars algériens (DZD)","Non remboursés en cas de refus. Les montants changent : confirmez-les sur le site de l'ambassade d'Italie à Alger et de VFS Global."],
+   en:["Visa fee and VFS Global service fee, in Algerian dinars (DZD)","Not refunded if the visa is refused. Amounts change: confirm them on the Italian Embassy in Algiers and VFS Global websites."],
+   ar:["رسوم التأشيرة ورسوم خدمة VFS Global بالدينار الجزائري (DZD)","لا تُسترجع في حالة الرفض. المبالغ تتغير: تأكد منها على موقع سفارة إيطاليا في الجزائر وVFS Global."]}},
+  all:{
+   cin:{fr:["Copie de la carte nationale d'identité biométrique",""],en:["Copy of the biometric national ID card",""],ar:["نسخة من بطاقة التعريف الوطنية البيومترية",""]},
+   emp_cnss:{fr:["Attestation d'affiliation à la sécurité sociale (CNAS)","Montre une activité déclarée et stable."],en:["Social security affiliation certificate (CNAS)","Shows a declared and stable job."],ar:["شهادة الانتساب للضمان الاجتماعي (CNAS)","تثبت نشاطًا مصرّحًا به ومستقرًا."]},
+   self_reg:{fr:["Extrait du registre du commerce, NIF et attestation fiscale","Selon votre activité : ajoutez l'affiliation CASNOS et vos dernières déclarations."],en:["Trade register extract, tax ID (NIF) and tax certificate","Depending on your activity: add CASNOS affiliation and your latest returns."],ar:["مستخرج السجل التجاري والرقم الجبائي (NIF) وشهادة جبائية","حسب نشاطك: أضف الانتساب لـCASNOS وآخر تصريحاتك."]},
+   med_file:{fr:["Dossier médical et rapport de votre médecin en Algérie","Diagnostic et raison du déplacement. Traduction assermentée si le document est en arabe."],en:["Medical file and report from your doctor in Algeria","Diagnosis and reason for travelling. Sworn translation if the document is in Arabic."],ar:["الملف الطبي وتقرير طبيبك في الجزائر","التشخيص وسبب السفر. ترجمة محلّفة إن كانت الوثيقة بالعربية."]},
+   transl:{
+    fr:{fr:["Traduction française certifiée des documents en arabe","Exigée pour les pièces rédigées en arabe : faites-la faire par un traducteur certifié."],en:["Certified French translation of documents in Arabic","Required for documents written in Arabic: have it done by a certified translator."],ar:["ترجمة فرنسية معتمدة للوثائق بالعربية","مطلوبة للوثائق المكتوبة بالعربية: اطلبها من مترجم معتمد."]},
+    es:{fr:["Traduction française ou espagnole des documents en arabe","Les documents doivent être en français ou en espagnol : les originaux en arabe sont accompagnés d'une traduction."],en:["French or Spanish translation of documents in Arabic","Documents must be in French or Spanish: Arabic originals come with a translation."],ar:["ترجمة فرنسية أو إسبانية للوثائق بالعربية","يجب أن تكون الوثائق بالفرنسية أو الإسبانية: الأصول العربية تُرفق بترجمة."]},
+    it:{fr:["Traduction en italien des documents en arabe, si demandée","Vérifiez sur le site de l'ambassade d'Italie à Alger quelles pièces doivent être traduites."],en:["Italian translation of documents in Arabic, if requested","Check on the Italian Embassy in Algiers website which documents must be translated."],ar:["ترجمة إلى الإيطالية للوثائق بالعربية عند الطلب","تحقق من موقع سفارة إيطاليا في الجزائر من الوثائق التي يجب ترجمتها."]}}}
+ }
+};
+var ITEM_TN={};
+var ORI_NOTE2={fr:"Il n'est lié à aucune ambassade.",en:"It is not affiliated with any embassy.",ar:"وهو غير تابع لأي سفارة."};
+function applyOriginItems(o){
+  var by={};ITEMS.forEach(function(it){by[it.id]=it});
+  ["cin","transl","emp_cnss","self_reg","med_file"].forEach(function(id){if(by[id]&&!ITEM_TN[id])ITEM_TN[id]={fr:by[id].fr,en:by[id].en,ar:by[id].ar}});
+  if(S.origin==="tn"){
+    ["cin","transl","emp_cnss","self_reg","med_file"].forEach(function(id){if(ITEM_TN[id]&&by[id]){by[id].fr=ITEM_TN[id].fr;by[id].en=ITEM_TN[id].en;by[id].ar=ITEM_TN[id].ar}});
+    return o;
+  }
+  var D=ORI_ITEMS[S.origin]||{},d=curC().id,P=D[d],A=D.all||{};
+  ["cin","emp_cnss","self_reg","med_file"].forEach(function(id){if(by[id]&&A[id]){by[id].fr=A[id].fr;by[id].en=A[id].en;by[id].ar=A[id].ar}});
+  if(by.transl&&A.transl&&A.transl[d]){var x=A.transl[d];by.transl.fr=x.fr;by.transl.en=x.en;by.transl.ar=x.ar}
+  if(P){["appt","fee"].forEach(function(id){if(by[id]&&P[id]){by[id].fr=P[id].fr;by[id].en=P[id].en;by[id].ar=P[id].ar}})}
+  var r=Object.assign({},o);
+  r.disc=ORI_NOTE[S.lang]+" "+ORI_NOTE2[S.lang];
+  r.linkFV=(curC().id==="fr"?"France-Visas":PX.link[S.lang])+" · "+(curC().id==="fr"?nm(ORIS.filter(function(x){return x.id===S.origin})[0]):nm(curC()));
+  return r;
+}
+function oriLink(cur){return S.origin==="tn"?(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site):((ORI_SITE[S.origin]||{})[cur.id]||"")}
+
+function applyCountry(t){return applyOriginItems(applyCountry0(t))}
 function applyOrigin(){COUNTRIES.forEach(function(c){c.ready=S.origin==="tn"?TN_READY.indexOf(c.id)>=0:(ORI_READY[S.origin]||[]).indexOf(c.id)>=0})}
 function oriName(id){var o=ORIS.filter(function(x){return x.id===id})[0];return o?o.n[S.lang]:""}
 function oriHtml(t){
@@ -2268,7 +2374,7 @@ function render(){
   $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10),TLS[S.lang].s11,TLS[S.lang].s12,TLS[S.lang].s13][st];document.body.dataset.step=st;
   $("disc").textContent=(st===0||st>=6)?GENDISC[S.lang]:t.disc;renderLegal();renderBpn();renderTrans();renderReviews();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
-  $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
+  $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+oriLink(cur)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
   if(showSt){$("stepper").innerHTML='<div class="st-row"><span class="st-num">'+STX[S.lang].step(st-2)+' · '+t.stepNames[st-2]+'</span><span class="pill"><span class="flag">'+flag(cur.id)+'</span>'+nm(cur)+(S.motive==="medical"?' · '+t.motive.medical:'')+'</span></div>'+stepper(st-2,[t.stepNames[0],t.stepNames[2],t.stepNames[3]])}
   $("home").hidden=st!==0;if(st===0)$("home").innerHTML=homeHtml(t);
