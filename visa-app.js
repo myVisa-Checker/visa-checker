@@ -1123,7 +1123,7 @@ function radarHtml(){
   var key=rdKey(),st=RD.st&&RD.st[key],tag=X.unk,cls="";
   if(st){if(st.open){tag=X.open;cls=" on"}else{tag=X.closed}if(st.at)tag+=" · "+X.ago(Math.max(0,Math.round((Date.now()-st.at)/60000)))}
   var dn=function(id){return nm(COUNTRIES.filter(function(c){return c.id===id})[0]||{n:{fr:id,en:id,ar:id}})};
-  return '<div class="needs rdr"><h2 class="hot">'+X.t+'</h2><p class="ag-sub">'+X.s+'</p>'
+  return '<div class="needs rdr"><h2 class="rdr-h"><img src="icons/radar-rdv.webp" alt="'+esc(X.t)+'" width="511" height="548" loading="lazy" style="display:block;width:100%;max-width:420px;height:auto;margin:0 auto"></h2><p class="ag-sub">'+X.s+'</p>'
    +'<div class="f-row"><div class="field"><label class="q-label" for="rd-c">'+X.c+'</label><select class="sel" id="rd-c">'+cs.map(function(c){return '<option value="'+c[0]+'"'+(c[0]===RD.c?' selected':'')+'>'+c[1]+'</option>'}).join("")+'</select></div>'
    +'<div class="field"><label class="q-label" for="rd-d">'+X.d+'</label><select class="sel" id="rd-d">'+RDD.map(function(d){return '<option value="'+d+'"'+(d===RD.d?' selected':'')+'>'+dn(d)+'</option>'}).join("")+'</select></div></div>'
    +'<p class="rd-st'+cls+'" role="status">'+tag+'</p>'
