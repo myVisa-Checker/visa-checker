@@ -1098,11 +1098,11 @@ function applyCountry(t){return applyOriginItems(applyCountry0(t))}
 function applyOrigin(){COUNTRIES.forEach(function(c){c.ready=S.origin==="tn"?TN_READY.indexOf(c.id)>=0:(ORI_READY[S.origin]||[]).indexOf(c.id)>=0})}
 function oriName(id){var o=ORIS.filter(function(x){return x.id===id})[0];return o?o.n[S.lang]:""}
 function oriHtml(t){
-  return '<div class="field"><span class="q-label">'+t.s_pass+'</span><div class="chips orig" role="group" aria-label="'+t.s_pass+'">'+ORIS.map(function(o){return '<button type="button" class="chip" data-o="'+o.id+'" aria-pressed="'+(S.origin===o.id)+'"><span class="flag">'+flag(o.id)+'</span>'+o.n[S.lang]+'</button>'}).join("")+'</div></div>';
+  return '<div class="field"><label class="q-label" for="orisel">'+t.s_pass+'</label><div class="orisel"><span class="flag">'+flag(S.origin)+'</span><select class="sel" id="orisel">'+ORIS.map(function(o){return '<option value="'+o.id+'"'+(S.origin===o.id?' selected':'')+'>'+o.n[S.lang]+'</option>'}).join("")+'</select></div></div>';
 }
-document.addEventListener("click",function(e){
-  var b=e.target.closest&&e.target.closest("[data-o]");if(!b)return;
-  var o=b.dataset.o;if(o===S.origin||["tn","ma","dz"].indexOf(o)<0)return;
+document.addEventListener("change",function(e){
+  var b=e.target;if(!b||b.id!=="orisel")return;
+  var o=b.value;if(o===S.origin||["tn","ma","dz"].indexOf(o)<0)return;
   S.origin=o;S.country="fr";S.step=0;applyOrigin();save();render();
 });
 function homeHtml(t){
