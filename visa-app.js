@@ -1101,6 +1101,7 @@ function oriHtml(t){
   return '<div class="field"><label class="q-label" for="orisel">'+t.s_pass+'</label><div class="orisel"><span class="flag">'+flag(S.origin)+'</span><select class="sel" id="orisel">'+ORIS.map(function(o){return '<option value="'+o.id+'"'+(S.origin===o.id?' selected':'')+'>'+o.n[S.lang]+'</option>'}).join("")+'</select></div></div>';
 }
 document.addEventListener("change",function(e){
+  var q=e.target;if(q&&q.id==="evsel"&&q.value&&evFind(q.value)){S.evc=q.value;S.step=7;save();render();window.scrollTo(0,0);return}
   var b=e.target;if(!b||b.id!=="orisel")return;
   var o=b.value;if(o===S.origin||["tn","ma","dz"].indexOf(o)<0)return;
   S.origin=o;S.country="fr";S.step=0;applyOrigin();save();render();
@@ -1117,7 +1118,7 @@ function homeHtml(t){
   }
   h+='</div>';
   if(!cur.ready){h+='<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+(S.origin==='tn'?t.soonText:ORI_SOON[S.origin][L])+'</p></div>'}
-  if(S.origin==='tn')h+=evCardHtml();
+  h+=evCardHtml();
   h+='</div>';
   h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+(S.origin==='tn'?needsHtml(t):'')+ivCardHtml()+'</div>';
   h+='<section class="why"><h2>'+t.whyTitle+'</h2><ul class="ticks">'+t.why.map(function(x){return '<li><svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" style="stroke:var(--surface)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>'+x+'</span></li>'}).join("")+'</ul><p class="ag-note">'+t.whyNote+'</p></section>';
@@ -1486,9 +1487,9 @@ function interviewHtml(){
 /* ===== Carte « Entraînement à l'entretien » : juste sous « Besoin de documents de voyage ? » ===== */
 var IVICON='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 7a4 4 0 0 1 4-4h11a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-7l-4 3.5V17a4 4 0 0 1-4-4z" fill="#fff"/><path d="M10.6 7.8a2.2 2.2 0 1 1 3.4 1.8c-.9.6-1.2 1-1.2 1.9" fill="none" stroke="#E8590C" stroke-width="2" stroke-linecap="round"/><circle cx="12.8" cy="14" r="1.1" fill="#E8590C"/><path d="M16 18a3.5 3.5 0 0 1 3.5-3.5H26a3.5 3.5 0 0 1 3.5 3.5v4.5a3.5 3.5 0 0 1-3.5 3.5h-1v3.5l-4.5-3.5h-1A3.5 3.5 0 0 1 16 22.5z" fill="#FFD43B"/><path d="M19.5 20.5l2.2 2.2 4.3-4.4" fill="none" stroke="#7C2D12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var IVC={
- fr:{t:"Préparez votre entretien",s:"Une IA joue le consulat et vous pose les questions, avec un retour sur chaque réponse. Surtout utile pour les États-Unis.",b:"Entraînement à l'entretien",n:"Accès par code · aucun visa garanti"},
- en:{t:"Prepare for your interview",s:"An AI plays the consulate and asks you questions, with feedback on each answer. Most useful for the United States.",b:"Interview practice",n:"Access by code · no visa guaranteed"},
- ar:{t:"حضّر مقابلتك",s:"ذكاء اصطناعي يلعب دور القنصلية ويطرح عليك الأسئلة مع تعليق على كل إجابة. مفيد خصوصاً للولايات المتحدة.",b:"التدريب على المقابلة",n:"الدخول برمز · لا ضمان للتأشيرة"}};
+ fr:{t:"Préparez votre entretien",s:"Entraînez-vous comme le jour J : un coach virtuel vous pose les questions d'un entretien de visa et vous conseille après chaque réponse. Arrivez serein, prêt à convaincre.",b:"Entraînement à l'entretien",n:"Accès par code · aucun visa garanti"},
+ en:{t:"Prepare for your interview",s:"Practise as if it were the big day: a virtual coach asks the questions of a visa interview and gives you tips after each answer. Walk in calm and ready to convince.",b:"Interview practice",n:"Access by code · no visa guaranteed"},
+ ar:{t:"حضّر مقابلتك",s:"تدرّب كأنه اليوم الحقيقي: مدرّب افتراضي يطرح عليك أسئلة مقابلة التأشيرة وينصحك بعد كل إجابة. اذهب إلى موعدك هادئًا وجاهزًا للإقناع.",b:"التدريب على المقابلة",n:"الدخول برمز · لا ضمان للتأشيرة"}};
 function ivCardHtml(){
   var X=IVC[S.lang]||IVC.fr;
   return '<div class="needs ivn"><h2 class="hot">'+X.t+'</h2><p class="ag-sub">'+X.s+'</p><div class="sp-chips"><button type="button" class="sp-chip iv-cta" data-iv-open><span class="iv-ico">'+IVICON+'</span><span class="iv-lbl">'+X.b+'</span></button></div><p class="ag-sub">'+X.n+'</p></div>';
@@ -1510,7 +1511,7 @@ function usHtml(){
    +'<p class="ag-note">'+esc(X.n)+'</p></section>';
 }
 function renderSponsors(t){
-  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t)+(curC().id==="us"?'':ivCardHtml()):'');
+  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t)+(curC().id==="us"||S.step===6?'':ivCardHtml()):'');
   var h='<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
   h+='<p class="sp-join c">'+SPT.note[S.lang]+'</p>';
   $("sponsors").innerHTML=h;
@@ -2232,7 +2233,8 @@ var EVCN={
  en:{eu:"Europe / Caucasus",af:"Africa",ame:"Americas and Caribbean",as:"Asia",oc:"Oceania"},
  ar:{eu:"أوروبا / القوقاز",af:"أفريقيا",ame:"الأمريكتان ومنطقة الكاريبي",as:"آسيا",oc:"أوقيانوسيا"}
 };
-var evk="";
+var evk="";var EVCK=["eu","af","ame","as","oc"];
+var EVO={fr:"Ces conditions sont celles d'un passeport tunisien. Pour un passeport marocain ou algérien, elles peuvent différer : vérifiez sur le portail officiel avant de payer.",en:"These conditions are for a Tunisian passport. For a Moroccan or Algerian passport they may differ: check the official portal before paying.",ar:"هذه الشروط خاصة بجواز السفر التونسي. قد تختلف بالنسبة لجواز السفر المغربي أو الجزائري: تحقق من البوابة الرسمية قبل الدفع."};
 var EVCI={
  af:'<g transform="translate(-2.95 -1.15) scale(1.092)"><g transform="translate(1.6 1.6) scale(.205)" fill="currentColor"><path d="M30 10 48 7l15 6 10 4 6 9 3 10 10 12-3 12-9 8-5 14-9 12-8 5-8-8-4-14-5-14-9-4-10-6-4-10 4-10 8-12 12-8Z"/></g><path d="M19.5 2.2l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z" fill="currentColor"/></g>',
  ame:'<g transform="translate(-1.66 -1.15) scale(1.057)"><g transform="translate(.6 1.2) scale(.215)" fill="currentColor"><path d="M10 14 30 7l19 3 10 9-4 12-9 8-2 8 4 8 12 2 10 8-4 12-12 14-6 8-5-12-4-16-2-12-4-8-8-8-10-8Z"/><circle cx="70" cy="38" r="3.6"/><circle cx="79" cy="43.5" r="3.6"/><circle cx="88" cy="49" r="3.6"/></g><path d="M20.5 2.4l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z" fill="currentColor"/></g>',
@@ -2241,13 +2243,15 @@ var EVCI={
  oc:'<g transform="translate(-0.74 -0.44) scale(0.995)"><path fill="currentColor" d="M12.2 9.2c-1.9-3.2-5.8-3.6-8.2-1.6 3-.7 5.4.2 8.2 1.6zM12.2 9.2c1.9-3.2 5.8-3.6 8.2-1.6-3-.7-5.4.2-8.2 1.6zM12 9c-.9-3 0-5.8 2.8-7-.9 2-1 4.2-1.2 7zM12 9c-1.9-1.9-3.1-4.6-1.4-6.8.1 2.9.5 4.9 1.4 6.8zM11 9.6c.9 3.8.8 7.4-.2 10.4h2.2c-.6-3.2-.1-6.9.9-10.4z"/><path fill="currentColor" d="M2 20.6c2-1.4 3.6-1.4 5.5 0s3.6 1.4 5.5 0 3.6-1.4 5.5 0c1.3.9 2.6 1.2 3.5 1V23H2z"/><path d="M21 2.2l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z" fill="currentColor"/></g>'
 };
 var EVCX={
- fr:{back:"Tous les continents",soon:"Aucun pays e-Visa dans cette région pour le moment. La liste sera complétée.",pick:"Choisissez un continent, puis un pays (ordre alphabétique).",n:["pays","pays"]},
- en:{back:"All continents",soon:"No e-Visa country in this region yet. The list will be completed.",pick:"Pick a continent, then a country (alphabetical order).",n:["country","countries"]},
- ar:{back:"كل القارات",soon:"لا توجد دول للتأشيرة الإلكترونية في هذه المنطقة حاليًا. ستُستكمل القائمة.",pick:"اختر قارة ثم دولة (بالترتيب الأبجدي).",n:["دولة","دول"]}
+ fr:{back:"Tous les continents",soon:"Aucun pays e-Visa dans cette région pour le moment. La liste sera complétée.",sel:"Choisir un pays",selp:"Choisissez dans la liste…",pick:"Choisissez un continent, puis un pays (ordre alphabétique).",n:["pays","pays"]},
+ en:{back:"All continents",soon:"No e-Visa country in this region yet. The list will be completed.",sel:"Choose a country",selp:"Choose from the list…",pick:"Pick a continent, then a country (alphabetical order).",n:["country","countries"]},
+ ar:{back:"كل القارات",soon:"لا توجد دول للتأشيرة الإلكترونية في هذه المنطقة حاليًا. ستُستكمل القائمة.",sel:"اختر دولة",selp:"اختر من القائمة…",pick:"اختر قارة ثم دولة (بالترتيب الأبجدي).",n:["دولة","دول"]}
 };
 function evListHtml(){
   var x=EVT[S.lang],L=S.lang,X=EVCX[L];
   var h='<div class="evwrap"><div class="book"><p>'+x.listWarn+'</p></div>';
+  if(S.origin!=="tn")h+='<p class="ag-note"><b>'+EVO[L]+'</b></p>';
+  h+='<div class="field"><label class="q-label" for="evsel">'+EVCX[L].sel+'</label><select class="sel" id="evsel"><option value="">'+EVCX[L].selp+'</option>'+EVCK.map(function(k){var cl=EV.filter(function(c){return EVCONT[c.id]===k}).sort(function(a,b){return evKey(a,L).localeCompare(evKey(b,L),L)});return cl.length?'<optgroup label="'+EVCN[L][k]+'">'+cl.map(function(c){return '<option value="'+c.id+'">'+c.n[L]+'</option>'}).join("")+'</optgroup>':""}).join("")+'</select></div>';
   if(!evk||!EVCN[L][evk]){
     var SH={fr:{eu:"Europe",af:"Afrique",ame:"Amériques",as:"Asie",oc:"Océanie"},en:{eu:"Europe",af:"Africa",ame:"Americas",as:"Asia",oc:"Oceania"},ar:{eu:"أوروبا",af:"أفريقيا",ame:"الأمريكتان",as:"آسيا",oc:"أوقيانوسيا"}};
     var tot=EV.length;
