@@ -347,7 +347,6 @@ function sanitizeState(o){
     if(typeof o[k]==="string"&&o[k].length<=64&&/^[\w-]*$/.test(o[k]))r[k]=o[k]});
   if(typeof o.refus==="string")r.refus=o.refus.slice(0,300);
   if(typeof o.tok==="string"&&o.tok.length<=1024)r.tok=o.tok;
-  if(typeof o.rtok==="string"&&o.rtok.length<=1024)r.rtok=o.rtok;
   ["paid","pack"].forEach(function(k){if(typeof o[k]==="boolean")r[k]=o[k]});
   ["step","back"].forEach(function(k){var n=o[k];if(typeof n==="number"&&isFinite(n)&&Math.floor(n)===n&&n>=0&&n<=13)r[k]=n});
   if(o.done&&typeof o.done==="object"&&!Array.isArray(o.done)){var c=0,id;for(id in o.done){if(/^[A-Za-z0-9_]{1,32}$/.test(id)&&o.done[id]===true&&c<300){r.done[id]=true;c++}}}
@@ -415,7 +414,7 @@ function d17Ref(k){
   if(!r){
     var n;
     try{var a=new Uint32Array(1);crypto.getRandomValues(a);n=a[0]%9000+1000}catch(x){n=Math.floor(Math.random()*9000)+1000}
-    r="VC-"+(k==="adv"?"A":k==="req"?"R":k==="radar"?"D":"P")+"-"+n;
+    r="VC-"+(k==="adv"?"A":k==="req"?"R":"P")+"-"+n;
     try{sessionStorage.setItem(key,r)}catch(x){}
   }
   return r;
@@ -613,7 +612,7 @@ function doUnlock(kind,inputId,errId,btn){
   verifyCode(kind,code).then(function(r){
     btn.disabled=false;btn.removeAttribute("aria-busy");
     if(!r.ok){err.textContent=X[r.err]||X.server;$(inputId).setAttribute("aria-invalid","true");return}
-    if(kind==="advisors")S.paid=true;else if(kind==="radar"){S.rtok=r.token;RD.expired=false}else{S.pack=true;S.tok=r.token;PACK_STATE="idle"}
+    if(kind==="advisors")S.paid=true;else{S.pack=true;S.tok=r.token;PACK_STATE="idle"}
     save();render();
   });
 }
@@ -1107,63 +1106,6 @@ document.addEventListener("change",function(e){
   var o=b.value;if(o===S.origin||["tn","ma","dz"].indexOf(o)<0)return;
   S.origin=o;S.country="fr";S.step=0;applyOrigin();save();render();
 });
-/* ===== Radar de rendez-vous : alerte par e-mail quand des créneaux s'ouvrent (le robot signale au Worker, le site inscrit) ===== */
-var RADAR_URL=UNLOCK_URL.replace(/\/unlock$/,"/radar");
-var RDC={tn:[["tunis","Tunis"],["sfax","Sfax"]],ma:[["casablanca","Casablanca"],["rabat","Rabat"],["tanger","Tanger"],["marrakech","Marrakech"],["fes","Fès"],["agadir","Agadir"],["oujda","Oujda"],["nador","Nador"],["tetouan","Tétouan"]],dz:[["alger","Alger"],["oran","Oran"],["annaba","Annaba"],["constantine","Constantine"]]};
-var RDD=["fr","es","it"];
-var RDT={
- fr:{t:"Radar de rendez-vous",s:"Fini de rafraîchir la page toute la journée. Dites-nous où vous déposez : nous surveillons les créneaux et vous prévenons par e-mail dès qu'ils s'ouvrent. Nous ne réservons rien à votre place.",c:"Centre de dépôt",d:"Destination",m:"Votre e-mail",b:"Me prévenir",ok:"C'est noté. Vous serez prévenu par e-mail pendant 30 jours.",err:"Envoi impossible. Vérifiez l'e-mail et réessayez.",open:"Créneaux détectés",closed:"Aucun créneau pour le moment",unk:"Surveillance en préparation pour ce centre",ago:function(m){return "Dernière vérification il y a "+m+" min"},n:"Pour vous désinscrire, répondez STOP à un e-mail d'alerte.",pr:function(p){return "Accès 1 mois : "+p+" DT"},pl:"Paiement unique. Alertes par e-mail pendant 30 jours.",code:"Déjà payé ? Entrez le code reçu",unlock:"Débloquer",until:function(d){return "Accès actif jusqu'au "+d},exp:"Votre accès a expiré. Saisissez un nouveau code.",soon:"Bientôt disponible",soonT:"Nous préparons la surveillance automatique des créneaux de rendez-vous. Le service ouvrira dès qu'elle fonctionnera."},
- en:{t:"Appointment radar",s:"No more refreshing the page all day. Tell us where you apply: we watch the slots and email you the moment they open. We never book anything for you.",c:"Application centre",d:"Destination",m:"Your email",b:"Alert me",ok:"Done. You will be alerted by email for 30 days.",err:"Could not send. Check the email and try again.",open:"Slots detected",closed:"No slots right now",unk:"Monitoring is being set up for this centre",ago:function(m){return "Last checked "+m+" min ago"},n:"To unsubscribe, reply STOP to an alert email.",pr:function(p){return "1-month access: "+p+" TND"},pl:"One payment. Email alerts for 30 days.",code:"Already paid? Enter the code you received",unlock:"Unlock",until:function(d){return "Access active until "+d},exp:"Your access has expired. Enter a new code.",soon:"Coming soon",soonT:"We are building automatic monitoring of appointment slots. The service will open as soon as it works."},
- ar:{t:"رادار المواعيد",s:"لا مزيد من تحديث الصفحة طوال اليوم. أخبرنا أين تقدّم ملفك: نراقب المواعيد ونرسل لك بريدًا فور فتحها. لا نحجز أي شيء نيابةً عنك.",c:"مركز الإيداع",d:"الوجهة",m:"بريدك الإلكتروني",b:"نبّهني",ok:"تم. ستصلك التنبيهات بالبريد لمدة 30 يومًا.",err:"تعذّر الإرسال. تحقق من البريد وأعد المحاولة.",open:"تم رصد مواعيد",closed:"لا مواعيد حاليًا",unk:"المراقبة قيد الإعداد لهذا المركز",ago:function(m){return "آخر فحص منذ "+m+" دقيقة"},n:"لإلغاء الاشتراك أجب بكلمة STOP على بريد التنبيه.",pr:function(p){return "وصول لمدة شهر: "+p+" د.ت"},pl:"دفعة واحدة. تنبيهات بالبريد لمدة 30 يومًا.",code:"دفعت؟ أدخل الرمز الذي وصلك",unlock:"فتح",until:function(d){return "الوصول مفعّل حتى "+d},exp:"انتهت صلاحية وصولك. أدخل رمزاً جديداً.",soon:"قريبًا",soonT:"نعمل على المراقبة التلقائية لمواعيد التأشيرة. ستُفتح الخدمة فور اشتغالها."}
-};
-var RD={c:"",d:"fr",mail:"",msg:"",st:null};
-function rdKey(){var c=RD.c||(RDC[S.origin]||RDC.tn)[0][0];return S.origin+"-"+RD.d+"-"+c}
-var RADAR_PRICE=50;
-var RADAR_LIVE=false; /* mettre true quand la surveillance des créneaux fonctionne vraiment : alors le paiement et le champ de code réapparaissent */
-function radarExp(){var p=String(S.rtok||"").split(".");return p.length===3&&p[0]==="radar"&&/^\d{10,14}$/.test(p[1])?Number(p[1]):0}
-function radarOk(){return radarExp()>Date.now()}
-function radarHtml(){
-  var X=RDT[S.lang]||RDT.fr,L=S.lang,cs=RDC[S.origin]||RDC.tn,ok=radarOk();
-  if(!cs.some(function(c){return c[0]===RD.c}))RD.c=cs[0][0];
-  var key=rdKey(),st=RD.st&&RD.st[key],tag=X.unk,cls="";
-  if(st){if(st.open){tag=X.open;cls=" on"}else{tag=X.closed}if(st.at)tag+=" · "+X.ago(Math.max(0,Math.round((Date.now()-st.at)/60000)))}
-  var dn=function(id){return nm(COUNTRIES.filter(function(c){return c.id===id})[0]||{n:{fr:id,en:id,ar:id}})};
-  var head='<div class="needs rdr"><div class="rdr-grid"><h2 class="rdr-h"><img src="icons/radar-rdv.webp" alt="'+esc(X.t)+'" width="511" height="548" loading="lazy" style="display:block;width:100%;max-width:420px;height:auto;margin:0 auto"></h2><div class="rdr-body"><p class="ag-sub">'+X.s+'</p>';
-  if(!RADAR_LIVE)return '<div class="needs rdr"><div class="rdr-grid"><h2 class="rdr-h"><img src="icons/radar-rdv.webp" alt="'+esc(X.t)+'" width="511" height="548" loading="lazy" style="display:block;width:100%;max-width:420px;height:auto;margin:0 auto"></h2><div class="rdr-body"><span style="align-self:flex-start;padding:8px 18px;border-radius:999px;background:var(--accent);color:#fff;font:700 1rem var(--f-body)">'+X.soon+'</span><p class="ag-sub">'+X.soonT+'</p></div></div></div>';
-  if(!ok){
-    var h=head;
-    if(RD.expired||S.rtok)h+='<p class="ag-err" role="alert">'+X.exp+'</p>';
-    h+='<div class="rd-price"><b>'+X.pr(RADAR_PRICE)+'</b><span>'+X.pl+'</span></div>';
-    h+=d17Html("radar",RADAR_PRICE);
-    h+='<div class="field"><label class="q-label" for="rd-code">'+X.code+'</label><div class="code-row"><input class="sel" id="rd-code" type="text" autocomplete="off" dir="ltr" aria-describedby="rd-cerr" aria-invalid="false"><button type="button" class="reset" id="rd-unlock">'+X.unlock+'</button></div><span class="ag-err" id="rd-cerr" role="alert"></span></div>';
-    return h+'<p class="ag-note">'+X.n+'</p></div></div></div>';
-  }
-  return head+'<p class="rd-st on" role="status">'+X.until(fmtD(new Date(radarExp()).toISOString().slice(0,10)))+'</p>'
-   +'<div class="f-row"><div class="field"><label class="q-label" for="rd-c">'+X.c+'</label><select class="sel" id="rd-c">'+cs.map(function(c){return '<option value="'+c[0]+'"'+(c[0]===RD.c?' selected':'')+'>'+c[1]+'</option>'}).join("")+'</select></div>'
-   +'<div class="field"><label class="q-label" for="rd-d">'+X.d+'</label><select class="sel" id="rd-d">'+RDD.map(function(d){return '<option value="'+d+'"'+(d===RD.d?' selected':'')+'>'+dn(d)+'</option>'}).join("")+'</select></div></div>'
-   +'<p class="rd-st'+cls+'" role="status">'+tag+'</p>'
-   +'<div class="field"><label class="q-label" for="rd-m">'+X.m+'</label><input class="sel" id="rd-m" type="email" inputmode="email" autocomplete="email" dir="ltr" value="'+esc(RD.mail)+'"></div>'
-   +'<span class="fe" id="rd-msg" role="status">'+esc(RD.msg)+'</span><button type="button" class="pay wide" id="rd-go">'+X.b+'</button><p class="ag-note">'+X.n+'</p></div></div></div>';
-}
-function rdrPaint(){var e=$("rdr");if(e&&!e.contains(document.activeElement))e.innerHTML=radarHtml()}
-function rdrLoad(){
-  if(RD.t&&Date.now()-RD.t<60000)return;RD.t=Date.now();
-  fetch(RADAR_URL+"/status",{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok){RD.st=j.centers||{};rdrPaint()}}).catch(function(){});
-}
-document.addEventListener("change",function(e){
-  var t=e.target;if(!t)return;
-  if(t.id==="rd-c"||t.id==="rd-d"){if(t.id==="rd-c")RD.c=t.value;else RD.d=t.value;RD.msg="";var e2=$("rdr");if(e2)e2.innerHTML=radarHtml()}
-});
-document.addEventListener("input",function(e){if(e.target&&e.target.id==="rd-m")RD.mail=e.target.value.trim()});
-document.addEventListener("click",function(e){
-  var b=e.target.closest&&e.target.closest("#rd-go");if(!b)return;
-  var X=RDT[S.lang]||RDT.fr,m=$("rd-m")?$("rd-m").value.trim():RD.mail;RD.mail=m;
-  var say=function(t){RD.msg=t;var q=$("rd-msg");if(q)q.textContent=t};
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)){say(X.err);return}
-  b.disabled=true;
-  fetch(RADAR_URL+"/sub",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+(S.rtok||"")},body:JSON.stringify({key:rdKey(),email:m,lang:S.lang})})
-   .then(function(r){return r.json().catch(function(){return {}})}).then(function(j){b.disabled=false;if(j&&j.error==="auth"){S.rtok="";RD.expired=true;save();var q=$("rdr");if(q)q.innerHTML=radarHtml();return}say(j&&j.ok?X.ok:X.err)},function(){b.disabled=false;say(X.err)});
-});
 function homeHtml(t){
   var cur=curC(),L=S.lang;
   var h='<div class="panel hcard"><div class="ask"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg><span>'+t.ask+'</span></div>';
@@ -1178,7 +1120,6 @@ function homeHtml(t){
   if(!cur.ready){h+='<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+(S.origin==='tn'?t.soonText:ORI_SOON[S.origin][L])+'</p></div>'}
   h+=evCardHtml();
   h+='</div>';
-  h+='<div id="rdr" class="rdw">'+radarHtml()+'</div>';
   h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+(S.origin==='tn'?needsHtml(t):'')+ivCardHtml()+'</div>';
   h+='<section class="why"><h2>'+t.whyTitle+'</h2><ul class="ticks">'+t.why.map(function(x){return '<li><svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" style="stroke:var(--surface)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>'+x+'</span></li>'}).join("")+'</ul><p class="ag-note">'+t.whyNote+'</p></section>';
   return h;
@@ -2440,7 +2381,7 @@ function render(){
   $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+oriLink(cur)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
   if(showSt){$("stepper").innerHTML='<div class="st-row"><span class="st-num">'+STX[S.lang].step(st-2)+' · '+t.stepNames[st-2]+'</span><span class="pill"><span class="flag">'+flag(cur.id)+'</span>'+nm(cur)+(S.motive==="medical"?' · '+t.motive.medical:'')+'</span></div>'+stepper(st-2,[t.stepNames[0],t.stepNames[2],t.stepNames[3]])}
-  $("home").hidden=st!==0;if(st===0){$("home").innerHTML=homeHtml(t);rdrLoad()}
+  $("home").hidden=st!==0;if(st===0){$("home").innerHTML=homeHtml(t)}
   $("mode").hidden=st!==1;if(st===1)$("mode").innerHTML=modeHtml(t);
   $("dest").hidden=st!==2;if(st===2)$("dest").innerHTML=destHtml(t);
   $("panel").hidden=st!==3;if(st===3)$("panel").innerHTML=panelHtml(t);
@@ -2488,7 +2429,6 @@ function go(n){if(S.step>=11){S.step=0;save();render();window.scrollTo(0,0);try{
 document.addEventListener("click",function(e){
   if(e.target.id==="unlock"){doUnlock("advisors","code","err",e.target);return}
   if(e.target.id==="unlock2"){doUnlock("pack","code2","err2",e.target);return}
-  if(e.target.id==="rd-unlock"){doUnlock("radar","rd-code","rd-cerr",e.target);return}
   var cb=e.target.closest(".cp");
   if(cb&&cb.dataset.pdf==null){copyLetter(cb);return}
   var nd=e.target.closest("[data-need]");
