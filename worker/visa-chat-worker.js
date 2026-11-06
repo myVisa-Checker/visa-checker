@@ -39,6 +39,24 @@ const ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const rid = (n) => Array.from(crypto.getRandomValues(new Uint8Array(n)), (b) => ALPHA[b % ALPHA.length]).join("");
 const TTL = 60 * 60 * 24 * 30;
 
+// Limite de l'assistant gratuit : RL_MAX messages par RL_WINDOW et par visiteur (adresse IP).
+// Le compteur est gardé en mémoire du Worker (aucune écriture dans le KV : le quota gratuit du KV reste pour l'entraînement payant).
+// C'est une limite « souple » : Cloudflare peut faire tourner plusieurs instances du Worker, chacune compte de son côté.
+const RL_MAX = 20, RL_WINDOW = 10 * 60 * 1000;
+const RATE_MSG = "Trop de messages d'affilée. Réessaie dans quelques minutes. / Too many messages, please try again in a few minutes. / رسائل كثيرة، أعد المحاولة بعد دقائق.";
+const hits = new Map();
+function limited(ip) {
+  const now = Date.now();
+  if (hits.size > 5000) {
+    for (const [k, v] of hits) if (now - v.t > RL_WINDOW) hits.delete(k);
+    if (hits.size > 5000) hits.clear();
+  }
+  const h = hits.get(ip);
+  if (!h || now - h.t > RL_WINDOW) { hits.set(ip, { t: now, n: 1 }); return false; }
+  h.n++;
+  return h.n > RL_MAX;
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -133,6 +151,7 @@ export default {
       }));
       while (msgs.length && msgs[0].role !== "user") msgs.shift();
       if (!msgs.length) return out({ error: "empty" }, 400);
+      if (!interview && limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
 
       const model = env.GEMINI_MODEL || "gemini-2.5-flash";
       const r = await fetch(
