@@ -1,6 +1,7 @@
 // Worker « visa-chat » : assistant Visa Checker + entraînement à l'entretien (payant, par code).
 // À déployer sur Cloudflare (Workers & Pages > visa-chat > Edit code). Ce fichier n'est PAS servi par le site.
-// Variables Cloudflare : GEMINI_API_KEY (secret), GEMINI_MODEL, INTERVIEW_CODES (secret, codes séparés par des virgules).
+// Variables Cloudflare : GEMINI_API_KEY (secret), INTERVIEW_CODES (secret, codes séparés par des virgules).
+// Le modèle Gemini est écrit directement dans le code (variable « model » plus bas).
 // KV nommé USAGE (Bindings) : limite par code, codes générés après paiement, commandes.
 // Paiement Konnect (cartes, e-Dinar, Flouci...) : KONNECT_API_KEY (secret), KONNECT_WALLET_ID, PRICE_MILLIMES (ex. 15000 = 15 DT),
 //   KONNECT_BASE (par défaut : bac à sable), SITE_URL, PAY_MOCK=1 (TEST ONLY : paiement simulé, ne jamais laisser en production).
@@ -38,6 +39,7 @@ const DEFAULT_KBASE = "https://api.sandbox.konnect.network/api/v2"; // productio
 const ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const rid = (n) => Array.from(crypto.getRandomValues(new Uint8Array(n)), (b) => ALPHA[b % ALPHA.length]).join("");
 const TTL = 60 * 60 * 24 * 30;
+const FALLBACK = "Désolé, je n'ai pas pu répondre. Réessaie dans un instant.";
 
 // Limite de l'assistant gratuit : RL_MAX messages par RL_WINDOW et par visiteur (adresse IP).
 // Le compteur est gardé en mémoire du Worker (aucune écriture dans le KV : le quota gratuit du KV reste pour l'entraînement payant).
@@ -153,27 +155,41 @@ export default {
       if (!msgs.length) return out({ error: "empty" }, 400);
       if (!interview && limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
 
-      const model = env.GEMINI_MODEL || "gemini-2.5-flash";
-      const r = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-goog-api-key": env.GEMINI_API_KEY,
-          },
-          body: JSON.stringify({
-            systemInstruction: { parts: [{ text: interview ? SYSTEM_INTERVIEW : SYSTEM }] },
-            contents: msgs,
-            generationConfig: { maxOutputTokens: 1500 },
-          }),
-        }
-      );
+      const model = "gemini-3.5-flash-lite"; // écrit en dur : ignore la variable GEMINI_MODEL
+      const ctl = new AbortController();
+      const tm = setTimeout(() => ctl.abort(), 20000); // délai maximum : 20 secondes
+      let r;
+      try {
+        r = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+          {
+            method: "POST",
+            signal: ctl.signal,
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": env.GEMINI_API_KEY || "",
+            },
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: interview ? SYSTEM_INTERVIEW : SYSTEM }] },
+              contents: msgs,
+              generationConfig: { maxOutputTokens: 2500 },
+            }),
+          }
+        );
+      } catch (e) {
+        clearTimeout(tm);
+        console.log("Gemini fetch failed", e && e.name, e && e.message);
+        return out({ reply: FALLBACK });
+      }
       const data = await r.json().catch(() => ({}));
+      clearTimeout(tm);
       if (!r.ok || data.error) console.log("Gemini error", r.status, JSON.stringify(data.error || data).slice(0, 300));
-      const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text || "").join("");
+      const cand = data?.candidates?.[0];
+      const text = cand?.content?.parts?.map((p) => p.text || "").join("");
+      if (!text) console.log("Gemini empty reply", r.status, cand && cand.finishReason, data && data.promptFeedback && data.promptFeedback.blockReason);
       if (interview && env.USAGE && text) await env.USAGE.put(usageKey, String(used + 1));
-      const raw = text || "Désolé, je n'ai pas pu répondre. Réessaie dans un instant.";
+
+      const raw = text || FALLBACK;
       const reply = raw
         .replace(/\*\*/g, "")
         .replace(/^#+\s*/gm, "")
