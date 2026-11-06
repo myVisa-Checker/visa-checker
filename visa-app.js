@@ -1221,8 +1221,8 @@ function pickHtml(t){
   if(pt==="intl"){h+=INTL.filter(svc).map(function(p,i){return agentCard(p,R,i+1)}).join("")}
   else{
     var seen={},list=[];delete PARTNERS._srv;Object.keys(PARTNERS).forEach(function(k){PARTNERS[k].forEach(function(p){if(!seen[p.id]&&svc(p)){seen[p.id]=1;list.push(p)}})});list=list.slice(0,4);
-    /* Trois serveurs toujours proposés : tant qu'il y a moins de 3 agences, les places libres reprennent la première (à remplacer par de vraies agences dans partners.json). */
-    if(list.length&&list.length<3){var base=list.slice(),extra=[],j=0;while(list.length<3){var b=base[j%base.length],c=Object.assign({},b,{id:b.id+"-s"+(list.length+1)});list.push(c);extra.push(c);j++}PARTNERS._srv=extra}
+    /* Le client ne voit que « Serveur 1, 2, 3 » (jamais le nom d'une agence). Chaque serveur garde les contacts de l'agence réelle (real/rid servent à l'envoi). Au moins 3 serveurs. */
+    if(list.length){var base=list.slice(),srv=[],cnt=Math.max(3,list.length);for(var j=0;j<cnt;j++){var b=base[j%base.length];srv.push(Object.assign({},b,{id:"srv"+(j+1)+"-"+b.id,name:R.agN+(j+1),real:b.name,rid:b.id}))}list=srv;PARTNERS._srv=srv}
     h+=list.length?'<p class="ag-sub srv-sub">'+R.anyWhere+'</p><div class="srv-row">'+list.map(function(p,i){return agentCard(p,R,i+1)}).join("")+'</div>':'<p class="ag-none">'+R.noLocal+'</p>';
   }
   h+='</div>';
@@ -1425,7 +1425,7 @@ function submitReq(){
   if(!REQUEST_URL){fin("manual");return}
   F.rid=newId();
   var payload={requestId:F.rid,service:S.need,destination:destName(),lastName:c.ln,firstName:c.fn,date1:F.d1,date2:F.d2,city:c.city,phone:c.phone,telegram:c.tg,email:c.mail,channel:F.chan,lang:S.lang,sentAt:new Date().toISOString(),
-    agency:{id:a.id,name:a.name,email:a.email||"",telegram:a.telegram||"",whatsapp:a.whatsapp||""},message:reqText()};
+    agency:{id:a.rid||a.id,name:a.real||a.name,email:a.email||"",telegram:a.telegram||"",whatsapp:a.whatsapp||""},message:reqText()};
   var btn=$("rqsend");RQ.sending=true;btn.disabled=true;btn.setAttribute("aria-busy","true");btn.textContent=R.sending;
   postRequest(payload).then(function(r){
     RQ.sending=false;
@@ -1515,7 +1515,7 @@ function panelHtml(t){
   if(e==="medical"){return '<div class="book"><b>'+t.gMed+'</b><p>'+t.medNote+'</p></div>'+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay)}
   return chips("purpose",t.s_purpose)+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay);
 }
-function allAdvisors(){var a=[];for(var k in PARTNERS){PARTNERS[k].forEach(function(p){a.push(p)})}return a}
+function allAdvisors(){var a=[];for(var k in PARTNERS){if(k==="_srv")continue;PARTNERS[k].forEach(function(p){a.push(p)})}return a}
 function advMsg(){var t=UI[S.lang];return "Visa Checker : "+t.advSubject+"\n"+t.advDest+" : "+nm(curC())+"\n"+t.advCase+" : "+(S.refus||"-")}
 function renderAgency(t){
   var L=S.lang,list=allAdvisors();
