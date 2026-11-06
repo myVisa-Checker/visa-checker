@@ -2,10 +2,7 @@
   var CHAT_URL="https://visa-chat.rabehfly.workers.dev";
   /* Pages à rejoindre : colle ici le lien complet de chaque page (https://www.instagram.com/... et https://www.facebook.com/...). Vide = l'icône reste cachée. */
   var SOCIAL={ig:"https://www.instagram.com/visacheckerrr/",fb:"https://www.facebook.com/profile.php?id=61595829433781"};
-  var SOC_IC={
-    ig:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg>',
-    fb:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8.5V7c0-.8.2-1.2 1.3-1.2H17V3h-2.6C11.7 3 10.5 4.5 10.5 6.8v1.7H8V12h2.5v9H14v-9h2.6l.4-3.5z"/></svg>'
-  };
+  var SOC_IMG={ig:"icons/social-instagram.png",fb:"icons/social-facebook.png"}; /* logos officiels fournis par toi */
   function socUrl(u,hosts){try{var x=new URL(String(u||""));if(x.protocol!=="https:")return "";return hosts.some(function(h){return x.hostname===h||x.hostname.slice(-h.length-1)==="."+h})?x.href:""}catch(e){return ""}}
   var FACE='<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="8" width="22" height="18" rx="7" fill="#fff" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="17" r="2.4" fill="currentColor"/><circle cx="20" cy="17" r="2.4" fill="currentColor"/><path d="M12 22c2.5 1.6 5.5 1.6 8 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 8V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="3.5" r="1.6" fill="currentColor"/></svg>';
   var HELLOS=["Bonjour","Hello","مرحبا","Bienvenue","Welcome","أهلاً"];
@@ -31,7 +28,7 @@
     el.textContent="";
     var t=document.createElement("span");t.textContent=l.join;el.appendChild(t);
     items.forEach(function(i){var u=socUrl(SOCIAL[i[0]],i[2]);if(!u)return;
-      var a=document.createElement("a");a.className="vc-soc";a.href=u;a.target="_blank";a.rel="noopener noreferrer";a.setAttribute("aria-label",i[1]);a.innerHTML=SOC_IC[i[0]];el.appendChild(a);n++});
+      var a=document.createElement("a");a.className="vc-soc";a.href=u;a.target="_blank";a.rel="noopener noreferrer";a.setAttribute("aria-label",i[1]);a.title=i[1];var im=document.createElement("img");im.src=SOC_IMG[i[0]];im.alt="";im.width=32;im.height=32;a.appendChild(im);el.appendChild(a);n++});
     el.className=n?"on":"";
   }
   function labels(){
