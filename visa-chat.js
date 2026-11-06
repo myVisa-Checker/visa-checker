@@ -1,7 +1,7 @@
 (function(){
   var CHAT_URL="https://visa-chat.rabehfly.workers.dev";
   /* Pages à rejoindre : colle ici le lien complet de chaque page (https://www.instagram.com/... et https://www.facebook.com/...). Vide = l'icône reste cachée. */
-  var SOCIAL={ig:"",fb:""};
+  var SOCIAL={ig:"https://www.instagram.com/visacheckerrr/",fb:""};
   var SOC_IC={
     ig:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg>',
     fb:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8.5V7c0-.8.2-1.2 1.3-1.2H17V3h-2.6C11.7 3 10.5 4.5 10.5 6.8v1.7H8V12h2.5v9H14v-9h2.6l.4-3.5z"/></svg>'
