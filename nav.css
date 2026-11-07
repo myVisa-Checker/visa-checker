@@ -1,0 +1,44 @@
+/* Barre de navigation du site Visa Checker.
+   Utilisée par index.html (version .in-app) et par toutes les pages de contenu.
+   Ne contient QUE les règles de la barre : sans danger pour l'application. */
+.sitenav{
+  display:flex;align-items:center;gap:6px 18px;height:48px;box-sizing:border-box;
+  padding:0 max(16px,calc((100% - 1080px)/2));
+  background:var(--surface,#fff);border-bottom:1px solid var(--line,#e1e5e9);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  overflow-x:auto;white-space:nowrap;scrollbar-width:none;
+}
+.sitenav::-webkit-scrollbar{display:none}
+.sitenav.in-app{margin-inline:-16px;padding:0 16px;justify-content:center}
+.sitenav ul{display:flex;align-items:center;gap:4px 18px;list-style:none;margin:0 0 0 auto;padding:0}
+.sitenav.in-app ul{margin:0}
+.sitenav a{
+  color:var(--ink,#14212b);text-decoration:none;font-weight:600;font-size:14px;
+  padding:6px 2px;border-bottom:2px solid transparent;display:inline-block;
+}
+.sitenav a:hover{color:#c2410c;border-bottom-color:#e8590c}
+.sitenav a[aria-current="page"]{color:#c2410c;border-bottom-color:#e8590c}
+.sitenav .sn-logo{font-weight:800;font-size:19px;letter-spacing:-.2px;border:0;padding:0}
+.sitenav .sn-logo b{color:#e8590c;font-weight:800}
+.sitenav .sn-logo:hover{border:0}
+.sitenav a:focus-visible{outline:3px solid #e8590c;outline-offset:2px;border-radius:4px}
+
+/* Dans l'application : la barre fait 48 px, on décale le sélecteur de langue (écran large) */
+@media (min-width:900px){
+  .lang{top:74px}
+  body[data-step="0"] .lang{top:82px}
+}
+
+/* Petits écrans : tout reste visible sans défilement */
+@media (max-width:480px){
+  .sitenav{gap:8px;padding:0 12px}
+  .sitenav .sn-logo{font-size:16px}
+  .sitenav ul{gap:4px 11px}
+  .sitenav a{font-size:13px}
+}
+@media (max-width:380px){
+  .sitenav{padding:0 8px}
+  .sitenav ul{gap:4px 8px}
+  .sitenav a{font-size:12.5px}
+  .sitenav .sn-logo{font-size:15px}
+}

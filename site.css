@@ -1,0 +1,78 @@
+/* Style des pages de contenu (guides, à propos, contact, confidentialité, conditions).
+   À utiliser avec nav.css. N'est PAS chargé par index.html. */
+:root{
+  --orange:#e8590c;
+  --orange-dark:#c2410c;
+  --orange-soft:#fff4ec;
+  --text:#1f2328;
+  --muted:#5b6470;
+  --line:#e6e8eb;
+  --bg:#ffffff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.7;font-size:17px;-webkit-text-size-adjust:100%;
+}
+a{color:var(--orange-dark)}
+main{max-width:760px;margin:0 auto;padding:20px 16px 56px}
+.crumbs{font-size:14px;color:var(--muted);margin:4px 0 14px}
+.crumbs a{color:var(--muted);text-decoration:none}
+.crumbs a:hover{text-decoration:underline}
+h1{font-size:clamp(26px,5.6vw,38px);line-height:1.2;margin:0 0 10px;letter-spacing:-.4px}
+.meta{color:var(--muted);font-size:14px;margin-bottom:20px}
+.lead{font-size:19px;color:#2b3138}
+h2{font-size:clamp(21px,4.4vw,27px);line-height:1.3;margin:40px 0 10px;padding-top:6px;border-top:3px solid var(--orange-soft)}
+h3{font-size:18px;margin:26px 0 6px;color:var(--orange-dark)}
+p{margin:0 0 14px}
+ul,ol{padding-left:22px;margin:0 0 16px}
+li{margin-bottom:6px}
+.note{background:var(--orange-soft);border-left:4px solid var(--orange);padding:14px 16px;border-radius:8px;margin:18px 0;font-size:16px}
+.toc{border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:22px 0;background:#fafafa}
+.toc strong{display:block;margin-bottom:6px}
+.toc ol{margin:0;columns:1}
+.toc a{text-decoration:none}
+.toc a:hover{text-decoration:underline}
+.table-wrap{overflow-x:auto;margin:14px 0 20px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15.5px}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--orange-soft);font-weight:700}
+tr:last-child td{border-bottom:none}
+.check{list-style:none;padding-left:0}
+.check li{padding:9px 12px 9px 40px;position:relative;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:#fff}
+.check li::before{content:"";position:absolute;left:12px;top:13px;width:16px;height:16px;border:2px solid var(--orange);border-radius:4px;background:#fff}
+details{border:1px solid var(--line);border-radius:10px;padding:2px 14px;margin-bottom:10px;background:#fff}
+summary{cursor:pointer;font-weight:700;padding:12px 0;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";float:right;color:var(--orange);font-size:22px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin:0 0 14px;color:#2b3138}
+.cta{margin:40px 0 10px;padding:22px;border-radius:14px;background:var(--orange);color:#fff;text-align:center}
+.cta h2{border:none;margin:0 0 6px;padding:0;color:#fff}
+.cta p{margin:0 0 14px}
+.cta a{display:inline-block;background:#fff;color:var(--orange-dark);font-weight:700;text-decoration:none;padding:12px 22px;border-radius:999px}
+.disclaimer{font-size:14px;color:var(--muted);border-top:1px solid var(--line);margin-top:28px;padding-top:14px}
+
+/* Cartes (page Guides, contact) */
+.cards{display:grid;gap:14px;grid-template-columns:1fr;margin:20px 0}
+@media (min-width:640px){.cards{grid-template-columns:1fr 1fr}}
+.card{display:block;border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff;text-decoration:none;color:var(--text);transition:border-color .15s,transform .15s,box-shadow .15s}
+a.card:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:0 10px 22px -14px rgba(232,89,12,.5)}
+.card .tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--orange-dark);background:var(--orange-soft);border-radius:999px;padding:3px 10px;margin-bottom:8px}
+.card h3{margin:0 0 6px;color:var(--text);font-size:19px;line-height:1.3}
+.card p{margin:0;color:var(--muted);font-size:15.5px}
+.card .more{display:inline-block;margin-top:10px;font-weight:700;color:var(--orange-dark);font-size:15px}
+.btn{display:inline-block;background:var(--orange);color:#fff;font-weight:700;text-decoration:none;padding:12px 22px;border-radius:999px}
+.btn:hover{background:var(--orange-dark)}
+
+/* Pied de page */
+footer.site{border-top:1px solid var(--line);background:#fafafa}
+footer.site .inner{max-width:760px;margin:0 auto;padding:22px 16px;font-size:14px;color:var(--muted)}
+footer.site .fl{display:flex;flex-wrap:wrap;gap:8px 18px;margin-bottom:12px}
+footer.site .fl a{color:var(--text);text-decoration:none;font-weight:600}
+footer.site .fl a:hover{color:var(--orange-dark);text-decoration:underline}
+footer.site p{margin:0 0 6px;font-size:13.5px;line-height:1.55}
+
+@media (min-width:700px){.toc ol{columns:2;column-gap:28px}}
