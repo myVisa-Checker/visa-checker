@@ -2035,7 +2035,7 @@ var FX={"al":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
 for(var fk in FX){if(!FLAGS[fk])FLAGS[fk]=FX[fk]}
 /* Arabic alphabetical order ignores the article "ال" and treats hamza forms of alef as alef. */
 function evKey(c,L){var n=c.n[L];if(L==="ar"){n=n.replace(/^ال(?=.)/,"").replace(/[\u0623\u0625\u0622]/g,"\u0627")}return n}
-function evFind(id){for(var i=0;i<EV.length;i++){if(EV[i].id===id)return EV[i]}return null}
+function evFind(id){var l=evList();for(var i=0;i<l.length;i++){if(l[i].id===id)return l[i]}return null}
 function evEmoji(cc){return cc.replace(/./g,function(ch){return String.fromCodePoint(127397+ch.toUpperCase().charCodeAt(0))})}
 function evFlag(cc){return flag(cc)}
 /* ===== Outils : calculateur Schengen 90/180 (étape 11), FAQ (12), planning de dépôt + rappels .ics (13) ===== */
@@ -2380,38 +2380,179 @@ var EVCX={
  en:{back:"All continents",soon:"No e-Visa country in this region yet. The list will be completed.",sel:"Choose a country",selp:"Choose from the list…",pick:"Pick a continent, then a country (alphabetical order).",n:["country","countries"]},
  ar:{back:"كل القارات",soon:"لا توجد دول للتأشيرة الإلكترونية في هذه المنطقة حاليًا. ستُستكمل القائمة.",sel:"اختر دولة",selp:"اختر من القائمة…",pick:"اختر قارة ثم دولة (بالترتيب الأبجدي).",n:["دولة","دول"]}
 };
+/* ===== e-Visa selon le passeport (ajouté le 08/11/2026) =====
+   La liste EV ci-dessus décrit le passeport TUNISIEN. Pour les passeports marocain (ma) et algérien (dz), la liste est différente :
+   EVORI.<origine> = { id_pays : [type, séjour] } où type = evisa | eta | mixed | cond | check et séjour = "90d" (jours) ou "3m" (mois), ou "" si inconnu.
+   Sources : Wikipedia « Visa requirements for Moroccan citizens » et « ... Algerian citizens » (2026), consultées le 08/11/2026.
+   Les pays absents de EV mais présents ici sont définis dans EVNEW (url = portail officiel si connu, sinon null : le site propose alors une recherche).
+   Pour ajouter un pays à un passeport : une ligne dans EVORI.ma ou EVORI.dz. Pour un pays nouveau : un bloc dans EVNEW + son continent dans EVCONT. */
+var EVNEW=[
+ {id:"au",n:{fr:"Australie",en:"Australia",ar:"أستراليا"},url:"https://immi.homeaffairs.gov.au",host:"immi.homeaffairs.gov.au",c:"oc"},
+ {id:"ca",n:{fr:"Canada",en:"Canada",ar:"كندا"},url:"https://www.canada.ca/en/immigration-refugees-citizenship/services/visit-canada/eta.html",host:"canada.ca",c:"ame"},
+ {id:"cv",n:{fr:"Cap-Vert",en:"Cape Verde",ar:"الرأس الأخضر"},url:null,host:null,c:"af"},
+ {id:"gq",n:{fr:"Guinée équatoriale",en:"Equatorial Guinea",ar:"غينيا الاستوائية"},url:null,host:null,c:"af"},
+ {id:"fj",n:{fr:"Fidji",en:"Fiji",ar:"فيجي"},url:null,host:null,c:"oc"},
+ {id:"gh",n:{fr:"Ghana",en:"Ghana",ar:"غانا"},url:"https://evisa.immigration.gov.gh",host:"evisa.immigration.gov.gh",c:"af"},
+ {id:"in",n:{fr:"Inde",en:"India",ar:"الهند"},url:"https://indianvisaonline.gov.in/evisa/tvoa.html",host:"indianvisaonline.gov.in",c:"as"},
+ {id:"ir",n:{fr:"Iran",en:"Iran",ar:"إيران"},url:"https://evisa.mfa.ir",host:"evisa.mfa.ir",c:"as"},
+ {id:"il",n:{fr:"Israël",en:"Israel",ar:"إسرائيل"},url:null,host:null,c:"as"},
+ {id:"jp",n:{fr:"Japon",en:"Japan",ar:"اليابان"},url:"https://www.evisa.mofa.go.jp",host:"evisa.mofa.go.jp",c:"as"},
+ {id:"jo",n:{fr:"Jordanie",en:"Jordan",ar:"الأردن"},url:null,host:null,c:"as"},
+ {id:"ly",n:{fr:"Libye",en:"Libya",ar:"ليبيا"},url:null,host:null,c:"af"},
+ {id:"mw",n:{fr:"Malawi",en:"Malawi",ar:"ملاوي"},url:null,host:null,c:"af"},
+ {id:"mr",n:{fr:"Mauritanie",en:"Mauritania",ar:"موريتانيا"},url:null,host:null,c:"af"},
+ {id:"mm",n:{fr:"Myanmar (Birmanie)",en:"Myanmar",ar:"ميانمار"},url:"https://evisa.moip.gov.mm",host:"evisa.moip.gov.mm",c:"as"},
+ {id:"ni",n:{fr:"Nicaragua",en:"Nicaragua",ar:"نيكاراغوا"},url:null,host:null,c:"ame"},
+ {id:"za",n:{fr:"Afrique du Sud",en:"South Africa",ar:"جنوب أفريقيا"},url:null,host:null,c:"af"},
+ {id:"sr",n:{fr:"Suriname",en:"Suriname",ar:"سورينام"},url:null,host:null,c:"ame"},
+ {id:"ye",n:{fr:"Yémen",en:"Yemen",ar:"اليمن"},url:null,host:null,c:"as"},
+ {id:"ci",n:{fr:"Côte d'Ivoire",en:"Côte d'Ivoire",ar:"كوت ديفوار"},url:null,host:null,c:"af"},
+ {id:"ls",n:{fr:"Lesotho",en:"Lesotho",ar:"ليسوتو"},url:null,host:null,c:"af"},
+ {id:"th",n:{fr:"Thaïlande",en:"Thailand",ar:"تايلاند"},url:"https://www.thaievisa.go.th",host:"thaievisa.go.th",c:"as"},
+ {id:"vu",n:{fr:"Vanuatu",en:"Vanuatu",ar:"فانواتو"},url:null,host:null,c:"oc"},
+ {id:"tr",n:{fr:"Turquie",en:"Türkiye",ar:"تركيا"},url:"https://www.evisa.gov.tr",host:"evisa.gov.tr",c:"eu"}
+];
+EVNEW.forEach(function(c){c.only=true;c.intro=null;c.notes=null;c.type="evisa";EVCONT[c.id]=c.c;EV.push(c)});
+var EVORI={
+ ma:{af:["evisa",""],al:["evisa","90d"],ag:["evisa",""],am:["evisa","120d"],au:["evisa",""],bs:["evisa","3m"],bh:["mixed","14d"],bt:["evisa","90d"],bo:["evisa","30d"],bw:["evisa","3m"],bi:["mixed","1m"],kh:["mixed","30d"],cm:["evisa",""],ca:["cond",""],cv:["eta","90d"],td:["evisa",""],cu:["evisa","90d"],cd:["evisa","7d"],dj:["evisa","90d"],gq:["evisa",""],et:["mixed","90d"],fj:["evisa",""],gh:["eta","90d"],gy:["evisa",""],"in":["evisa","30d"],id:["mixed","30d"],ir:["evisa","30d"],iq:["evisa","30d"],il:["check",""],jp:["cond",""],jo:["mixed",""],kg:["evisa","60d"],la:["mixed","30d"],ly:["evisa",""],mg:["mixed","90d"],mw:["evisa","90d"],mr:["evisa","30d"],mz:["mixed","30d"],mm:["evisa","28d"],na:["evisa","3m"],np:["mixed","90d"],ni:["evisa",""],ng:["evisa","30d"],pk:["evisa","3m"],pg:["evisa","60d"],qa:["evisa",""],kn:["evisa","30d"],rs:["evisa","90d"],sc:["eta","3m"],sl:["mixed","3m"],so:["evisa","30d"],za:["evisa",""],ss:["evisa",""],kr:["eta","90d"],lk:["eta","30d"],sr:["cond","90d"],tj:["cond","60d"],tz:["mixed","90d"],tt:["evisa","90d"],ug:["evisa","3m"],ae:["check",""],uz:["evisa","30d"],ve:["evisa",""],ye:["cond",""],zw:["evisa","1m"],ai:["evisa",""],ms:["evisa",""]},
+ dz:{af:["evisa",""],al:["evisa",""],ag:["evisa","30d"],am:["evisa","120d"],az:["evisa","30d"],au:["evisa",""],bs:["evisa",""],bh:["mixed","14d"],bt:["evisa","90d"],bo:["mixed","30d"],bw:["evisa","3m"],bf:["evisa",""],kh:["mixed","30d"],cm:["evisa",""],td:["evisa",""],co:["evisa",""],cd:["evisa","7d"],ci:["evisa","3m"],cu:["evisa","90d"],dj:["evisa","90d"],gq:["evisa",""],et:["mixed","90d"],fj:["evisa",""],ga:["evisa","90d"],ge:["evisa","30d"],ir:["mixed","30d"],iq:["evisa","30d"],jo:["mixed","30d"],jp:["cond",""],kz:["evisa",""],kg:["evisa","60d"],ls:["evisa","14d"],lr:["evisa",""],mg:["mixed","60d"],mw:["evisa","90d"],md:["evisa",""],mz:["mixed","30d"],mm:["evisa","28d"],na:["evisa",""],np:["mixed","90d"],ng:["evisa","90d"],pk:["evisa","30d"],pg:["evisa","60d"],qa:["evisa",""],kn:["evisa",""],st:["evisa",""],sc:["eta","3m"],sl:["evisa","3m"],so:["evisa","30d"],za:["evisa",""],ss:["evisa",""],lk:["eta","30d"],sr:["cond","90d"],tj:["mixed","60d"],tz:["mixed","90d"],th:["evisa","60d"],tg:["evisa","15d"],tt:["evisa",""],tr:["cond",""],ug:["evisa","3m"],ae:["check",""],uz:["evisa","30d"],vu:["evisa",""],ve:["evisa",""],vn:["evisa","90d"],zm:["evisa","90d"],zw:["mixed","3m"],ms:["evisa",""]}
+};
+var EVADJ={ma:{fr:"marocains",en:"Moroccan",ar:"المغربي",src:"Moroccan"},dz:{fr:"algériens",en:"Algerian",ar:"الجزائري",src:"Algerian"}};
+var EVTO={
+ ma:{
+  fr:{listTitle:"e-Visa pour passeport marocain",listSub:"Choisissez un pays, par ordre alphabétique, pour voir les règles et le portail officiel.",
+   listWarn:"Liste établie d'après Wikipedia (« Visa requirements for Moroccan citizens », 2026) et des sources publiques, consultées le 8 novembre 2026. Les règles changent souvent : confirmez toujours sur le portail officiel avant de payer.",
+   notListed:"Cette liste ne reprend que les pays où une e-visa ou une autorisation en ligne est possible pour un passeport marocain. Ailleurs, le visa se demande au consulat ou dans un centre de dépôt.",
+   confirmBox:"Statut à confirmer : nos sources ne sont pas assez claires pour les passeports marocains. Vérifiez sur le portail officiel avant de payer ou d'acheter un billet.",
+   srcNote:"Statuts d'après Wikipedia (« Visa requirements for Moroccan citizens », 2026) et des sources publiques consultées le 8 novembre 2026. Visa Checker n'est pas un site officiel et ne dépose pas la demande à votre place."},
+  en:{listTitle:"e-Visa for Moroccan passports",listSub:"Pick a country, in alphabetical order, to see the rules and the official portal.",
+   listWarn:"List compiled from Wikipedia (\"Visa requirements for Moroccan citizens\", 2026) and public sources, checked on 8 November 2026. Rules change often: always confirm on the official portal before paying.",
+   notListed:"This list only covers countries where an e-visa or an online authorisation is possible for a Moroccan passport. Elsewhere, the visa is requested at the consulate or an application centre.",
+   confirmBox:"Status to confirm: our sources are not clear enough for Moroccan passports. Verify on the official portal before paying or buying a ticket.",
+   srcNote:"Statuses based on Wikipedia (\"Visa requirements for Moroccan citizens\", 2026) and public sources checked on 8 November 2026. Visa Checker is not an official website and does not file the application for you."},
+  ar:{listTitle:"التأشيرة الإلكترونية لجواز السفر المغربي",listSub:"اختر دولة، بالترتيب الأبجدي، لتعرف الشروط والبوابة الرسمية.",
+   listWarn:"القائمة مبنية على ويكيبيديا (Visa requirements for Moroccan citizens، 2026) ومصادر عامة اطُّلع عليها في 8 نوفمبر 2026. القواعد تتغير كثيرًا: تأكد دائمًا من البوابة الرسمية قبل الدفع.",
+   notListed:"تضم هذه القائمة فقط الدول التي تتيح تأشيرة إلكترونية أو إذنًا عبر الإنترنت لحاملي جواز السفر المغربي. في غيرها تُطلب التأشيرة لدى القنصلية أو مركز الإيداع.",
+   confirmBox:"الوضع يحتاج إلى تأكيد: مصادرنا غير واضحة بما يكفي بخصوص جوازات السفر المغربية. تحقق من البوابة الرسمية قبل الدفع أو شراء تذكرة.",
+   srcNote:"الأوضاع مبنية على ويكيبيديا (Visa requirements for Moroccan citizens، 2026) ومصادر عامة اطُّلع عليها في 8 نوفمبر 2026. Visa Checker ليس موقعًا رسميًا ولا يقدّم الطلب بدلًا عنك."}
+ },
+ dz:{
+  fr:{listTitle:"e-Visa pour passeport algérien",listSub:"Choisissez un pays, par ordre alphabétique, pour voir les règles et le portail officiel.",
+   listWarn:"Liste établie d'après Wikipedia (« Visa requirements for Algerian citizens », 2026) et des sources publiques, consultées le 8 novembre 2026. Les règles changent souvent : confirmez toujours sur le portail officiel avant de payer.",
+   notListed:"Cette liste ne reprend que les pays où une e-visa ou une autorisation en ligne est possible pour un passeport algérien. Ailleurs, le visa se demande au consulat ou dans un centre de dépôt. Quelques démarches en ligne très ciblées ne sont pas reprises (par exemple pour des résidents de certains pays) : Koweït, Philippines, Singapour.",
+   confirmBox:"Statut à confirmer : nos sources ne sont pas assez claires pour les passeports algériens. Vérifiez sur le portail officiel avant de payer ou d'acheter un billet.",
+   srcNote:"Statuts d'après Wikipedia (« Visa requirements for Algerian citizens », 2026) et des sources publiques consultées le 8 novembre 2026. Visa Checker n'est pas un site officiel et ne dépose pas la demande à votre place."},
+  en:{listTitle:"e-Visa for Algerian passports",listSub:"Pick a country, in alphabetical order, to see the rules and the official portal.",
+   listWarn:"List compiled from Wikipedia (\"Visa requirements for Algerian citizens\", 2026) and public sources, checked on 8 November 2026. Rules change often: always confirm on the official portal before paying.",
+   notListed:"This list only covers countries where an e-visa or an online authorisation is possible for an Algerian passport. Elsewhere, the visa is requested at the consulate or an application centre. A few very targeted online procedures are left out (for example for residents of certain countries): Kuwait, the Philippines, Singapore.",
+   confirmBox:"Status to confirm: our sources are not clear enough for Algerian passports. Verify on the official portal before paying or buying a ticket.",
+   srcNote:"Statuses based on Wikipedia (\"Visa requirements for Algerian citizens\", 2026) and public sources checked on 8 November 2026. Visa Checker is not an official website and does not file the application for you."},
+  ar:{listTitle:"التأشيرة الإلكترونية لجواز السفر الجزائري",listSub:"اختر دولة، بالترتيب الأبجدي، لتعرف الشروط والبوابة الرسمية.",
+   listWarn:"القائمة مبنية على ويكيبيديا (Visa requirements for Algerian citizens، 2026) ومصادر عامة اطُّلع عليها في 8 نوفمبر 2026. القواعد تتغير كثيرًا: تأكد دائمًا من البوابة الرسمية قبل الدفع.",
+   notListed:"تضم هذه القائمة فقط الدول التي تتيح تأشيرة إلكترونية أو إذنًا عبر الإنترنت لحاملي جواز السفر الجزائري. في غيرها تُطلب التأشيرة لدى القنصلية أو مركز الإيداع. لم تُدرج بعض الإجراءات الإلكترونية المحدودة جدًا (مثل المخصصة لمقيمي دول معينة): الكويت والفلبين وسنغافورة.",
+   confirmBox:"الوضع يحتاج إلى تأكيد: مصادرنا غير واضحة بما يكفي بخصوص جوازات السفر الجزائرية. تحقق من البوابة الرسمية قبل الدفع أو شراء تذكرة.",
+   srcNote:"الأوضاع مبنية على ويكيبيديا (Visa requirements for Algerian citizens، 2026) ومصادر عامة اطُّلع عليها في 8 نوفمبر 2026. Visa Checker ليس موقعًا رسميًا ولا يقدّم الطلب بدلًا عنك."}
+ }
+};
+/* Remarques propres à un pays et à un passeport : clé "origine:pays". */
+var EVEXTRA={
+ "ma:ca":{fr:["Ce n'est pas une e-visa : c'est une autorisation de voyage électronique (AVE), réservée aux voyageurs par avion qui ont eu un visa canadien ces 10 dernières années ou qui ont un visa américain de non-immigrant valide. Sinon, le visa se demande de la façon habituelle."],en:["This is not an e-visa: it is an electronic travel authorisation (eTA), only for people travelling by air who held a Canadian visa in the last 10 years or hold a valid US non-immigrant visa. Otherwise, the visa is requested the usual way."],ar:["هذه ليست تأشيرة إلكترونية بل إذن سفر إلكتروني (eTA) خاص بالمسافرين جوًا ممن حصلوا على تأشيرة كندية خلال آخر 10 سنوات أو يحملون تأشيرة أمريكية سارية لغير المهاجرين. وإلا تُطلب التأشيرة بالطريقة المعتادة."]},
+ "ma:jp":{fr:["E-visa pour un court séjour touristique, ouverte seulement aux personnes qui résident dans certains pays figurant sur le site officiel. Sinon, le visa se demande à l'ambassade."],en:["E-visa for a short tourist stay, only for people who live in certain countries listed on the official website. Otherwise, apply at the embassy."],ar:["تأشيرة إلكترونية لإقامة سياحية قصيرة، مخصصة فقط لمن يقيمون في دول معينة مذكورة على الموقع الرسمي. وإلا قدّم الطلب لدى السفارة."]},
+ "dz:jp":{fr:["E-visa pour un court séjour, ouverte seulement aux personnes qui résident dans certains pays figurant sur le site officiel. Sinon, le visa se demande à l'ambassade."],en:["E-visa for a short stay, only for people who live in certain countries listed on the official website. Otherwise, apply at the embassy."],ar:["تأشيرة إلكترونية لإقامة قصيرة، مخصصة فقط لمن يقيمون في دول معينة مذكورة على الموقع الرسمي. وإلا قدّم الطلب لدى السفارة."]},
+ "ma:ye":{fr:["Selon notre source, l'e-visa n'est ouverte qu'à des cas précis : groupes d'au moins 10 personnes, voyages d'affaires et transit. Vérifiez la situation de sécurité avant tout projet de voyage."],en:["According to our source, the e-visa is only open to specific cases: groups of 10 or more, business trips and transit. Check the security situation before planning any trip."],ar:["حسب مصدرنا، التأشيرة الإلكترونية مخصصة لحالات محددة: المجموعات من 10 أشخاص فأكثر والرحلات التجارية والعبور. تحقق من الوضع الأمني قبل التخطيط لأي سفر."]},
+ "ma:sr":{fr:["Selon notre source, le passeport marocain n'a pas besoin de visa, mais il faut payer en ligne, avant l'arrivée, un droit d'entrée de 50 USD ou EUR. Une e-visa à entrées multiples existe aussi."],en:["According to our source, Moroccan passports need no visa, but an entrance fee of USD or EUR 50 must be paid online before arrival. A multiple-entry e-visa also exists."],ar:["حسب مصدرنا، لا يحتاج حامل الجواز المغربي إلى تأشيرة، لكن يجب دفع رسم دخول قدره 50 دولارًا أو يورو عبر الإنترنت قبل الوصول. وتوجد أيضًا تأشيرة إلكترونية متعددة الدخول."]},
+ "dz:sr":{fr:["Selon notre source, le passeport algérien n'a pas besoin de visa, mais il faut payer en ligne, avant l'arrivée, un droit d'entrée de 50 USD ou EUR. Une e-visa à entrées multiples existe aussi."],en:["According to our source, Algerian passports need no visa, but an entrance fee of USD or EUR 50 must be paid online before arrival. A multiple-entry e-visa also exists."],ar:["حسب مصدرنا، لا يحتاج حامل الجواز الجزائري إلى تأشيرة، لكن يجب دفع رسم دخول قدره 50 دولارًا أو يورو عبر الإنترنت قبل الوصول. وتوجد أيضًا تأشيرة إلكترونية متعددة الدخول."]},
+ "ma:tj":{fr:["Selon notre source, l'entrée sans visa de 14 jours ne vaut que pour les titulaires de passeport de 55 ans et plus. Les autres demandent l'e-visa (60 jours)."],en:["According to our source, the 14-day visa-free entry only applies to passport holders aged 55 and over. Everyone else applies for the e-visa (60 days)."],ar:["حسب مصدرنا، الدخول دون تأشيرة لمدة 14 يومًا مخصص لمن بلغ 55 سنة فأكثر. أما الآخرون فيطلبون التأشيرة الإلكترونية (60 يومًا)."]},
+ "dz:tr":{fr:["E-visa possible seulement pour certains voyageurs : selon l'âge et s'ils ont un visa ou un titre de séjour Schengen, américain, britannique ou irlandais en cours de validité. Sinon, le visa se demande au consulat."],en:["E-visa only possible for some travellers: depending on age and on holding a valid Schengen, US, UK or Irish visa or residence permit. Otherwise, apply at the consulate."],ar:["التأشيرة الإلكترونية متاحة لبعض المسافرين فقط: حسب العمر وحيازة تأشيرة أو إقامة سارية لشنغن أو الولايات المتحدة أو بريطانيا أو أيرلندا. وإلا تُطلب التأشيرة لدى القنصلية."]},
+ "ma:td":{fr:["Notre source indique une exemption de visa à partir du 1er janvier 2027 : vérifiez la règle en vigueur avant de payer."],en:["Our source mentions a visa exemption from 1 January 2027: check the rule in force before paying."],ar:["يشير مصدرنا إلى إعفاء من التأشيرة اعتبارًا من 1 يناير 2027: تحقق من القاعدة السارية قبل الدفع."]},
+ "dz:af":{fr:["Notre source précise que l'e-visa n'est valable que si elle est délivrée par une mission approuvée par les autorités actuelles, et que l'arrivée se fait par l'aéroport de Kaboul. Vérifiez les conseils aux voyageurs de votre pays avant tout projet."],en:["Our source says the e-visa is only valid if issued by a mission approved by the current authorities, and that you must arrive at Kabul airport. Check travel advice before planning any trip."],ar:["يذكر مصدرنا أن التأشيرة الإلكترونية لا تصح إلا إذا أصدرتها بعثة معتمدة لدى السلطات الحالية، وأن الوصول يكون عبر مطار كابول. راجع نصائح السفر قبل التخطيط لأي رحلة."]},
+ "ma:af":{fr:["Notre source précise que l'arrivée se fait par l'aéroport de Kaboul. Vérifiez les conseils aux voyageurs de votre pays avant tout projet."],en:["Our source says you must arrive at Kabul airport. Check travel advice before planning any trip."],ar:["يذكر مصدرنا أن الوصول يكون عبر مطار كابول. راجع نصائح السفر قبل التخطيط لأي رحلة."]},
+ "ma:il":{fr:["Notre source mentionne une e-visa, mais nous n'avons pas pu la confirmer sur un portail officiel. Passez par le consulat ou par la page officielle du ministère de l'Intérieur avant tout achat."],en:["Our source mentions an e-visa, but we could not confirm it on an official portal. Check with the consulate or the official page of the Ministry of the Interior before buying anything."],ar:["يذكر مصدرنا تأشيرة إلكترونية، لكننا لم نتمكن من تأكيدها على بوابة رسمية. تحقق لدى القنصلية أو من الصفحة الرسمية لوزارة الداخلية قبل أي شراء."]},
+ "ma:ae":{fr:["Notre source indique une demande en ligne via les services intelligents, mais les sources ne sont pas d'accord sur les passeports marocains. Utilisez uniquement le portail officiel ICP ou une compagnie aérienne agréée."],en:["Our source mentions an online application through the smart services, but sources disagree for Moroccan passports. Use only the official ICP portal or an approved airline."],ar:["يذكر مصدرنا طلبًا عبر الإنترنت من خلال الخدمات الذكية، لكن المصادر غير متفقة بخصوص الجواز المغربي. استعمل فقط بوابة الهيئة الاتحادية الرسمية أو شركة طيران معتمدة."]},
+ "dz:ae":{fr:["Notre source indique une demande en ligne via les services intelligents, mais les sources ne sont pas d'accord sur les passeports algériens. Utilisez uniquement le portail officiel ICP ou une compagnie aérienne agréée."],en:["Our source mentions an online application through the smart services, but sources disagree for Algerian passports. Use only the official ICP portal or an approved airline."],ar:["يذكر مصدرنا طلبًا عبر الإنترنت من خلال الخدمات الذكية، لكن المصادر غير متفقة بخصوص الجواز الجزائري. استعمل فقط بوابة الهيئة الاتحادية الرسمية أو شركة طيران معتمدة."]},
+ "ma:mr":{fr:["Notre source indique une e-visa de 30 jours. Les règles entre pays voisins changent : vérifiez-les avant de payer."],en:["Our source mentions a 30-day e-visa. Rules between neighbouring countries change: check them before paying."],ar:["يذكر مصدرنا تأشيرة إلكترونية لمدة 30 يومًا. القواعد بين الدول المجاورة تتغير: تحقق منها قبل الدفع."]}
+};
+function evOri(){return EVORI[S.origin]||null}
+function evList(){
+  var o=evOri();
+  if(!o)return EV.filter(function(c){return !c.only});
+  return EV.filter(function(c){return !!o[c.id]});
+}
+function evType(c){var o=evOri();return o&&o[c.id]?o[c.id][0]:c.type}
+function evX(){
+  var L=S.lang,b=EVT[L],ov=(EVTO[S.origin]||{})[L];
+  if(!ov)return b;
+  var r={},k;for(k in b)r[k]=b[k];for(k in ov)r[k]=ov[k];return r;
+}
+function evStay(code){
+  if(!code)return null;
+  var n=parseInt(code,10),m=/m$/.test(code);
+  return {fr:m?(n+" mois"):(n+" jours"),en:m?(n+(n>1?" months":" month")):(n+" days"),ar:m?(n===1?"شهر واحد":n+" أشهر"):(n<=10?n+" أيام":n+" يومًا")};
+}
+function evIntro(c){
+  var o=evOri();
+  if(!o)return c.intro;
+  var a=EVADJ[S.origin],t=o[c.id][0],n=c.n;
+  var T={
+   evisa:{fr:"e-visa pour les passeports "+a.fr,en:"e-visa for "+a.en+" passports",ar:"تأشيرة إلكترونية لجواز السفر "+a.ar},
+   mixed:{fr:"e-visa ou visa à l'arrivée pour les passeports "+a.fr,en:"e-visa or visa on arrival for "+a.en+" passports",ar:"تأشيرة إلكترونية أو عند الوصول لجواز السفر "+a.ar},
+   eta:{fr:"autorisation électronique de voyage (ETA) pour les passeports "+a.fr+", qui n'est pas un visa",en:"electronic travel authorisation (ETA) for "+a.en+" passports, which is not a visa",ar:"إذن سفر إلكتروني (ETA) لجواز السفر "+a.ar+"، وهو ليس تأشيرة"},
+   cond:{fr:"démarche en ligne possible sous conditions pour les passeports "+a.fr,en:"online procedure possible under conditions for "+a.en+" passports",ar:"إجراء إلكتروني ممكن بشروط لجواز السفر "+a.ar},
+   check:{fr:"statut à confirmer pour les passeports "+a.fr,en:"status to confirm for "+a.en+" passports",ar:"الوضع يحتاج إلى تأكيد لجواز السفر "+a.ar}
+  }[t];
+  return {fr:n.fr+" : "+T.fr+" (Wikipedia, novembre 2026).",en:n.en+": "+T.en+" (Wikipedia, November 2026).",ar:n.ar+": "+T.ar+" (ويكيبيديا، نوفمبر 2026)."};
+}
+function evNotes(c){
+  var o=evOri();
+  if(!o)return c.notes;
+  var a=EVADJ[S.origin],st=evStay(o[c.id][1]),ex=EVEXTRA[S.origin+":"+c.id],r={fr:[],en:[],ar:[]};
+  if(c.notes&&c.notes.fr){
+    c.notes.fr.forEach(function(s,i){
+      if(/tunisi|^S[ée]jour|^Stay/i.test(s))return;
+      r.fr.push(s);r.en.push(c.notes.en[i]);r.ar.push(c.notes.ar[i]);
+    });
+  }
+  if(st){
+    r.fr.unshift("Séjour indiqué par notre source : "+st.fr+" (indicatif).");
+    r.en.unshift("Stay shown by our source: "+st.en+" (indicative).");
+    r.ar.unshift("مدة الإقامة حسب مصدرنا: "+st.ar+" (للاسترشاد).");
+  }
+  if(ex){r.fr=ex.fr.concat(r.fr);r.en=ex.en.concat(r.en);r.ar=ex.ar.concat(r.ar)}
+  var g={fr:"Ces conditions concernent un passeport "+a.fr.replace(/s$/,"")+". Confirmez les règles et les frais sur le portail officiel avant de payer.",en:"These conditions are for "+(/^[AEIOU]/.test(a.en)?"an ":"a ")+a.en+" passport. Confirm the rules and fees on the official portal before paying.",ar:"هذه الشروط خاصة بجواز السفر "+a.ar+". تأكد من القواعد والرسوم على البوابة الرسمية قبل الدفع."};
+  r.fr.push(g.fr);r.en.push(g.en);r.ar.push(g.ar);
+  return r;
+}
 function evListHtml(){
-  var x=EVT[S.lang],L=S.lang,X=EVCX[L];
+  var x=evX(),L=S.lang,X=EVCX[L],EVL=evList();
   var h='<div class="evwrap"><div class="book"><p>'+x.listWarn+'</p></div>';
-  if(S.origin!=="tn")h+='<p class="ag-note"><b>'+EVO[L]+'</b></p>';
-  h+='<div class="field"><label class="q-label" for="evsel">'+EVCX[L].sel+'</label><select class="sel" id="evsel"><option value="">'+EVCX[L].selp+'</option>'+EVCK.map(function(k){var cl=EV.filter(function(c){return EVCONT[c.id]===k}).sort(function(a,b){return evKey(a,L).localeCompare(evKey(b,L),L)});return cl.length?'<optgroup label="'+EVCN[L][k]+'">'+cl.map(function(c){return '<option value="'+c.id+'">'+c.n[L]+'</option>'}).join("")+'</optgroup>':""}).join("")+'</select></div>';
+  h+='<div class="field"><label class="q-label" for="evsel">'+EVCX[L].sel+'</label><select class="sel" id="evsel"><option value="">'+EVCX[L].selp+'</option>'+EVCK.map(function(k){var cl=EVL.filter(function(c){return EVCONT[c.id]===k}).sort(function(a,b){return evKey(a,L).localeCompare(evKey(b,L),L)});return cl.length?'<optgroup label="'+EVCN[L][k]+'">'+cl.map(function(c){return '<option value="'+c.id+'">'+c.n[L]+'</option>'}).join("")+'</optgroup>':""}).join("")+'</select></div>';
   if(!evk||!EVCN[L][evk]){
     var SH={fr:{eu:"Europe",af:"Afrique",ame:"Amériques",as:"Asie",oc:"Océanie"},en:{eu:"Europe",af:"Africa",ame:"Americas",as:"Asia",oc:"Oceania"},ar:{eu:"أوروبا",af:"أفريقيا",ame:"الأمريكتان",as:"آسيا",oc:"أوقيانوسيا"}};
-    var tot=EV.length;
+    var tot=EVL.length;
     h+='<p class="ag-sub c">'+X.pick+'</p><div class="cring" role="group" aria-label="'+x.cardTitle+'"><div class="chub"><b>'+x.cardTitle+'</b><small>'+tot+' '+X.n[tot>1?1:0]+'</small></div>';
     ["eu","af","ame","as","oc"].forEach(function(k,i){
-      var n=EV.filter(function(c){return EVCONT[c.id]===k}).length;
+      var n=EVL.filter(function(c){return EVCONT[c.id]===k}).length;
       h+='<button type="button" class="cring-b" data-evk="'+k+'" data-k="'+k+'" style="--i:'+i+'" aria-label="'+EVCN[L][k]+(n?', '+n+' '+X.n[n>1?1:0]:'')+'"><svg viewBox="0 0 24 24" aria-hidden="true">'+EVCI[k]+'</svg><span>'+SH[L][k]+'</span>'+(n?'<i class="cbadge">'+n+'</i>':'')+'</button>';
     });
     return h+'</div><p class="ag-note">'+x.notListed+'</p></div>';
   }
-  var list=EV.filter(function(c){return EVCONT[c.id]===evk}).sort(function(a,b){return evKey(a,L).localeCompare(evKey(b,L),L)});
+  var list=EVL.filter(function(c){return EVCONT[c.id]===evk}).sort(function(a,b){return evKey(a,L).localeCompare(evKey(b,L),L)});
   h+='<p><button type="button" class="evrow" data-evk="" style="max-width:100%"><span class="cn">'+X.back+'</span></button></p>';
   h+='<h2 style="margin:14px 0 8px;font-size:1.1rem">'+EVCN[L][evk]+'</h2>';
   if(!list.length)return h+'<p class="ag-sub">'+X.soon+'</p><p class="ag-note">'+x.notListed+'</p></div>';
   h+='<ul class="evlist">';
-  list.forEach(function(c){h+='<li><button type="button" class="evrow" data-ev="'+c.id+'"><span class="flag">'+evFlag(c.id)+'</span><span class="cn">'+c.n[L]+'</span><span class="evtag'+(c.type==="check"?' warn':'')+'">'+x.type[c.type]+'</span>'+EVARROW+'</button></li>'});
+  list.forEach(function(c){h+='<li><button type="button" class="evrow" data-ev="'+c.id+'"><span class="flag">'+evFlag(c.id)+'</span><span class="cn">'+c.n[L]+'</span><span class="evtag'+(evType(c)==="check"?' warn':'')+'">'+x.type[evType(c)]+'</span>'+EVARROW+'</button></li>'});
   return h+'</ul><p class="ag-note">'+x.notListed+'</p></div>';
 }
 function evDetailHtml(t){
-  var x=EVT[S.lang],L=S.lang,c=evFind(S.evc);
-  var h='<div class="evwrap"><div class="panel evdetail"><div class="evhead"><span class="flag">'+evFlag(c.id)+'</span><div class="evhd"><b class="evname">'+c.n[L]+'</b><span class="evtag'+(c.type==="check"?' warn':'')+'">'+x.type[c.type]+'</span></div></div>';
-  h+='<p class="evintro">'+c.intro[L]+'</p>';
-  if(c.type==="check")h+='<div class="book"><p>'+x.confirmBox+'</p></div>';
+  var x=evX(),L=S.lang,c=evFind(S.evc),ty=evType(c);
+  var h='<div class="evwrap"><div class="panel evdetail"><div class="evhead"><span class="flag">'+evFlag(c.id)+'</span><div class="evhd"><b class="evname">'+c.n[L]+'</b><span class="evtag'+(ty==="check"?' warn':'')+'">'+x.type[ty]+'</span></div></div>';
+  h+='<p class="evintro">'+evIntro(c)[L]+'</p>';
+  if(ty==="check")h+='<div class="book"><p>'+x.confirmBox+'</p></div>';
   var evu=c.url||('https://www.google.com/search?q='+encodeURIComponent('site officiel e-visa '+c.n.fr+' gouvernement'));
   h+='<a class="pay wide" href="'+evu+'" target="_blank" rel="noopener noreferrer">'+(c.url?x.portalBtn:x.portalSearch)+'</a>';
   h+=(c.host?'<p class="evaddr">'+x.portalAddr+' <span class="evhost" dir="ltr">'+c.host+'</span></p><p class="rf-sub">'+x.portalWarn+'</p>':'')+'</div>';
-  h+='<section class="group"><h2>'+x.notesTitle+'</h2><ul class="adv">'+c.notes[L].map(function(n){return '<li>'+n+'</li>'}).join("")+'</ul></section>';
+  h+='<section class="group"><h2>'+x.notesTitle+'</h2><ul class="adv">'+evNotes(c)[L].map(function(n){return '<li>'+n+'</li>'}).join("")+'</ul></section>';
   h+=needsHtml(t);
   h+='<section class="group"><h2>'+x.prepTitle+'</h2><p class="ag-sub">'+x.prepSub+'</p>';
   x.prep.forEach(function(p){var on=!!S.done[p[0]];h+='<label class="item'+(on?' on':'')+'"><input type="checkbox" data-id="'+p[0]+'"'+(on?' checked':'')+'><span class="i-body"><span class="i-title">'+p[1]+'</span><span class="i-note">'+p[2]+'</span></span></label>'});
