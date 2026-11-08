@@ -2525,6 +2525,8 @@ function evNotes(c){
 function evListHtml(){
   var x=evX(),L=S.lang,X=EVCX[L],EVL=evList();
   var h='<div class="evwrap"><div class="book"><p>'+x.listWarn+'</p></div>';
+  var EPL={fr:"Pays du passeport",en:"Passport country",ar:"بلد جواز السفر"};
+  h+='<div class="field"><span class="q-label" id="evolab">'+EPL[L]+'</span><div class="evopick" role="group" aria-labelledby="evolab" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">'+ORIS.map(function(o){var on=S.origin===o.id;return '<button type="button" class="evo-b" data-evo="'+o.id+'" aria-pressed="'+on+'" style="flex:1 1 30%;min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;font:'+(on?'700':'500')+' 15px inherit;color:var(--ink);background:var(--surface);border:'+(on?'2px solid var(--accent)':'1px solid var(--line)')+'"><span class="flag">'+flag(o.id)+'</span><span>'+o.n[L]+'</span></button>'}).join("")+'</div></div>';
   h+='<div class="field"><label class="q-label" for="evsel">'+EVCX[L].sel+'</label><select class="sel" id="evsel"><option value="">'+EVCX[L].selp+'</option>'+EVCK.map(function(k){var cl=EVL.filter(function(c){return EVCONT[c.id]===k}).sort(function(a,b){return evKey(a,L).localeCompare(evKey(b,L),L)});return cl.length?'<optgroup label="'+EVCN[L][k]+'">'+cl.map(function(c){return '<option value="'+c.id+'">'+c.n[L]+'</option>'}).join("")+'</optgroup>':""}).join("")+'</select></div>';
   if(!evk||!EVCN[L][evk]){
     var SH={fr:{eu:"Europe",af:"Afrique",ame:"Amériques",as:"Asie",oc:"Océanie"},en:{eu:"Europe",af:"Africa",ame:"Americas",as:"Asia",oc:"Oceania"},ar:{eu:"أوروبا",af:"أفريقيا",ame:"الأمريكتان",as:"آسيا",oc:"أوقيانوسيا"}};
@@ -2718,6 +2720,8 @@ document.addEventListener("click",function(e){
   if(gb){go(parseInt(gb.dataset.go,10));return}
   if(e.target.closest("#start")){go(1);return}
   if(e.target.closest("#evbtn")){evk="";S.step=6;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
+  var eo=e.target.closest("[data-evo]");
+  if(eo){var oo=eo.dataset.evo;if(oo!==S.origin&&["tn","ma","dz"].indexOf(oo)>=0){S.origin=oo;S.country="fr";applyOrigin();evk="";save();render()}return}
   var ek=e.target.closest("[data-evk]");
   if(ek){evk=ek.dataset.evk;render();window.scrollTo(0,0);return}
   var evr=e.target.closest(".evrow");
