@@ -3,7 +3,7 @@ document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="
 (function(){
 var UI={
 fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destination, puis cochez chaque document au fur et à mesure.",
- s_country:"Destination",cAvail:"Disponible",cSoon:"Bientôt",soonText:"La liste des pièces pour ce pays arrive bientôt. La France est disponible dès maintenant.",
+ s_country:"Destination",cAvail:"Disponible",cSoon:"Bientôt",soonText:"La liste des pièces pour ce pays arrive bientôt.",
  agTitle:"Besoin d'un conseiller visa ?",agSub:"Voir ses coordonnées coûte 10 DT, en paiement unique.",
  gov:"Gouvernorat",govPick:"Choisir un gouvernorat",agCount:function(n){return n+(n>1?" conseillers":" conseiller")},
  agNone:"Pas encore de conseiller disponible.",payBtn:"Payer 10 DT",payWait:"Lien de paiement bientôt",
@@ -43,7 +43,7 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  rfNoGuar:"Ces modèles aident à présenter votre dossier. Ils ne garantissent pas le visa.",copy:"Copier le texte",copied:"Copié",selected:"Texte sélectionné, copiez-le",
  adv:["Lisez le formulaire de refus. La case cochée indique le motif à corriger.","Choisissez : un recours (délai court, indiqué sur la notification) ou une nouvelle demande, qui entraîne de nouveaux frais.","Corrigez le motif avec des preuves nouvelles. Moyens financiers : relevés réguliers, sans gros dépôt soudain. Objet du séjour : programme clair et réservations réelles. Retour en Tunisie : preuves d'attaches (emploi, famille, logement).","Restez cohérent avec la première demande. Le consulat garde votre dossier : dates, emploi et revenus doivent être identiques.","Il n'existe pas de délai légal d'attente avant de redéposer, mais ne redéposez pas le même dossier sans changement.","Aucun intermédiaire ne peut promettre un visa. Un faux document peut entraîner de graves conséquences, dont une interdiction d'entrée."]},
 en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, then tick each document as you collect it.",
- s_country:"Destination",cAvail:"Available",cSoon:"Coming soon",soonText:"The document list for this country is coming soon. France is available now.",
+ s_country:"Destination",cAvail:"Available",cSoon:"Coming soon",soonText:"The document list for this country is coming soon.",
  agTitle:"Need a visa advisor?",agSub:"Seeing his contact details costs 10 TND, paid once.",
  gov:"Governorate",govPick:"Choose a governorate",agCount:function(n){return n+(n>1?" advisors":" advisor")},
  agNone:"No advisor available yet.",payBtn:"Pay 10 TND",payWait:"Payment link coming soon",
@@ -83,7 +83,7 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  rfNoGuar:"These models help you present your file. They do not guarantee a visa.",copy:"Copy the text",copied:"Copied",selected:"Text selected, copy it",
  adv:["Read the refusal form. The ticked box shows the reason to fix.","Choose: an appeal (short deadline, shown on the notification) or a new application, which means new fees.","Fix the reason with new evidence. Funds: regular statements, no sudden large deposit. Purpose of stay: a clear plan and real bookings. Return to Tunisia: proof of ties (job, family, home).","Stay consistent with your first application. The consulate keeps your file: dates, job and income must be identical.","There is no legal waiting period before you apply again, but do not resubmit the same file unchanged.","No intermediary can promise a visa. A false document can have serious consequences, including an entry ban."]},
 ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اختر وجهتك ثم علّم كل وثيقة بعد تجهيزها.",
- s_country:"الوجهة",cAvail:"متاحة",cSoon:"قريبًا",soonText:"قائمة وثائق هذا البلد قادمة قريبًا. فرنسا متاحة الآن.",
+ s_country:"الوجهة",cAvail:"متاحة",cSoon:"قريبًا",soonText:"قائمة وثائق هذا البلد قادمة قريبًا.",
  agTitle:"هل تحتاج إلى مستشار تأشيرة؟",agSub:"مشاهدة بيانات الاتصال تكلّف 10 دنانير، تُدفع مرة واحدة.",
  gov:"الولاية",govPick:"اختر الولاية",agCount:function(n){return n===1?"مستشار واحد":n+" مستشارين"},
  agNone:"لا يوجد مستشار متاح بعد.",payBtn:"ادفع 10 د.ت",payWait:"رابط الدفع قريبًا",
@@ -427,8 +427,11 @@ var SVC_PRICE=15;
 function d17Amt(txt,x){return String(txt).split("{A}").join(SVC_PRICE+" "+(x.cur||"DT"))}
 var NXT={fr:"Étape suivante : ouvrez l'e-mail que nous venons de vous envoyer et touchez « Confirmer et payer ». Vous y trouverez aussi « Modifier mes dates ».",en:"Next step: open the e-mail we just sent you and tap “Confirm and pay”. You will also find “Change my dates” there.",ar:"الخطوة التالية: افتح الرسالة التي أرسلناها لك واضغط «تأكيد ودفع». ستجد فيها أيضًا «تعديل التواريخ»."};
 function d17Later(a){return '<div class="d17" role="region"><p>'+(NXT[S.lang]||NXT.fr)+'</p></div>'}
+/* D17 est un moyen de paiement tunisien : pour les voyageurs du Maroc et d'Algérie, on n'affiche pas D17. */
+var PAYX={fr:"Le paiement en ligne n'est pas encore disponible depuis votre pays. Écrivez-nous et nous vous répondrons dès son ouverture :",en:"Online payment is not available from your country yet. Write to us and we will reply as soon as it opens:",ar:"الدفع عبر الإنترنت غير متاح بعد من بلدك. راسلنا وسنرد عليك فور فتحه:"};
 function d17Html(k,amt){
   var L=S.lang,x=D17X[L]||D17X.fr,on=D17O===k;
+  if(S.origin!=="tn")return '<p class="ag-note" role="note">'+(PAYX[L]||PAYX.fr)+' <a href="mailto:'+D17.mail+'">'+D17.mail+'</a></p>';
   if(!D17.num)return '<span class="pay off" aria-disabled="true">'+UI[L].payWait+'</span>';
   var h='<button type="button" class="pay" data-d17="'+k+'" aria-expanded="'+on+'">'+x.btn+'</button>';
   if(!on)return h;
@@ -1162,7 +1165,76 @@ function applyOriginItems(o){
 }
 function oriLink(cur){return S.origin==="tn"?(cur.id==="fr"?"https://france-visas.gouv.fr/tunisie":(PROF[cur.id]||{}).site):((ORI_SITE[S.origin]||{})[cur.id]||"")}
 
-function applyCountry(t){return applyOriginItems(applyCountry0(t))}
+/* ===== Textes selon la destination choisie (Belgique, Suisse, Italie…) =====
+   Les listes de pièces sont écrites une seule fois (modèle Schengen). Pour une destination autre que la France,
+   le nom du pays choisi remplace « France » dans les phrases, et les pièces propres à la France
+   (attestation d'accueil CERFA, traduction française, France-Visas) deviennent neutres.
+   ITEMS0 = copie d'origine, rétablie à chaque affichage pour pouvoir changer de pays sans résidus. */
+var ITEMS0=ITEMS.map(function(it){return {id:it.id,fr:it.fr.slice(),en:it.en.slice(),ar:it.ar.slice()}});
+var CFR={
+ de:["en Allemagne","l'Allemagne"],it:["en Italie","l'Italie"],es:["en Espagne","l'Espagne"],be:["en Belgique","la Belgique"],
+ nl:["aux Pays-Bas","les Pays-Bas"],ch:["en Suisse","la Suisse"],at:["en Autriche","l'Autriche"],dk:["au Danemark","le Danemark"],
+ fi:["en Finlande","la Finlande"],pt:["au Portugal","le Portugal"],gr:["en Grèce","la Grèce"],pl:["en Pologne","la Pologne"],
+ cz:["en Tchéquie","la Tchéquie"],hu:["en Hongrie","la Hongrie"],se:["en Suède","la Suède"],no:["en Norvège","la Norvège"],
+ mt:["à Malte","Malte"],lu:["au Luxembourg","le Luxembourg"],hr:["en Croatie","la Croatie"],si:["en Slovénie","la Slovénie"],
+ sk:["en Slovaquie","la Slovaquie"],lt:["en Lituanie","la Lituanie"],lv:["en Lettonie","la Lettonie"],ee:["en Estonie","l'Estonie"],
+ is:["en Islande","l'Islande"],li:["au Liechtenstein","le Liechtenstein"],bg:["en Bulgarie","la Bulgarie"],ro:["en Roumanie","la Roumanie"],
+ ca:["au Canada","le Canada"],us:["aux États-Unis","les États-Unis"],gb:["au Royaume-Uni","le Royaume-Uni"],
+ ae:["aux Émirats arabes unis","les Émirats arabes unis"],sa:["en Arabie saoudite","l'Arabie saoudite"],jp:["au Japon","le Japon"],
+ au:["en Australie","l'Australie"],nz:["en Nouvelle-Zélande","la Nouvelle-Zélande"],cn:["en Chine","la Chine"]
+};
+var CEN_THE={nl:1,us:1,gb:1,ae:1};
+function cArt(c){return CFR[c.id]||["en "+c.n.fr,c.n.fr]}
+function cDe(art){
+  if(/^le /.test(art))return "du "+art.slice(3);
+  if(/^la /.test(art))return "de la "+art.slice(3);
+  if(/^l'/.test(art))return "de l'"+art.slice(2);
+  if(/^les /.test(art))return "des "+art.slice(4);
+  return "de "+art;
+}
+function cEn(c){return (CEN_THE[c.id]?"the ":"")+c.n.en}
+function genText(s,l,c){
+  if(typeof s!=="string")return s;
+  var a=cArt(c);
+  if(l==="fr")return s.replace(/en France/g,a[0]).replace(/la France/g,a[1]).replace(/Traduction française assermentée/g,"Traduction assermentée").replace(/traduction française assermentée/g,"traduction assermentée").replace(/sur France-Visas/g,"sur le site officiel").replace(/France-Visas/g,"le site officiel");
+  if(l==="en")return s.replace(/in France/g,"in "+cEn(c)).replace(/Sworn French translation/g,"Sworn translation").replace(/on France-Visas/g,"on the official website").replace(/France-Visas/g,"the official website");
+  return s.replace(/ترجمة فرنسية محلّفة/g,"ترجمة محلّفة").replace(/فرنسا/g,c.n.ar).replace(/France-Visas/g,"الموقع الرسمي");
+}
+function restoreItems(){
+  ITEMS0.forEach(function(x){
+    var it=ITEMS.filter(function(y){return y.id===x.id})[0];
+    if(it){it.fr=x.fr.slice();it.en=x.en.slice();it.ar=x.ar.slice()}
+  });
+}
+function sameItem(it,o){return JSON.stringify([it.fr,it.en,it.ar])===JSON.stringify([o.fr,o.en,o.ar])}
+function genCountry(o){
+  var c=curC();
+  if(c.id==="fr")return o;
+  var a=cArt(c),de=cDe(a[1]),en=cEn(c),by0={};
+  ITEMS0.forEach(function(x){by0[x.id]=x});
+  ITEMS.forEach(function(it){
+    var pristine=by0[it.id]&&sameItem(it,by0[it.id]);
+    if(pristine&&it.id==="transl"){
+      it.fr=["Traduction assermentée des documents rédigés en arabe","Souvent exigée. La langue acceptée est indiquée par le centre de dépôt ou l'ambassade "+de+" : confirmez-la sur le site officiel avant de faire traduire."];
+      it.en=["Sworn translation of documents written in Arabic","Often required. The accepted language is given by the application centre or the embassy of "+en+": confirm it on the official website before having documents translated."];
+      it.ar=["ترجمة محلّفة للوثائق المكتوبة بالعربية","تُطلب غالبًا. اللغة المقبولة يحددها مركز الإيداع أو سفارة "+c.n.ar+": تأكد منها على الموقع الرسمي قبل الترجمة."];
+      return;
+    }
+    if(pristine&&it.id==="invite"){
+      it.fr=["Lettre d'invitation ou attestation d'hébergement de l'hôte","Le modèle et les formalités dépendent du pays : confirmez-les sur le site officiel "+de+". Ajoutez la pièce d'identité de l'hôte, son justificatif de domicile "+a[0]+", ses revenus et la preuve du lien de parenté."];
+      it.en=["Invitation letter or hosting certificate from your host","The form and formalities depend on the country: confirm them on the official website of "+en+". Add the host's ID, proof of address in "+en+", proof of income and proof of kinship."];
+      it.ar=["رسالة دعوة أو شهادة استضافة من المضيف","النموذج والإجراءات يختلفان حسب البلد: تأكد منهما على الموقع الرسمي لدولة "+c.n.ar+". أضف هوية المضيف وإثبات إقامته في "+c.n.ar+" ودخله وإثبات صلة القرابة."];
+      return;
+    }
+    ["fr","en","ar"].forEach(function(l){it[l]=[genText(it[l][0],l,c),genText(it[l][1],l,c)]});
+  });
+  var r=Object.assign({},o);
+  r.msgDone=({fr:"Dossier complet. Vérifiez une dernière fois sur le site officiel "+de+".",en:"File complete. Check once more on the official website of "+en+".",ar:"الملف مكتمل. تحقق مرة أخيرة على الموقع الرسمي لدولة "+c.n.ar+"."})[S.lang];
+  r.medNote=genText(r.medNote,S.lang,c);
+  r.disc=String(r.disc).replace(/France-Visas, /g,"").replace(/France-Visas و/g,"");
+  return r;
+}
+function applyCountry(t){restoreItems();return genCountry(applyOriginItems(applyCountry0(t)))}
 function applyOrigin(){COUNTRIES.forEach(function(c){c.ready=S.origin==="tn"?TN_READY.indexOf(c.id)>=0:(ORI_READY[S.origin]||[]).indexOf(c.id)>=0})}
 function oriName(id){var o=ORIS.filter(function(x){return x.id===id})[0];return o?o.n[S.lang]:""}
 function oriHtml(t){
