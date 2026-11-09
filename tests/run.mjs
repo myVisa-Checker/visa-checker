@@ -145,6 +145,7 @@ ok("planner affiche une progression accessible", plannerPage.includes('id="progr
 ok("planner conserve les tâches cochées lors d’une mise à jour", plannerScript.includes("previousDone=plan&&plan.done?plan.done:{}"));
 ok("planner valide les dates enregistrées", plannerScript.includes("function validDate") && plannerScript.includes("validDate(saved.departure)"));
 ok("planner exporte un calendrier ICS", plannerScript.includes("BEGIN:VCALENDAR") && plannerScript.includes("text/calendar"));
+ok("planner affiche un lien vers la source officielle", productApp.includes("if(p.site)h+=") && productApp.includes("france-visas.gouv.fr/tunisie"));
 ok("planner ne collecte pas de numéro de passeport", !/<input[^>]*(?:passport|passeport)/i.test(plannerPage));
 ok("planner précise que les dates ne sont pas officielles", plannerScript.includes("not official processing deadlines") && plannerScript.includes("pas des délais officiels"));
 ok("planner n'utilise aucune bibliothèque distante", !/<script[^>]+src=["']https?:/i.test(plannerPage));
