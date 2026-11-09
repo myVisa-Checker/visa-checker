@@ -3,6 +3,7 @@
 // Vérifie la syntaxe des scripts, la validité des JSON, les fichiers référencés, la cohérence de version
 // et le rendu de la section e-Visa pour les trois passeports (tn, ma, dz) dans les trois langues.
 import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
 import vm from "node:vm";
 
@@ -20,11 +21,25 @@ for (const f of ["manifest.json", "partners.json", "rdv.json", "reviews.json", "
   try { JSON.parse(read(f)); ok(f, true); } catch (e) { ok(f, false, e.message); }
 }
 
-console.log("Fichiers référencés par index.html");
+console.log("Liens et ressources locaux de toutes les pages HTML");
 const html = read("index.html");
-const refs = [...html.matchAll(/(?:src|href)="([^"#?]+)(?:\?[^"]*)?"/g)].map((m) => m[1])
-  .filter((r) => !/^(https?:|data:|mailto:|tel:|\/\/)/.test(r));
-for (const r of [...new Set(refs)]) ok(r, r === "/" || existsSync(r.replace(/^\//, "")));
+const htmlPages = [
+  "index.html", "partenaires.html", "a-propos.html", "contact.html",
+  "confidentialite.html", "conditions.html",
+  "guide/index.html", "guide/documents-visa-schengen-france-tunisie.html"
+];
+for (const page of htmlPages) {
+  const source = read(page);
+  const refs = [...source.matchAll(/(?:src|href)=["']([^"']+)["']/g)].map((m) => m[1]);
+  for (const ref of [...new Set(refs)]) {
+    if (/^(https?:|data:|mailto:|tel:|\/\/|#|javascript:)/i.test(ref)) continue;
+    const clean = ref.split(/[?#]/)[0];
+    if (!clean) continue;
+    const target = resolve(dirname(page), clean.endsWith("/") ? clean + "index.html" : clean);
+    ok(page + " → " + ref, existsSync(target), target);
+    ok(page + " : pas de chemin local absolu", !clean.startsWith("/"));
+  }
+}
 
 console.log("Sitemap");
 const urls = [...read("sitemap.xml").matchAll(/<loc>https:\/\/checkmyvisa\.org\/([^<]*)<\/loc>/g)].map((m) => m[1]);
@@ -42,6 +57,10 @@ const secretRe = /(AIza[0-9A-Za-z_-]{30,}|sk-[A-Za-z0-9]{20,}|-----BEGIN [A-Z ]*
 for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "index.html", "worker/visa-chat-worker.js", "data.js", "app.js"]) ok("aucune clé secrète dans " + f, !secretRe.test(read(f)));
 const workerCode = read("worker/visa-chat-worker.js").split("\n").filter((l) => !/^\s*\/\//.test(l)).join("\n");
 ok("PAY_MOCK n'est pas activé en dur dans le Worker (commentaires ignorés)", !/PAY_MOCK\s*=\s*["']?1/.test(workerCode));
+ok("Worker refuse les origines web non autorisées", /if \(origin && !ORIGINS\.includes\(origin\)\)/.test(workerCode));
+ok("Paiement manuel désactivé tant qu’aucun partenaire n’est validé", /var D17=\{num:"",name:"",tg:""/.test(read("visa-app.js")));
+const manifest = JSON.parse(read("manifest.json"));
+ok("identifiant PWA compatible avec un déploiement en sous-chemin", manifest.id.startsWith("./"));
 
 console.log("Contraste des couleurs de marque (brand.css, WCAG AA = 4,5)");
 {
