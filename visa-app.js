@@ -779,7 +779,7 @@ function cleanReviews(j){
 function starsHtml(n){var s="";for(var i=1;i<=5;i++)s+=i<=n?"★":"<i>★</i>";return '<span class="rv-stars" role="img" aria-label="'+n+' / 5" dir="ltr">'+s+'</span>'}
 function renderReviews(){
   var el=$("reviews");if(!el)return;
-  var on=S.step===0;el.hidden=!on;if(!on)return;
+  var on=true;el.hidden=false;
   var sig=S.lang+"|"+REVIEWS.length;if(sig===rvSig&&el.firstChild)return;rvSig=sig;
   var R=RVT[S.lang]||RVT.fr,L=S.lang,n=REVIEWS.length,h='';
   var mail=SITE.email?'<a class="pay rv-cta" href="mailto:'+SITE.email+'?subject='+encodeURIComponent(R.sub)+'&body='+encodeURIComponent(R.body)+'">'+R.cta+'</a>':'';
