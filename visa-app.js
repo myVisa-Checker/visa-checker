@@ -398,16 +398,20 @@ var SVC_PRICE=15; // Affiché uniquement dans le récapitulatif de paiement.
 var N48={fr:"Modification possible pendant 48 h maximum après la demande, uniquement sur les dates. Le nom et le prénom ne sont jamais modifiables. Passé ce délai, faites une nouvelle demande.",en:"Changes are possible for 48 hours maximum after your request, dates only. First and last name can never be changed. After that, make a new request.",ar:"يمكن التعديل خلال 48 ساعة كحد أقصى بعد الطلب، وللتواريخ فقط. لا يمكن أبدًا تعديل الاسم واللقب. بعد هذه المدة قدّم طلبًا جديدًا."};
 function n48(l){l=l||S.lang;return '<p class="n48" role="note">'+(N48[l]||N48.fr)+'</p>'}
 var PAYMENT_COPY={
- fr:{title:"Paiement sécurisé",sub:"Choisissez votre prestataire lorsque le paiement en ligne sera activé.",status:"Activation en cours",billing:"Votre adresse de facturation et le récapitulatif du montant seront demandés avant la validation, sur la page sécurisée du prestataire.",note:"Aucun paiement n'est demandé sur cette page pour le moment."},
- en:{title:"Secure payment",sub:"Choose your provider once online payments are enabled.",status:"Coming soon",billing:"Your billing address and the amount breakdown will be requested before confirmation on the provider's secure page.",note:"No payment is being requested on this page yet."},
- ar:{title:"دفع آمن",sub:"اختر مزوّد الدفع عند تفعيل الدفع الإلكتروني.",status:"قريبًا",billing:"سيُطلب عنوان الفوترة وتفاصيل المبلغ قبل التأكيد على الصفحة الآمنة لمزوّد الدفع.",note:"لا يُطلب أي دفع في هذه الصفحة حاليًا."}
+ fr:{title:"Paiement sécurisé",sub:"Choisissez votre prestataire lorsque le paiement en ligne sera activé.",status:"Activation en cours",billingTitle:"Adresse de facturation",name:"Nom complet",email:"E-mail",address:"Adresse",city:"Ville",postal:"Code postal",country:"Pays",billingNote:"Ces informations ne sont pas collectées maintenant. Le formulaire sera activé avec le paiement sécurisé.",note:"Aucun paiement n'est demandé sur cette page pour le moment."},
+ en:{title:"Secure payment",sub:"Choose your provider once online payments are enabled.",status:"Coming soon",billingTitle:"Billing address",name:"Full name",email:"E-mail",address:"Street address",city:"City",postal:"Postal code",country:"Country",billingNote:"These details are not collected now. The form will be enabled with secure payments.",note:"No payment is being requested on this page yet."},
+ ar:{title:"دفع آمن",sub:"اختر مزوّد الدفع عند تفعيل الدفع الإلكتروني.",status:"قريبًا",billingTitle:"عنوان الفوترة",name:"الاسم الكامل",email:"البريد الإلكتروني",address:"العنوان",city:"المدينة",postal:"الرمز البريدي",country:"البلد",billingNote:"لا يتم جمع هذه المعلومات حاليًا. سيتم تفعيل النموذج مع الدفع الآمن.",note:"لا يُطلب أي دفع في هذه الصفحة حاليًا."}
 };
-function paymentMethodsHtml(){
+function paymentMethodsHtml(withBilling){
   var x=PAYMENT_COPY[S.lang]||PAYMENT_COPY.fr;
-  return '<section class="payment-panel" aria-label="'+x.title+'"><div class="payment-panel-head"><b>'+x.title+'</b><p>'+x.sub+'</p></div><div class="payment-providers">'
+  var h='<section class="payment-panel" aria-label="'+x.title+'"><div class="payment-panel-head"><b>'+x.title+'</b><p>'+x.sub+'</p></div><div class="payment-providers">'
     +'<div class="payment-provider payment-konnect" aria-disabled="true"><span class="provider-mark" aria-hidden="true">K</span><span class="provider-name">Konnect</span><span class="provider-status">'+x.status+'</span></div>'
-    +'<div class="payment-provider payment-flouci" aria-disabled="true"><span class="provider-mark" aria-hidden="true">F</span><span class="provider-name">Flouci</span><span class="provider-status">'+x.status+'</span></div></div>'
-    +'<p class="payment-billing">'+x.billing+'</p><p class="ag-note">'+x.note+'</p></section>';
+    +'<div class="payment-provider payment-flouci" aria-disabled="true"><span class="provider-mark" aria-hidden="true">F</span><span class="provider-name">Flouci</span><span class="provider-status">'+x.status+'</span></div></div>';
+  if(withBilling)h+='<fieldset class="billing-fields" disabled><legend>'+x.billingTitle+'</legend><div class="billing-grid">'
+    +'<label>'+x.name+'<input type="text" autocomplete="name"></label><label>'+x.email+'<input type="email" autocomplete="email"></label>'
+    +'<label class="billing-full">'+x.address+'<input type="text" autocomplete="street-address"></label><label>'+x.city+'<input type="text" autocomplete="address-level2"></label>'
+    +'<label>'+x.postal+'<input type="text" autocomplete="postal-code"></label><label class="billing-full">'+x.country+'<input type="text" autocomplete="country-name"></label></div><p class="ag-note">'+x.billingNote+'</p></fieldset>';
+  return h+'<p class="ag-note">'+x.note+'</p></section>';
 }
 var PAYMENT_NEXT={fr:"Nous vous informerons dès que le paiement sécurisé sera disponible. Aucun document ne sera envoyé avant confirmation effective de la transaction.",en:"We will let you know when secure payment is available. No document will be sent before the transaction is actually confirmed.",ar:"سنُعلمك عند إتاحة الدفع الآمن. لن يتم إرسال أي مستند قبل التأكد الفعلي من إتمام المعاملة."};
 function paymentNextHtml(){return '<div class="payment-next" role="status">'+(PAYMENT_NEXT[S.lang]||PAYMENT_NEXT.fr)+'</div>'}
@@ -433,10 +437,10 @@ function ordClose(){
   document.documentElement.classList.remove("modal-open");
   try{history.replaceState(null,"",location.pathname)}catch(e){}
 }
-function ordRecap(L,od){
+function ordRecap(L,od,showAmount){
   var R=RT[L]||RT.fr,X=OVX[L]||OVX.fr,hot=od.svc==="hotel",sh=function(x){return String(x).replace(/\s*\(.*?\)/g,"")};
   var rows=[[(R.svc&&R.svc[od.svc])||od.svc,od.dest+(od.city?" · "+od.city:"")],[sh(R.ln),od.ln],[sh(R.fn),od.fn],[sh(hot?R.d1h:R.d1f),fmtD(od.d1)],[sh(hot?R.d2h:R.d2f),od.d2?fmtD(od.d2):"-"]];
-  rows.push([X.amt,SVC_PRICE+" DT"]);
+  if(showAmount)rows.push([X.amt,SVC_PRICE+" DT"]);
   rows.push(["Réf.",od.ref]);
   return '<div class="recap"><h2>'+X.recap+'</h2><dl>'+rows.map(function(r){return '<div><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>'}).join("")+'</dl></div>';
 }
@@ -444,10 +448,10 @@ function ordBad(){ordShell(OV.L,'<h1>Visa Checker</h1><p class="n48" role="alert
 /* ---- client : confirmer et payer ---- */
 function ordPayView(){
   var L=OV.L,X=OVX[L],od=OV.od;
-  var h='<h1>'+X.payT+'</h1><p class="rf-sub">'+X.check+'</p>'+ordRecap(L,od)+n48(L);
+  var h='<h1>'+X.payT+'</h1><p class="rf-sub">'+X.check+'</p>'+ordRecap(L,od,true)+n48(L);
   if(od.status==="sent"){h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.sent+'</b></p>'}
   else if(od.status==="paid"){h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.ok+'</b></p>'}
-  else{h+=paymentMethodsHtml()}
+  else{h+=paymentMethodsHtml(true)}
   if(od.canEdit)h+='<button type="button" class="reset wide" data-ovedit>'+X.goEdit+'</button>';
   ordShell(L,h);
 }
