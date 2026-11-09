@@ -599,7 +599,7 @@ function renderRefus(t){
     if(PACK_STATE==="expired")h+='<p class="ag-err" role="alert">'+PKX[L].exp+'</p>';
     h+='<ul class="inc">'+t.rfInc.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>';
     h+=paymentMethodsHtml();
-    h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off" aria-describedby="err2" aria-invalid="false"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
+    /* Code d'accès masqué tant qu'aucun parcours de paiement n'est actif. */
   }else{
     h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
     h+='<h2>'+t.rfAdvTitle+'</h2><ol class="adv">'+t.adv.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ol>';
@@ -1603,7 +1603,7 @@ function renderAgency(t){
   }else{
     h+='<div class="locked"><b>'+t.agCount(list.length)+'</b><i></i><i></i></div>';
     h+=paymentMethodsHtml();
-    h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off" aria-describedby="err" aria-invalid="false"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>';
+    /* Déblocage masqué tant que les paiements ne sont pas activés. */
   }
   h+='<p class="ag-note">'+t.agNote+'</p>';
   $("agency").innerHTML=h;
