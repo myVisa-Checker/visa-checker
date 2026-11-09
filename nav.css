@@ -52,3 +52,10 @@
 .trd-country-panel{width:100%;min-height:120px}
 @media(max-width:480px){.trd-country-tabs{gap:6px}.trd-country-tab{font-size:13px;padding:8px 5px}}
 @media(max-width:340px){.trd-country-tabs{grid-template-columns:1fr}}
+
+/* Accès au profil / espace Joury */
+.sitenav .sn-profile{display:inline-flex;align-items:center;justify-content:center;gap:8px;flex:none;min-height:40px;padding:7px 13px;border:1px solid #c9d9f3;border-radius:999px;background:#edf4ff;color:#1749a5;font-size:13px;font-weight:700;text-decoration:none;transition:background .18s,border-color .18s,transform .18s}
+.sitenav .sn-profile svg{width:18px;height:18px;flex:none}
+.sitenav .sn-profile:hover{background:#dceaff;border-color:#9ebcf0;transform:translateY(-1px)}
+.sitenav .sn-profile:focus-visible{outline:3px solid #245bd4;outline-offset:3px}
+@media(max-width:480px){.sitenav .sn-profile{min-height:38px;padding:6px 9px;font-size:12px;gap:5px}.sitenav .sn-profile svg{width:17px;height:17px}}
