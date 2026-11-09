@@ -402,8 +402,8 @@ var N48={fr:"Modification possible pendant 48 h maximum après la demande, uniqu
 function n48(l){l=l||S.lang;return '<p class="n48" role="note">'+(N48[l]||N48.fr)+'</p>'}
 var NXT={fr:"Nous vous informerons dès que les moyens de paiement sécurisés seront disponibles. Vous pourrez ensuite confirmer votre réservation.",en:"We will let you know when secure payment methods are available. You can then confirm your booking.",ar:"سنُعلمك عند توفر وسائل الدفع الآمنة، لتتمكن بعدها من تأكيد الحجز."};
 function d17Later(a){return '<div class="d17" role="region"><p>'+(NXT[S.lang]||NXT.fr)+'</p></div>'}
-function paymentMethodsHtml(){
-  var L=S.lang;
+function paymentMethodsHtml(lang){
+  var L=lang||S.lang;
   var T={
     fr:{title:"Moyens de paiement",soon:"Bientôt disponible",desc:"Les paiements en ligne sont en préparation. Aucun paiement n'est demandé pour le moment.",bill:"Adresse de facturation",billText:"Elle sera demandée au moment du paiement sécurisé. Aucune adresse ni donnée bancaire n'est collectée ici."},
     en:{title:"Payment methods",soon:"Coming soon",desc:"Online payments are being prepared. No payment is requested at this time.",bill:"Billing address",billText:"It will be requested during secure checkout. No address or banking details are collected here."},
@@ -453,7 +453,7 @@ function ordPayView(){
   var h='<h1>'+X.payT+'</h1><p class="rf-sub">'+X.check+'</p>'+ordRecap(L,od)+n48(L);
   if(od.status==="sent"){h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.sent+'</b></p>'}
   else if(od.status==="paid"){h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.ok+'</b></p>'}
-  else h+=paymentMethodsHtml();
+  else h+=paymentMethodsHtml(L);
   if(od.canEdit)h+='<button type="button" class="reset wide" data-ovedit>'+X.goEdit+'</button>';
   ordShell(L,h);
 }
