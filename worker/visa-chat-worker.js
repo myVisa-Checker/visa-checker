@@ -1,26 +1,27 @@
 // Worker « visa-chat » : assistant Visa Checker + entraînement à l'entretien (payant, par code).
 // À déployer sur Cloudflare (Workers & Pages > visa-chat > Edit code). Ce fichier n'est PAS servi par le site.
-// Variables Cloudflare : GEMINI_API_KEY (secret), INTERVIEW_CODES (secret, codes séparés par des virgules).
-// Le modèle Gemini est écrit directement dans le code (variable « model » plus bas).
+// Variables Cloudflare : GEMINI_API_KEY (secret), GEMINI_MODEL (facultatif), INTERVIEW_CODES (secret, codes séparés par des virgules).
 // KV nommé USAGE (Bindings) : limite par code, codes générés après paiement, commandes.
-// Paiement Konnect (cartes, e-Dinar, Flouci...) : KONNECT_API_KEY (secret), KONNECT_WALLET_ID, PRICE_MILLIMES (ex. 15000 = 15 DT),
-//   KONNECT_BASE (par défaut : bac à sable), SITE_URL, PAY_MOCK=1 (TEST ONLY : paiement simulé, ne jamais laisser en production).
+// Paiements : intégration reportée. Aucun fournisseur ni endpoint de paiement actif pour le moment ; Flouci sera évalué séparément.
 
-const SYSTEM = `Tu es l'assistant de Visa Checker, un site qui aide les voyageurs tunisiens à vérifier leur dossier de visa pour la France.
+const SYSTEM = `Tu es l'assistant de Visa Checker, un service indépendant d'aide à la préparation des dossiers de visa et à la compréhension des formalités de voyage.
 Règles :
-- Réponds dans la langue de l'utilisateur (français, anglais ou arabe), en réponses courtes et claires.
-- Réponds en texte simple, sans markdown (pas de ** ni de #), avec des tirets "-" pour les listes et 150 mots maximum.
-- Tu parles uniquement des visas pour la France et des documents à préparer.
-- Ne promets jamais l'obtention d'un visa : le consulat décide, même si le dossier est complet.
-- Ne donne aucun montant de frais : renvoie vers le site officiel France-Visas.
-- Tu ne remplis pas la demande de visa à la place du client.
-- Si la question sort du sujet, ramène poliment vers les visas.`;
+- Réponds dans la langue de l'utilisateur : français, anglais ou arabe. Sois bref, clair et pratique (150 mots maximum).
+- Réponds en texte simple, sans markdown décoratif.
+- Les formalités dépendent du passeport, du pays de destination, du motif et de la durée du séjour. Si une information manque, pose une seule question courte avant de conseiller.
+- Ne suppose jamais que l'utilisateur est tunisien ou qu'il demande un visa pour la France.
+- Donne la priorité aux sources officielles du pays de destination. Signale clairement quand une règle doit être vérifiée ou quand tu n'as pas de source fiable.
+- Ne présente jamais une liste indicative comme une liste officielle ou exhaustive et n'invente ni document, ni frais, ni délai, ni lien.
+- Ne promets jamais l'obtention d'un visa : seule l'autorité compétente décide.
+- Tu ne remplis pas et ne déposes pas la demande à la place du client.
+- Ne demande jamais de numéro de passeport, de données bancaires ou d'autres informations sensibles.
+- Si la question sort du sujet, ramène poliment vers la préparation du voyage et des formalités de visa.`;
 
-const SYSTEM_INTERVIEW = `Tu es un simulateur d'entretien de visa pour Visa Checker. Le client est un voyageur tunisien qui s'entraîne avant un entretien consulaire (surtout les États-Unis, parfois un autre pays).
+const SYSTEM_INTERVIEW = `Tu es un simulateur d'entretien de visa pour Visa Checker. Le client est un voyageur qui s'entraîne avant un entretien consulaire. Adapte les questions à sa nationalité, sa destination et son motif de voyage.
 Tu joues un agent consulaire exigeant mais correct.
 Déroulement :
 - Le client décrit d'abord sa situation (destination, motif, dates, métier, qui paie).
-- Pose UNE seule question courte à la fois, adaptée à sa destination et à son motif (but du voyage, durée, logement, qui paie, travail et attaches en Tunisie, voyages passés, refus précédents, famille ou connaissances sur place, retour).
+- Pose UNE seule question courte à la fois, adaptée à sa destination et à son motif (but du voyage, durée, logement, qui paie, travail et attaches dans son pays de résidence, voyages passés, refus précédents, famille ou connaissances sur place, retour).
 - Après chaque réponse du client : 1) un retour en 1 ou 2 phrases : ce qui est clair, ce qui est flou ou pourrait contredire son dossier ; 2) une meilleure formulation basée UNIQUEMENT sur les informations qu'il a données ; 3) la question suivante.
 - Après 6 questions, ou s'il le demande, fais un résumé : points forts, points à corriger, pièces à revérifier.
 Règles strictes :
@@ -32,10 +33,8 @@ Règles strictes :
 - Réponds dans la langue du client (français, anglais ou arabe), en texte simple sans markdown, avec des tirets "-" pour les listes, 150 mots maximum.
 - Si la question sort du sujet de l'entretien de visa, ramène poliment vers l'entraînement.`;
 
-const DEFAULT_SITE = "https://checkmyvisa.org/"; // surchargé par la variable SITE_URL
 const IV_MAX = 40; // messages par code (utilisé seulement si le KV « USAGE » est relié)
 const ORIGINS = ["https://checkmyvisa.org", "https://www.checkmyvisa.org", "https://myvisa-checker.github.io"];
-const DEFAULT_KBASE = "https://api.sandbox.konnect.network/api/v2"; // production : https://api.konnect.network/api/v2
 const ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const rid = (n) => Array.from(crypto.getRandomValues(new Uint8Array(n)), (b) => ALPHA[b % ALPHA.length]).join("");
 const TTL = 60 * 60 * 24 * 30;
@@ -62,8 +61,16 @@ function limited(ip) {
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
+    // Refuser explicitement les origines web non autorisées au lieu de leur renvoyer
+    // un en-tête CORS appartenant à un autre domaine.
+    if (origin && !ORIGINS.includes(origin)) {
+      return new Response(JSON.stringify({ error: "origin" }), {
+        status: 403,
+        headers: { "Content-Type": "application/json", "Vary": "Origin" },
+      });
+    }
     const cors = {
-      "Access-Control-Allow-Origin": ORIGINS.includes(origin) ? origin : ORIGINS[0],
+      ...(origin ? { "Access-Control-Allow-Origin": origin } : {}),
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
       "Vary": "Origin",
@@ -71,64 +78,36 @@ export default {
     const out = (obj, status = 200) =>
       new Response(JSON.stringify(obj), {
         status,
-        headers: { ...cors, "Content-Type": "application/json" },
+        headers: { ...cors, "Content-Type": "application/json", "Cache-Control": "no-store, max-age=0" },
       });
 
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
     if (request.method !== "POST") return out({ error: "POST only" }, 405);
 
     try {
-      const body = await request.json();
-      const interview = body.mode === "interview";
-      const SITE = env.SITE_URL || DEFAULT_SITE;
-      const KBASE = env.KONNECT_BASE || DEFAULT_KBASE;
-
-      // ----- Paiement : création d'une commande -----
-      if (body.action === "pay_create") {
-        const amount = parseInt(env.PRICE_MILLIMES || "0", 10);
-        if (!env.USAGE || !amount) return out({ error: "config" }, 500);
-        const orderId = rid(16);
-        if (env.PAY_MOCK === "1") {
-          await env.USAGE.put("order:" + orderId, orderId, { expirationTtl: TTL });
-          return out({ payUrl: SITE + "?pay=1&mock=1", ref: orderId });
-        }
-        if (!env.KONNECT_API_KEY || !env.KONNECT_WALLET_ID) return out({ error: "config" }, 500);
-        const r = await fetch(KBASE + "/payments/init-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-api-key": env.KONNECT_API_KEY },
-          body: JSON.stringify({
-            receiverWalletId: env.KONNECT_WALLET_ID, token: "TND", amount, type: "immediate",
-            description: "Visa Checker - entrainement entretien", orderId, lifespan: 30,
-            successUrl: SITE + "?pay=1", failUrl: SITE + "?pay=fail",
-          }),
-        });
-        const d = await r.json().catch(() => ({}));
-        if (!d.paymentRef || !d.payUrl) return out({ error: "gateway" }, 502);
-        await env.USAGE.put("order:" + d.paymentRef, orderId, { expirationTtl: TTL });
-        return out({ payUrl: d.payUrl, ref: d.paymentRef });
+      const contentType = request.headers.get("Content-Type") || "";
+      if (!contentType.toLowerCase().includes("application/json")) {
+        return out({ error: "content_type" }, 415);
       }
+      const maxBodyBytes = 24 * 1024;
+      const declaredLength = Number(request.headers.get("Content-Length") || 0);
+      if (declaredLength > maxBodyBytes) return out({ error: "body_too_large" }, 413);
+      const rawBody = await request.text();
+      if (new TextEncoder().encode(rawBody).byteLength > maxBodyBytes) {
+        return out({ error: "body_too_large" }, 413);
+      }
+      let body;
+      try { body = JSON.parse(rawBody); } catch { return out({ error: "invalid_json" }, 400); }
+      if (!body || typeof body !== "object" || Array.isArray(body)) {
+        return out({ error: "invalid_body" }, 400);
+      }
+      const interview = body.mode === "interview";
+      if (interview && !env.USAGE) return out({ error: "usage_unavailable" }, 503);
 
-      // ----- Paiement : vérification puis génération du code -----
-      if (body.action === "pay_check") {
-        const ref = String(body.ref || "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 64);
-        if (!ref || !env.USAGE) return out({ error: "bad" }, 400);
-        const done = await env.USAGE.get("ref:" + ref);
-        if (done) return out({ paid: true, code: done });
-        const orderId = await env.USAGE.get("order:" + ref);
-        if (!orderId) return out({ paid: false, error: "unknown" });
-        let paid = false;
-        if (env.PAY_MOCK === "1") paid = true;
-        else {
-          const r = await fetch(KBASE + "/payments/" + ref, { headers: { "x-api-key": env.KONNECT_API_KEY } });
-          const d = await r.json().catch(() => ({}));
-          const p = d.payment || d;
-          paid = p.status === "completed" && (p.orderId == null || p.orderId === orderId);
-        }
-        if (!paid) return out({ paid: false });
-        const code = "IV-" + rid(4) + "-" + rid(4);
-        await env.USAGE.put("mint:" + code, "1");
-        await env.USAGE.put("ref:" + ref, code);
-        return out({ paid: true, code });
+      // Paiements désactivés jusqu'à validation d'un partenaire et configuration de production.
+      // Les anciens appels frontend reçoivent une réponse explicite, sans fournisseur de paiement actif.
+      if (body.action === "pay_create" || body.action === "pay_check") {
+        return out({ error: "payments_unavailable" }, 503);
       }
 
       // ----- Entraînement : accès par code -----
@@ -147,15 +126,24 @@ export default {
         if (body.check) return out({ ok: true, left: env.USAGE ? IV_MAX - used : null });
       }
 
-      const msgs = (body.messages || []).slice(interview ? -16 : -8).map((m) => ({
-        role: m.role === "assistant" ? "model" : "user",
-        parts: [{ text: String(m.text || "").slice(0, interview ? 700 : 500) }],
-      }));
+      if (!Array.isArray(body.messages) || body.messages.length > 32) {
+        return out({ error: "invalid_messages" }, 400);
+      }
+      const msgs = body.messages
+        .filter((m) => m && typeof m === "object" &&
+          (m.role === "user" || m.role === "assistant") &&
+          typeof m.text === "string" && m.text.trim().length > 0)
+        .slice(interview ? -16 : -8)
+        .map((m) => ({
+          role: m.role === "assistant" ? "model" : "user",
+          parts: [{ text: m.text.slice(0, interview ? 700 : 500) }],
+        }));
       while (msgs.length && msgs[0].role !== "user") msgs.shift();
       if (!msgs.length) return out({ error: "empty" }, 400);
       if (!interview && limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
 
-      const model = "gemini-3.5-flash-lite"; // écrit en dur : ignore la variable GEMINI_MODEL
+      if (!env.GEMINI_API_KEY) return out({ error: "service_unavailable", reply: FALLBACK }, 503);
+      const model = env.GEMINI_MODEL || "gemini-3.5-flash-lite";
       const ctl = new AbortController();
       const tm = setTimeout(() => ctl.abort(), 20000); // délai maximum : 20 secondes
       let r;
@@ -172,7 +160,7 @@ export default {
             body: JSON.stringify({
               systemInstruction: { parts: [{ text: interview ? SYSTEM_INTERVIEW : SYSTEM }] },
               contents: msgs,
-              generationConfig: { maxOutputTokens: 2500 },
+              generationConfig: { maxOutputTokens: 700 },
             }),
           }
         );

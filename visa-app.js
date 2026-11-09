@@ -2,7 +2,7 @@
 document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&t.classList.contains("fav")&&t.parentNode){t.parentNode.classList.add("fb");t.remove()}},true);
 (function(){
 var UI={
-fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destination, puis cochez chaque document au fur et à mesure.",
+fr:{stamp:"Voyageurs",h1:"Visa Checker",sub:"Choisissez votre destination, puis cochez chaque document au fur et à mesure.",
  s_country:"Destination",cAvail:"Disponible",cSoon:"Bientôt",soonText:"La liste des pièces pour ce pays arrive bientôt.",
  agTitle:"Besoin d'un conseiller visa ?",agSub:"Voir ses coordonnées coûte 10 DT, en paiement unique.",
  gov:"Gouvernorat",govPick:"Choisir un gouvernorat",agCount:function(n){return n+(n>1?" conseillers":" conseiller")},
@@ -20,7 +20,7 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  linkFV:"France-Visas Tunisie (officiel)",linkTLS:"TLScontact Tunisie",
  disc:"Les pièces exigées peuvent évoluer. Confirmez toujours la liste sur France-Visas et auprès de TLScontact. Cet outil aide à préparer le dossier et ne garantit pas l'obtention du visa. Il n'est lié à aucune ambassade. Passez uniquement par le portail officiel et méfiez-vous des intermédiaires qui promettent des facilités.",
  reset:"Tout décocher",
- brand:"Visa Checker",slogan:"Déposez votre dossier visa sans rien oublier.",homeSub:"Choisissez votre destination, dites-nous pourquoi vous voyagez, puis suivez la liste exacte des documents.",
+ brand:"Visa Checker",slogan:"Déposez votre dossier visa sans rien oublier.",homeSub:"Choisissez votre destination, dites-nous pourquoi vous voyagez, puis suivez une liste de préparation adaptée à votre profil.",
  s_pass:"Passeport",passName:"Tunisie",s_dest:"Destination",s_motive:"Motif du voyage",
  motive:{medical:"Visite médicale",other:"Autre motif"},motiveHint:{medical:"Soins, consultation ou opération",other:"Tourisme, famille, affaires"},
  start:"Commencer",back:"Retour",next:"Continuer",stepWord:function(n){return "Étape "+n+" sur 2"},stepNames:["Motif","Profil","Documents","Aide en plus"],
@@ -28,9 +28,9 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  medNote:"Visite médicale : le consulat veut voir un rendez-vous réel en France, le coût des soins et la preuve que vous pouvez les payer.",gMed:"Votre visite médicale",
  destTitle:"Votre voyage",destSub:"Pourquoi voyagez-vous ?",
  sloganA:"Votre dossier visa, vérifié",sloganB:"avant le dépôt",homeSub2:"Votre conseiller visa : nous vérifions que rien ne manque. Nous ne déposons pas votre demande."
- ,modeTitle:"Que voulez-vous faire ?",modeSub:"Visa Checker conseille et vérifie. Nous ne déposons pas votre demande.",mode:{check:["Vérifier mon dossier","Avant le dépôt : la liste exacte des documents à préparer."],appeal:["Recours après un refus","Lettre de recours, conseils pour redéposer, lettres modèles."]},apTitle:"Recours après un refus",apSub:"Reprenez votre dossier avec nos conseils.",adapt:"Adapter la liste à ma situation",ask:"Où partez-vous ?",
+ ,modeTitle:"Que voulez-vous faire ?",modeSub:"Visa Checker conseille et vérifie. Nous ne déposons pas votre demande.",mode:{check:["Vérifier mon dossier","Avant le dépôt : une liste de préparation adaptée à votre profil, à confirmer sur le site officiel."],appeal:["Recours après un refus","Lettre de recours, conseils pour redéposer, lettres modèles."]},apTitle:"Recours après un refus",apSub:"Reprenez votre dossier avec nos conseils.",adapt:"Adapter la liste à ma situation",ask:"Où partez-vous ?",
  howTitle:"Comment ça marche",how:[["Choisissez","Votre destination et le motif du voyage."],["Répondez","Quelques questions sur votre situation."],["Cochez","Chaque document, au fur et à mesure."]],
- whyTitle:"Pourquoi choisir Visa Checker",why:["Guidé étape par étape, en quelques minutes","Liste adaptée à votre situation : motif, activité, famille","Disponible en français, anglais et arabe","Votre progression reste enregistrée sur cet appareil","Aide en cas de refus : recours et lettres modèles"],whyNote:"Visa Checker conseille et vérifie votre dossier. Il ne dépose pas la demande, ne garantit pas le visa et n'est lié à aucune ambassade.",
+ whyTitle:"Pourquoi choisir Visa Checker",why:["Guidé étape par étape, en quelques minutes","Liste adaptée à votre situation : motif, activité, famille","Disponible en français, anglais et arabe","Votre progression reste enregistrée sur cet appareil","Aide en cas de refus : recours et lettres modèles"],whyNote:"Visa Checker conseille et vérifie votre dossier. Il ne dépose pas la demande, ne garantit pas le visa et n'est lié à aucune ambassade.",plannerTitle:"Vous voulez mieux organiser votre préparation ?",plannerText:"Créez un calendrier personnalisé, suivez vos étapes et recevez des rappels dans votre agenda.",plannerLink:"Ouvrir le Planner",
  needTitle:"Besoin de documents de voyage ?",needSub:"Billet d'avion, réservation d'hôtel… Pour le visa, prenez des réservations annulables",needFlight:"Billet d'avion",needHotel:"Réservation d'hôtel",spTitle:"Nos partenaires",spSub:"Agences de voyage locales et partenaires dans le monde.",spLocal:"Agence de voyage locale",spWorld:"Partenaire dans le monde",spSlot:"Espace disponible",spTag:"Sponsorisé",spJoin:"Devenir partenaire",spSoon:"Contact à venir",
  s_purpose:"Type de visa",purpose:{tourism:"Tourisme",family:"Visite familiale ou amicale",business:"Affaires"},
  reunTitle:"Visa de long séjour",reunText:"Procédure différente d'un voyage touristique : la personne qui vit en France dépose d'abord la demande de regroupement familial auprès de l'OFII. Cette liste est générale. Confirmez les pièces sur France-Visas et auprès du consulat, car elles varient selon votre cas.",
@@ -42,7 +42,7 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  rfNote:"Les lettres sont en français, car elles sont adressées aux autorités françaises. Remplacez tout ce qui est entre [crochets]. Collez le texte dans Word ou Google Docs, puis imprimez.",
  rfNoGuar:"Ces modèles aident à présenter votre dossier. Ils ne garantissent pas le visa.",copy:"Copier le texte",copied:"Copié",selected:"Texte sélectionné, copiez-le",
  adv:["Lisez le formulaire de refus. La case cochée indique le motif à corriger.","Choisissez : un recours (délai court, indiqué sur la notification) ou une nouvelle demande, qui entraîne de nouveaux frais.","Corrigez le motif avec des preuves nouvelles. Moyens financiers : relevés réguliers, sans gros dépôt soudain. Objet du séjour : programme clair et réservations réelles. Retour en Tunisie : preuves d'attaches (emploi, famille, logement).","Restez cohérent avec la première demande. Le consulat garde votre dossier : dates, emploi et revenus doivent être identiques.","Il n'existe pas de délai légal d'attente avant de redéposer, mais ne redéposez pas le même dossier sans changement.","Aucun intermédiaire ne peut promettre un visa. Un faux document peut entraîner de graves conséquences, dont une interdiction d'entrée."]},
-en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, then tick each document as you collect it.",
+en:{stamp:"Travellers",h1:"Visa Checker",sub:"Pick your destination, then tick each document as you collect it.",
  s_country:"Destination",cAvail:"Available",cSoon:"Coming soon",soonText:"The document list for this country is coming soon.",
  agTitle:"Need a visa advisor?",agSub:"Seeing his contact details costs 10 TND, paid once.",
  gov:"Governorate",govPick:"Choose a governorate",agCount:function(n){return n+(n>1?" advisors":" advisor")},
@@ -60,7 +60,7 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  linkFV:"France-Visas Tunisia (official)",linkTLS:"TLScontact Tunisia",
  disc:"Required documents can change. Always confirm the list on France-Visas and with TLScontact. This tool helps you prepare your file and does not guarantee a visa. It is not affiliated with any embassy. Use the official portal only, and be wary of intermediaries who promise shortcuts.",
  reset:"Untick everything",
- brand:"Visa Checker",slogan:"Apply for your visa without missing a document.",homeSub:"Pick your destination, tell us why you travel, then follow the exact list of documents.",
+ brand:"Visa Checker",slogan:"Apply for your visa without missing a document.",homeSub:"Pick your destination, tell us why you travel, then follow a preparation checklist adapted to your profile.",
  s_pass:"Passport",passName:"Tunisia",s_dest:"Destination",s_motive:"Reason for travel",
  motive:{medical:"Medical visit",other:"Other reason"},motiveHint:{medical:"Treatment, consultation or surgery",other:"Tourism, family, business"},
  start:"Start",back:"Back",next:"Continue",stepWord:function(n){return "Step "+n+" of 2"},stepNames:["Reason","Profile","Documents","Extra help"],
@@ -68,9 +68,9 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  medNote:"Medical visit: the consulate wants a real appointment in France, the cost of care and proof you can pay for it.",gMed:"Your medical visit",
  destTitle:"Your trip",destSub:"Why are you travelling?",
  sloganA:"Your visa file, checked",sloganB:"before you apply",homeSub2:"Your visa advisor: we check that nothing is missing. We do not file your application."
- ,modeTitle:"What do you want to do?",modeSub:"Visa Checker advises and checks. We do not file your application.",mode:{check:["Check my file","Before you apply: the exact list of documents to prepare."],appeal:["Appeal after a refusal","Appeal letter, advice for applying again, sample letters."]},apTitle:"Appeal after a refusal",apSub:"Rebuild your file with our advice.",adapt:"Adjust the list to my situation",ask:"Where are you headed?",
+ ,modeTitle:"What do you want to do?",modeSub:"Visa Checker advises and checks. We do not file your application.",mode:{check:["Check my file","Before you apply: a preparation checklist adapted to your profile. Confirm it on the official website."],appeal:["Appeal after a refusal","Appeal letter, advice for applying again, sample letters."]},apTitle:"Appeal after a refusal",apSub:"Rebuild your file with our advice.",adapt:"Adjust the list to my situation",ask:"Where are you headed?",
  howTitle:"How it works",how:[["Choose","Your destination and reason for travel."],["Answer","A few questions about your situation."],["Tick","Each document as you collect it."]],
- whyTitle:"Why travellers choose Visa Checker",why:["Guided step by step, in minutes","List fitted to your situation: reason, work, family","Available in French, English and Arabic","Your progress stays saved on this device","Help after a refusal: appeal and sample letters"],whyNote:"Visa Checker advises and checks your file. It does not file the application, does not guarantee a visa and is not affiliated with any embassy.",
+ whyTitle:"Why travellers choose Visa Checker",why:["Guided step by step, in minutes","List fitted to your situation: reason, work, family","Available in French, English and Arabic","Your progress stays saved on this device","Help after a refusal: appeal and sample letters"],whyNote:"Visa Checker advises and checks your file. It does not file the application, does not guarantee a visa and is not affiliated with any embassy.",plannerTitle:"Want to organise your preparation?",plannerText:"Create a personal timeline, track each step and add reminders to your calendar.",plannerLink:"Open the Planner",
  needTitle:"Need travel documents?",needSub:"Flight ticket, hotel booking… For the visa, choose cancellable bookings",needFlight:"Flight ticket",needHotel:"Hotel booking",spTitle:"Our partners",spSub:"Local travel agencies and partners around the world.",spLocal:"Local travel agency",spWorld:"Partner worldwide",spSlot:"Space available",spTag:"Sponsored",spJoin:"Become a partner",spSoon:"Contact coming soon",
  s_purpose:"Visa type",purpose:{tourism:"Tourism",family:"Family or friends visit",business:"Business"},
  reunTitle:"Long-stay visa",reunText:"This is a different procedure from a tourist trip: the person living in France first files the family reunification request with the OFII. This list is general. Confirm the documents on France-Visas and with the consulate, because they vary by case.",
@@ -82,7 +82,7 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  rfNote:"The letters are in French because they go to the French authorities. Replace everything in [brackets]. Paste the text into Word or Google Docs, then print.",
  rfNoGuar:"These models help you present your file. They do not guarantee a visa.",copy:"Copy the text",copied:"Copied",selected:"Text selected, copy it",
  adv:["Read the refusal form. The ticked box shows the reason to fix.","Choose: an appeal (short deadline, shown on the notification) or a new application, which means new fees.","Fix the reason with new evidence. Funds: regular statements, no sudden large deposit. Purpose of stay: a clear plan and real bookings. Return to Tunisia: proof of ties (job, family, home).","Stay consistent with your first application. The consulate keeps your file: dates, job and income must be identical.","There is no legal waiting period before you apply again, but do not resubmit the same file unchanged.","No intermediary can promise a visa. A false document can have serious consequences, including an entry ban."]},
-ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اختر وجهتك ثم علّم كل وثيقة بعد تجهيزها.",
+ar:{stamp:"المسافرون",h1:"Visa Checker",sub:"اختر وجهتك ثم علّم كل وثيقة بعد تجهيزها.",
  s_country:"الوجهة",cAvail:"متاحة",cSoon:"قريبًا",soonText:"قائمة وثائق هذا البلد قادمة قريبًا.",
  agTitle:"هل تحتاج إلى مستشار تأشيرة؟",agSub:"مشاهدة بيانات الاتصال تكلّف 10 دنانير، تُدفع مرة واحدة.",
  gov:"الولاية",govPick:"اختر الولاية",agCount:function(n){return n===1?"مستشار واحد":n+" مستشارين"},
@@ -100,7 +100,7 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  linkFV:"France-Visas تونس (الموقع الرسمي)",linkTLS:"TLScontact تونس",
  disc:"قد تتغير الوثائق المطلوبة. تأكد دائمًا من القائمة على موقع France-Visas ولدى TLScontact. هذه الأداة تساعدك على تحضير ملفك ولا تضمن الحصول على التأشيرة، وهي غير تابعة لأي سفارة. اعتمد البوابة الرسمية فقط واحذر من الوسطاء الذين يعدون بتسهيلات.",
  reset:"إلغاء كل العلامات",
- brand:"Visa Checker",slogan:"قدّم ملف تأشيرتك دون أن تنسى أي وثيقة.",homeSub:"اختر وجهتك، وأخبرنا سبب سفرك، ثم اتبع قائمة الوثائق الدقيقة.",
+ brand:"Visa Checker",slogan:"قدّم ملف تأشيرتك دون أن تنسى أي وثيقة.",homeSub:"اختر وجهتك وسبب سفرك، ثم اتبع قائمة تحضيرية ملائمة لوضعك.",
  s_pass:"جواز السفر",passName:"تونس",s_dest:"الوجهة",s_motive:"سبب السفر",
  motive:{medical:"زيارة طبية",other:"سبب آخر"},motiveHint:{medical:"علاج أو استشارة أو عملية",other:"سياحة أو عائلة أو أعمال"},
  start:"ابدأ",back:"رجوع",next:"متابعة",stepWord:function(n){return "الخطوة "+n+" من 2"},stepNames:["السبب","ملفك","الوثائق","مساعدة"],
@@ -108,9 +108,9 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  medNote:"زيارة طبية: تريد القنصلية موعدًا حقيقيًا في فرنسا وتكلفة العلاج وإثبات قدرتك على دفعها.",gMed:"زيارتك الطبية",
  destTitle:"رحلتك",destSub:"ما سبب سفرك؟",
  sloganA:"ملف تأشيرتك، مُراجَع",sloganB:"قبل تقديمه",homeSub2:"مستشارك للتأشيرة: نتحقق من أنه لا ينقصك شيء. نحن لا نودع طلبك."
- ,modeTitle:"ماذا تريد أن تفعل؟",modeSub:"Visa Checker ينصح ويتحقق. نحن لا نودع طلبك.",mode:{check:["تحقق من ملفي","قبل التقديم: القائمة الدقيقة للوثائق المطلوبة."],appeal:["طعن بعد الرفض","رسالة طعن ونصائح لإعادة التقديم ورسائل نموذجية."]},apTitle:"طعن بعد الرفض",apSub:"أعد بناء ملفك بمساعدة نصائحنا.",adapt:"تكييف القائمة مع وضعي",ask:"إلى أين تسافر؟",
+ ,modeTitle:"ماذا تريد أن تفعل؟",modeSub:"Visa Checker ينصح ويتحقق. نحن لا نودع طلبك.",mode:{check:["تحقق من ملفي","قبل التقديم: قائمة تحضيرية ملائمة لوضعك. تأكد منها على الموقع الرسمي."],appeal:["طعن بعد الرفض","رسالة طعن ونصائح لإعادة التقديم ورسائل نموذجية."]},apTitle:"طعن بعد الرفض",apSub:"أعد بناء ملفك بمساعدة نصائحنا.",adapt:"تكييف القائمة مع وضعي",ask:"إلى أين تسافر؟",
  howTitle:"كيف يعمل",how:[["اختر","وجهتك وسبب السفر."],["أجب","عن بضعة أسئلة حول وضعك."],["علّم","كل وثيقة بعد تجهيزها."]],
- whyTitle:"لماذا يختار المسافرون Visa Checker",why:["إرشاد خطوة بخطوة في دقائق","قائمة مناسبة لوضعك: السبب والعمل والعائلة","متاح بالفرنسية والإنجليزية والعربية","يبقى تقدّمك محفوظًا على هذا الجهاز","مساعدة عند الرفض: طعن ورسائل نموذجية"],whyNote:"Visa Checker ينصح ويتحقق من ملفك. لا يودع الطلب ولا يضمن التأشيرة وهو غير تابع لأي سفارة.",
+ whyTitle:"لماذا يختار المسافرون Visa Checker",why:["إرشاد خطوة بخطوة في دقائق","قائمة مناسبة لوضعك: السبب والعمل والعائلة","متاح بالفرنسية والإنجليزية والعربية","يبقى تقدّمك محفوظًا على هذا الجهاز","مساعدة عند الرفض: طعن ورسائل نموذجية"],whyNote:"Visa Checker ينصح ويتحقق من ملفك. لا يودع الطلب ولا يضمن التأشيرة وهو غير تابع لأي سفارة.",plannerTitle:"هل تريد تنظيم التحضير بشكل أفضل؟",plannerText:"أنشئ جدولًا شخصيًا، وتابع خطواتك، وأضف التذكيرات إلى تقويمك.",plannerLink:"افتح المخطط",
  needTitle:"تحتاج وثائق السفر؟",needSub:"تذكرة طيران، حجز فندق… للتأشيرة، اختر حجوزات قابلة للإلغاء",needFlight:"تذكرة طيران",needHotel:"حجز فندق",spTitle:"شركاؤنا",spSub:"وكالات سفر محلية وشركاء حول العالم.",spLocal:"وكالة سفر محلية",spWorld:"شريك حول العالم",spSlot:"مساحة متاحة",spTag:"برعاية",spJoin:"كن شريكًا",spSoon:"بيانات الاتصال قريبًا",
  s_purpose:"نوع التأشيرة",purpose:{tourism:"سياحة",family:"زيارة عائلية أو للأصدقاء",business:"أعمال"},
  reunTitle:"تأشيرة الإقامة الطويلة",reunText:"الإجراء يختلف عن السفر السياحي: يقدّم الشخص المقيم في فرنسا أولًا طلب لمّ الشمل لدى المكتب الفرنسي للهجرة والاندماج (OFII). هذه القائمة عامة. تأكد من الوثائق على موقع France-Visas ولدى القنصلية لأنها تختلف حسب حالتك.",
@@ -138,41 +138,41 @@ var ITEMS=[
  en:["Visa fee and application centre service fee","Amounts and payment method are shown on France-Visas and on the application centre's website. Confirm them before your appointment."],
  ar:["رسوم التأشيرة ورسوم خدمة مركز الإيداع","المبالغ وطريقة الدفع مذكورة على موقع France-Visas وعلى موقع مركز الإيداع. تأكد منها قبل موعدك."]},
 {id:"passport",g:"core",w:any,
- fr:["Passeport valable 3 mois après votre retour","Délivré depuis moins de 10 ans, avec au moins 2 pages vierges. Apportez aussi les anciens passeports avec visas."],
- en:["Passport valid 3 months after you leave","Issued within the last 10 years, with at least 2 blank pages. Bring older passports that hold visas."],
- ar:["جواز سفر صالح 3 أشهر بعد عودتك","صادر منذ أقل من 10 سنوات وبه صفحتان فارغتان على الأقل. أحضر أيضًا جوازات السفر القديمة التي بها تأشيرات."]},
+ fr:["Passeport valable au moins 3 mois après la date prévue de votre départ de l’espace Schengen","En bon état, délivré depuis moins de 10 ans et comportant au moins 2 pages vierges. Préparez l’original et une copie ; les anciens visas peuvent être utiles si la liste personnalisée les demande."],
+ en:["Passport valid for at least 3 months after your planned departure from the Schengen area","In good condition, issued within the last 10 years and with at least 2 blank pages. Prepare the original and a copy; previous visas may be useful if requested by your personalised list."],
+ ar:["جواز سفر صالح لمدة لا تقل عن 3 أشهر بعد تاريخ مغادرتك المتوقع لمنطقة شنغن","بحالة جيدة، صادر منذ أقل من 10 سنوات وبه صفحتان فارغتان على الأقل. حضّر الأصل ونسخة منه؛ وقد تكون التأشيرات السابقة مفيدة إذا طلبتها قائمتك الشخصية."]},
 {id:"passcopy",g:"core",w:any,
  fr:["Copie de la page d'identité du passeport et des anciens visas",""],
  en:["Copy of the passport data page and previous visas",""],
  ar:["نسخة من صفحة بيانات الجواز والتأشيرات السابقة",""]},
 {id:"photos",g:"core",w:any,
- fr:["2 photos d'identité identiques et récentes","35 x 45 mm, en couleur, fond blanc ou très clair, tête nue. Les photos faites à la maison sont souvent refusées."],
- en:["2 identical, recent passport photos","35 x 45 mm, colour, white or very light background, head uncovered. Home-printed photos are often refused."],
- ar:["صورتا هوية متطابقتان وحديثتان","35 × 45 مم، ملوّنة، خلفية بيضاء أو فاتحة جدًا، دون غطاء للرأس. الصور المطبوعة في البيت تُرفض غالبًا."]},
+ fr:["2 photos d’identité récentes conformes à la norme OACI","35 × 45 mm, en couleur, fond uni clair (bleu clair ou gris clair — blanc interdit). Visage de face, net et bien éclairé. Pour un visa Schengen, le couvre-chef est admis uniquement pour des raisons religieuses, sans masquer le visage."],
+ en:["2 recent passport photos meeting ICAO standards","35 × 45 mm, colour, plain light background (light blue or light grey — white is not allowed). Face forward, clear and evenly lit. For a Schengen visa, head coverings are allowed only for religious reasons and must not obscure the face."],
+ ar:["صورتا هوية حديثتان مطابقتان لمعايير منظمة الطيران المدني الدولي","35 × 45 مم، ملونتان، بخلفية موحّدة فاتحة (أزرق فاتح أو رمادي فاتح؛ الأبيض ممنوع). الوجه مقابل للكاميرا وواضح والإضاءة متوازنة. يُسمح بغطاء الرأس لأسباب دينية في تأشيرة شنغن بشرط عدم حجب ملامح الوجه."]},
 {id:"cin",g:"core",w:any,
  fr:["Copie de la carte d'identité nationale (CIN)",""],
  en:["Copy of the national ID card (CIN)",""],
  ar:["نسخة من بطاقة التعريف الوطنية",""]},
 {id:"civil",g:"core",w:function(s){return s.purpose==="family"||s.party==="family"},
- fr:["Extrait d'acte de naissance avec filiation","Souvent demandé, de moins de 3 mois."],
- en:["Birth certificate extract with filiation","Often requested, less than 3 months old."],
- ar:["مضمون ولادة مع الأصول","يُطلب غالبًا، وعمره أقل من 3 أشهر."]},
+ fr:["Extrait d’acte de naissance avec filiation, si demandé","La nécessité et l’ancienneté du document dépendent de votre situation et de la liste personnalisée France-Visas."],
+ en:["Birth certificate extract showing parentage, if requested","Whether it is required and how recent it must be depend on your circumstances and personalised France-Visas list."],
+ ar:["مضمون ولادة مع ذكر الأصول عند طلبه","يتوقف وجوب تقديمه ومدى حداثته على وضعك والقائمة الشخصية الصادرة عن France-Visas."]},
 {id:"insurance",g:"core",w:any,
  fr:["Assurance voyage médicale, 30 000 € minimum","Valable dans tout l'espace Schengen, avec rapatriement médical, pour la durée complète du séjour."],
  en:["Travel medical insurance, minimum €30,000","Valid across the Schengen area, with medical repatriation, for the whole stay."],
  ar:["تأمين سفر طبي بـ30 000 € على الأقل","صالح في كامل فضاء شنغن، ويشمل الإعادة الطبية، ويغطي كامل مدة الإقامة."]},
 {id:"transl",g:"core",w:any,opt:1,
- fr:["Traduction française assermentée des documents en arabe","Souvent exigée pour les pièces rédigées en arabe."],
- en:["Sworn French translation of documents written in Arabic","Often required for documents written in Arabic."],
- ar:["ترجمة فرنسية محلّفة للوثائق المكتوبة بالعربية","تُطلب غالبًا للوثائق المحرّرة بالعربية."]},
+ fr:["Traduction française des documents rédigés en arabe, si demandée","France-Visas indique que les documents dans une langue autre que le français ou l’anglais peuvent devoir être traduits en français. Une traduction assermentée n’est pas à présenter comme systématiquement obligatoire : suivez la liste personnalisée et les consignes du consulat."],
+ en:["French translation of documents written in Arabic, if requested","France-Visas says documents in languages other than French or English may have to be translated into French. Do not present a sworn translation as universally mandatory: follow the personalised list and consular instructions."],
+ ar:["ترجمة فرنسية للوثائق المحررة بالعربية عند طلبها","تشير France-Visas إلى أنه قد يُطلب ترجمة الوثائق المكتوبة بلغة غير الفرنسية أو الإنجليزية إلى الفرنسية. لا تعتبر الترجمة المحلّفة شرطًا عامًا في كل الحالات؛ اتبع القائمة الشخصية وتعليمات القنصلية."]},
 {id:"prev",g:"core",w:any,opt:1,
  fr:["Anciens visas et preuves de voyages passés","Des voyages passés avec retour dans les délais renforcent le dossier."],
  en:["Previous visas and proof of past trips","Past trips returned on time strengthen your file."],
  ar:["التأشيرات السابقة وإثباتات الرحلات السابقة","الرحلات السابقة مع العودة في الوقت المحدد تقوّي الملف."]},
 {id:"bank",g:"money",w:function(s){return s.pay==="self"},
- fr:["Relevés bancaires des 3 derniers mois et RIB","Évitez les gros dépôts en espèces juste avant la demande. Le solde doit rester cohérent avec la durée du séjour."],
- en:["Bank statements for the last 3 months and your RIB","Avoid large cash deposits just before applying. Your balance should fit the length of the stay."],
- ar:["كشوف الحساب البنكي لآخر 3 أشهر وبيانات الحساب (RIB)","تجنّب الإيداعات النقدية الكبيرة قبل التقديم مباشرة. يجب أن يتناسب الرصيد مع مدة الإقامة."]},
+ fr:["Justificatifs de ressources financières adaptés à votre situation","Relevés bancaires récents, revenus ou autres preuves de moyens. La période et les justificatifs exacts dépendent de la liste personnalisée France-Visas et de votre situation."],
+ en:["Proof of financial means suited to your situation","Recent bank statements, income evidence or other proof of funds. The required period and documents depend on your personalised France-Visas list and your circumstances."],
+ ar:["إثباتات الموارد المالية الملائمة لوضعك","كشوف حساب حديثة أو إثباتات دخل أو وسائل مالية أخرى. تحدد قائمة France-Visas الشخصية ووضعك الفترة والوثائق المطلوبة بدقة."]},
 {id:"sp_letter",g:"money",w:function(s){return s.pay==="sponsor"},
  fr:["Lettre de prise en charge du garant","Signée, avec la copie de sa pièce d'identité ou de son titre de séjour."],
  en:["Sponsor's letter of financial support","Signed, with a copy of their ID or residence permit."],
@@ -253,10 +253,10 @@ var ITEMS=[
  fr:["Preuves de votre activité et de vos relations d'affaires","Contrats, factures ou échanges avec le partenaire en France."],
  en:["Proof of your activity and business relations","Contracts, invoices or exchanges with your partner in France."],
  ar:["إثباتات نشاطك وعلاقاتك التجارية","عقود أو فواتير أو مراسلات مع الشريك في فرنسا."]},
-{id:"flight",g:"stay",w:any,
- fr:["Réservation de vol aller-retour","Réservation non payée. N'achetez pas de billet non remboursable avant d'avoir le visa."],
- en:["Round-trip flight reservation","Reserved but unpaid. Do not buy a non-refundable ticket before you have the visa."],
- ar:["حجز طيران ذهاب وإياب","حجز غير مدفوع. لا تشترِ تذكرة غير قابلة للاسترداد قبل الحصول على التأشيرة."]},
+{id:"flight",g:"stay",w:any,opt:1,
+ fr:["Justificatif de transport ou itinéraire, si demandé","La liste personnalisée France-Visas détermine les justificatifs à fournir. Évitez d’acheter un billet non remboursable avant la décision de visa."],
+ en:["Transport evidence or itinerary, if requested","Your personalised France-Visas checklist determines which supporting documents are required. Avoid buying a non-refundable ticket before the visa decision."],
+ ar:["إثبات وسيلة النقل أو خط سير الرحلة عند طلبه","تحدد قائمة France-Visas الشخصية الوثائق المطلوبة. تجنب شراء تذكرة غير قابلة للاسترداد قبل صدور قرار التأشيرة."]},
 {id:"hotel",g:"stay",w:function(s){return s.stay==="hotel"},
  fr:["Réservation d'hôtel ou de location pour toutes les nuits","Dates et noms des voyageurs conformes au dossier."],
  en:["Hotel or rental reservation for every night","Dates and traveller names must match your file."],
@@ -301,9 +301,9 @@ var RITEMS=[
  en:["Valid passport, original and copy of the useful pages","With blank pages. Add previous visas and French stamps."],
  ar:["جواز سفر صالح، الأصل ونسخة من الصفحات المفيدة","به صفحات فارغة. أضف التأشيرات السابقة والأختام الفرنسية."]},
 {id:"r_photos",g:"core",w:any,
- fr:["2 photos d'identité récentes","35 x 45 mm, en couleur, fond blanc ou très clair."],
- en:["2 recent passport photos","35 x 45 mm, colour, white or very light background."],
- ar:["صورتا هوية حديثتان","35 × 45 مم، ملوّنة، خلفية بيضاء أو فاتحة جدًا."]},
+ fr:["2 photos d’identité récentes conformes à la norme OACI","35 × 45 mm, en couleur, fond uni clair (bleu clair ou gris clair — blanc interdit)."],
+ en:["2 recent passport photos meeting ICAO standards","35 × 45 mm, colour, plain light background (light blue or light grey — white is not allowed)."],
+ ar:["صورتا هوية حديثتان مطابقتان لمعايير منظمة الطيران المدني الدولي","35 × 45 مم، ملونتان، بخلفية موحّدة فاتحة (أزرق فاتح أو رمادي فاتح؛ الأبيض ممنوع)."]},
 {id:"r_cin",g:"core",w:any,
  fr:["Copie de la carte d'identité nationale (CIN)",""],
  en:["Copy of the national ID card (CIN)",""],
@@ -398,10 +398,11 @@ var PAY_URL2="";
 var UNLOCK_URL="https://visa-proxy.rabehfly.workers.dev/unlock";
 var PACK_URL="https://visa-proxy.rabehfly.workers.dev/pack";
 var UNLOCK_TIMEOUT_MS=8000;
-/* ===== Paiement manuel D17 (sans compte marchand) =====
-   D17.num : VOTRE numéro D17 ; D17.name : votre nom tel qu'il apparaît dans D17.
-   Tant que D17.num est vide, le bouton reste « bientôt » : aucun paiement n'est proposé. */
-var D17={num:"+216 58 986 980",name:"RT",tg:"rabehtlili",mail:"visacheckercontact@gmail.com"};
+/* ===== Paiements désactivés jusqu'à la validation d'un partenaire =====
+   Ne jamais publier de numéro de compte ou de coordonnées de paiement personnelles
+   dans le JavaScript client. Réactiver uniquement après validation d'un prestataire
+   et mise en place d'une vérification serveur des transactions. */
+var D17={num:"",name:"",tg:"",mail:"visacheckercontact@gmail.com"};
 var D17O="";
 var D17X={
 fr:{btn:"Payer par D17",title:"Payer avec D17",s1:"Montant exact :",s2:"Envoyez-le par D17 au numéro",s3:"Écrivez cette référence dans le message du transfert :",s4:"Puis appuyez sur « J'ai payé ». Nous vérifions dans notre application D17 et vous envoyons votre code, à saisir ci-dessous.",tg:"J'ai payé (Telegram)",mail:"J'ai payé (e-mail)",copy:"Copier",ok:"Copié ✓",warn:"Nous ne demandons jamais votre code PIN ni les données de votre carte. Aucun code n'est envoyé avant la réception réelle du paiement : une capture d'écran ne suffit pas. Payez uniquement au numéro affiché ici, sur le site officiel.",msg:"J'ai payé par D17. Référence : ",cur:"DT",hold:"Titulaire :",lt:"Paiement par D17",ln:"Payez {A} par D17 au numéro ci-dessous, en écrivant cette référence dans le message du transfert. Le document vous est envoyé après réception du paiement.",lw:"Ne payez qu'au numéro affiché ici. Nous ne demandons jamais votre code PIN."},
@@ -987,7 +988,7 @@ function photoHtml(){
   return '<img class="hero-img" src="hero-voyage.jpg" width="1200" height="675" alt="'+tx[0]+'" decoding="async" fetchpriority="high"><figcaption><b>'+tx[1]+'</b><span>'+tx[2]+'</span></figcaption>';
 }
 /* ===== Pays du passeport (Tunisie, Maroc, Algérie) =====
-   ORI_READY : destinations dont la liste de pièces est prête pour chaque pays de départ. Maroc et Algérie : vides tant que les listes ne sont pas vérifiées sur sources officielles. */
+   ORI_READY est initialisé avec les destinations de base, puis complété ci-dessous par les destinations disposant de données spécifiques. "Disponible" signifie que le parcours existe dans le code, pas que chaque pièce a été certifiée exhaustive. */
 var ORIS=[{id:"tn",n:{fr:"Tunisie",en:"Tunisia",ar:"تونس"}},{id:"ma",n:{fr:"Maroc",en:"Morocco",ar:"المغرب"}},{id:"dz",n:{fr:"Algérie",en:"Algeria",ar:"الجزائر"}}];
 var ORI_READY={ma:["fr","es","it"],dz:["fr","es","it"]};
 var ORI_SOON={ma:{fr:"Cette destination n'est pas encore prête pour les voyageurs marocains : la liste des pièces est en cours de vérification sur les sources officielles.",en:"This destination is not ready yet for Moroccan travellers: the document list is being checked against official sources.",ar:"هذه الوجهة غير جاهزة بعد للمسافرين المغاربة: قائمة الوثائق قيد التحقق من المصادر الرسمية."},dz:{fr:"Cette destination n'est pas encore prête pour les voyageurs algériens : la liste des pièces est en cours de vérification sur les sources officielles.",en:"This destination is not ready yet for Algerian travellers: the document list is being checked against official sources.",ar:"هذه الوجهة غير جاهزة بعد للمسافرين الجزائريين: قائمة الوثائق قيد التحقق من المصادر الرسمية."}};
@@ -1001,9 +1002,9 @@ var ORI_SITE={
  dz:{fr:"https://france-visas.gouv.fr/algerie",es:"https://algeria.blsspainvisa.com/",it:"https://visa.vfsglobal.com/dza/fr/ita"}
 };
 var ORI_NOTE={
- fr:"Liste vérifiée en novembre 2026 d'après les sites officiels (France-Visas, centres de dépôt, ambassades). Les règles et les frais changent : confirmez-les avant de déposer. Visa Checker ne garantit pas l'obtention du visa.",
- en:"List checked in November 2026 from official sources (France-Visas, application centres, embassies). Rules and fees change: confirm them before you apply. Visa Checker does not guarantee the visa.",
- ar:"تم التحقق من القائمة في نوفمبر 2026 اعتمادًا على المواقع الرسمية (France-Visas ومراكز الإيداع والسفارات). القواعد والرسوم تتغير: تأكد منها قبل التقديم. لا يضمن Visa Checker الحصول على التأشيرة."
+ fr:"Les pièces affichées sont des repères de préparation et ne remplacent pas la liste personnalisée délivrée par le portail officiel compétent. Vérifiez les exigences, traductions, frais et modalités avant chaque dépôt. Visa Checker n’est ni une autorité consulaire ni un intermédiaire officiel et ne garantit pas l’obtention du visa.",
+ en:"The documents shown are preparation guidance and do not replace the personalised checklist issued by the competent official portal. Confirm requirements, translations, fees and procedures before each application. Visa Checker is not a consular authority or official intermediary and does not guarantee a visa.",
+ ar:"الوثائق المعروضة إرشادات للتحضير ولا تعوّض القائمة الشخصية الصادرة عن البوابة الرسمية المختصة. تحقق من الشروط والترجمات والرسوم والإجراءات قبل كل طلب. Visa Checker ليست سلطة قنصلية ولا وسيطًا رسميًا ولا تضمن الحصول على التأشيرة."
 };
 var ORI_ITEMS={
  ma:{
@@ -1231,7 +1232,12 @@ function genCountry(o){
   var r=Object.assign({},o);
   r.msgDone=({fr:"Dossier complet. Vérifiez une dernière fois sur le site officiel "+de+".",en:"File complete. Check once more on the official website of "+en+".",ar:"الملف مكتمل. تحقق مرة أخيرة على الموقع الرسمي لدولة "+c.n.ar+"."})[S.lang];
   r.medNote=genText(r.medNote,S.lang,c);
-  r.disc=String(r.disc).replace(/France-Visas, /g,"").replace(/France-Visas و/g,"");
+  if(S.origin==="tn")r.disc=({
+    fr:"Les exigences peuvent évoluer. Confirmez chaque pièce sur le site officiel de "+c.n.fr+" et auprès du centre de dépôt compétent. Cette checklist est un outil indicatif, pas une liste officielle exhaustive. Pour la France, la liste personnalisée générée par France-Visas fait foi. Visa Checker ne garantit pas l'obtention du visa et n'est lié à aucune ambassade.",
+    en:"Requirements can change. Confirm each document on the official website of "+c.n.en+" and with the competent application centre. This checklist is preparation guidance, not an exhaustive official list. For France, the personalised France-Visas checklist is authoritative. Visa Checker does not guarantee a visa and is not affiliated with any embassy.",
+    ar:"قد تتغير الشروط. تأكد من كل وثيقة على الموقع الرسمي لدولة "+c.n.ar+" ولدى مركز الإيداع المختص. هذه القائمة أداة إرشادية للتحضير وليست قائمة رسمية شاملة. بالنسبة إلى فرنسا، تُعد القائمة الشخصية الصادرة عن France-Visas المرجع المعتمد. لا يضمن Visa Checker الحصول على التأشيرة وليس تابعًا لأي سفارة."
+  })[S.lang];
+  else r.disc=String(r.disc).replace(/France-Visas, /g,"").replace(/France-Visas و/g,"");
   return r;
 }
 function applyCountry(t){restoreItems();return genCountry(applyOriginItems(applyCountry0(t)))}
@@ -1262,6 +1268,7 @@ function homeHtml(t){
   h+='</div>';
   h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+(S.origin==='tn'?needsHtml(t):'')+ivCardHtml()+'</div>';
   h+='<section class="why"><h2>'+t.whyTitle+'</h2><ul class="ticks">'+t.why.map(function(x){return '<li><svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" style="stroke:var(--surface)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>'+x+'</span></li>'}).join("")+'</ul><p class="ag-note">'+t.whyNote+'</p></section>';
+  h+='<section class="planner-promo"><div><h2>'+t.plannerTitle+'</h2><p>'+t.plannerText+'</p></div><a class="pay" href="./planner.html">'+t.plannerLink+'</a></section>';
   return h;
 }
 /* Sponsors: add entries like {name:"Agence X",url:"https://...",tag:{fr:"Voyages à Tunis",en:"Travel in Tunis",ar:"سفر في تونس"}}. SPONSOR_CONTACT is shown as text under the slots. */
@@ -1287,10 +1294,17 @@ function tileHtml(x){
 function tilesHtml(list){return '<div class="tiles">'+list.map(tileHtml).join("")+'</div>'}
 var SPT={
  local:{fr:"Partenaires locaux",en:"Local partners",ar:"شركاء محليون"},
- sAg:{fr:"Agences de voyages",en:"Travel agencies",ar:"وكالات السفر"},sIns:{fr:"Assurance voyage",en:"Travel insurance",ar:"تأمين السفر"},sCar:{fr:"Location de voiture",en:"Car rental",ar:"تأجير السيارات"},pick:{fr:"Touchez une catégorie pour voir la liste",en:"Tap a category to see the list",ar:"اختر فئة لعرض القائمة"},soon:{fr:"Bientôt disponible",en:"Coming soon",ar:"قريبًا"},
- cIns:{fr:"Assurance voyage",en:"Travel insurance",ar:"تأمين السفر"},cAg:{fr:"Agences de voyages",en:"Travel agencies",ar:"وكالات السفر"},cCar:{fr:"Location de voiture et transferts aéroport",en:"Car rental and airport transfers",ar:"تأجير السيارات والنقل من المطار"},cFh:{fr:"Vols et hôtels",en:"Flights and hotels",ar:"طيران وفنادق"},
+ sAg:{fr:"Agences de voyages",en:"Travel agencies",ar:"وكالات السفر"},sIns:{fr:"Assurance voyage",en:"Travel insurance",ar:"تأمين السفر"},sCar:{fr:"Location de voiture",en:"Car rental",ar:"تأجير السيارات"},
+ sTr:{fr:"Traduction",en:"Translation",ar:"الترجمة"},sDoc:{fr:"Photo et documents",en:"Photo & document services",ar:"التصوير والخدمات الوثائقية"},
+ sEsim:{fr:"eSIM et télécoms",en:"eSIM & telecom",ar:"شرائح eSIM والاتصالات"},
+ pick:{fr:"Touchez une catégorie pour voir les partenaires disponibles",en:"Choose a category to see available partners",ar:"اختر فئة لعرض الشركاء المتاحين"},soon:{fr:"Partenaires en cours de sélection. Aucune offre n'est encore affichée dans cette catégorie.",en:"Partners are being vetted. No offer is listed in this category yet.",ar:"يجري التحقق من الشركاء. لا توجد عروض منشورة في هذه الفئة حالياً."},
+ cIns:{fr:"Assurance voyage et assurance Schengen",en:"Travel and Schengen insurance",ar:"تأمين السفر وتأمين شنغن"},cAg:{fr:"Agences de voyages et services de réservation",en:"Travel agencies and booking services",ar:"وكالات السفر وخدمات الحجز"},cCar:{fr:"Location de voiture et transferts aéroport",en:"Car rental and airport transfers",ar:"تأجير السيارات والنقل من المطار"},
+ cTr:{fr:"Traducteurs professionnels et assermentés",en:"Professional and sworn translators",ar:"مترجمون محترفون ومحلفون"},cDoc:{fr:"Photographes, impression, scan et préparation de documents",en:"Photo studios, printing, scanning and document services",ar:"التصوير والطباعة والمسح الضوئي والخدمات الوثائقية"},
+ cEsim:{fr:"eSIM et connectivité internationale",en:"eSIM and international connectivity",ar:"شرائح eSIM والاتصال الدولي"},cFh:{fr:"Vols et hébergements",en:"Flights and accommodation",ar:"الرحلات الجوية والإقامة"},
  world:{fr:"Partenaires internationaux",en:"International partners",ar:"شركاء دوليون"},
- note:{fr:"Liens pratiques vers des sites indépendants. Certains sont des liens partenaires : Visa Checker peut recevoir une commission, sans frais pour vous. Pour le visa, choisissez des réservations annulables.",en:"Handy links to independent sites. Some are partner links: Visa Checker may earn a commission at no cost to you. For the visa, choose cancellable bookings.",ar:"روابط مفيدة لمواقع مستقلة. بعضها روابط شركاء: قد يحصل Visa Checker على عمولة دون أي تكلفة عليك. للتأشيرة، اختر حجوزات قابلة للإلغاء."}
+ join:{fr:"Vous proposez un service utile aux voyageurs ? Découvrez notre programme partenaires.",en:"Do you offer a useful service for travellers? Discover our partner programme.",ar:"هل تقدم خدمة مفيدة للمسافرين؟ اكتشف برنامج الشراكة معنا."},
+ joinLink:{fr:"Devenir partenaire",en:"Become a partner",ar:"كن شريكاً"},
+ note:{fr:"Les partenaires sont des prestataires indépendants. Les éventuelles commissions sont signalées et n'influencent jamais les informations ni les listes de documents visa. Pour un dossier de visa, choisissez des réservations réellement annulables.",en:"Partners are independent providers. Any commission is disclosed and never affects visa information or document checklists. For a visa application, choose genuinely cancellable bookings.",ar:"الشركاء مزودون مستقلون. يتم الإفصاح عن أي عمولة ولا تؤثر مطلقاً على معلومات التأشيرة أو قوائم الوثائق. لملف التأشيرة، اختر حجوزات قابلة للإلغاء فعلياً."}
 };
 var ICONS={
  bed:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20V6M3 16h18v4M21 16v-3a3 3 0 0 0-3-3h-7v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
@@ -1587,8 +1601,8 @@ function needCard(k,label){return '<button type="button" class="sp-chip need-car
 function needsHtml(t){return '<div class="needs"><h2 class="hot">'+t.needTitle+'</h2><p class="ag-sub">'+t.needSub+'</p><div class="sp-chips">'+needCard('flight',t.needFlight)+needCard('hotel',t.needHotel)+'</div></div>'}
 var SPSEL={local:"",world:""};
 function spGroups(){return [
- {id:"local",title:SPT.local,cats:[["ag",SPT.sAg,SPT.cAg],["ins",SPT.sIns,SPT.cIns],["car",SPT.sCar,SPT.cCar]],list:LOCAL},
- {id:"world",title:SPT.world,cats:[["car",SPT.sCar,SPT.cCar],["fh",SPT.cFh,SPT.cFh]],list:WORLD}]}
+ {id:"local",title:SPT.local,cats:[["ag",SPT.sAg,SPT.cAg],["ins",SPT.sIns,SPT.cIns],["car",SPT.sCar,SPT.cCar],["tr",SPT.sTr,SPT.cTr],["doc",SPT.sDoc,SPT.cDoc]],list:LOCAL},
+ {id:"world",title:SPT.world,cats:[["ins",SPT.sIns,SPT.cIns],["esim",SPT.sEsim,SPT.cEsim],["car",SPT.sCar,SPT.cCar],["fh",SPT.cFh,SPT.cFh]],list:WORLD}]}
 function spResult(g){
   var L=S.lang,sel=SPSEL[g.id],c=g.cats.filter(function(x){return x[0]===sel})[0];
   if(!c)return '<p class="sp-hint"><i aria-hidden="true">\uD83D\uDC46</i>'+SPT.pick[L]+'</p>';
@@ -1608,7 +1622,7 @@ function spSync(){
   spGroups().forEach(function(g){var el=$("spr-"+g.id);if(el)el.innerHTML=spResult(g)});
 }
 /* ===== Préparer l'entretien (si convoqué) : bloc repliable sur la liste des pièces ===== */
-var IVT={"fr": {"t": "Préparer mon entretien (si je suis convoqué)", "s": "Une convocation n'est pas un refus : le consulat veut simplement vérifier certains points de votre dossier.", "secs": [["Avant l'entretien", ["Relisez tout votre dossier : dates, montants, adresses et noms doivent être identiques partout.", "Emportez le passeport, la convocation, les originaux et une copie de chaque pièce, classés dans l'ordre.", "Préparez les justificatifs de vos attaches en Tunisie : travail, études, famille, biens.", "Arrivez en avance et habillez-vous simplement."]], ["Questions fréquentes", ["Quel est le but de votre voyage ?", "Combien de temps restez-vous et où logerez-vous ?", "Qui paie le voyage ? Quelles sont vos ressources ?", "Que faites-vous dans la vie, et qui vous attend en Tunisie ?", "Avez-vous déjà voyagé ? Avez-vous déjà eu un refus ?", "Connaissez-vous quelqu'un dans le pays de destination ?", "Quand rentrez-vous en Tunisie ?"]], ["Comment répondre", ["Dites la vérité, avec des réponses courtes et claires.", "Vos réponses doivent correspondre exactement à votre dossier.", "N'apprenez pas de texte par cœur : parlez naturellement.", "Si vous ne comprenez pas la question, demandez de la répéter.", "N'inventez jamais : une contradiction est plus grave qu'une réponse simple."]], ["À éviter", ["Un document falsifié ou modifié, même légèrement.", "Des réponses différentes de ce qui est écrit dans votre dossier.", "Une réservation que vous ne pouvez pas expliquer ou justifier.", "Les conseils d'un intermédiaire qui vous dicte quoi répondre."]]], "n": "Ces conseils aident à se préparer. Ils ne garantissent pas l'obtention du visa : la décision revient au consulat."}, "en": {"t": "Prepare for your interview (if you are called)", "s": "Being called in is not a refusal: the consulate just wants to check some points of your file.", "secs": [["Before the interview", ["Reread your whole file: dates, amounts, addresses and names must match everywhere.", "Bring your passport, the summons, the originals and one copy of each document, in order.", "Prepare proof of your ties to Tunisia: job, studies, family, property.", "Arrive early and dress simply."]], ["Frequent questions", ["What is the purpose of your trip?", "How long will you stay and where will you stay?", "Who pays for the trip? What are your resources?", "What do you do for a living, and who is waiting for you in Tunisia?", "Have you travelled before? Have you ever been refused?", "Do you know anyone in the destination country?", "When will you return to Tunisia?"]], ["How to answer", ["Tell the truth, with short and clear answers.", "Your answers must match your file exactly.", "Do not memorise a script: speak naturally.", "If you do not understand a question, ask for it to be repeated.", "Never invent anything: a contradiction is worse than a simple answer."]], ["What to avoid", ["A forged or altered document, even slightly.", "Answers that differ from what your file says.", "A booking you cannot explain or justify.", "Advice from an intermediary who tells you what to answer."]]], "n": "These tips help you prepare. They do not guarantee a visa: the decision belongs to the consulate."}, "ar": {"t": "التحضير للمقابلة (في حال تمت دعوتي)", "s": "الدعوة إلى مقابلة لا تعني الرفض: القنصلية تريد فقط التحقق من بعض نقاط ملفك.", "secs": [["قبل المقابلة", ["أعد قراءة ملفك كاملاً: يجب أن تتطابق التواريخ والمبالغ والعناوين والأسماء في كل الوثائق.", "أحضر جواز السفر ورسالة الاستدعاء والوثائق الأصلية ونسخة من كل وثيقة، مرتبة.", "جهّز ما يثبت ارتباطك بتونس: العمل أو الدراسة أو العائلة أو الممتلكات.", "احضر مبكراً وارتدِ ملابس بسيطة ومرتبة."]], ["الأسئلة الشائعة", ["ما هو الغرض من سفرك؟", "كم ستبقى وأين ستقيم؟", "من يتحمّل تكاليف السفر؟ وما هي مواردك؟", "ما عملك، ومن ينتظرك في تونس؟", "هل سافرت من قبل؟ وهل سبق أن رُفض طلبك؟", "هل تعرف أحداً في بلد الوجهة؟", "متى ستعود إلى تونس؟"]], ["كيف تجيب", ["قل الحقيقة بإجابات قصيرة وواضحة.", "يجب أن تتوافق إجاباتك تماماً مع ملفك.", "لا تحفظ نصاً عن ظهر قلب: تحدّث بشكل طبيعي.", "إن لم تفهم السؤال فاطلب إعادته.", "لا تختلق شيئاً أبداً: التناقض أخطر من إجابة بسيطة."]], ["ما يجب تجنّبه", ["وثيقة مزوّرة أو معدّلة، ولو بشكل بسيط.", "إجابات تختلف عمّا هو مكتوب في ملفك.", "حجز لا تستطيع شرحه أو تبريره.", "نصائح وسيط يخبرك بما يجب أن تقوله."]]], "n": "هذه النصائح تساعدك على التحضير ولا تضمن الحصول على التأشيرة: القرار يعود إلى القنصلية."}};
+var IVT={"fr": {"t": "Préparer mon entretien (si je suis convoqué)", "s": "Une convocation n'est pas un refus : le consulat veut simplement vérifier certains points de votre dossier.", "secs": [["Avant l'entretien", ["Relisez tout votre dossier : dates, montants, adresses et noms doivent être identiques partout.", "Emportez le passeport, la convocation, les originaux et une copie de chaque pièce, classés dans l'ordre.", "Préparez les justificatifs de vos attaches dans votre pays de résidence : travail, études, famille, biens.", "Arrivez en avance et habillez-vous simplement."]], ["Questions fréquentes", ["Quel est le but de votre voyage ?", "Combien de temps restez-vous et où logerez-vous ?", "Qui paie le voyage ? Quelles sont vos ressources ?", "Que faites-vous dans la vie, et qui vous attend dans votre pays de résidence ?", "Avez-vous déjà voyagé ? Avez-vous déjà eu un refus ?", "Connaissez-vous quelqu'un dans le pays de destination ?", "Quand rentrez-vous dans votre pays de résidence ?"]], ["Comment répondre", ["Dites la vérité, avec des réponses courtes et claires.", "Vos réponses doivent correspondre exactement à votre dossier.", "N'apprenez pas de texte par cœur : parlez naturellement.", "Si vous ne comprenez pas la question, demandez de la répéter.", "N'inventez jamais : une contradiction est plus grave qu'une réponse simple."]], ["À éviter", ["Un document falsifié ou modifié, même légèrement.", "Des réponses différentes de ce qui est écrit dans votre dossier.", "Une réservation que vous ne pouvez pas expliquer ou justifier.", "Les conseils d'un intermédiaire qui vous dicte quoi répondre."]]], "n": "Ces conseils aident à se préparer. Ils ne garantissent pas l'obtention du visa : la décision revient au consulat."}, "en": {"t": "Prepare for your interview (if you are called)", "s": "Being called in is not a refusal: the consulate just wants to check some points of your file.", "secs": [["Before the interview", ["Reread your whole file: dates, amounts, addresses and names must match everywhere.", "Bring your passport, the summons, the originals and one copy of each document, in order.", "Prepare proof of your ties to your country of residence: job, studies, family, property.", "Arrive early and dress simply."]], ["Frequent questions", ["What is the purpose of your trip?", "How long will you stay and where will you stay?", "Who pays for the trip? What are your resources?", "What do you do for a living, and who is waiting for you in your country of residence?", "Have you travelled before? Have you ever been refused?", "Do you know anyone in the destination country?", "When will you return to your country of residence?"]], ["How to answer", ["Tell the truth, with short and clear answers.", "Your answers must match your file exactly.", "Do not memorise a script: speak naturally.", "If you do not understand a question, ask for it to be repeated.", "Never invent anything: a contradiction is worse than a simple answer."]], ["What to avoid", ["A forged or altered document, even slightly.", "Answers that differ from what your file says.", "A booking you cannot explain or justify.", "Advice from an intermediary who tells you what to answer."]]], "n": "These tips help you prepare. They do not guarantee a visa: the decision belongs to the consulate."}, "ar": {"t": "التحضير للمقابلة (في حال تمت دعوتي)", "s": "الدعوة إلى مقابلة لا تعني الرفض: القنصلية تريد فقط التحقق من بعض نقاط ملفك.", "secs": [["قبل المقابلة", ["أعد قراءة ملفك كاملاً: يجب أن تتطابق التواريخ والمبالغ والعناوين والأسماء في كل الوثائق.", "أحضر جواز السفر ورسالة الاستدعاء والوثائق الأصلية ونسخة من كل وثيقة، مرتبة.", "جهّز ما يثبت ارتباطك ببلد إقامتك: العمل أو الدراسة أو العائلة أو الممتلكات.", "احضر مبكراً وارتدِ ملابس بسيطة ومرتبة."]], ["الأسئلة الشائعة", ["ما هو الغرض من سفرك؟", "كم ستبقى وأين ستقيم؟", "من يتحمّل تكاليف السفر؟ وما هي مواردك؟", "ما عملك، ومن ينتظرك في بلد إقامتك؟", "هل سافرت من قبل؟ وهل سبق أن رُفض طلبك؟", "هل تعرف أحداً في بلد الوجهة؟", "متى ستعود إلى بلد إقامتك؟"]], ["كيف تجيب", ["قل الحقيقة بإجابات قصيرة وواضحة.", "يجب أن تتوافق إجاباتك تماماً مع ملفك.", "لا تحفظ نصاً عن ظهر قلب: تحدّث بشكل طبيعي.", "إن لم تفهم السؤال فاطلب إعادته.", "لا تختلق شيئاً أبداً: التناقض أخطر من إجابة بسيطة."]], ["ما يجب تجنّبه", ["وثيقة مزوّرة أو معدّلة، ولو بشكل بسيط.", "إجابات تختلف عمّا هو مكتوب في ملفك.", "حجز لا تستطيع شرحه أو تبريره.", "نصائح وسيط يخبرك بما يجب أن تقوله."]]], "n": "هذه النصائح تساعدك على التحضير ولا تضمن الحصول على التأشيرة: القرار يعود إلى القنصلية."}};
 var IVOPEN=false;
 document.addEventListener("toggle",function(e){if(e.target&&e.target.id==="iv-d")IVOPEN=e.target.open},true);
 function interviewHtml(){
@@ -1647,6 +1661,7 @@ function renderSponsors(t){
   var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t)+(curC().id==="us"||S.step===6?'':ivCardHtml()):'');
   var h='<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
   h+='<p class="sp-join c">'+SPT.note[S.lang]+'</p>';
+  h+='<p class="sp-join c">'+SPT.join[S.lang]+' <a href="partenaires.html">'+SPT.joinLink[S.lang]+'</a></p>';
   $("sponsors").innerHTML=h;
 }
 function panelHtml(t){
@@ -2197,9 +2212,10 @@ function planData(){
 function planRes(){var el=$("plan-res");if(el)el.innerHTML=planResHtml(TLS[S.lang])}
 function planResHtml(L){
   var o=planData();if(!o)return '<p class="ag-note">'+esc({fr:"Renseignez votre date de départ prévue.",en:"Enter your planned departure date.",ar:"أدخل تاريخ السفر المتوقع."}[S.lang])+'</p>';
-  var c=COUNTRIES.filter(function(x){return x.id===o.id})[0],p=o.id==="fr"?{prov:"TLScontact"}:(PROF[o.id]||{prov:"?"}),h="";
+  var c=COUNTRIES.filter(function(x){return x.id===o.id})[0],p=o.id==="fr"?{prov:"TLScontact",site:"https://france-visas.gouv.fr/tunisie"}:(PROF[o.id]||{prov:"?"}),h="";
   h+='<p>'+esc(tFill(L.win,{d:fmtD(o.open)}))+'</p><p>'+esc(tFill(L.late,{d:fmtD(o.late)}))+'</p>';
   if(o.days!=null)h+='<p><b>'+esc(tFill(L.rdv,{n:o.days,u:fmtD(o.upd),d:fmtD(o.book)}))+'</b></p>';else h+='<p class="ag-note">'+esc(tFill(L.rdv0,{p:p.prov}))+'</p>';
+  if(p.site)h+='<p><a href="'+escA(p.site)+'" target="_blank" rel="noopener noreferrer">'+esc(L.site)+' ↗</a></p>';
   if(o.past)h+='<p class="i-warn">\u26A0 '+esc(L.past)+'</p>';
   h+='<button type="button" class="pay" data-ics="1">'+esc(L.ics)+'</button><p class="ag-note">'+esc(L.icsNote)+'</p>';
   return h;

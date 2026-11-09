@@ -3,6 +3,7 @@
 // Vérifie la syntaxe des scripts, la validité des JSON, les fichiers référencés, la cohérence de version
 // et le rendu de la section e-Visa pour les trois passeports (tn, ma, dz) dans les trois langues.
 import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
 import vm from "node:vm";
 
@@ -11,8 +12,8 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "bump-version.mjs"]) {
-  try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
+for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "planner.js", "sw.js", "worker/visa-chat-worker.js", "bump-version.mjs"]) {
+  try { if (f === "worker/visa-chat-worker.js") execFileSync(process.execPath, ["--input-type=module", "--check"], { input: read(f), stdio: ["pipe", "pipe", "pipe"] }); else execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
 console.log("JSON");
@@ -20,11 +21,26 @@ for (const f of ["manifest.json", "partners.json", "rdv.json", "reviews.json", "
   try { JSON.parse(read(f)); ok(f, true); } catch (e) { ok(f, false, e.message); }
 }
 
-console.log("Fichiers référencés par index.html");
+console.log("Liens et ressources locaux de toutes les pages HTML");
 const html = read("index.html");
-const refs = [...html.matchAll(/(?:src|href)="([^"#?]+)(?:\?[^"]*)?"/g)].map((m) => m[1])
-  .filter((r) => !/^(https?:|data:|mailto:|tel:|\/\/)/.test(r));
-for (const r of [...new Set(refs)]) ok(r, r === "/" || existsSync(r.replace(/^\//, "")));
+const htmlPages = [
+  "index.html", "planner.html", "partenaires.html", "a-propos.html", "contact.html",
+  "confidentialite.html", "conditions.html",
+  "guide/index.html", "guide/documents-visa-schengen-france-tunisie.html"
+];
+for (const page of htmlPages) {
+  ok(page + " : CSP présente", /Content-Security-Policy/.test(read(page)));
+  const source = read(page);
+  const refs = [...source.matchAll(/(?:src|href)=["']([^"']+)["']/g)].map((m) => m[1]);
+  for (const ref of [...new Set(refs)]) {
+    if (/^(https?:|data:|mailto:|tel:|\/\/|#|javascript:)/i.test(ref)) continue;
+    const clean = ref.split(/[?#]/)[0];
+    if (!clean) continue;
+    const target = resolve(dirname(page), clean.endsWith("/") ? clean + "index.html" : clean);
+    ok(page + " → " + ref, existsSync(target), target);
+    ok(page + " : pas de chemin local absolu", !clean.startsWith("/"));
+  }
+}
 
 console.log("Sitemap");
 const urls = [...read("sitemap.xml").matchAll(/<loc>https:\/\/checkmyvisa\.org\/([^<]*)<\/loc>/g)].map((m) => m[1]);
@@ -42,6 +58,14 @@ const secretRe = /(AIza[0-9A-Za-z_-]{30,}|sk-[A-Za-z0-9]{20,}|-----BEGIN [A-Z ]*
 for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "index.html", "worker/visa-chat-worker.js", "data.js", "app.js"]) ok("aucune clé secrète dans " + f, !secretRe.test(read(f)));
 const workerCode = read("worker/visa-chat-worker.js").split("\n").filter((l) => !/^\s*\/\//.test(l)).join("\n");
 ok("PAY_MOCK n'est pas activé en dur dans le Worker (commentaires ignorés)", !/PAY_MOCK\s*=\s*["']?1/.test(workerCode));
+ok("Worker refuse les origines web non autorisées", /if \(origin && !ORIGINS\.includes\(origin\)\)/.test(workerCode));
+ok("Worker exige KV pour contrôler les quotas d’entretien", /if \(interview && !env\.USAGE\)/.test(workerCode));
+ok("Worker refuse de traiter sans clé Gemini", /if \(!env\.GEMINI_API_KEY\)/.test(workerCode));
+ok("Worker limite la sortie du modèle", /maxOutputTokens: 700/.test(workerCode));
+ok("réponses Worker non mises en cache", /Cache-Control": "no-store/.test(workerCode));
+ok("Paiement manuel désactivé tant qu’aucun partenaire n’est validé", /var D17=\{num:"",name:"",tg:""/.test(read("visa-app.js")));
+const manifest = JSON.parse(read("manifest.json"));
+ok("identifiant PWA compatible avec un déploiement en sous-chemin", manifest.id.startsWith("./"));
 
 console.log("Contraste des couleurs de marque (brand.css, WCAG AA = 4,5)");
 {
@@ -85,5 +109,53 @@ if (loaded) {
   for (const o of ["ma", "dz"]) { const miss = Object.keys(api.EVORI[o]).filter((id) => !api.EV.some((c) => c.id === id)); ok("EVORI." + o + " : tous les pays sont définis", miss.length === 0, miss.join(",")); }
 }
 
+console.log("Programme partenaires");
+const partnerPage = "partenaires.html";
+ok("page partenaires présente", existsSync(partnerPage));
+if (existsSync(partnerPage)) {
+  const p = read(partnerPage);
+  ok("contact partenariat opérationnel", p.includes("visacheckercontact@gmail.com") && p.includes("mailto:visacheckercontact@gmail.com"));
+  ok("présentation des principales catégories", ["Assurance voyage", "Traduction", "Services documentaires", "eSIM", "Conseil spécialisé"].every((x) => p.includes(x)));
+  ok("règles de transparence partenaires", p.includes("Aucune commission ne peut influencer") && p.includes("faux documents"));
+}
+const productApp = read("visa-app.js");
+console.log("Moteur de checklist et couverture");
+ok("marque du parcours neutre selon le passeport", productApp.includes('stamp:"Voyageurs"') && productApp.includes('stamp:"Travellers"') && productApp.includes('stamp:"المسافرون"'));
+ok("interface sans promesse de liste exacte ou exhaustive", !/liste exacte des documents|exact list of documents|القائمة الدقيقة للوثائق/.test(productApp));
+ok("disclaimer France-Visas personnalisé et caractère non officiel", productApp.includes("la liste personnalisée générée par France-Visas fait foi") && productApp.includes("the personalised France-Visas checklist is authoritative") && productApp.includes("القائمة الشخصية الصادرة عن France-Visas المرجع المعتمد"));
+ok("photos : fond blanc interdit et fond clair", productApp.includes("blanc interdit") && productApp.includes("white is not allowed") && productApp.includes("الأبيض ممنوع") && !/fond blanc ou très clair|white or very light background|خلفية بيضاء أو فاتحة جدًا/.test(productApp));
+ok("traduction assermentée non présentée comme obligatoire partout", productApp.includes("Do not present a sworn translation as universally mandatory") && productApp.includes("لا تعتبر الترجمة المحلّفة شرطًا عامًا"));
+ok("ressources sans exigence générique de 3 mois ni RIB", !productApp.includes("Relevés bancaires des 3 derniers mois et RIB") && !productApp.includes("Bank statements for the last 3 months and your RIB"));
+ok("transport conditionnel selon la liste personnalisée", /id:"flight",g:"stay",w:any,opt:1/.test(productApp) && productApp.includes("Transport evidence or itinerary, if requested"));
+const coverage = read("guide/couverture-provisoire.md");
+ok("matrice provisoire corrigée à 22 parcours Schengen", coverage.includes("22 combinaisons") && coverage.includes("7 destinations Schengen") && coverage.includes("5 destinations Schengen"));
+ok("matrice distingue parcours présents et validation officielle", coverage.includes("pas une validation officielle") && coverage.includes("Cela ne vaut pas certification de l'exhaustivité"));
+ok("catégories partenaires intégrées au parcours", ["SPT.sTr", "SPT.sDoc", "SPT.sEsim"].every((x) => productApp.includes(x)));
+ok("accès au programme partenaires depuis l'accueil", productApp.includes('href="partenaires.html"'));
+const ivStart = productApp.indexOf("var IVT=");
+const ivEnd = productApp.indexOf("\nvar IVOPEN", ivStart);
+const ivText = productApp.slice(ivStart, ivEnd > ivStart ? ivEnd : ivStart + 6000);
+ok("conseils d'entretien non limités à la Tunisie", !/Tunisie|Tunisia|تونس/.test(ivText));
+
+console.log("Visa Journey Planner");
+const plannerPage = read("planner.html");
+const plannerScript = read("planner.js");
+ok("planner multilingue FR/EN/AR", ["fr:", "en:", "ar:"].every((x) => plannerScript.includes(x)));
+ok("planner sauvegarde localement sans compte", plannerScript.includes("localStorage.setItem") && plannerScript.includes("vc-journey-plan-v1"));
+ok("planner affiche une progression accessible", plannerPage.includes('id="progress-track"') && plannerPage.includes('role="progressbar"') && plannerScript.includes('setAttribute("aria-valuenow"'));
+ok("planner conserve les tâches cochées lors d’une mise à jour", plannerScript.includes("previousDone=plan&&plan.done?plan.done:{}"));
+ok("planner valide les dates enregistrées", plannerScript.includes("function validDate") && plannerScript.includes("validDate(saved.departure)"));
+ok("planner exporte un calendrier ICS", plannerScript.includes("BEGIN:VCALENDAR") && plannerScript.includes("text/calendar"));
+ok("planner affiche un lien vers la source officielle", productApp.includes("if(p.site)h+=") && productApp.includes("france-visas.gouv.fr/tunisie"));
+ok("planner ne collecte pas de numéro de passeport", !/<input[^>]*(?:passport|passeport)/i.test(plannerPage));
+ok("planner précise que les dates ne sont pas officielles", plannerScript.includes("not official processing deadlines") && plannerScript.includes("pas des délais officiels"));
+ok("planner n'utilise aucune bibliothèque distante", !/<script[^>]+src=["']https?:/i.test(plannerPage));
+ok("planner possède les métadonnées de partage social", plannerPage.includes('property="og:title"') && plannerPage.includes('name="twitter:card"'));
+ok("planner enregistre le service worker même en accès direct", plannerScript.includes('navigator.serviceWorker.register("./sw.js"'));
+ok("planner mémorise la langue choisie", plannerScript.includes('vc-planner-lang-v1'));
+ok("service worker précache les fichiers du planner", /"planner.html"[\s\S]*"planner.js"/.test(read("sw.js")));
+ok("service worker ne renvoie pas la page d’accueil pour un fichier local absent", /req.mode === "navigate" \? await caches.match\("\."\) : null/.test(read("sw.js")));
+
 console.log("\n" + pass + " réussis, " + fail + " échoués");
+
 process.exit(fail ? 1 : 0);
