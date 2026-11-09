@@ -39,7 +39,7 @@ self.addEventListener("install", (e) => {
       // addAll échoue si UNE ressource échoue : on tolère les absences ; cache:"reload" ignore le cache HTTP
       .then((c) => Promise.all(PRECACHE.map((u) => c.add(new Request(u, { cache: "reload" })).catch(() => null))))
   );
-  self.skipWaiting(); // active immédiatement la version publiée pour éviter de garder une ancienne interface en cache
+  // Ne pas activer immédiatement : visa-pwa.js doit pouvoir afficher la notification de mise à jour.
 });
 
 self.addEventListener("activate", (e) => {
