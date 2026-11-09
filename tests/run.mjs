@@ -29,6 +29,7 @@ const htmlPages = [
   "guide/index.html", "guide/documents-visa-schengen-france-tunisie.html"
 ];
 for (const page of htmlPages) {
+  ok(page + " : CSP présente", /Content-Security-Policy/.test(read(page)));
   const source = read(page);
   const refs = [...source.matchAll(/(?:src|href)=["']([^"']+)["']/g)].map((m) => m[1]);
   for (const ref of [...new Set(refs)]) {
