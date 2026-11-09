@@ -1000,6 +1000,23 @@ img,svg,video,canvas{max-width:100%;height:auto}
 :root[data-theme="dark"] .trd-country>a.trd-extra{background:#203653;color:#d8e6fa;border-color:#34517c}
 @media(max-width:700px){.trd-country-grid{grid-template-columns:1fr;gap:9px}.trd-country{padding:14px}.trd-country>p{font-size:14px}}
 </style>
+<style id="vc-nav-layout-fix">
+/* Keep the Joury profile control visible: the links scroll inside their own flex area. */
+.sitenav.in-app{display:flex!important;align-items:center!important;gap:8px!important;overflow:visible!important}
+.sitenav.in-app>.sn-logo{flex:0 0 auto!important}
+.sitenav.in-app>ul{flex:1 1 0!important;min-width:0!important;width:0!important;margin:0!important;justify-content:flex-end!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important}
+.sitenav.in-app>ul::-webkit-scrollbar{display:none!important}
+.sitenav.in-app>ul>li{flex:0 0 auto!important}
+.sitenav.in-app>.sn-profile{position:relative!important;display:inline-flex!important;visibility:visible!important;opacity:1!important;flex:0 0 46px!important;width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important;margin:0 0 0 4px!important;z-index:110!important}
+@media(max-width:700px){
+ .sitenav.in-app{width:100%!important;box-sizing:border-box!important;padding-inline:12px!important;gap:6px!important}
+ .sitenav.in-app>.sn-logo{font-size:17px!important;letter-spacing:-.5px!important}
+ .sitenav.in-app>ul{justify-content:flex-start!important;gap:4px 10px!important}
+ .sitenav.in-app>ul a{font-size:11px!important;padding-inline:1px!important}
+ .sitenav.in-app>.sn-profile{flex-basis:42px!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;margin-inline-start:2px!important}
+ .sitenav.in-app>.sn-profile svg{width:21px!important;height:21px!important}
+}
+</style>
 </head>
 <body>
 <nav class="sitenav in-app" aria-label="Navigation principale">
