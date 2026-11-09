@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#153d82"><meta name="description" content="Votre espace personnel Joury, assistant IA de Visa Checker.">
+<title>Joury — AI Visa Assistant | Visa Checker</title><link rel="stylesheet" href="joury.css">
+</head><body>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="./"><span class="brand-logo">V</span><span>Visa Checker<small>AI WORKSPACE</small></span></a>
+<div class="nav-caption" data-t="workspace">ESPACE DE TRAVAIL</div>
+<button class="nav active" data-page="home"><i>⌂</i><span data-t="home">Accueil</span></button>
+<button class="nav" data-page="chat"><i>✳</i><span data-t="assistant">Assistant Joury</span></button>
+<button class="nav" data-page="review"><i>✓</i><span data-t="review">Vérification du dossier</span></button>
+<button class="nav" data-page="recovery"><i>↗</i><span data-t="recovery">AI Visa Recovery</span></button>
+<button class="nav" data-page="interview"><i>▤</i><span data-t="interview">Préparation entretien</span></button>
+<div class="nav-caption history-caption" data-t="history">HISTORIQUE</div><div class="history-empty" data-t="historyEmpty">Vos conversations apparaîtront ici.</div>
+<div class="sidebar-foot"><div class="private"><span>●</span><div><b data-t="private">Espace privé</b><small data-t="privateSub">Les fichiers restent sur cet appareil.</small></div></div><a href="./" data-t="back">← Retour à Visa Checker</a></div>
+</aside>
+<main class="main">
+<header class="topbar"><button class="menu" id="menu" aria-label="Menu">☰</button><div class="breadcrumb">Visa Checker <span>/</span> <b>Joury</b></div><div class="topright"><div class="languages"><button class="chosen" data-lang="fr">FR</button><button data-lang="en">EN</button><button data-lang="ar">عربي</button></div><span class="status"><i></i><span data-t="online">En ligne</span></span></div></header>
+<div class="content">
+<section id="home" class="page">
+<div class="eyebrow">✳ <span data-t="eyebrow">VOTRE ASSISTANT VISA INTELLIGENT</span></div>
+<h1 data-t="welcome">Bonjour, comment puis-je vous aider ?</h1><p class="lead" data-t="intro">Joury vous accompagne pour comprendre, préparer et améliorer votre dossier visa.</p>
+<div class="actions">
+<button class="action" data-open="review"><span class="tile blue">✓</span><b data-t="reviewTitle">Vérifier mon dossier</b><small data-t="reviewSub">Checklist, documents et points à contrôler.</small><em>↗</em></button>
+<button class="action" data-open="recovery"><span class="tile coral">↗</span><b data-t="recoveryTitle">Analyser un refus de visa</b><small data-t="recoverySub">Comprendre les motifs et les options possibles.</small><em>↗</em></button>
+<button class="action" data-open="interview"><span class="tile violet">▤</span><b data-t="interviewTitle">Préparer mon entretien</b><small data-t="interviewSub">Entraînement et évaluation des réponses.</small><em>↗</em></button>
+<button class="action" data-open="chat"><span class="tile mint">✳</span><b data-t="askTitle">Poser une question</b><small data-t="askSub">Obtenir une réponse claire de Joury.</small><em>↗</em></button>
+</div>
+<div class="upload-box"><div class="upload-info"><span class="upload-symbol">＋</span><div><b data-t="uploadTitle">Ajouter un document</b><p data-t="uploadSub">Choisissez une notification de refus ou une pièce de votre dossier.</p></div></div><label for="file" class="upload-button" data-t="choose">Choisir un fichier</label><input id="file" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple hidden><div class="upload-hint" id="fileHint" data-t="fileHint">PDF, JPG ou PNG · 10 Mo maximum par fichier</div><div class="selected-files" id="selectedFiles"></div><p class="privacy-note" data-t="uploadPrivacy">Les fichiers sélectionnés restent dans votre navigateur : l'envoi pour analyse sera activé après raccordement sécurisé du service documentaire.</p></div>
+<div class="notice">ⓘ <span data-t="notice">Joury fournit une aide informative. La décision de visa appartient exclusivement aux autorités compétentes.</span></div>
+</section>
+<section id="review" class="page" hidden><button class="back" data-back>← <span data-t="backHome">Retour à l'accueil</span></button><div class="eyebrow" data-t="reviewEyebrow">CONTRÔLE PRÉPARATOIRE</div><h1 data-t="reviewHeading">Vérification de votre dossier</h1><p class="lead" data-t="reviewLead">Utilisez cette liste pour repérer les éléments à réunir et à vérifier. Les exigences varient selon le pays et le type de visa.</p><div class="checklist" id="checklist"></div><div class="progress"><span id="progressText">0 / 6</span><div><i id="progressBar"></i></div></div><button class="primary" id="reviewAsk" data-t="reviewAsk">Demander à Joury de revoir ma checklist</button></section>
+<section id="recovery" class="page" hidden><button class="back" data-back>← <span data-t="backHome">Retour à l'accueil</span></button><div class="feature-icon coral">↗</div><div class="eyebrow" data-t="special">ESPACE SPÉCIALISÉ</div><h1>AI Visa Recovery</h1><p class="lead" data-t="recoveryLead">Comprenez votre notification de refus, les motifs mentionnés et les démarches à examiner.</p><div class="steps" id="recoverySteps"></div><button class="primary" data-start="recovery" data-t="start">Commencer avec Joury</button><p class="disclaimer" data-t="legal">Les délais et voies de recours dépendent du pays et du type de décision. Vérifiez toujours la notification officielle.</p></section>
+<section id="interview" class="page" hidden><button class="back" data-back>← <span data-t="backHome">Retour à l'accueil</span></button><div class="feature-icon violet">▤</div><div class="eyebrow" data-t="special">ESPACE SPÉCIALISÉ</div><h1 data-t="interviewHeading">Préparation à l'entretien</h1><p class="lead" data-t="interviewLead">Entraînez-vous à présenter votre projet de voyage avec des réponses claires, cohérentes et personnelles.</p><div class="steps" id="interviewSteps"></div><button class="primary" data-start="interview" data-t="start">Commencer avec Joury</button></section>
+<section id="chat" class="page chat-page" hidden><div class="chat-title"><span class="joury-avatar">✳</span><div><h2>Joury</h2><p data-t="chatLead">Votre assistant IA Visa Checker</p></div></div><div class="messages" id="messages" aria-live="polite"><div class="bubble assistant" data-t="hello">Bonjour ! Je suis Joury. Décrivez votre situation et je vous guiderai étape par étape.</div></div><div class="composer"><textarea id="prompt" rows="2" maxlength="3000" data-placeholder="placeholder" placeholder="Écrivez votre message à Joury…"></textarea><button id="send" aria-label="Envoyer">↑</button><small data-t="safe">Ne partagez pas votre numéro de passeport ni vos données bancaires.</small></div></section>
+<footer>© Visa Checker <span data-t="footer">Conçu pour vous accompagner, pas pour remplacer les autorités consulaires.</span></footer>
+</div></main></div><script src="joury.js" defer></script></body></html>
