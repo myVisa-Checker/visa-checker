@@ -43,3 +43,10 @@
   .sitenav .sn-logo{font-size:15px}
 }
 .skip-link{position:fixed;top:8px;inset-inline-start:8px;z-index:1000;transform:translateY(-160%);padding:10px 14px;border-radius:8px;background:#102b5c;color:#fff;font-weight:700;text-decoration:none;box-shadow:0 4px 16px #102b5c33}.skip-link:focus{transform:translateY(0);outline:3px solid #38bdf8;outline-offset:3px}
+
+/* Country-separated sworn-translator directory */
+.trd-country-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;width:100%;margin:12px 0}
+.trd-country-tab{min-width:0;min-height:48px;padding:9px 8px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface);color:var(--ink);font:600 14px var(--f-body);cursor:pointer}
+.trd-country-tab[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink);box-shadow:0 0 0 1px var(--accent)}
+.trd-country-panel{width:100%;min-height:150px}
+@media(max-width:380px){.trd-country-tabs{grid-template-columns:1fr}.trd-country-tab{min-height:44px}}
