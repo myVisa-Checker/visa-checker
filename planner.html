@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d4ed8">
+<meta name="description" content="Planificateur de préparation visa : calendrier personnalisé, échéances et checklist avant votre rendez-vous.">
+<title>Visa Planner · Visa Checker</title>
+<link rel="stylesheet" href="/nav.css">
+<link rel="stylesheet" href="/brand.css">
+<style>
+:root{--blue:#1d4ed8;--navy:#10234b;--ink:#14212b;--muted:#617080;--line:#e4eaf2;--bg:#f5f8ff;--card:#fff;--soft:#eaf1ff;--green:#168454;--amber:#a65b00}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,-apple-system,sans-serif;padding:0 16px 48px}
+main{max-width:900px;margin:0 auto}.hero{margin:26px 0 18px;padding:28px;border-radius:24px;color:#fff;background:radial-gradient(circle at 90% 10%,#60a5fa 0,transparent 35%),linear-gradient(130deg,#10234b,#1d4ed8 68%,#38bdf8);box-shadow:0 18px 44px #163b8130}
+.kicker{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.8}.hero h1{font-size:clamp(30px,6vw,48px);line-height:1.05;margin:8px 0 12px}.hero p{max-width:620px;margin:0;color:#e7efff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:16px 0;box-shadow:0 8px 24px #10234b0a}
+h2{font-size:20px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:13px;font-weight:700;color:var(--muted)}input,select{width:100%;min-height:48px;border:1px solid #cfd9e8;border-radius:11px;padding:10px 12px;background:#fff;color:var(--ink);font:inherit}input:focus,select:focus,button:focus-visible,a:focus-visible{outline:3px solid #93b4ff;outline-offset:2px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.btn{border:0;border-radius:12px;padding:12px 18px;min-height:46px;font:700 15px inherit;cursor:pointer}.primary{background:var(--blue);color:#fff}.secondary{background:var(--soft);color:var(--navy)}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{padding:14px;border-radius:14px;background:var(--soft)}.metric b{display:block;font-size:25px;color:var(--blue);line-height:1.2}.metric span{font-size:12px;color:var(--muted)}
+.timeline{display:flex;flex-direction:column;gap:10px}.task{display:grid;grid-template-columns:24px 1fr auto;align-items:start;gap:12px;padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff}.task input{width:20px;height:20px;min-height:0;margin:3px 0;accent-color:var(--green)}.task.done{background:#f0faf5;border-color:#b7e4ce}.task.done .task-title{text-decoration:line-through;color:var(--muted)}.task small{display:block;color:var(--muted);font-size:13px}.when{font-size:12px;font-weight:800;color:var(--blue);white-space:nowrap}.progress{height:9px;background:#e8edf5;border-radius:20px;overflow:hidden;margin:12px 0}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#1d4ed8,#38bdf8);transition:width .25s}
+.note{font-size:13px;color:var(--muted);margin:10px 0 0}.empty{padding:18px;text-align:center;color:var(--muted);background:#f8faff;border-radius:12px}
+.lang{display:flex;gap:6px;justify-content:flex-end;margin-top:16px}.lang button{border:1px solid var(--line);background:#fff;border-radius:30px;padding:7px 13px;font-weight:700;color:var(--ink);cursor:pointer}.lang button[aria-pressed=true]{background:var(--navy);color:#fff;border-color:var(--navy)}
+footer{max-width:900px;margin:24px auto;color:var(--muted);font-size:13px}footer a{color:var(--blue)}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.hero{padding:22px}.metrics{grid-template-columns:1fr 1fr}.metric:last-child{grid-column:1/-1}.task{grid-template-columns:24px 1fr}.when{grid-column:2}}
+@media print{body{background:#fff;padding:0}.sitenav,.lang,.actions,.hero{print-color-adjust:exact;-webkit-print-color-adjust:exact}.actions,.lang{display:none!important}.card{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<nav class="sitenav in-app" aria-label="Main navigation">
+<a class="sn-logo" href="/"><b>Visa</b> Checker</a>
+<ul><li><a href="/">Accueil</a></li><li><a href="/guide/">Guides</a></li><li><a href="/planner.html" aria-current="page">Planner</a></li><li><a href="/a-propos.html">À propos</a></li></ul>
+</nav>
+<main>
+<div class="lang" role="group" aria-label="Language"><button type="button" data-lang="fr" aria-pressed="true">FR</button><button type="button" data-lang="en" aria-pressed="false">EN</button><button type="button" data-lang="ar" aria-pressed="false">عربي</button></div>
+<section class="hero"><div class="kicker" id="kicker">VISA CHECKER · ORGANISATION</div><h1 id="title">Votre calendrier visa, en clair.</h1><p id="intro">Un plan personnalisé pour organiser vos documents, votre rendez-vous et votre départ — sans oublier les étapes importantes.</p></section>
+<section class="card">
+<h2 id="setupTitle">1. Préparez votre calendrier</h2>
+<div class="grid">
+<div class="field"><label id="destinationLabel" for="destination">Destination</label><select id="destination"><option value="fr">France</option><option value="other">Autre destination</option></select></div>
+<div class="field"><label id="purposeLabel" for="purpose">Motif du voyage</label><select id="purpose"><option value="tourism">Tourisme</option><option value="family">Visite familiale</option><option value="business">Affaires</option><option value="study">Études</option><option value="other">Autre</option></select></div>
+<div class="field"><label id="appointmentLabel" for="appointment">Date du rendez-vous (si connue)</label><input id="appointment" type="date"></div>
+<div class="field"><label id="departureLabel" for="departure">Date prévue de départ</label><input id="departure" type="date"></div>
+</div>
+<div class="actions"><button class="btn primary" id="generate">Créer mon calendrier</button><button class="btn secondary" id="print">Imprimer / PDF</button></div>
+<p class="note" id="privacy">Vos dates et votre progression restent enregistrées dans ce navigateur. Aucun document ni numéro de passeport n'est demandé ici.</p>
+</section>
+<section class="card" id="results" hidden>
+<h2 id="overviewTitle">2. Votre aperçu</h2>
+<div class="metrics"><div class="metric"><b id="daysAppointment">—</b><span id="toAppointment">jours avant le rendez-vous</span></div><div class="metric"><b id="daysDeparture">—</b><span id="toDeparture">jours avant le départ</span></div><div class="metric"><b id="progressText">0%</b><span id="progressLabel">progression du plan</span></div></div>
+<div class="progress"><i id="progressBar"></i></div>
+</section>
+<section class="card" id="tasksCard" hidden>
+<h2 id="tasksTitle">3. Votre plan d'action</h2>
+<div class="timeline" id="tasks"></div>
+<div class="actions"><button class="btn secondary" id="reset">Réinitialiser ma progression</button></div>
+<p class="note" id="disclaimer">Ce calendrier est un outil d'organisation, pas une garantie de visa. Vérifiez toujours les consignes et délais auprès des autorités et du centre de dépôt compétents.</p>
+</section>
+</main>
+<footer><a href="/">Visa Checker</a> · <a href="/confidentialite.html">Confidentialité</a> · <a href="/conditions.html">Conditions</a></footer>
+<script>
+(function(){
+"use strict";
+var copy={
+fr:{kicker:"VISA CHECKER · ORGANISATION",title:"Votre calendrier visa, en clair.",intro:"Un plan personnalisé pour organiser vos documents, votre rendez-vous et votre départ — sans oublier les étapes importantes.",setup:"1. Préparez votre calendrier",destination:"Destination",purpose:"Motif du voyage",appointment:"Date du rendez-vous (si connue)",departure:"Date prévue de départ",generate:"Créer mon calendrier",print:"Imprimer / PDF",privacy:"Vos dates et votre progression restent enregistrées dans ce navigateur. Aucun document ni numéro de passeport n'est demandé ici.",overview:"2. Votre aperçu",toAppt:"jours avant le rendez-vous",toDep:"jours avant le départ",progress:"progression du plan",tasks:"3. Votre plan d'action",reset:"Réinitialiser ma progression",disclaimer:"Ce calendrier est un outil d'organisation, pas une garantie de visa. Vérifiez toujours les consignes et délais auprès des autorités et du centre de dépôt compétents.",destOther:"Autre destination",tourism:"Tourisme",family:"Visite familiale",business:"Affaires",study:"Études",other:"Autre",empty:"Choisissez au moins une date puis créez votre calendrier.",tasksList:[["Vérifier les conditions officielles","Consultez la liste et les consignes du pays de destination."],["Préparer les documents personnels","Passeport, photos et justificatifs d'identité selon les exigences officielles."],["Réunir les justificatifs du voyage","Hébergement, transport et programme cohérent avec le motif du séjour."],["Préparer les justificatifs financiers","Relevés et preuves de ressources adaptés à votre situation."],["Relire et contrôler le dossier","Vérifiez les dates, traductions, signatures et cohérence de toutes les pièces."],["Confirmer le rendez-vous et les frais","Vérifiez l'heure, l'adresse, les modalités et les frais sur le site officiel."],["Préparer le jour du dépôt","Classez les originaux et copies, préparez votre convocation et arrivez à l'heure."],["Suivre la demande et préparer le départ","Consultez les notifications officielles. N'achetez pas de prestations non remboursables sans avoir évalué le risque."]],offsets:[-35,-28,-21,-14,-7,-2,0,3],appt:"Rendez-vous",departureDate:"Départ",days:"j",done:"Terminé",left:"À faire"},
+en:{kicker:"VISA CHECKER · PLANNING",title:"Your visa timeline, made clear.",intro:"A practical plan to organise your documents, appointment and departure — without missing key steps.",setup:"1. Set up your timeline",destination:"Destination",purpose:"Travel purpose",appointment:"Appointment date (if known)",departure:"Planned departure date",generate:"Build my timeline",print:"Print / PDF",privacy:"Your dates and progress are saved in this browser. No document or passport number is requested here.",overview:"2. Your overview",toAppt:"days until appointment",toDep:"days until departure",progress:"plan progress",tasks:"3. Your action plan",reset:"Reset my progress",disclaimer:"This timeline is an organisation tool, not a visa guarantee. Always check instructions and deadlines with the relevant authorities and application centre.",destOther:"Other destination",tourism:"Tourism",family:"Family visit",business:"Business",study:"Study",other:"Other",empty:"Choose at least one date, then build your timeline.",tasksList:[["Check official requirements","Review the destination country's official document list and instructions."],["Prepare personal documents","Passport, photos and identity documents according to official requirements."],["Gather travel evidence","Accommodation, transport and an itinerary consistent with your travel purpose."],["Prepare financial evidence","Statements and proof of funds appropriate to your circumstances."],["Review the complete application","Check dates, translations, signatures and consistency across all documents."],["Confirm appointment and fees","Check time, address, process and fees on the official website."],["Prepare for submission day","Organise originals and copies, bring your appointment confirmation and arrive on time."],["Track the application and prepare travel","Follow official notifications. Consider the risk before buying non-refundable services."]],offsets:[-35,-28,-21,-14,-7,-2,0,3],appt:"Appointment",departureDate:"Departure",days:"d",done:"Done",left:"To do"},
+ar:{kicker:"فيزا تشيكر · التخطيط",title:"جدول تأشيرتك، خطوة بخطوة.",intro:"خطة عملية لتنظيم وثائقك وموعدك وتاريخ سفرك دون نسيان المراحل المهمة.",setup:"1. إعداد الجدول الزمني",destination:"الوجهة",purpose:"سبب السفر",appointment:"تاريخ الموعد (إن توفر)",departure:"تاريخ السفر المتوقع",generate:"إنشاء جدولي",print:"طباعة / PDF",privacy:"يتم حفظ التواريخ والتقدم في هذا المتصفح. لا نطلب أي وثيقة أو رقم جواز سفر هنا.",overview:"2. ملخص خطتك",toAppt:"يومًا حتى الموعد",toDep:"يومًا حتى السفر",progress:"نسبة تقدم الخطة",tasks:"3. خطة العمل",reset:"إعادة ضبط التقدم",disclaimer:"هذا الجدول أداة للتنظيم وليس ضمانًا للحصول على التأشيرة. تحقق دائمًا من التعليمات والمواعيد لدى السلطات ومركز الإيداع المختص.",destOther:"وجهة أخرى",tourism:"سياحة",family:"زيارة عائلية",business:"أعمال",study:"دراسة",other:"أخرى",empty:"اختر تاريخًا واحدًا على الأقل ثم أنشئ الجدول.",tasksList:[["التحقق من الشروط الرسمية","راجع قائمة الوثائق والتعليمات الرسمية لبلد الوجهة."],["إعداد الوثائق الشخصية","جواز السفر والصور ووثائق الهوية حسب الشروط الرسمية."],["جمع إثباتات السفر","الإقامة والنقل وبرنامج يتناسب مع سبب السفر."],["إعداد الإثباتات المالية","كشوف الحساب وإثبات الموارد حسب وضعيتك."],["مراجعة ملف الطلب","تحقق من التواريخ والترجمات والإمضاءات وتناسق الوثائق."],["تأكيد الموعد والمعاليم","تحقق من التوقيت والعنوان والإجراءات والمعاليم عبر الموقع الرسمي."],["الاستعداد ليوم الإيداع","رتب الأصول والنسخ وأحضر تأكيد الموعد واحترم التوقيت."],["متابعة الطلب والاستعداد للسفر","تابع الإشعارات الرسمية وقيّم المخاطر قبل شراء خدمات غير قابلة للاسترجاع."]],offsets:[-35,-28,-21,-14,-7,-2,0,3],appt:"الموعد",departureDate:"السفر",days:"ي",done:"مكتمل",left:"متبقي"}
+};
+var lang="fr",state={appointment:"",departure:"",done:{}},$=function(id){return document.getElementById(id)},store="vc_planner_v1";
+function load(){try{var x=JSON.parse(localStorage.getItem(store)||"{}");if(x&&typeof x==="object")state={appointment:x.appointment||"",departure:x.departure||"",done:x.done||{}}}catch(e){}$("appointment").value=state.appointment;$("departure").value=state.departure}
+function save(){try{localStorage.setItem(store,JSON.stringify(state))}catch(e){}}
+function days(date){if(!date)return "—";var a=new Date();a.setHours(0,0,0,0);var b=new Date(date+"T00:00:00");return Math.ceil((b-a)/86400000)}
+function dateLabel(date){if(!date)return "";return new Intl.DateTimeFormat(lang==="ar"?"ar-TN":lang==="en"?"en-GB":"fr-FR",{day:"numeric",month:"short",year:"numeric"}).format(new Date(date+"T00:00:00"))}
+function render(){var t=copy[lang],tasks=$("tasks"),dates=[state.appointment,state.departure].filter(Boolean);document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+$("kicker").textContent=t.kicker;$("title").textContent=t.title;$("intro").textContent=t.intro;$("setupTitle").textContent=t.setup;$("destinationLabel").textContent=t.destination;$("purposeLabel").textContent=t.purpose;$("appointmentLabel").textContent=t.appointment;$("departureLabel").textContent=t.departure;$("generate").textContent=t.generate;$("print").textContent=t.print;$("privacy").textContent=t.privacy;$("overviewTitle").textContent=t.overview;$("toAppointment").textContent=t.toAppt;$("toDeparture").textContent=t.toDep;$("progressLabel").textContent=t.progress;$("tasksTitle").textContent=t.tasks;$("reset").textContent=t.reset;$("disclaimer").textContent=t.disclaimer;
+$("destination").options[1].textContent=t.destOther;var po=$("purpose").options;po[0].textContent=t.tourism;po[1].textContent=t.family;po[2].textContent=t.business;po[3].textContent=t.study;po[4].textContent=t.other;
+document.querySelectorAll("[data-lang]").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.lang===lang)});
+if(!dates.length){$("results").hidden=true;$("tasksCard").hidden=true;return}
+$("results").hidden=false;$("tasksCard").hidden=false;
+$("daysAppointment").textContent=state.appointment?days(state.appointment)+t.days:"—";$("daysDeparture").textContent=state.departure?days(state.departure)+t.days:"—";
+var done=Object.keys(state.done).filter(function(k){return state.done[k]}).length,pct=Math.round(done/8*100);$("progressText").textContent=pct+"%";$("progressBar").style.width=pct+"%";
+tasks.innerHTML="";var base=state.appointment||state.departure;var anchor=new Date(base+"T00:00:00");
+t.tasksList.forEach(function(item,i){var d=new Date(anchor);d.setDate(d.getDate()+t.offsets[i]);var iso=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");var key=String(i),el=document.createElement("label");el.className="task"+(state.done[key]?" done":"");var cb=document.createElement("input");cb.type="checkbox";cb.checked=!!state.done[key];cb.addEventListener("change",function(){state.done[key]=cb.checked;save();render()});var body=document.createElement("span");var title=document.createElement("span");title.className="task-title";title.textContent=item[0];var detail=document.createElement("small");detail.textContent=item[1];body.append(title,detail);var when=document.createElement("span");when.className="when";when.textContent=dateLabel(iso);el.append(cb,body,when);tasks.append(el)});
+}
+function build(){state.appointment=$("appointment").value;state.departure=$("departure").value;if(!state.appointment&&!state.departure){alert(copy[lang].empty);return}state.done={};save();render();$("results").scrollIntoView({behavior:"smooth",block:"start"})}
+document.querySelectorAll("[data-lang]").forEach(function(b){b.addEventListener("click",function(){lang=b.dataset.lang;render()})});
+$("generate").addEventListener("click",build);$("print").addEventListener("click",function(){window.print()});$("reset").addEventListener("click",function(){state.done={};save();render()});
+$("appointment").addEventListener("change",function(){state.appointment=this.value;save()});$("departure").addEventListener("change",function(){state.departure=this.value;save()});
+load();render();
+})();
+</script>
+</body></html>
