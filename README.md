@@ -1,6 +1,8 @@
 # Visa Checker
 
-Application web (PWA) multilingue (français, anglais, arabe) pour les voyageurs tunisiens, marocains et algériens : documents de visa, pack recours, e-Visa par passeport, assistant d'entretien.
+Application web (PWA) multilingue (français, anglais, arabe) pour les voyageurs : checklist Schengen actuellement centrée sur le passeport tunisien, informations e-Visa selon le passeport (Tunisie, Maroc et Algérie), pack d'aide en cas de refus et assistant d'entretien. Les exigences doivent toujours être confirmées auprès des sources officielles.
+
+Les paiements en ligne restent désactivés tant que le partenariat de paiement n'est pas finalisé. Aucun mode de paiement simulé n'est prévu en production.
 
 Site : https://checkmyvisa.org
 
