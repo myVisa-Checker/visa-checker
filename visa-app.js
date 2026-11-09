@@ -253,10 +253,10 @@ var ITEMS=[
  fr:["Preuves de votre activité et de vos relations d'affaires","Contrats, factures ou échanges avec le partenaire en France."],
  en:["Proof of your activity and business relations","Contracts, invoices or exchanges with your partner in France."],
  ar:["إثباتات نشاطك وعلاقاتك التجارية","عقود أو فواتير أو مراسلات مع الشريك في فرنسا."]},
-{id:"flight",g:"stay",w:any,
- fr:["Réservation de vol aller-retour","Réservation non payée. N'achetez pas de billet non remboursable avant d'avoir le visa."],
- en:["Round-trip flight reservation","Reserved but unpaid. Do not buy a non-refundable ticket before you have the visa."],
- ar:["حجز طيران ذهاب وإياب","حجز غير مدفوع. لا تشترِ تذكرة غير قابلة للاسترداد قبل الحصول على التأشيرة."]},
+{id:"flight",g:"stay",w:any,opt:1,
+ fr:["Justificatif de transport ou itinéraire, si demandé","La liste personnalisée France-Visas détermine les justificatifs à fournir. Évitez d’acheter un billet non remboursable avant la décision de visa."],
+ en:["Transport evidence or itinerary, if requested","Your personalised France-Visas checklist determines which supporting documents are required. Avoid buying a non-refundable ticket before the visa decision."],
+ ar:["إثبات وسيلة النقل أو خط سير الرحلة عند طلبه","تحدد قائمة France-Visas الشخصية الوثائق المطلوبة. تجنب شراء تذكرة غير قابلة للاسترداد قبل صدور قرار التأشيرة."]},
 {id:"hotel",g:"stay",w:function(s){return s.stay==="hotel"},
  fr:["Réservation d'hôtel ou de location pour toutes les nuits","Dates et noms des voyageurs conformes au dossier."],
  en:["Hotel or rental reservation for every night","Dates and traveller names must match your file."],
@@ -301,9 +301,9 @@ var RITEMS=[
  en:["Valid passport, original and copy of the useful pages","With blank pages. Add previous visas and French stamps."],
  ar:["جواز سفر صالح، الأصل ونسخة من الصفحات المفيدة","به صفحات فارغة. أضف التأشيرات السابقة والأختام الفرنسية."]},
 {id:"r_photos",g:"core",w:any,
- fr:["2 photos d'identité récentes","35 x 45 mm, en couleur, fond blanc ou très clair."],
- en:["2 recent passport photos","35 x 45 mm, colour, white or very light background."],
- ar:["صورتا هوية حديثتان","35 × 45 مم، ملوّنة، خلفية بيضاء أو فاتحة جدًا."]},
+ fr:["2 photos d’identité récentes conformes à la norme OACI","35 × 45 mm, en couleur, fond uni clair (bleu clair ou gris clair — blanc interdit)."],
+ en:["2 recent passport photos meeting ICAO standards","35 × 45 mm, colour, plain light background (light blue or light grey — white is not allowed)."],
+ ar:["صورتا هوية حديثتان مطابقتان لمعايير منظمة الطيران المدني الدولي","35 × 45 مم، ملونتان، بخلفية موحّدة فاتحة (أزرق فاتح أو رمادي فاتح؛ الأبيض ممنوع)."]},
 {id:"r_cin",g:"core",w:any,
  fr:["Copie de la carte d'identité nationale (CIN)",""],
  en:["Copy of the national ID card (CIN)",""],
@@ -1232,9 +1232,9 @@ function genCountry(o){
   r.msgDone=({fr:"Dossier complet. Vérifiez une dernière fois sur le site officiel "+de+".",en:"File complete. Check once more on the official website of "+en+".",ar:"الملف مكتمل. تحقق مرة أخيرة على الموقع الرسمي لدولة "+c.n.ar+"."})[S.lang];
   r.medNote=genText(r.medNote,S.lang,c);
   if(S.origin==="tn")r.disc=({
-    fr:"Les exigences peuvent évoluer. Confirmez chaque pièce sur le site officiel de "+c.n.fr+" et auprès du centre de dépôt compétent. Cette checklist est un outil indicatif de préparation, pas une liste officielle exhaustive. Visa Checker ne garantit pas l'obtention du visa et n'est lié à aucune ambassade.",
-    en:"Requirements can change. Confirm each document on the official website of "+c.n.en+" and with the competent application centre. This checklist is a preparation aid, not an exhaustive official list. Visa Checker does not guarantee a visa and is not affiliated with any embassy.",
-    ar:"قد تتغير الشروط. تأكد من كل وثيقة على الموقع الرسمي لدولة "+c.n.ar+" ولدى مركز الإيداع المختص. هذه القائمة أداة تحضيرية إرشادية وليست قائمة رسمية شاملة. لا يضمن Visa Checker الحصول على التأشيرة وليس تابعًا لأي سفارة."
+    fr:"Les exigences peuvent évoluer. Confirmez chaque pièce sur le site officiel de "+c.n.fr+" et auprès du centre de dépôt compétent. Cette checklist est un outil indicatif, pas une liste officielle exhaustive. Pour la France, la liste personnalisée générée par France-Visas fait foi. Visa Checker ne garantit pas l'obtention du visa et n'est lié à aucune ambassade.",
+    en:"Requirements can change. Confirm each document on the official website of "+c.n.en+" and with the competent application centre. This checklist is preparation guidance, not an exhaustive official list. For France, the personalised France-Visas checklist is authoritative. Visa Checker does not guarantee a visa and is not affiliated with any embassy.",
+    ar:"قد تتغير الشروط. تأكد من كل وثيقة على الموقع الرسمي لدولة "+c.n.ar+" ولدى مركز الإيداع المختص. هذه القائمة أداة إرشادية للتحضير وليست قائمة رسمية شاملة. بالنسبة إلى فرنسا، تُعد القائمة الشخصية الصادرة عن France-Visas المرجع المعتمد. لا يضمن Visa Checker الحصول على التأشيرة وليس تابعًا لأي سفارة."
   })[S.lang];
   else r.disc=String(r.disc).replace(/France-Visas, /g,"").replace(/France-Visas و/g,"");
   return r;
