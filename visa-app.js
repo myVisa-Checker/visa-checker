@@ -1646,7 +1646,6 @@ function usHtml(){
    +'<h3 class="us-h">'+esc(X.sh)+'</h3><ol class="adv">'+X.st.map(function(i){return '<li>'+esc(i)+'</li>'}).join("")+'</ol>'
    +'<h3 class="us-h">'+esc(X.bh)+'</h3>'+ul(X.b)
    +'<div class="us-warn"><b>'+esc(X.wh)+'</b><p>'+esc(X.w)+'</p></div>'
-   +'<div class="needs ivn"><div class="sp-chips"><button type="button" class="sp-chip iv-cta" data-iv-open><span class="iv-ico">'+IVICON+'</span><span class="iv-lbl">'+esc(X.btn)+'</span></button></div></div>'
    +'<p class="ag-sub"><a href="https://ustraveldocs.com/tn/index.html" target="_blank" rel="noopener noreferrer">'+esc(X.link)+'</a></p>'
    +'<p class="ag-note">'+esc(X.n)+'</p></section>';
 }
