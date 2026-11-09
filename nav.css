@@ -42,3 +42,4 @@
   .sitenav a{font-size:12.5px}
   .sitenav .sn-logo{font-size:15px}
 }
+.skip-link{position:fixed;top:8px;inset-inline-start:8px;z-index:1000;transform:translateY(-160%);padding:10px 14px;border-radius:8px;background:#102b5c;color:#fff;font-weight:700;text-decoration:none;box-shadow:0 4px 16px #102b5c33}.skip-link:focus{transform:translateY(0);outline:3px solid #38bdf8;outline-offset:3px}
