@@ -1,26 +1,27 @@
 // Worker « visa-chat » : assistant Visa Checker + entraînement à l'entretien (payant, par code).
 // À déployer sur Cloudflare (Workers & Pages > visa-chat > Edit code). Ce fichier n'est PAS servi par le site.
-// Variables Cloudflare : GEMINI_API_KEY (secret), INTERVIEW_CODES (secret, codes séparés par des virgules).
-// Le modèle Gemini est écrit directement dans le code (variable « model » plus bas).
+// Variables Cloudflare : GEMINI_API_KEY (secret), GEMINI_MODEL (facultatif), INTERVIEW_CODES (secret, codes séparés par des virgules).
 // KV nommé USAGE (Bindings) : limite par code, codes générés après paiement, commandes.
-// Paiement Konnect (cartes, e-Dinar, Flouci...) : KONNECT_API_KEY (secret), KONNECT_WALLET_ID, PRICE_MILLIMES (ex. 15000 = 15 DT),
-//   KONNECT_BASE (par défaut : bac à sable), SITE_URL, PAY_MOCK=1 (TEST ONLY : paiement simulé, ne jamais laisser en production).
+// Paiement Konnect (à activer uniquement après finalisation du partenariat) : KONNECT_API_KEY, KONNECT_WALLET_ID, PRICE_MILLIMES, KONNECT_BASE, SITE_URL. Aucun paiement simulé.
 
-const SYSTEM = `Tu es l'assistant de Visa Checker, un site qui aide les voyageurs tunisiens à vérifier leur dossier de visa pour la France.
+const SYSTEM = `Tu es l'assistant de Visa Checker, un service indépendant d'aide à la préparation des dossiers de visa et à la compréhension des formalités de voyage.
 Règles :
-- Réponds dans la langue de l'utilisateur (français, anglais ou arabe), en réponses courtes et claires.
-- Réponds en texte simple, sans markdown (pas de ** ni de #), avec des tirets "-" pour les listes et 150 mots maximum.
-- Tu parles uniquement des visas pour la France et des documents à préparer.
-- Ne promets jamais l'obtention d'un visa : le consulat décide, même si le dossier est complet.
-- Ne donne aucun montant de frais : renvoie vers le site officiel France-Visas.
-- Tu ne remplis pas la demande de visa à la place du client.
-- Si la question sort du sujet, ramène poliment vers les visas.`;
+- Réponds dans la langue de l'utilisateur : français, anglais ou arabe. Sois bref, clair et pratique (150 mots maximum).
+- Réponds en texte simple, sans markdown décoratif.
+- Les formalités dépendent du passeport, du pays de destination, du motif et de la durée du séjour. Si une information manque, pose une seule question courte avant de conseiller.
+- Ne suppose jamais que l'utilisateur est tunisien ou qu'il demande un visa pour la France.
+- Donne la priorité aux sources officielles du pays de destination. Signale clairement quand une règle doit être vérifiée ou quand tu n'as pas de source fiable.
+- Ne présente jamais une liste indicative comme une liste officielle ou exhaustive et n'invente ni document, ni frais, ni délai, ni lien.
+- Ne promets jamais l'obtention d'un visa : seule l'autorité compétente décide.
+- Tu ne remplis pas et ne déposes pas la demande à la place du client.
+- Ne demande jamais de numéro de passeport, de données bancaires ou d'autres informations sensibles.
+- Si la question sort du sujet, ramène poliment vers la préparation du voyage et des formalités de visa.`;
 
-const SYSTEM_INTERVIEW = `Tu es un simulateur d'entretien de visa pour Visa Checker. Le client est un voyageur tunisien qui s'entraîne avant un entretien consulaire (surtout les États-Unis, parfois un autre pays).
+const SYSTEM_INTERVIEW = `Tu es un simulateur d'entretien de visa pour Visa Checker. Le client est un voyageur qui s'entraîne avant un entretien consulaire. Adapte les questions à sa nationalité, sa destination et son motif de voyage.
 Tu joues un agent consulaire exigeant mais correct.
 Déroulement :
 - Le client décrit d'abord sa situation (destination, motif, dates, métier, qui paie).
-- Pose UNE seule question courte à la fois, adaptée à sa destination et à son motif (but du voyage, durée, logement, qui paie, travail et attaches en Tunisie, voyages passés, refus précédents, famille ou connaissances sur place, retour).
+- Pose UNE seule question courte à la fois, adaptée à sa destination et à son motif (but du voyage, durée, logement, qui paie, travail et attaches dans son pays de résidence, voyages passés, refus précédents, famille ou connaissances sur place, retour).
 - Après chaque réponse du client : 1) un retour en 1 ou 2 phrases : ce qui est clair, ce qui est flou ou pourrait contredire son dossier ; 2) une meilleure formulation basée UNIQUEMENT sur les informations qu'il a données ; 3) la question suivante.
 - Après 6 questions, ou s'il le demande, fais un résumé : points forts, points à corriger, pièces à revérifier.
 Règles strictes :
@@ -88,11 +89,7 @@ export default {
         const amount = parseInt(env.PRICE_MILLIMES || "0", 10);
         if (!env.USAGE || !amount) return out({ error: "config" }, 500);
         const orderId = rid(16);
-        if (env.PAY_MOCK === "1") {
-          await env.USAGE.put("order:" + orderId, orderId, { expirationTtl: TTL });
-          return out({ payUrl: SITE + "?pay=1&mock=1", ref: orderId });
-        }
-        if (!env.KONNECT_API_KEY || !env.KONNECT_WALLET_ID) return out({ error: "config" }, 500);
+        if (!env.KONNECT_API_KEY || !env.KONNECT_WALLET_ID) return out({ error: "config" }, 503);
         const r = await fetch(KBASE + "/payments/init-payment", {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-api-key": env.KONNECT_API_KEY },
@@ -117,13 +114,10 @@ export default {
         const orderId = await env.USAGE.get("order:" + ref);
         if (!orderId) return out({ paid: false, error: "unknown" });
         let paid = false;
-        if (env.PAY_MOCK === "1") paid = true;
-        else {
-          const r = await fetch(KBASE + "/payments/" + ref, { headers: { "x-api-key": env.KONNECT_API_KEY } });
-          const d = await r.json().catch(() => ({}));
-          const p = d.payment || d;
-          paid = p.status === "completed" && (p.orderId == null || p.orderId === orderId);
-        }
+        const r = await fetch(KBASE + "/payments/" + ref, { headers: { "x-api-key": env.KONNECT_API_KEY } });
+        const d = await r.json().catch(() => ({}));
+        const p = d.payment || d;
+        paid = p.status === "completed" && (p.orderId == null || p.orderId === orderId);
         if (!paid) return out({ paid: false });
         const code = "IV-" + rid(4) + "-" + rid(4);
         await env.USAGE.put("mint:" + code, "1");
@@ -155,7 +149,7 @@ export default {
       if (!msgs.length) return out({ error: "empty" }, 400);
       if (!interview && limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
 
-      const model = "gemini-3.5-flash-lite"; // écrit en dur : ignore la variable GEMINI_MODEL
+      const model = env.GEMINI_MODEL || "gemini-3.5-flash-lite";
       const ctl = new AbortController();
       const tm = setTimeout(() => ctl.abort(), 20000); // délai maximum : 20 secondes
       let r;
