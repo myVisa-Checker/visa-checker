@@ -401,7 +401,7 @@ var UNLOCK_TIMEOUT_MS=8000;
 var N48={fr:"Modification possible pendant 48 h maximum après la demande, uniquement sur les dates. Le nom et le prénom ne sont jamais modifiables. Passé ce délai, faites une nouvelle demande.",en:"Changes are possible for 48 hours maximum after your request, dates only. First and last name can never be changed. After that, make a new request.",ar:"يمكن التعديل خلال 48 ساعة كحد أقصى بعد الطلب، وللتواريخ فقط. لا يمكن أبدًا تعديل الاسم واللقب. بعد هذه المدة قدّم طلبًا جديدًا."};
 function n48(l){l=l||S.lang;return '<p class="n48" role="note">'+(N48[l]||N48.fr)+'</p>'}
 var NXT={fr:"Nous vous informerons dès que les moyens de paiement sécurisés seront disponibles. Vous pourrez ensuite confirmer votre réservation.",en:"We will let you know when secure payment methods are available. You can then confirm your booking.",ar:"سنُعلمك عند توفر وسائل الدفع الآمنة، لتتمكن بعدها من تأكيد الحجز."};
-function d17Later(a){return '<div class="d17" role="region"><p>'+(NXT[S.lang]||NXT.fr)+'</p></div>'}
+function laterNotice(a){return '<div class="later-notice" role="region"><p>'+(NXT[S.lang]||NXT.fr)+'</p></div>'}
 function paymentMethodsHtml(lang){
   var L=lang||S.lang;
   var T={
@@ -1441,7 +1441,7 @@ function doneHtml(t){
   if(F.mode==="sent"){
     h+='<div class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+esc(R.okT(a.name))+'</b><p>'+esc(R.okTxt(R.ch[F.chan],contactFor()))+'</p></div>'
      +'<ol class="nxt">'+NS[L].map(function(x,i){return '<li class="'+(i===0?'dn':'')+'"><i>'+(i===0?'✓':i+1)+'</i><span>'+x+'</span></li>'}).join("")+'</ol>';
-    h+=d17Later(a);
+    h+=laterNotice(a);
   }else{
     var enc=encodeURIComponent(txt),b='';
     if(a.email)b+='<a class="pay wide" href="mailto:'+a.email+'?subject='+encodeURIComponent("Visa Checker : "+SVCFR[S.need])+'&body='+enc+'">'+R.bMail+'</a>';
