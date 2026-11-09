@@ -98,3 +98,11 @@ if (loaded) {
 
 console.log("\n" + pass + " réussis, " + fail + " échoués");
 process.exit(fail ? 1 : 0);
+
+console.log("Checklist personnalisée et détection des pièces manquantes");
+const checklistJs = read("visa-app.js");
+const checklistHtml = read("index.html");
+ok("détection dynamique des documents obligatoires manquants", /var missing=req\.filter\(function\(i\)\{return !S\.done\[i\.id\]\}\)/.test(checklistJs) && /missing\.map\(function\(i\)\{return '<li>'\+i\[S\.lang\]\[0\]/.test(checklistJs));
+ok("état vide explicite quand toutes les pièces sont cochées", /allDone:"Tous les documents obligatoires sont cochés"/.test(checklistJs));
+ok("aucun score de préparation ni pourcentage dans le rendu checklist", !/aria-valuenow|pct\+" %|Avancement du dossier|File progress/.test(checklistJs.slice(checklistJs.indexOf("function render(){"), checklistJs.indexOf("function go("))) && !/id="barfill"/.test(checklistHtml));
+ok("liste des pièces manquantes annoncée aux technologies d'assistance", /role="status" aria-live="polite"/.test(checklistJs) && /\.missing-docs/.test(checklistHtml));
