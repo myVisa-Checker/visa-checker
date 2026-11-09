@@ -127,4 +127,4 @@ These facts cannot be invented in code or legal pages:
 - Which countries are actively targeted with paid offers or behavioural advertising.
 - The actual payment provider and the terms it has approved for this business.
 
-Until these facts and legal formalities are confirmed, keep customer document uploads, partner forwarding, paid services, appointment monitoring and advertising disabled.
+Until these facts and legal formalities are confirmed, keep customer document uploads, AI processing of user messages, partner forwarding, paid services, appointment monitoring and advertising disabled. The Worker source contains a default-off `DATA_PROCESSING_APPROVED` gate; this safeguard takes effect only after the updated Worker is redeployed to Cloudflare. Do not set that variable to `1` before the legal and transfer checks are completed.
