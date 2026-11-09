@@ -64,6 +64,10 @@ ok("Worker refuse de traiter sans clé Gemini", /if \(!env\.GEMINI_API_KEY\)/.te
 ok("Worker limite la sortie du modèle", /maxOutputTokens: 700/.test(workerCode));
 ok("réponses Worker non mises en cache", /Cache-Control": "no-store/.test(workerCode));
 ok("Paiement manuel désactivé tant qu’aucun partenaire n’est validé", /var D17=\{num:"",name:"",tg:""/.test(read("visa-app.js")));
+ok("Transmission des demandes partenaires désactivée", /var REQUEST_URL=""/.test(read("visa-app.js")));
+ok("Déblocage payant désactivé", /var UNLOCK_URL=""/.test(read("visa-app.js")) && /var PACK_URL=""/.test(read("visa-app.js")));
+ok("Aucun partenaire exemple publié", Object.keys(JSON.parse(read("partners.json")).partners || {}).length === 0);
+ok("Worker verrouillé sans validation de traitement des données", /env\.DATA_PROCESSING_APPROVED !== "1"/.test(workerCode));
 const manifest = JSON.parse(read("manifest.json"));
 ok("identifiant PWA compatible avec un déploiement en sous-chemin", manifest.id.startsWith("./"));
 
