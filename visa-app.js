@@ -853,7 +853,7 @@ function renderTrans(){
   }[S.lang]||null;
   h+='<div class="trd-country-grid">'
     +'<article class="trd-country"><b>'+DIR.tn+'</b><p>'+DIR.tnSub+'</p><a href="'+TR_SRC.url+'" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a></article>'
-    +'<article class="trd-country"><b>'+DIR.dz+'</b><p>'+DIR.dzSub+'</p><a href="https://www.mjustice.dz/ar/بحث-عن-المترجمين/" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a></article>'
+    +'<article class="trd-country"><b>'+DIR.dz+'</b><p>'+DIR.dzSub+'</p><a href="https://www.mjustice.gov.dz/ar/بحث-عن-المترجمين/" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a></article>'
     +'<article class="trd-country"><b>'+DIR.ma+'</b><p>'+DIR.maSub+'</p><a href="https://marjii.justice.gov.ma/" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a><a class="trd-extra" href="https://atajtraduction.ma/" target="_blank" rel="noopener noreferrer">'+DIR.extra+'</a></article>'
     +'</div><p class="trd-src">'+DIR.note+'</p>';
   h+='<div class="trd-search"><span class="trd-lens" aria-hidden="true">🔎</span><input id="trd-q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" list="trd-dl" placeholder="'+escA(X.ph)+'" aria-label="'+escA(X.ph)+'" value="'+escA(TRS.q)+'"><datalist id="trd-dl">'+cities.map(function(c){return '<option value="'+escA(c)+'">'}).join("")+'</datalist></div>';
