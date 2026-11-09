@@ -7,7 +7,7 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  agTitle:"Besoin d'un conseiller visa ?",agSub:"Consultez les coordonnées des conseillers indépendants.",
  gov:"Gouvernorat",govPick:"Choisir un gouvernorat",agCount:function(n){return n+(n>1?" conseillers":" conseiller")},
  agNone:"Pas encore de conseiller disponible.",payBtn:"Voir les options de paiement",payWait:"Lien de paiement bientôt",
- codeLabel:"Déjà payé ? Entrez le code reçu",unlock:"Débloquer",badCode:"Code incorrect.",contactSoon:"Coordonnées à venir",
+ codeLabel:"Vous avez reçu un code d’accès ? Saisissez-le",unlock:"Débloquer",badCode:"Code incorrect.",contactSoon:"Coordonnées à venir",
  agNote:"Les conseillers sont indépendants. Visa Checker ne garantit pas l'obtention du visa.",
  s_status:"Votre activité",s_party:"Vous voyagez",s_stay:"Hébergement",s_pay:"Qui finance le voyage",
  status:{employee:"Salarié",self:"Indépendant / entrepreneur",student:"Étudiant",retired:"Retraité"},
@@ -47,7 +47,7 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  agTitle:"Need a visa advisor?",agSub:"View contact details for independent visa advisors.",
  gov:"Governorate",govPick:"Choose a governorate",agCount:function(n){return n+(n>1?" advisors":" advisor")},
  agNone:"No advisor available yet.",payBtn:"View payment options",payWait:"Payment link coming soon",
- codeLabel:"Already paid? Enter the code you received",unlock:"Unlock",badCode:"Incorrect code.",contactSoon:"Contact details coming",
+ codeLabel:"Have you received an access code? Enter it",unlock:"Unlock",badCode:"Incorrect code.",contactSoon:"Contact details coming",
  agNote:"Advisors are independent. Visa Checker does not guarantee a visa.",
  s_status:"Your activity",s_party:"You travel",s_stay:"Accommodation",s_pay:"Who pays for the trip",
  status:{employee:"Employee",self:"Self-employed / business owner",student:"Student",retired:"Retired"},
@@ -87,7 +87,7 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  agTitle:"هل تحتاج إلى مستشار تأشيرة؟",agSub:"عرض بيانات الاتصال بالمستشارين المستقلين.",
  gov:"الولاية",govPick:"اختر الولاية",agCount:function(n){return n===1?"مستشار واحد":n+" مستشارين"},
  agNone:"لا يوجد مستشار متاح بعد.",payBtn:"خيارات الدفع",payWait:"رابط الدفع قريبًا",
- codeLabel:"دفعت؟ أدخل الرمز الذي وصلك",unlock:"فتح",badCode:"الرمز غير صحيح.",contactSoon:"بيانات الاتصال قريبًا",
+ codeLabel:"هل تلقيت رمز دخول؟ أدخله هنا",unlock:"فتح",badCode:"الرمز غير صحيح.",contactSoon:"بيانات الاتصال قريبًا",
  agNote:"المستشارون مستقلون. Visa Checker لا يضمن الحصول على التأشيرة.",
  s_status:"نشاطك",s_party:"تسافر",s_stay:"الإقامة",s_pay:"من يموّل السفر",
  status:{employee:"موظف",self:"عمل حر / صاحب مشروع",student:"طالب",retired:"متقاعد"},
@@ -400,14 +400,8 @@ var PACK_URL="https://visa-proxy.rabehfly.workers.dev/pack";
 var UNLOCK_TIMEOUT_MS=8000;
 var N48={fr:"Modification possible pendant 48 h maximum après la demande, uniquement sur les dates. Le nom et le prénom ne sont jamais modifiables. Passé ce délai, faites une nouvelle demande.",en:"Changes are possible for 48 hours maximum after your request, dates only. First and last name can never be changed. After that, make a new request.",ar:"يمكن التعديل خلال 48 ساعة كحد أقصى بعد الطلب، وللتواريخ فقط. لا يمكن أبدًا تعديل الاسم واللقب. بعد هذه المدة قدّم طلبًا جديدًا."};
 function n48(l){l=l||S.lang;return '<p class="n48" role="note">'+(N48[l]||N48.fr)+'</p>'}
-function d17Of(a){return {num:D17.num,name:D17.name}}  /* le client paie Visa Checker, jamais l'agence directement */
-/* Prix de la demande billet d'avion / réservation d'hôtel (en dinars). Une seule valeur à changer. */
-var SVC_PRICE=15;
-function d17Amt(txt,x){return String(txt).split("{A}").join(SVC_PRICE+" "+(x.cur||"DT"))}
 var NXT={fr:"Nous vous informerons dès que les moyens de paiement sécurisés seront disponibles. Vous pourrez ensuite confirmer votre réservation.",en:"We will let you know when secure payment methods are available. You can then confirm your booking.",ar:"سنُعلمك عند توفر وسائل الدفع الآمنة، لتتمكن بعدها من تأكيد الحجز."};
 function d17Later(a){return '<div class="d17" role="region"><p>'+(NXT[S.lang]||NXT.fr)+'</p></div>'}
-/* D17 est un moyen de paiement tunisien : pour les voyageurs du Maroc et d'Algérie, on n'affiche pas D17. */
-var PAYX={fr:"Le paiement en ligne n'est pas encore disponible depuis votre pays. Écrivez-nous et nous vous répondrons dès son ouverture :",en:"Online payment is not available from your country yet. Write to us and we will reply as soon as it opens:",ar:"الدفع عبر الإنترنت غير متاح بعد من بلدك. راسلنا وسنرد عليك فور فتحه:"};
 function paymentMethodsHtml(){
   var L=S.lang;
   var T={
@@ -1426,7 +1420,7 @@ function reqText(){
   l.push("Canal pour le paiement et le document : "+CHFR[F.chan]);
   /* Lien de réponse en un clic pour l'agence, selon le canal choisi par le client */
   var reply=F.chan==="whatsapp"&&F.phone?"https://wa.me/"+F.phone.replace(/[^\d]/g,""):F.chan==="telegram"&&F.tg?"https://t.me/"+F.tg:F.chan==="email"&&F.mail?"mailto:"+F.mail:"";
-  l.push("Paiement : le client paie Visa Checker par D17 (référence "+ordRef(RQ.rid)+"). N'envoyez le document qu'après le message « Paiement confirmé ».");
+  l.push("Paiement : utilisez uniquement le moyen de paiement sécurisé qui sera indiqué sur le site lorsqu’il sera activé. N’envoyez le document qu’après confirmation effective du paiement.");
   l.push("Modification : 48 h maximum, dates uniquement, jamais le nom ni le prénom.");
   if(reply)l.push("Répondre au client "+"(pour toute question)"+" : "+reply);
   return l.join("\n");
