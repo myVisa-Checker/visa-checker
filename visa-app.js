@@ -1688,11 +1688,19 @@ function renderSponsors(t){
   h+='<p class="sp-join c">'+SPT.note[S.lang]+'</p>';
   $("sponsors").innerHTML=h;
 }
+function jouryProfileCard(){
+  var L=S.lang||"fr",c={
+    fr:["AI Visa Assistant","Votre espace intelligent pour vérifier votre dossier, comprendre un refus et préparer votre entretien.","Découvrir Joury"],
+    en:["AI Visa Assistant","Your intelligent space to review your file, understand a refusal and prepare for your interview.","Explore Joury"],
+    ar:["مساعد التأشيرة الذكي","مساحتك للتحقق من ملفك وفهم الرفض والتحضير للمقابلة.","اكتشف جوري"]
+  }[L]||[];
+  return '<section class="joury-entry" aria-label="Joury AI Visa Assistant"><div class="joury-entry-head"><span class="joury-entry-symbol">✳</span><span>AI POWERED</span></div><div><strong class="joury-word">JOURY</strong><b class="joury-entry-title">'+c[0]+'</b><p>'+c[1]+'</p></div><a href="./joury.html" class="joury-entry-button">'+c[2]+' <span>↗</span></a></section>';
+}
 function panelHtml(t){
-  var e=eff();
-  if(e==="reunion"){return chips("purpose",t.s_purpose)+chips("party",t.s_party)+'<div class="book"><b>'+t.reunTitle+'</b><p>'+t.reunText+'</p></div>'}
-  if(e==="medical"){return '<div class="book"><b>'+t.gMed+'</b><p>'+t.medNote+'</p></div>'+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay)}
-  return chips("purpose",t.s_purpose)+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay);
+  var e=eff(),j=jouryProfileCard();
+  if(e==="reunion"){return chips("purpose",t.s_purpose)+chips("party",t.s_party)+'<div class="book"><b>'+t.reunTitle+'</b><p>'+t.reunText+'</p></div>'+j}
+  if(e==="medical"){return '<div class="book"><b>'+t.gMed+'</b><p>'+t.medNote+'</p></div>'+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay)+j}
+  return chips("purpose",t.s_purpose)+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay)+j;
 }
 function allAdvisors(){var a=[];for(var k in PARTNERS){if(k==="_srv")continue;PARTNERS[k].forEach(function(p){a.push(p)})}return a}
 function advMsg(){var t=UI[S.lang];return "Visa Checker : "+t.advSubject+"\n"+t.advDest+" : "+nm(curC())+"\n"+t.advCase+" : "+(S.refus||"-")}
