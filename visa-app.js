@@ -1261,7 +1261,8 @@ function homeHtml(t){
   h+=evCardHtml();
   h+='</div>';
   h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+(S.origin==='tn'?needsHtml(t):'')+ivCardHtml()+'</div>';
-  h+='<section class="why"><h2>'+t.whyTitle+'</h2><ul class="ticks">'+t.why.map(function(x){return '<li><svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" style="stroke:var(--surface)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>'+x+'</span></li>'}).join("")+'</ul><p class="ag-note">'+t.whyNote+'</p></section>';
+  var whyIcons=["✦","◎","文","↗","✓"];
+  h+='<section class="why why-showcase" aria-labelledby="why-title"><div class="why-head"><span class="why-eyebrow">'+(L==="ar"?"لماذا نحن؟":L==="en"?"THE VISA CHECKER ADVANTAGE":"L’AVANTAGE VISA CHECKER")+'</span><h2 id="why-title">'+t.whyTitle+'</h2><p class="why-lead">'+(L==="ar"?"مرافقة أوضح لتحضير ملف تأشيرتك بثقة.":L==="en"?"A clearer way to prepare your visa file with confidence.":"Une façon plus claire de préparer votre dossier visa, en toute confiance.")+'</p></div><ul class="why-grid">'+t.why.map(function(x,i){return '<li class="why-card"><span class="why-icon" aria-hidden="true">'+whyIcons[i%whyIcons.length]+'</span><span class="why-copy">'+x+'</span><span class="why-check" aria-hidden="true">✓</span></li>'}).join("")+'</ul><p class="why-note">'+t.whyNote+'</p></section>';
   return h;
 }
 /* Sponsors: add entries like {name:"Agence X",url:"https://...",tag:{fr:"Voyages à Tunis",en:"Travel in Tunis",ar:"سفر في تونس"}}. SPONSOR_CONTACT is shown as text under the slots. */
@@ -2880,7 +2881,7 @@ document.addEventListener("input",function(e){if(e.target.id==="refcase"){S.refu
   document.body.insertAdjacentHTML("afterbegin",'<div class="deco" aria-hidden="true"><i></i><i></i><span class="plane">'+ICONS.plane+'</span></div>');
   if(reduce||!("IntersectionObserver" in window))return;
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.08,rootMargin:"0px 0px -4% 0px"});
-  var SEL=".why,.needs,#sponsors>*,.tile,.ag-card,.recap,.item,.partner,.book,.nxt li";
+  var SEL=".needs,#sponsors>*,.tile,.ag-card,.recap,.item,.partner,.book,.nxt li";
   function scan(){document.querySelectorAll(SEL).forEach(function(el){if(el.dataset.rv)return;el.dataset.rv=1;var sib=Array.prototype.indexOf.call(el.parentNode.children,el);el.style.transitionDelay=Math.min(sib,6)*60+"ms";el.classList.add("rv");io.observe(el)})}
   var tm;new MutationObserver(function(){clearTimeout(tm);tm=setTimeout(scan,30)}).observe(document.body,{childList:true,subtree:true});
   var h=document.querySelector("header"),last=document.body.dataset.step;
