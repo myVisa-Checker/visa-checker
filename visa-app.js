@@ -415,7 +415,6 @@ function paymentMethodsHtml(lang){
     '<div class="pay-method pay-flouci"><span class="pay-mark" aria-hidden="true">f</span><span class="pay-brand"><b>flouci</b><small>'+t.soon+'</small></span></div></div>'+
     '<p class="ag-note">'+t.desc+'</p><div class="billing-block"><b>'+t.bill+'</b><p>'+t.billText+'</p></div></div>';
 }
-function d17Html(k,amt){return paymentMethodsHtml();}
 
 /* ===== Pages « Ma demande » : liens des mails (client, agence, Visa Checker) =====
    Le Worker garde la demande, vérifie le délai de 48 h et les droits de chaque lien : ces pages affichent et envoient. */
@@ -601,7 +600,7 @@ function renderRefus(t){
     if(PACK_STATE==="expired")h+='<p class="ag-err" role="alert">'+PKX[L].exp+'</p>';
     h+='<ul class="inc">'+t.rfInc.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>';
     h+='<div><div class="price">'+t.rfPrice+'</div><p class="rf-sub">'+t.rfPriceSub+'</p></div>';
-    h+=PAY_URL2?'<a class="pay" href="'+PAY_URL2+'" target="_blank" rel="noopener">'+t.rfPay+'</a>':d17Html("pack",20);
+    h+=PAY_URL2?'<a class="pay" href="'+PAY_URL2+'" target="_blank" rel="noopener">'+t.rfPay+'</a>':paymentMethodsHtml();
     h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off" aria-describedby="err2" aria-invalid="false"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
   }else{
     h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
@@ -1635,7 +1634,7 @@ function renderAgency(t){
     });
   }else{
     h+='<div class="locked"><b>'+t.agCount(list.length)+'</b><i></i><i></i></div>';
-    h+=PAY_URL?'<a class="pay" href="'+PAY_URL+'" target="_blank" rel="noopener">'+t.payBtn+'</a>':d17Html("adv",10);
+    h+=PAY_URL?'<a class="pay" href="'+PAY_URL+'" target="_blank" rel="noopener">'+t.payBtn+'</a>':paymentMethodsHtml();
     h+='<div class="q"><label class="q-label" for="code">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code" type="text" autocomplete="off" aria-describedby="err" aria-invalid="false"><button type="button" class="reset" id="unlock">'+t.unlock+'</button></div><span class="ag-err" id="err" role="alert"></span></div>';
   }
   h+='<p class="ag-note">'+t.agNote+'</p>';
