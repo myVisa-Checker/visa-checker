@@ -2753,7 +2753,7 @@ document.addEventListener("submit",function(e){if(e.target.id==="rqform"){e.prev
 
 /* ===== Pages légales ===== */
 /* À COMPLÉTER avant le lancement : laissez vide ce que vous ne voulez pas afficher. */
-var SITE={name:"Visa Checker",owner:"",status:"",address:"",email:"",phone:"",domain:"",host:""};
+var SITE={name:"Visa Checker",owner:"",status:"",address:"",email:"visacheckercontact@gmail.com",phone:"",domain:"checkmyvisa.org",host:"GitHub Pages / Cloudflare"};
 var LGL={
 fr:{m:"Mentions légales",c:"Confidentialité",x:"Fermer",d:"Dernière mise à jour : octobre 2026. Ce texte est un modèle de bonne foi, pas un avis juridique : faites-le relire par un professionnel avant le lancement.",
  mt:[["Éditeur du site",function(){return L(["Site : "+SITE.name+(SITE.domain?" ("+SITE.domain+")":""),SITE.owner&&"Responsable : "+SITE.owner,SITE.status&&"Statut : "+SITE.status,SITE.address&&"Adresse : "+SITE.address,SITE.email&&"E-mail : "+SITE.email,SITE.phone&&"Téléphone : "+SITE.phone,SITE.host&&"Hébergeur : "+SITE.host])}],
