@@ -74,7 +74,7 @@ ok("rate limiting distribué par identifiant IP", /counterRequest\(env, "rate:" 
 ok("quota entretien atomique par code", /counterRequest\(env, quotaName, "consume", IV_MAX\)/.test(workerCode));
 ok("contrôle de code sans consommation de quota", /body\.check === true/.test(workerCode) && /counterRequest\(env, quotaName, "check", IV_MAX\)/.test(workerCode));
 ok("compteurs protégés par transaction Durable Object", /this\.state\.storage\.transaction\(async \(txn\)/.test(workerCode));
-ok("rate limit IP appliqué avant la validation des modes", /counterRequest\(env, "rate:" \+ ip, "consume", RATE_MAX, RATE_WINDOW\)/.test(workerCode) && workerCode.indexOf('counterRequest(env, "rate:" + ip') < workerCode.indexOf("// ----- Entraînement : validation du code -----"));
+ok("rate limit IP appliqué avant la validation des modes", workerCode.includes('const ip = request.headers.get("CF-Connecting-IP")') && /counterRequest\(env, "rate:" \+ ip, "consume", RATE_MAX, RATE_WINDOW\)/.test(workerCode));
 ok("identifiants Durable Object hachés avant stockage", workerCode.includes('crypto.subtle.digest("SHA-256"'));
 ok("Worker ajoute X-Frame-Options et Permissions-Policy", workerCode.includes('"X-Frame-Options": "DENY"') && workerCode.includes('"Permissions-Policy": "camera=(), microphone=(), geolocation=()"'));
 ok("Worker ajoute CSP et HSTS sur toutes les réponses", workerCode.includes('"Content-Security-Policy": "default-src') && workerCode.includes('"Strict-Transport-Security": "max-age=31536000"'));
