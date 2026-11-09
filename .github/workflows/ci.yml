@@ -1,0 +1,29 @@
+name: Visa Checker CI
+
+on:
+  push:
+    branches: [amelioration]
+  pull_request:
+    branches: [amelioration]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check Wrangler configuration and bundle
+        run: npx --yes wrangler@4.45.0 deploy --dry-run --outdir .wrangler-ci-dry-run
+      - name: Run project checks
+        run: node tests/run.mjs
+      - name: Test Durable Object concurrency
+        run: node tests/durable-object.test.mjs
