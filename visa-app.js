@@ -806,32 +806,72 @@ var TRT={
  en:{t:"Sworn translators by applicant country",sub:function(d){return "Official list of the Consulate General of France in Tunis (valid on "+d+"), for translation to and from French. For another Schengen country, ask its embassy or consulate which translations it accepts."},src:"Source",all:"All cities",unk:"City not specified",near:"Near me",nearOff:"Location denied or unavailable.",n:function(n){return n+(n>1?" translators":" translator")},call:"Call",wa:"WhatsApp",mail:"E-mail",map:"View on map",more:function(n){return "Show all ("+n+")"},less:"Show less",city:"Filter by city",appr:"Approximate distances, measured from the city centre.",note:"List provided for information by the consulate: it does not replace checking with the local authorities. To correct or remove an entry, write to us."},
  ar:{t:"المترجمون المحلَّفون حسب بلد مقدم الطلب",sub:function(d){return "القائمة الرسمية للقنصلية العامة لفرنسا في تونس (سارية بتاريخ "+d+")، للترجمة من الفرنسية وإليها. بالنسبة لدولة شنغن أخرى، اسأل سفارتها أو قنصليتها عن الترجمات المقبولة."},src:"المصدر",all:"كل المدن",unk:"المدينة غير محددة",near:"الأقرب إليّ",nearOff:"تم رفض الموقع أو هو غير متاح.",n:function(n){return n+" مترجم"},call:"اتصال",wa:"واتساب",mail:"بريد إلكتروني",map:"عرض على الخريطة",more:function(n){return "عرض الكل ("+n+")"},less:"عرض أقل",city:"التصفية حسب المدينة",appr:"المسافات تقريبية، محسوبة من وسط المدينة.",note:"القائمة مقدَّمة للإعلام من القنصلية ولا تغني عن التحقق لدى السلطات المحلية. لتصحيح بطاقة أو حذفها، راسلنا."}
 };
-var TRS={q:"",city:"",pos:null,posErr:false,all:false,every:false},trSig="",TRD_COUNTRY="tn";
+var TRS={q:"",city:"",pos:null,posErr:false,all:false,every:false,org:""},trSig="",TRD_COUNTRY="tn";
 var TR_ALIAS={"tunis":"Tunis","تونس":"Tunis","lac":"Tunis","menzah":"Tunis","manar":"Tunis","bab bnet":"Tunis","sfax":"Sfax","صفاقس":"Sfax","sousse":"Sousse","سوسة":"Sousse","nabeul":"Nabeul","نابل":"Nabeul","hammamet":"Nabeul","الحمامات":"Nabeul","beja":"Béja","باجة":"Béja","djerba":"Djerba","jerba":"Djerba","جربة":"Djerba","houmt souk":"Djerba","medenine":"Djerba","la marsa":"La Marsa","marsa":"La Marsa","المرسى":"La Marsa","la soukra":"La Soukra","soukra":"La Soukra","ariana":"La Soukra","السكرة":"La Soukra","أريانة":"La Soukra","hammam lif":"Hammam Lif","ben arous":"Hammam Lif","حمام الأنف":"Hammam Lif","grombalia":"Grombalia","قرمبالية":"Grombalia"};
 var TRX={
  fr:{ph:"Tapez votre ville…",fix:"Une fiche à corriger ou à retirer ?",hint:"Choisissez ou tapez votre ville pour voir les traducteurs assermentés",noRes:function(q){return "Aucun traducteur trouvé pour « "+q+" ». Essayez une ville proche ou le bouton « Près de moi »."}},
  en:{ph:"Type your city…",fix:"An entry to correct or remove?",hint:"Pick or type your city to see the sworn translators",noRes:function(q){return "No translator found for “"+q+"”. Try a nearby city or the “Near me” button."}},
  ar:{ph:"اكتب مدينتك…",fix:"بطاقة تحتاج إلى تصحيح أو حذف؟",hint:"اختر مدينتك أو اكتبها لتظهر لك قائمة المترجمين المحلَّفين",noRes:function(q){return "لم نجد أي مترجم لـ «"+q+"». جرّب مدينة قريبة أو زر «الأقرب إليّ»."}}
 };
+/* Répertoire par pays du passeport (S.origin) : tn = fiches individuelles ; ma et dz = listes officielles des consulats de France (PDF), les coordonnées de chaque traducteur étant dans le PDF. Pour passer à des fiches individuelles : remplir data et city (même format que TR_DATA / TR_CITY). */
+var TRL={
+ kind:{
+  cas:{fr:"Traducteurs dont la signature est déposée et reconnue pour une légalisation au consulat général",en:"Translators whose signature is on file and recognised for legalisation at the Consulate General",ar:"مترجمون توقيعهم مودع ومعترف به للتصديق لدى القنصلية العامة"},
+  atj:{fr:"Traducteurs assermentés, membres de l'association ATAJ, agréés près les juridictions",en:"Sworn translators, members of the ATAJ association, approved by the courts",ar:"المترجمون المحلَّفون، أعضاء جمعية ATAJ، المقبولون لدى المحاكم"},
+  gen:{fr:"Liste de traducteurs assermentés",en:"List of sworn translators",ar:"قائمة المترجمين المحلَّفين"},
+  not:{fr:"Liste de notoriété des traducteurs-interprètes assermentés",en:"Reference list of sworn translators-interpreters",ar:"قائمة إرشادية للمترجمين الترجمانيين المحلَّفين"}
+ },
+ who:{fr:function(c){return "Liste publiée par le consulat de France à "+c},en:function(c){return "List published by the French consulate in "+c},ar:function(c){return "قائمة منشورة من قنصلية فرنسا في "+c}},
+ open:{fr:"Ouvrir la liste officielle (PDF)",en:"Open the official list (PDF)",ar:"فتح القائمة الرسمية (PDF)"},
+ inList:{fr:"Les coordonnées de chaque traducteur figurent dans la liste officielle.",en:"Each translator's contact details are in the official list.",ar:"بيانات الاتصال بكل مترجم موجودة في القائمة الرسمية."},
+ disc:{fr:"Liste indicative, sans valeur de recommandation : le choix du traducteur est libre.",en:"Indicative list, not a recommendation: you are free to choose your translator.",ar:"قائمة إرشادية وليست توصية: لك حرية اختيار المترجم."},
+ src:{fr:"Source",en:"Source",ar:"المصدر"},
+ upd:{fr:"Liste du ",en:"List dated ",ar:"تاريخ القائمة "}
+};
+var TR_SETS={
+ tn:{tel:"216",cc:"Tunisie",data:TR_DATA,city:TR_CITY,lists:[],t:{fr:"Traducteurs assermentés en Tunisie",en:"Sworn translators in Tunisia",ar:"المترجمون المحلَّفون في تونس"},src:{u:TR_SRC.url,d:TR_SRC.date,l:{fr:"Consulat général de France à Tunis",en:"Consulate General of France in Tunis",ar:"القنصلية العامة لفرنسا في تونس"}}},
+ ma:{tel:"212",cc:"Maroc",data:[],city:{},t:{fr:"Traducteurs assermentés au Maroc",en:"Sworn translators in Morocco",ar:"المترجمون المحلَّفون في المغرب"},src:{u:"https://ma.diplomatie.gouv.fr/fr/liste-de-notoriete",d:"",l:{fr:"Consulats de France au Maroc",en:"French consulates in Morocco",ar:"قنصليات فرنسا في المغرب"}},lists:[
+  {c:"Casablanca",al:["casa","الدار البيضاء"],k:"cas",d:"2026",u:"https://ma.diplomatie.gouv.fr/files/ma/files/Consulat%20Casablanca/liste-des-traducteurs-assermentes-2026.pdf"},
+  {c:"Rabat",al:["الرباط"],k:"atj",d:"02/2025",u:"https://ma.diplomatie.gouv.fr/files/ma/files/Consulat%20Rabat/traducteurs-interpretes_fevrier_2025_rabat.pdf"},
+  {c:"Marrakech",al:["marrakesh","مراكش"],k:"gen",d:"",u:"https://ma.diplomatie.gouv.fr/files/ma/files/Consulat%20Marrakech/liste_traducteurs_marrakech.pdf"},
+  {c:"Agadir",al:["أكادير"],k:"gen",d:"",u:"https://ma.diplomatie.gouv.fr/files/ma/files/Consulat%20Agadir/liste_traducteurs_assermentes_agadir.pdf"}]},
+ dz:{tel:"213",cc:"Algérie",data:[],city:{},t:{fr:"Traducteurs assermentés en Algérie",en:"Sworn translators in Algeria",ar:"المترجمون المحلَّفون في الجزائر"},src:{u:"https://dz.diplomatie.gouv.fr/fr/liste-de-notoriete",d:"",l:{fr:"Consulats de France en Algérie",en:"French consulates in Algeria",ar:"قنصليات فرنسا في الجزائر"}},lists:[
+  {c:"Alger",al:["algiers","الجزائر"],k:"not",d:"15/10/2026",u:"https://dz.diplomatie.gouv.fr/files/dz/files/Consulat%20Alger/Etat%20Civil/maj-liste-traducteurs-interpretes-le-15-oct-2026.pdf"},
+  {c:"Annaba et Constantine",al:["annaba","عنابة","constantine","قسنطينة"],k:"not",d:"12/04/2026",u:"https://dz.diplomatie.gouv.fr/files/dz/files/Consulat%20Annaba/liste-des-traducteurs-de-la-circonscription-consulaire-annaba-12-04-2026.pdf"}]}
+};
+function trSet(){return TR_SETS[S.origin]||TR_SETS.tn}
+function trListCard(l,L,D){
+  var kn=(TRL.kind[l.k]||TRL.kind.gen)[L]||TRL.kind.gen.fr;
+  return '<article class="trd-card"><div class="trd-top"><b>'+esc(l.c)+'</b>'+(l.d?'<span class="trd-city"><span class="trd-km">'+TRL.upd[L]+esc(l.d)+'</span></span>':'')+'</div><p class="trd-adr">'+esc(TRL.who[L](l.c))+'</p><p class="trd-adr">'+esc(kn)+'</p><div class="trd-act"><a href="'+escA(l.u)+'" rel="noopener" target="_blank">'+TRL.open[L]+'</a></div></article>';
+}
+function trListResults(D,R,X,q){
+  var L=S.lang,rows=D.lists.filter(function(l){
+    if(TRS.city&&l.c!==TRS.city)return false;
+    if(q.length>=2&&!(trNorm(l.c).indexOf(q)>-1||l.al.some(function(a){return trNorm(a).indexOf(q)>-1})))return false;
+    return true});
+  if(!rows.length)return '<p class="trd-none">'+X.noRes(esc(TRS.q.trim()))+'</p>';
+  return '<div class="trd-list">'+rows.map(function(l){return trListCard(l,L,D)}).join("")+'</div><p class="trd-src">'+TRL.inList[L]+'</p>';
+}
 function trNorm(v){return String(v||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9؀-ۿ ]+/g," ").replace(/\s+/g," ").trim()}
 function trAlias(q){for(var k in TR_ALIAS){var n=trNorm(k);if(n===q||(q.length>=3&&n.indexOf(q)===0))return TR_ALIAS[k]}return ""}
-function trTel(p){return "+216"+String(p).replace(/\D/g,"")}
+function trTel(p){return "+"+trSet().tel+String(p).replace(/\D/g,"")}
 function trKm(a,b,c,d){var r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,h=Math.sin(x/2)*Math.sin(x/2)+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)*Math.sin(y/2);return 12742*Math.asin(Math.sqrt(h))}
 function trCard(x,R){
   var r=x.r,tel=r[3].map(function(p){return '<a href="tel:'+trTel(p)+'" dir="ltr">'+R.call+' '+esc(p)+'</a>'}).join("");
   var wa=r[5]>=0?'<a href="https://wa.me/'+trTel(r[3][r[5]]).slice(1)+'" rel="noopener" target="_blank">'+R.wa+'</a>':'';
   var ml=r[4].length?'<a href="mailto:'+escA(r[4][0])+'">'+R.mail+'</a>':'';
-  var mp=r[2]?'<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r[2]+", Tunisie")+'" rel="noopener" target="_blank">'+R.map+'</a>':'';
+  var mp=r[2]?'<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r[2]+", "+trSet().cc)+'" rel="noopener" target="_blank">'+R.map+'</a>':'';
   return '<article class="trd-card"><div class="trd-top"><b>'+esc(r[0])+'</b>'+(x.km!=null?'<span class="trd-city"><span class="trd-km">≈ '+Math.round(x.km)+' km</span></span>':'')+'</div>'+(r[2]?'<p class="trd-adr">'+esc(r[2])+'</p>':'')+'<div class="trd-act">'+tel+wa+ml+mp+'</div></article>';
 }
 /* Liste classée par ville : un groupe repliable par ville (Tunis en premier, « ville non précisée » en dernier). */
 function trResults(){
-  var R=TRT[S.lang]||TRT.fr,X=TRX[S.lang]||TRX.fr,q=trNorm(TRS.q),rows=[];
+  var D=trSet(),R=TRT[S.lang]||TRT.fr,X=TRX[S.lang]||TRX.fr,q=trNorm(TRS.q),rows=[];
   var ac=q.length>=2?trAlias(q):"";
-  if(!(TRS.city||q.length>=2||TRS.pos||TRS.every))return '<p class="trd-hint"><i aria-hidden="true">☝</i>'+X.hint+'</p>'+(TRS.posErr?'<span class="trd-n">'+R.nearOff+'</span>':"");
-  TR_DATA.forEach(function(r){
+  if(!(TRS.city||q.length>=2||TRS.pos||TRS.every))return '<p class="trd-hint"><i aria-hidden="true">☝</i>'+X.hint+'</p>'+(TRS.posErr&&D.data.length?'<span class="trd-n">'+R.nearOff+'</span>':"");
+  if(!D.data.length)return trListResults(D,R,X,q);
+  D.data.forEach(function(r){
     if(TRS.city&&r[1]!==TRS.city)return;
-    var c=TR_CITY[r[1]],km=(TRS.pos&&c)?trKm(TRS.pos[0],TRS.pos[1],c[0],c[1]):null,sc=0;
+    var c=D.city[r[1]],km=(TRS.pos&&c)?trKm(TRS.pos[0],TRS.pos[1],c[0],c[1]):null,sc=0;
     if(q.length>=2){
       if(trNorm(r[1]).indexOf(q)>-1||(ac&&r[1]===ac))sc=1;else if(trNorm(r[2]).indexOf(q)>-1)sc=2;else if(trNorm(r[0]).indexOf(q)>-1)sc=3;else return;
     }
@@ -851,19 +891,21 @@ function trResults(){
 function renderTrans(){
   var el=$("trans");if(!el)return;
   var on=S.step===0;el.hidden=!on;if(!on)return;
-  var sig=S.lang+"|"+(TRS.pos?1:0)+"|"+TRS.city+"|"+(TRS.every?1:0)+"|tunisia-only-v3";
+  if(TRS.org!==S.origin){TRS.org=S.origin;TRS.city="";TRS.q="";TRS.every=false;TRS.pos=null;TRS.posErr=false;trSig=""}
+  var D=trSet(),sig=S.origin+"|"+S.lang+"|"+(TRS.pos?1:0)+"|"+TRS.city+"|"+(TRS.every?1:0)+"|by-country-v1";
   if(sig===trSig&&el.firstChild){var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}
   trSig=sig;
   var R=TRT[S.lang]||TRT.fr,X=TRX[S.lang]||TRX.fr;
-  var cities=Object.keys(TR_CITY).filter(function(c){return TR_DATA.some(function(r){return r[1]===c})});
-  var title={fr:"Traducteurs assermentés en Tunisie",en:"Sworn translators in Tunisia",ar:"المترجمون المحلَّفون في تونس"}[S.lang]||"Traducteurs assermentés en Tunisie";
+  var hasD=D.data.length>0,cities=hasD?Object.keys(D.city).filter(function(c){return D.data.some(function(r){return r[1]===c})}):D.lists.map(function(l){return l.c});
+  var title=D.t[S.lang]||D.t.fr;
   var h='<h2>'+title+'</h2>';
   h+='<div class="trd-search"><span class="trd-lens" aria-hidden="true">🔎</span><input id="trd-q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" list="trd-dl" placeholder="'+escA(X.ph)+'" aria-label="'+escA(X.ph)+'" value="'+escA(TRS.q)+'"><datalist id="trd-dl">'+cities.map(function(c){return '<option value="'+escA(c)+'">'}).join("")+'</datalist></div>';
-  var cnt={};TR_DATA.forEach(function(r){if(r[1])cnt[r[1]]=(cnt[r[1]]||0)+1});
-  var cs=Object.keys(cnt).sort(function(a,b){return cnt[b]-cnt[a]||(a<b?-1:1)});
-  h+='<div class="trd-chips" role="group" aria-label="'+escA(R.city)+'"><button type="button" class="chip" data-trc="*" aria-pressed="'+(TRS.every?"true":"false")+'">'+R.all+' ('+TR_DATA.length+')</button>'+cs.map(function(c){return '<button type="button" class="chip" data-trc="'+escA(c)+'" aria-pressed="'+(TRS.city===c?"true":"false")+'">'+esc(c)+' ('+cnt[c]+')</button>'}).join("")+'</div>';
-  h+='<button type="button" class="reset trd-near" id="trd-near" aria-pressed="'+(TRS.pos?"true":"false")+'">📍 '+R.near+'</button>';
+  var cnt={};if(hasD)D.data.forEach(function(r){if(r[1])cnt[r[1]]=(cnt[r[1]]||0)+1});
+  var cs=hasD?Object.keys(cnt).sort(function(a,b){return cnt[b]-cnt[a]||(a<b?-1:1)}):cities;
+  h+='<div class="trd-chips" role="group" aria-label="'+escA(R.city)+'"><button type="button" class="chip" data-trc="*" aria-pressed="'+(TRS.every?"true":"false")+'">'+R.all+' ('+(hasD?D.data.length:D.lists.length)+')</button>'+cs.map(function(c){return '<button type="button" class="chip" data-trc="'+escA(c)+'" aria-pressed="'+(TRS.city===c?"true":"false")+'">'+esc(c)+(hasD?' ('+cnt[c]+')':'')+'</button>'}).join("")+'</div>';
+  if(hasD)h+='<button type="button" class="reset trd-near" id="trd-near" aria-pressed="'+(TRS.pos?"true":"false")+'">📍 '+R.near+'</button>';
   h+='<div class="trd-res" id="trd-res" aria-live="polite">'+trResults()+'</div>';
+  h+='<p class="trd-src">'+(hasD?'':TRL.disc[S.lang]+' ')+TRL.src[S.lang]+' : <a href="'+escA(D.src.u)+'" rel="noopener" target="_blank">'+esc(D.src.l[S.lang]||D.src.l.fr)+'</a>'+(D.src.d?' ('+esc(D.src.d)+')':'')+'</p>';
   if(SITE.email)h+='<p class="trd-src">'+X.fix+' <a href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Traducteurs")+'">'+SITE.email+'</a></p>';
   el.innerHTML=h;
 }
