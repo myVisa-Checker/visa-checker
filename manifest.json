@@ -50,6 +50,17 @@
           "sizes": "192x192"
         }
       ]
+    },
+    {
+      "name": "Planifier mon voyage",
+      "short_name": "Planner",
+      "url": "./planner.html",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
