@@ -2212,9 +2212,10 @@ function planData(){
 function planRes(){var el=$("plan-res");if(el)el.innerHTML=planResHtml(TLS[S.lang])}
 function planResHtml(L){
   var o=planData();if(!o)return '<p class="ag-note">'+esc({fr:"Renseignez votre date de départ prévue.",en:"Enter your planned departure date.",ar:"أدخل تاريخ السفر المتوقع."}[S.lang])+'</p>';
-  var c=COUNTRIES.filter(function(x){return x.id===o.id})[0],p=o.id==="fr"?{prov:"TLScontact"}:(PROF[o.id]||{prov:"?"}),h="";
+  var c=COUNTRIES.filter(function(x){return x.id===o.id})[0],p=o.id==="fr"?{prov:"TLScontact",site:"https://france-visas.gouv.fr/tunisie"}:(PROF[o.id]||{prov:"?"}),h="";
   h+='<p>'+esc(tFill(L.win,{d:fmtD(o.open)}))+'</p><p>'+esc(tFill(L.late,{d:fmtD(o.late)}))+'</p>';
   if(o.days!=null)h+='<p><b>'+esc(tFill(L.rdv,{n:o.days,u:fmtD(o.upd),d:fmtD(o.book)}))+'</b></p>';else h+='<p class="ag-note">'+esc(tFill(L.rdv0,{p:p.prov}))+'</p>';
+  if(p.site)h+='<p><a href="'+escA(p.site)+'" target="_blank" rel="noopener noreferrer">'+esc(L.site)+' ↗</a></p>';
   if(o.past)h+='<p class="i-warn">\u26A0 '+esc(L.past)+'</p>';
   h+='<button type="button" class="pay" data-ics="1">'+esc(L.ics)+'</button><p class="ag-note">'+esc(L.icsNote)+'</p>';
   return h;
