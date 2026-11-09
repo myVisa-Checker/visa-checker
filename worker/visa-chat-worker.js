@@ -112,6 +112,8 @@ export default {
         return out({ error: "invalid_body" }, 400);
       }
       const interview = body.mode === "interview";
+      // Fonction payante en préparation : activation distincte, explicite et désactivée par défaut.
+      if (interview && env.INTERVIEW_ENABLED !== "1") return out({ error: "interview_unavailable" }, 503);
       if (interview && !env.USAGE) return out({ error: "usage_unavailable" }, 503);
 
       // Paiements désactivés jusqu'à validation d'un partenaire et configuration de production.
