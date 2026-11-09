@@ -74,7 +74,7 @@ ok("rate limiting distribué par identifiant IP", /counterRequest\(env, "rate:" 
 ok("quota entretien atomique par code", /counterRequest\(env, quotaName, "consume", IV_MAX\)/.test(workerCode));
 ok("contrôle de code sans consommation de quota", /body\.check === true/.test(workerCode) && /counterRequest\(env, quotaName, "check", IV_MAX\)/.test(workerCode));
 ok("compteurs protégés par transaction Durable Object", /this\.state\.storage\.transaction\(async \(txn\)/.test(workerCode));
-ok("rate limit IP appliqué aussi au mode entretien", workerCode.includes("Rate limit distribué par IP pour TOUS les modes"));
+ok("rate limit IP appliqué avant la validation des modes", /counterRequest\(env, "rate:" \+ ip, "consume", RATE_MAX, RATE_WINDOW\)/.test(workerCode) && workerCode.indexOf('counterRequest(env, "rate:" + ip') < workerCode.indexOf("// ----- Entraînement : validation du code -----"));
 ok("identifiants Durable Object hachés avant stockage", workerCode.includes('crypto.subtle.digest("SHA-256"'));
 ok("Worker ajoute X-Frame-Options et Permissions-Policy", workerCode.includes('"X-Frame-Options": "DENY"') && workerCode.includes('"Permissions-Policy": "camera=(), microphone=(), geolocation=()"'));
 ok("Worker ajoute CSP et HSTS sur toutes les réponses", workerCode.includes('"Content-Security-Policy": "default-src') && workerCode.includes('"Strict-Transport-Security": "max-age=31536000"'));
@@ -156,7 +156,7 @@ ok("ressources sans exigence générique de 3 mois ni RIB", !productApp.includes
 ok("transport conditionnel selon la liste personnalisée", /id:"flight",g:"stay",w:any,opt:1/.test(productApp) && productApp.includes("Transport evidence or itinerary, if requested"));
 const coverage = read("guide/couverture-provisoire.md");
 ok("matrice provisoire corrigée à 22 parcours Schengen", coverage.includes("22 combinaisons") && coverage.includes("7 destinations Schengen") && coverage.includes("5 destinations Schengen"));
-ok("matrice distingue parcours présents et validation officielle", coverage.includes("pas une validation officielle") && coverage.includes("Cela ne vaut pas certification de l'exhaustivité"));
+ok("matrice distingue parcours présents et validation officielle", coverage.includes("pas une validation officielle ou exhaustive") && coverage.includes("ne signifie pas que toutes les pièces") && coverage.includes("validation officielle"));
 ok("catégories partenaires intégrées au parcours", ["SPT.sTr", "SPT.sDoc", "SPT.sEsim"].every((x) => productApp.includes(x)));
 ok("accès au programme partenaires depuis l'accueil", productApp.includes('href="partenaires.html"'));
 const ivStart = productApp.indexOf("var IVT=");
@@ -184,7 +184,7 @@ ok("planner possède les métadonnées de partage social", plannerPage.includes(
 ok("planner enregistre le service worker même en accès direct", plannerScript.includes('navigator.serviceWorker.register("./sw.js"'));
 ok("planner mémorise la langue choisie", plannerScript.includes('vc-planner-lang-v1'));
 ok("service worker précache les fichiers du planner", /"planner.html"[\s\S]*"planner.js"/.test(read("sw.js")));
-ok("service worker ne renvoie pas la page d’accueil pour un fichier local absent", /req.mode === "navigate" \? await caches.match\("\."\) : null/.test(read("sw.js")));
+ok("service worker ne renvoie la page d’accueil que pour une navigation", /return req\.mode === "navigate" \? await caches\.match\("\.\/"\) : null/.test(read("sw.js")));
 
 console.log("Suivi des rendez-vous — sécurité et fiabilité");
 const monitoring = read("docs/appointment-monitoring-architecture.md");
