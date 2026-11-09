@@ -18,6 +18,7 @@ function build(){
 var raw=$("departure").value,appointment=$("appointment").value,n=Number($("lead").value),today=new Date();today.setHours(0,0,0,0);
 if(!raw||dateLocal(raw)<=today){$("departure").setCustomValidity(copy[lang].invalid);$("departure").reportValidity();return}
 if(appointment&&(!validDate(appointment)||dateLocal(appointment)<=today||dateLocal(appointment)>=dateLocal(raw))){$("appointment").setCustomValidity(copy[lang].invalid);$("appointment").reportValidity();return}
+$("appointment").max=raw;
 if(!Number.isInteger(n)||n<14||n>240){$("lead").setCustomValidity(copy[lang].invalid);$("lead").reportValidity();return}
 $("departure").setCustomValidity("");$("lead").setCustomValidity("");
 var departure=dateLocal(raw);
