@@ -43,7 +43,7 @@ const FALLBACK = "Désolé, je n'ai pas pu répondre. Réessaie dans un instant.
 // Limite de l'assistant gratuit : RL_MAX messages par RL_WINDOW et par visiteur (adresse IP).
 // Le compteur est gardé en mémoire du Worker (aucune écriture dans le KV : le quota gratuit du KV reste pour l'entraînement payant).
 // C'est une limite « souple » : Cloudflare peut faire tourner plusieurs instances du Worker, chacune compte de son côté.
-const RL_MAX = 20, RL_WINDOW = 10 * 60 * 1000;
+const RL_MAX = 20, RL_WINDOW = 10 * 60 * 1000; // Limite locale souple uniquement : remplacer par un rate limiter distribué avant une montée en charge.
 const RATE_MSG = "Trop de messages d'affilée. Réessaie dans quelques minutes. / Too many messages, please try again in a few minutes. / رسائل كثيرة، أعد المحاولة بعد دقائق.";
 const hits = new Map();
 function limited(ip) {
@@ -83,6 +83,16 @@ export default {
 
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
     if (request.method !== "POST") return out({ error: "POST only" }, 405);
+
+    // Verrou de conformité : ne traiter aucun contenu utilisateur tant que
+    // les formalités de protection des données et les transferts internationaux
+    // n'ont pas été validés. Activation explicite uniquement après validation.
+    if (env.DATA_PROCESSING_APPROVED !== "1") {
+      return out({
+        error: "privacy_review_pending",
+        reply: "L'assistant est temporairement indisponible pendant la validation de nos formalités de protection des données. / The assistant is temporarily unavailable while our data-protection requirements are being reviewed. / المساعد غير متاح مؤقتًا أثناء مراجعة متطلبات حماية البيانات."
+      }, 503);
+    }
 
     try {
       const contentType = request.headers.get("Content-Type") || "";
