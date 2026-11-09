@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg,#fff);color:var(--ink,#000)}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+<style>.skip-link{position:fixed;top:8px;inset-inline-start:8px;z-index:1000;transform:translateY(-160%);padding:10px 14px;border-radius:8px;background:var(--ink);color:var(--bg);font-weight:600;text-decoration:none;box-shadow:var(--shadow-pop)}.skip-link:focus{transform:translateY(0);outline:3px solid var(--accent);outline-offset:3px}:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg,#fff);color:var(--ink,#000)}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
 .aibox{display:flex;flex-direction:column;gap:6px;margin-block:16px;padding:16px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface)}.aibox .pay{align-self:flex-start;margin-top:8px}.tool .sc-ok{color:var(--ok);font-weight:600}
 </style>
 <style>
@@ -766,6 +766,7 @@ html[lang="ar"] .ptop,html[lang="ar"] .ptop-b{font-family:var(--f-ar)}
 <link rel="stylesheet" href="./brand.css">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Aller au contenu</a>
 <nav class="sitenav in-app" aria-label="Navigation principale">
   <a class="sn-logo" href="./"><b>Visa</b> Checker</a>
   <ul>
@@ -777,6 +778,7 @@ html[lang="ar"] .ptop,html[lang="ar"] .ptop-b{font-family:var(--f-ar)}
   </ul>
 </nav>
 <div class="wrap">
+  <main id="main-content">
   <header>
     <div class="top">
       <span class="brand" id="brand"></span>
@@ -833,6 +835,7 @@ html[lang="ar"] .ptop,html[lang="ar"] .ptop-b{font-family:var(--f-ar)}
   <section class="bpn" id="bpn" aria-label="Bons plans" hidden></section>
   <section class="trd" id="trans" aria-label="Traducteurs assermentés" hidden></section>
   <section class="avs" id="reviews" aria-labelledby="rv-t" hidden></section>
+  </main>
   <footer>
     <div class="links"><a href="./planner.html">Visa Journey Planner</a><a href="./guide/">Guides</a><a href="./a-propos.html">À propos</a><a href="./contact.html">Contact</a><a href="./confidentialite.html">Confidentialité</a><a href="./conditions.html">Conditions d'utilisation</a><a href="./partenaires.html">Partenaires</a></div>
     <div class="links" id="links"></div>
