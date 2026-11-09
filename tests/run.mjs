@@ -60,6 +60,7 @@ const workerCode = read("worker/visa-chat-worker.js").split("\n").filter((l) => 
 ok("PAY_MOCK n'est pas activé en dur dans le Worker (commentaires ignorés)", !/PAY_MOCK\s*=\s*["']?1/.test(workerCode));
 ok("Worker refuse les origines web non autorisées", /if \(origin && !ORIGINS\.includes\(origin\)\)/.test(workerCode));
 ok("Worker exige KV pour contrôler les quotas d’entretien", /if \(interview && !env\.USAGE\)/.test(workerCode));
+ok("entraînement payant désactivé par défaut sans validation explicite", /interview && env\.INTERVIEW_ENABLED !== "1"/.test(workerCode));
 ok("Worker refuse de traiter sans clé Gemini", /if \(!env\.GEMINI_API_KEY\)/.test(workerCode));
 ok("Worker limite la sortie du modèle", /maxOutputTokens: 700/.test(workerCode));
 ok("réponses Worker non mises en cache", /Cache-Control": "no-store/.test(workerCode));
