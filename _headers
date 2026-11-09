@@ -5,8 +5,40 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-site
+  X-Permitted-Cross-Domain-Policies: none
+  Origin-Agent-Cluster: ?1
   Strict-Transport-Security: max-age=31536000
 
 # Cloudflare Pages applies this file at the edge. GitHub Pages ignores _headers.
 # CSP remains declared per HTML document in meta tags until response policies are
 # validated page-by-page against inline script hashes and API connect-src needs.
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/guide/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.css
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/*.js
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/*.json
+  Cache-Control: public, max-age=300, stale-while-revalidate=600
+
+/*.png
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/*.jpg
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/*.svg
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/sw.js
+  Cache-Control: no-cache, must-revalidate
+
+/version.json
+  Cache-Control: no-store
