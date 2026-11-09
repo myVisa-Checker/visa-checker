@@ -806,12 +806,12 @@ var TRT={
  en:{t:"Sworn translators by applicant country",sub:function(d){return "Official list of the Consulate General of France in Tunis (valid on "+d+"), for translation to and from French. For another Schengen country, ask its embassy or consulate which translations it accepts."},src:"Source",all:"All cities",unk:"City not specified",near:"Near me",nearOff:"Location denied or unavailable.",n:function(n){return n+(n>1?" translators":" translator")},call:"Call",wa:"WhatsApp",mail:"E-mail",map:"View on map",more:function(n){return "Show all ("+n+")"},less:"Show less",city:"Filter by city",appr:"Approximate distances, measured from the city centre.",note:"List provided for information by the consulate: it does not replace checking with the local authorities. To correct or remove an entry, write to us."},
  ar:{t:"المترجمون المحلَّفون حسب بلد مقدم الطلب",sub:function(d){return "القائمة الرسمية للقنصلية العامة لفرنسا في تونس (سارية بتاريخ "+d+")، للترجمة من الفرنسية وإليها. بالنسبة لدولة شنغن أخرى، اسأل سفارتها أو قنصليتها عن الترجمات المقبولة."},src:"المصدر",all:"كل المدن",unk:"المدينة غير محددة",near:"الأقرب إليّ",nearOff:"تم رفض الموقع أو هو غير متاح.",n:function(n){return n+" مترجم"},call:"اتصال",wa:"واتساب",mail:"بريد إلكتروني",map:"عرض على الخريطة",more:function(n){return "عرض الكل ("+n+")"},less:"عرض أقل",city:"التصفية حسب المدينة",appr:"المسافات تقريبية، محسوبة من وسط المدينة.",note:"القائمة مقدَّمة للإعلام من القنصلية ولا تغني عن التحقق لدى السلطات المحلية. لتصحيح بطاقة أو حذفها، راسلنا."}
 };
-var TRS={q:"",city:"",pos:null,posErr:false,all:false},trSig="",TRD_COUNTRY="tn";
+var TRS={q:"",city:"",pos:null,posErr:false,all:false,every:false},trSig="",TRD_COUNTRY="tn";
 var TR_ALIAS={"tunis":"Tunis","تونس":"Tunis","lac":"Tunis","menzah":"Tunis","manar":"Tunis","bab bnet":"Tunis","sfax":"Sfax","صفاقس":"Sfax","sousse":"Sousse","سوسة":"Sousse","nabeul":"Nabeul","نابل":"Nabeul","hammamet":"Nabeul","الحمامات":"Nabeul","beja":"Béja","باجة":"Béja","djerba":"Djerba","jerba":"Djerba","جربة":"Djerba","houmt souk":"Djerba","medenine":"Djerba","la marsa":"La Marsa","marsa":"La Marsa","المرسى":"La Marsa","la soukra":"La Soukra","soukra":"La Soukra","ariana":"La Soukra","السكرة":"La Soukra","أريانة":"La Soukra","hammam lif":"Hammam Lif","ben arous":"Hammam Lif","حمام الأنف":"Hammam Lif","grombalia":"Grombalia","قرمبالية":"Grombalia"};
 var TRX={
- fr:{ph:"Tapez votre ville…",fix:"Une fiche à corriger ou à retirer ?",hint:"Tapez votre ville pour voir les traducteurs assermentés près de chez vous",noRes:function(q){return "Aucun traducteur trouvé pour « "+q+" ». Essayez une ville proche ou le bouton « Près de moi »."}},
- en:{ph:"Type your city…",fix:"An entry to correct or remove?",hint:"Type your city to see sworn translators near you",noRes:function(q){return "No translator found for “"+q+"”. Try a nearby city or the “Near me” button."}},
- ar:{ph:"اكتب مدينتك…",fix:"بطاقة تحتاج إلى تصحيح أو حذف؟",hint:"اكتب مدينتك لتظهر لك قائمة المترجمين المحلَّفين القريبين منك",noRes:function(q){return "لم نجد أي مترجم لـ «"+q+"». جرّب مدينة قريبة أو زر «الأقرب إليّ»."}}
+ fr:{ph:"Tapez votre ville…",fix:"Une fiche à corriger ou à retirer ?",hint:"Choisissez ou tapez votre ville pour voir les traducteurs assermentés",noRes:function(q){return "Aucun traducteur trouvé pour « "+q+" ». Essayez une ville proche ou le bouton « Près de moi »."}},
+ en:{ph:"Type your city…",fix:"An entry to correct or remove?",hint:"Pick or type your city to see the sworn translators",noRes:function(q){return "No translator found for “"+q+"”. Try a nearby city or the “Near me” button."}},
+ ar:{ph:"اكتب مدينتك…",fix:"بطاقة تحتاج إلى تصحيح أو حذف؟",hint:"اختر مدينتك أو اكتبها لتظهر لك قائمة المترجمين المحلَّفين",noRes:function(q){return "لم نجد أي مترجم لـ «"+q+"». جرّب مدينة قريبة أو زر «الأقرب إليّ»."}}
 };
 function trNorm(v){return String(v||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9؀-ۿ ]+/g," ").replace(/\s+/g," ").trim()}
 function trAlias(q){for(var k in TR_ALIAS){var n=trNorm(k);if(n===q||(q.length>=3&&n.indexOf(q)===0))return TR_ALIAS[k]}return ""}
@@ -828,6 +828,7 @@ function trCard(x,R){
 function trResults(){
   var R=TRT[S.lang]||TRT.fr,X=TRX[S.lang]||TRX.fr,q=trNorm(TRS.q),rows=[];
   var ac=q.length>=2?trAlias(q):"";
+  if(!(TRS.city||q.length>=2||TRS.pos||TRS.every))return '<p class="trd-hint"><i aria-hidden="true">☝</i>'+X.hint+'</p>'+(TRS.posErr?'<span class="trd-n">'+R.nearOff+'</span>':"");
   TR_DATA.forEach(function(r){
     if(TRS.city&&r[1]!==TRS.city)return;
     var c=TR_CITY[r[1]],km=(TRS.pos&&c)?trKm(TRS.pos[0],TRS.pos[1],c[0],c[1]):null,sc=0;
@@ -837,6 +838,7 @@ function trResults(){
     rows.push({r:r,km:km,sc:sc});
   });
   if(!rows.length)return '<p class="trd-none">'+X.noRes(esc(TRS.q.trim()))+'</p>';
+  if(TRS.city){rows.sort(function(a,b){return a.sc-b.sc||(a.km==null?1e9:a.km)-(b.km==null?1e9:b.km)});return '<span class="trd-n">'+R.n(rows.length)+(TRS.pos?' · '+R.appr:'')+(TRS.posErr?' · '+R.nearOff:'')+'</span><div class="trd-list">'+rows.map(function(x){return trCard(x,R)}).join("")+'</div>'}
   var groups={},order=[];
   rows.forEach(function(x){var k=x.r[1]||"",g=groups[k];if(!g){g=groups[k]={k:k,rows:[],min:1e9};order.push(g)}g.rows.push(x);if(x.km!=null&&x.km<g.min)g.min=x.km});
   order.sort(function(a,b){if(!a.k!==!b.k)return a.k?-1:1;if(TRS.pos&&a.min!==b.min)return a.min-b.min;return b.rows.length-a.rows.length||(a.k<b.k?-1:1)});
@@ -849,7 +851,7 @@ function trResults(){
 function renderTrans(){
   var el=$("trans");if(!el)return;
   var on=S.step===0;el.hidden=!on;if(!on)return;
-  var sig=S.lang+"|"+(TRS.pos?1:0)+"|"+TRS.city+"|tunisia-only-v2";
+  var sig=S.lang+"|"+(TRS.pos?1:0)+"|"+TRS.city+"|"+(TRS.every?1:0)+"|tunisia-only-v3";
   if(sig===trSig&&el.firstChild){var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}
   trSig=sig;
   var R=TRT[S.lang]||TRT.fr,X=TRX[S.lang]||TRX.fr;
@@ -859,14 +861,14 @@ function renderTrans(){
   h+='<div class="trd-search"><span class="trd-lens" aria-hidden="true">🔎</span><input id="trd-q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" list="trd-dl" placeholder="'+escA(X.ph)+'" aria-label="'+escA(X.ph)+'" value="'+escA(TRS.q)+'"><datalist id="trd-dl">'+cities.map(function(c){return '<option value="'+escA(c)+'">'}).join("")+'</datalist></div>';
   var cnt={};TR_DATA.forEach(function(r){if(r[1])cnt[r[1]]=(cnt[r[1]]||0)+1});
   var cs=Object.keys(cnt).sort(function(a,b){return cnt[b]-cnt[a]||(a<b?-1:1)});
-  h+='<div class="trd-chips" role="group" aria-label="'+escA(R.city)+'"><button type="button" class="chip" data-trc="" aria-pressed="'+(TRS.city?"false":"true")+'">'+R.all+' ('+TR_DATA.length+')</button>'+cs.map(function(c){return '<button type="button" class="chip" data-trc="'+escA(c)+'" aria-pressed="'+(TRS.city===c?"true":"false")+'">'+esc(c)+' ('+cnt[c]+')</button>'}).join("")+'</div>';
+  h+='<div class="trd-chips" role="group" aria-label="'+escA(R.city)+'"><button type="button" class="chip" data-trc="*" aria-pressed="'+(TRS.every?"true":"false")+'">'+R.all+' ('+TR_DATA.length+')</button>'+cs.map(function(c){return '<button type="button" class="chip" data-trc="'+escA(c)+'" aria-pressed="'+(TRS.city===c?"true":"false")+'">'+esc(c)+' ('+cnt[c]+')</button>'}).join("")+'</div>';
   h+='<button type="button" class="reset trd-near" id="trd-near" aria-pressed="'+(TRS.pos?"true":"false")+'">📍 '+R.near+'</button>';
   h+='<div class="trd-res" id="trd-res" aria-live="polite">'+trResults()+'</div>';
   if(SITE.email)h+='<p class="trd-src">'+X.fix+' <a href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Traducteurs")+'">'+SITE.email+'</a></p>';
   el.innerHTML=h;
 }
-document.addEventListener("input",function(e){if(e.target&&e.target.id==="trd-q"){TRS.q=e.target.value;TRS.all=false;var rs=$("trd-res");if(rs)rs.innerHTML=trResults()}});
-document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-trc]");if(!b)return;TRS.city=b.getAttribute("data-trc")||"";TRS.q="";trSig="";renderTrans()});
+document.addEventListener("input",function(e){if(e.target&&e.target.id==="trd-q"){TRS.q=e.target.value;TRS.all=false;TRS.every=false;var rs=$("trd-res");if(rs)rs.innerHTML=trResults()}});
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-trc]");if(!b)return;var v=b.getAttribute("data-trc")||"";if(v==="*"){TRS.every=!TRS.every;TRS.city=""}else{TRS.every=false;TRS.city=(TRS.city===v)?"":v}TRS.q="";trSig="";renderTrans()});
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("#trd-near,#trd-more");if(!b)return;
   if(b.id==="trd-more"){TRS.all=!TRS.all;var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}
   if(TRS.pos){TRS.pos=null;trSig="";renderTrans();return}
