@@ -63,6 +63,8 @@ ok("Worker exige KV pour contrôler les quotas d’entretien", /if \(interview &
 ok("Worker refuse de traiter sans clé Gemini", /if \(!env\.GEMINI_API_KEY\)/.test(workerCode));
 ok("Worker limite la sortie du modèle", /maxOutputTokens: 700/.test(workerCode));
 ok("réponses Worker non mises en cache", /Cache-Control": "no-store/.test(workerCode));
+ok("Worker ajoute les en-têtes anti-MIME-sniffing et Referrer-Policy", /X-Content-Type-Options": "nosniff"/.test(workerCode) && /Referrer-Policy": "no-referrer"/.test(workerCode));
+ok("Worker rejette les messages malformés au lieu de les filtrer", /const invalidMessage = body\.messages\.some/.test(workerCode) && /if \(invalidMessage\) return out\(\{ error: "invalid_messages" \}, 400\)/.test(workerCode));
 ok("Paiement manuel désactivé tant qu’aucun partenaire n’est validé", /var D17=\{num:"",name:"",tg:""/.test(read("visa-app.js")));
 ok("Transmission des demandes partenaires désactivée", /var REQUEST_URL=""/.test(read("visa-app.js")));
 ok("Déblocage payant désactivé", /var UNLOCK_URL=""/.test(read("visa-app.js")) && /var PACK_URL=""/.test(read("visa-app.js")));
