@@ -4,9 +4,9 @@ document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="
 var UI={
 fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destination, puis cochez chaque document au fur et à mesure.",
  s_country:"Destination",cAvail:"Disponible",cSoon:"Bientôt",soonText:"La liste des pièces pour ce pays arrive bientôt.",
- agTitle:"Besoin d'un conseiller visa ?",agSub:"Voir ses coordonnées coûte 10 DT, en paiement unique.",
+ agTitle:"Besoin d'un conseiller visa ?",agSub:"Consultez les coordonnées des conseillers indépendants.",
  gov:"Gouvernorat",govPick:"Choisir un gouvernorat",agCount:function(n){return n+(n>1?" conseillers":" conseiller")},
- agNone:"Pas encore de conseiller disponible.",payBtn:"Payer 10 DT",payWait:"Lien de paiement bientôt",
+ agNone:"Pas encore de conseiller disponible.",payBtn:"Voir les options de paiement",payWait:"Lien de paiement bientôt",
  codeLabel:"Déjà payé ? Entrez le code reçu",unlock:"Débloquer",badCode:"Code incorrect.",contactSoon:"Coordonnées à venir",
  agNote:"Les conseillers sont indépendants. Visa Checker ne garantit pas l'obtention du visa.",
  s_status:"Votre activité",s_party:"Vous voyagez",s_stay:"Hébergement",s_pay:"Qui finance le voyage",
@@ -44,9 +44,9 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  adv:["Lisez le formulaire de refus. La case cochée indique le motif à corriger.","Choisissez : un recours (délai court, indiqué sur la notification) ou une nouvelle demande, qui entraîne de nouveaux frais.","Corrigez le motif avec des preuves nouvelles. Moyens financiers : relevés réguliers, sans gros dépôt soudain. Objet du séjour : programme clair et réservations réelles. Retour en Tunisie : preuves d'attaches (emploi, famille, logement).","Restez cohérent avec la première demande. Le consulat garde votre dossier : dates, emploi et revenus doivent être identiques.","Il n'existe pas de délai légal d'attente avant de redéposer, mais ne redéposez pas le même dossier sans changement.","Aucun intermédiaire ne peut promettre un visa. Un faux document peut entraîner de graves conséquences, dont une interdiction d'entrée."]},
 en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, then tick each document as you collect it.",
  s_country:"Destination",cAvail:"Available",cSoon:"Coming soon",soonText:"The document list for this country is coming soon.",
- agTitle:"Need a visa advisor?",agSub:"Seeing his contact details costs 10 TND, paid once.",
+ agTitle:"Need a visa advisor?",agSub:"View contact details for independent visa advisors.",
  gov:"Governorate",govPick:"Choose a governorate",agCount:function(n){return n+(n>1?" advisors":" advisor")},
- agNone:"No advisor available yet.",payBtn:"Pay 10 TND",payWait:"Payment link coming soon",
+ agNone:"No advisor available yet.",payBtn:"View payment options",payWait:"Payment link coming soon",
  codeLabel:"Already paid? Enter the code you received",unlock:"Unlock",badCode:"Incorrect code.",contactSoon:"Contact details coming",
  agNote:"Advisors are independent. Visa Checker does not guarantee a visa.",
  s_status:"Your activity",s_party:"You travel",s_stay:"Accommodation",s_pay:"Who pays for the trip",
@@ -84,9 +84,9 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  adv:["Read the refusal form. The ticked box shows the reason to fix.","Choose: an appeal (short deadline, shown on the notification) or a new application, which means new fees.","Fix the reason with new evidence. Funds: regular statements, no sudden large deposit. Purpose of stay: a clear plan and real bookings. Return to Tunisia: proof of ties (job, family, home).","Stay consistent with your first application. The consulate keeps your file: dates, job and income must be identical.","There is no legal waiting period before you apply again, but do not resubmit the same file unchanged.","No intermediary can promise a visa. A false document can have serious consequences, including an entry ban."]},
 ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اختر وجهتك ثم علّم كل وثيقة بعد تجهيزها.",
  s_country:"الوجهة",cAvail:"متاحة",cSoon:"قريبًا",soonText:"قائمة وثائق هذا البلد قادمة قريبًا.",
- agTitle:"هل تحتاج إلى مستشار تأشيرة؟",agSub:"مشاهدة بيانات الاتصال تكلّف 10 دنانير، تُدفع مرة واحدة.",
+ agTitle:"هل تحتاج إلى مستشار تأشيرة؟",agSub:"عرض بيانات الاتصال بالمستشارين المستقلين.",
  gov:"الولاية",govPick:"اختر الولاية",agCount:function(n){return n===1?"مستشار واحد":n+" مستشارين"},
- agNone:"لا يوجد مستشار متاح بعد.",payBtn:"ادفع 10 د.ت",payWait:"رابط الدفع قريبًا",
+ agNone:"لا يوجد مستشار متاح بعد.",payBtn:"خيارات الدفع",payWait:"رابط الدفع قريبًا",
  codeLabel:"دفعت؟ أدخل الرمز الذي وصلك",unlock:"فتح",badCode:"الرمز غير صحيح.",contactSoon:"بيانات الاتصال قريبًا",
  agNote:"المستشارون مستقلون. Visa Checker لا يضمن الحصول على التأشيرة.",
  s_status:"نشاطك",s_party:"تسافر",s_stay:"الإقامة",s_pay:"من يموّل السفر",
@@ -398,59 +398,30 @@ var PAY_URL2="";
 var UNLOCK_URL="https://visa-proxy.rabehfly.workers.dev/unlock";
 var PACK_URL="https://visa-proxy.rabehfly.workers.dev/pack";
 var UNLOCK_TIMEOUT_MS=8000;
-/* ===== Paiement manuel D17 (sans compte marchand) =====
-   D17.num : VOTRE numéro D17 ; D17.name : votre nom tel qu'il apparaît dans D17.
-   Tant que D17.num est vide, le bouton reste « bientôt » : aucun paiement n'est proposé. */
-var D17={num:"+216 58 986 980",name:"RT",tg:"rabehtlili",mail:"visacheckercontact@gmail.com"};
-var D17O="";
-var D17X={
-fr:{btn:"Payer par D17",title:"Payer avec D17",s1:"Montant exact :",s2:"Envoyez-le par D17 au numéro",s3:"Écrivez cette référence dans le message du transfert :",s4:"Puis appuyez sur « J'ai payé ». Nous vérifions dans notre application D17 et vous envoyons votre code, à saisir ci-dessous.",tg:"J'ai payé (Telegram)",mail:"J'ai payé (e-mail)",copy:"Copier",ok:"Copié ✓",warn:"Nous ne demandons jamais votre code PIN ni les données de votre carte. Aucun code n'est envoyé avant la réception réelle du paiement : une capture d'écran ne suffit pas. Payez uniquement au numéro affiché ici, sur le site officiel.",msg:"J'ai payé par D17. Référence : ",cur:"DT",hold:"Titulaire :",lt:"Paiement par D17",ln:"Payez {A} par D17 au numéro ci-dessous, en écrivant cette référence dans le message du transfert. Le document vous est envoyé après réception du paiement.",lw:"Ne payez qu'au numéro affiché ici. Nous ne demandons jamais votre code PIN."},
-en:{btn:"Pay with D17",title:"Pay with D17",s1:"Exact amount:",s2:"Send it through D17 to the number",s3:"Write this reference in the transfer message:",s4:"Then tap “I have paid”. We check our D17 app and send you your code, to enter below.",tg:"I have paid (Telegram)",mail:"I have paid (e-mail)",copy:"Copy",ok:"Copied ✓",warn:"We never ask for your PIN or card details. No code is sent before the payment has really arrived: a screenshot is not enough. Pay only to the number shown here, on the official site.",msg:"I paid with D17. Reference: ",cur:"TND",hold:"Account holder:",lt:"Payment with D17",ln:"Pay {A} with D17 to the number below, writing this reference in the transfer message. Your document is sent once the payment has arrived.",lw:"Pay only to the number shown here. We never ask for your PIN."},
-ar:{btn:"ادفع عبر D17",title:"الدفع عبر D17",s1:"المبلغ بالضبط:",s2:"أرسله عبر D17 إلى الرقم",s3:"اكتب هذا المرجع في رسالة التحويل:",s4:"ثم اضغط «دفعت». نتحقق في تطبيق D17 لدينا ونرسل لك الرمز لتدخله بالأسفل.",tg:"دفعت (تيليغرام)",mail:"دفعت (بريد إلكتروني)",copy:"نسخ",ok:"تم النسخ ✓",warn:"لا نطلب أبدًا رمز PIN ولا بيانات بطاقتك. لا يُرسل أي رمز قبل وصول الدفعة فعلًا: لقطة الشاشة لا تكفي. ادفع فقط إلى الرقم المعروض هنا في الموقع الرسمي.",msg:"دفعت عبر D17. المرجع: ",cur:"د.ت",hold:"صاحب الحساب:",lt:"الدفع عبر D17",ln:"ادفع {A} عبر D17 إلى الرقم أدناه واكتب هذا المرجع في رسالة التحويل. يُرسل لك المستند بعد وصول الدفعة.",lw:"ادفع فقط إلى الرقم المعروض هنا. لا نطلب أبدًا رمز PIN."}
-};
-function d17Ref(k){
-  var key="vcref"+k,r="";
-  try{r=sessionStorage.getItem(key)||""}catch(x){}
-  if(!r){
-    var n;
-    try{var a=new Uint32Array(1);crypto.getRandomValues(a);n=a[0]%9000+1000}catch(x){n=Math.floor(Math.random()*9000)+1000}
-    r="VC-"+(k==="adv"?"A":k==="req"?"R":"P")+"-"+n;
-    try{sessionStorage.setItem(key,r)}catch(x){}
-  }
-  return r;
-}
 var N48={fr:"Modification possible pendant 48 h maximum après la demande, uniquement sur les dates. Le nom et le prénom ne sont jamais modifiables. Passé ce délai, faites une nouvelle demande.",en:"Changes are possible for 48 hours maximum after your request, dates only. First and last name can never be changed. After that, make a new request.",ar:"يمكن التعديل خلال 48 ساعة كحد أقصى بعد الطلب، وللتواريخ فقط. لا يمكن أبدًا تعديل الاسم واللقب. بعد هذه المدة قدّم طلبًا جديدًا."};
 function n48(l){l=l||S.lang;return '<p class="n48" role="note">'+(N48[l]||N48.fr)+'</p>'}
 function d17Of(a){return {num:D17.num,name:D17.name}}  /* le client paie Visa Checker, jamais l'agence directement */
 /* Prix de la demande billet d'avion / réservation d'hôtel (en dinars). Une seule valeur à changer. */
 var SVC_PRICE=15;
 function d17Amt(txt,x){return String(txt).split("{A}").join(SVC_PRICE+" "+(x.cur||"DT"))}
-var NXT={fr:"Étape suivante : ouvrez l'e-mail que nous venons de vous envoyer et touchez « Confirmer et payer ». Vous y trouverez aussi « Modifier mes dates ».",en:"Next step: open the e-mail we just sent you and tap “Confirm and pay”. You will also find “Change my dates” there.",ar:"الخطوة التالية: افتح الرسالة التي أرسلناها لك واضغط «تأكيد ودفع». ستجد فيها أيضًا «تعديل التواريخ»."};
+var NXT={fr:"Nous vous informerons dès que les moyens de paiement sécurisés seront disponibles. Vous pourrez ensuite confirmer votre réservation.",en:"We will let you know when secure payment methods are available. You can then confirm your booking.",ar:"سنُعلمك عند توفر وسائل الدفع الآمنة، لتتمكن بعدها من تأكيد الحجز."};
 function d17Later(a){return '<div class="d17" role="region"><p>'+(NXT[S.lang]||NXT.fr)+'</p></div>'}
 /* D17 est un moyen de paiement tunisien : pour les voyageurs du Maroc et d'Algérie, on n'affiche pas D17. */
 var PAYX={fr:"Le paiement en ligne n'est pas encore disponible depuis votre pays. Écrivez-nous et nous vous répondrons dès son ouverture :",en:"Online payment is not available from your country yet. Write to us and we will reply as soon as it opens:",ar:"الدفع عبر الإنترنت غير متاح بعد من بلدك. راسلنا وسنرد عليك فور فتحه:"};
-function d17Html(k,amt){
-  var L=S.lang,x=D17X[L]||D17X.fr,on=D17O===k;
-  if(S.origin!=="tn")return '<p class="ag-note" role="note">'+(PAYX[L]||PAYX.fr)+' <a href="mailto:'+D17.mail+'">'+D17.mail+'</a></p>';
-  if(!D17.num)return '<span class="pay off" aria-disabled="true">'+UI[L].payWait+'</span>';
-  var h='<button type="button" class="pay" data-d17="'+k+'" aria-expanded="'+on+'">'+x.btn+'</button>';
-  if(!on)return h;
-  var r=d17Ref(k),m=encodeURIComponent(x.msg+r);
-  h+='<div class="d17" role="region" aria-label="'+x.title+'"><b class="d17-t">'+x.title+'</b><ol>';
-  h+='<li>'+x.s1+' <b>'+amt+' '+x.cur+'</b></li>';
-  h+='<li>'+x.s2+' <b dir="ltr">'+D17.num+'</b>'+(D17.name?' ('+x.hold+' '+D17.name+')':'')+' <button type="button" class="d17-c" data-d17c="'+D17.num+'">'+x.copy+'</button></li>';
-  h+='<li>'+x.s3+' <b dir="ltr" class="d17-ref">'+r+'</b> <button type="button" class="d17-c" data-d17c="'+r+'">'+x.copy+'</button></li>';
-  h+='<li>'+x.s4+'</li></ol>';
-  h+='<a class="pay wide" href="mailto:'+D17.mail+'?subject='+encodeURIComponent("D17 "+r)+'&body='+m+'">'+x.mail+'</a>';
-  h+='<p class="ag-note">'+x.warn+'</p></div>';
-  return h;
+function paymentMethodsHtml(){
+  var L=S.lang;
+  var T={
+    fr:{title:"Moyens de paiement",soon:"Bientôt disponible",desc:"Les paiements en ligne sont en préparation. Aucun paiement n'est demandé pour le moment.",bill:"Adresse de facturation",billText:"Elle sera demandée au moment du paiement sécurisé. Aucune adresse ni donnée bancaire n'est collectée ici."},
+    en:{title:"Payment methods",soon:"Coming soon",desc:"Online payments are being prepared. No payment is requested at this time.",bill:"Billing address",billText:"It will be requested during secure checkout. No address or banking details are collected here."},
+    ar:{title:"وسائل الدفع",soon:"قريبًا",desc:"نعمل على تجهيز الدفع عبر الإنترنت. لا يُطلب أي دفع في الوقت الحالي.",bill:"عنوان الفوترة",billText:"سيُطلب عند إتمام الدفع الآمن. لا نجمع هنا أي عنوان أو بيانات بنكية."}
+  };
+  var t=T[L]||T.fr;
+  return '<div class="d17 pay-panel" role="region" aria-label="'+t.title+'"><b class="d17-t">'+t.title+'</b>'+
+    '<div class="pay-methods"><div class="pay-method pay-konnect"><span class="pay-mark" aria-hidden="true">K</span><span class="pay-brand"><b>Konnect</b><small>'+t.soon+'</small></span></div>'+
+    '<div class="pay-method pay-flouci"><span class="pay-mark" aria-hidden="true">f</span><span class="pay-brand"><b>flouci</b><small>'+t.soon+'</small></span></div></div>'+
+    '<p class="ag-note">'+t.desc+'</p><div class="billing-block"><b>'+t.bill+'</b><p>'+t.billText+'</p></div></div>';
 }
-document.addEventListener("click",function(e){
-  var c=e.target.closest&&e.target.closest("[data-d17c]");
-  if(c){var v=c.dataset.d17c;try{navigator.clipboard.writeText(v)}catch(x){}var o=c.textContent;c.textContent=(D17X[S.lang]||D17X.fr).ok;setTimeout(function(){c.textContent=o},1800);return}
-  var d=e.target.closest&&e.target.closest("[data-d17]");
-  if(d){D17O=D17O===d.dataset.d17?"":d.dataset.d17;render()}
-});
+function d17Html(k,amt){return paymentMethodsHtml();}
 
 /* ===== Pages « Ma demande » : liens des mails (client, agence, Visa Checker) =====
    Le Worker garde la demande, vérifie le délai de 48 h et les droits de chaque lien : ces pages affichent et envoient. */
@@ -477,22 +448,18 @@ function ordClose(){
 function ordRecap(L,od){
   var R=RT[L]||RT.fr,X=OVX[L]||OVX.fr,hot=od.svc==="hotel",sh=function(x){return String(x).replace(/\s*\(.*?\)/g,"")};
   var rows=[[(R.svc&&R.svc[od.svc])||od.svc,od.dest+(od.city?" · "+od.city:"")],[sh(R.ln),od.ln],[sh(R.fn),od.fn],[sh(hot?R.d1h:R.d1f),fmtD(od.d1)],[sh(hot?R.d2h:R.d2f),od.d2?fmtD(od.d2):"-"]];
-  rows.push([X.amt,SVC_PRICE+" DT"]);
+  /* Tarif affiché uniquement après activation du paiement. */
   rows.push(["Réf.",od.ref]);
   return '<div class="recap"><h2>'+X.recap+'</h2><dl>'+rows.map(function(r){return '<div><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>'}).join("")+'</dl></div>';
 }
 function ordBad(){ordShell(OV.L,'<h1>Visa Checker</h1><p class="n48" role="alert">'+(OVX[OV.L]||OVX.fr).bad+'</p><button type="button" class="pay wide" data-ovnew>'+(OVX[OV.L]||OVX.fr).newReq+'</button>')}
 /* ---- client : confirmer et payer ---- */
 function ordPayView(){
-  var L=OV.L,X=OVX[L],x=D17X[L]||D17X.fr,od=OV.od,r=od.ref;
+  var L=OV.L,X=OVX[L],od=OV.od;
   var h='<h1>'+X.payT+'</h1><p class="rf-sub">'+X.check+'</p>'+ordRecap(L,od)+n48(L);
   if(od.status==="sent"){h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.sent+'</b></p>'}
   else if(od.status==="paid"){h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.ok+'</b></p>'}
-  else{
-    h+='<div class="d17" role="region" aria-label="'+x.lt+'"><b class="d17-t">'+x.lt+'</b><p>'+d17Amt(x.ln,x)+'</p><p><b dir="ltr">'+esc(D17.num)+'</b>'+(D17.name?' ('+x.hold+' '+esc(D17.name)+')':'')+' <button type="button" class="d17-c" data-d17c="'+esc(D17.num)+'">'+x.copy+'</button></p><p><b dir="ltr" class="d17-ref">'+esc(r)+'</b> <button type="button" class="d17-c" data-d17c="'+esc(r)+'">'+x.copy+'</button></p>';
-    h+=od.status==="claimed"?'<p class="ok-hero"><b>'+X.claimed+'</b></p>':'<button type="button" class="pay wide" data-ovact="claim">'+X.paid+'</button>';
-    h+='<p class="ag-note">'+x.lw+'</p></div>';
-  }
+  else h+=paymentMethodsHtml();
   if(od.canEdit)h+='<button type="button" class="reset wide" data-ovedit>'+X.goEdit+'</button>';
   ordShell(L,h);
 }
@@ -518,7 +485,7 @@ function ordSentView(){
 function ordConfirmView(){
   var od=OV.od,h='<h1>Paiement reçu ?</h1>'+ordRecap("fr",od);
   if(od.status==="paid"||od.status==="sent")h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>Paiement déjà confirmé.</b></p>';
-  else h+='<p class="rf-sub">Ouvre ton app D17 : le montant ('+SVC_PRICE+' DT) et la référence '+esc(od.ref)+' doivent apparaître.</p><button type="button" class="pay wide" data-ovact="paid">Oui, j\'ai vu l\'argent : paiement reçu</button>';
+  else h+='<p class="rf-sub">Confirmez uniquement après vérification effective du paiement dans le compte du prestataire.</p><button type="button" class="pay wide" data-ovact="paid">Paiement vérifié et reçu</button>';
   ordShell("fr",h);
 }
 function ordView(){
