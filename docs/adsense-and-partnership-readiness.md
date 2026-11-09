@@ -30,6 +30,10 @@ Ce document est un plan de préparation. Il ne constitue ni une approbation Goog
 - Ne jamais cliquer sur ses propres annonces, demander des clics, ni inciter artificiellement les visiteurs à cliquer.
 - Commencer avec un petit nombre d'emplacements, puis mesurer l'expérience utilisateur.
 
+### Sécurité technique à prévoir lors de l'intégration
+
+La Content Security Policy actuelle des pages est volontairement restrictive et n'autorise pas encore les scripts publicitaires Google. Au moment de l'intégration seulement, mettre à jour la CSP de manière ciblée pour les domaines Google réellement requis par le code AdSense choisi, puis tester le rendu et les violations CSP. Ne pas ajouter des jokers larges ni autoriser des domaines publicitaires avant d'avoir un compte et une intégration à valider.
+
 ### Fichier ads.txt
 Créer `/ads.txt` uniquement après réception de la ligne personnalisée fournie dans le compte AdSense. Ne jamais inventer un identifiant éditeur ni publier un exemple `pub-000...`. Après publication, vérifier que `https://checkmyvisa.org/ads.txt` répond en HTTP 200 et que Google peut l'explorer.
 
