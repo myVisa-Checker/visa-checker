@@ -98,7 +98,7 @@ const productApp = read("visa-app.js");
 console.log("Moteur de checklist et couverture");
 ok("marque du parcours neutre selon le passeport", productApp.includes('stamp:"Voyageurs"') && productApp.includes('stamp:"Travellers"') && productApp.includes('stamp:"المسافرون"'));
 ok("interface sans promesse de liste exacte ou exhaustive", !/liste exacte des documents|exact list of documents|القائمة الدقيقة للوثائق/.test(productApp));
-ok("disclaimer de préparation indicatif pour les destinations tunisiennes hors France", productApp.includes("Cette checklist est un outil indicatif de préparation") && productApp.includes("not an exhaustive official list"));
+ok("disclaimer de préparation indicatif pour les destinations tunisiennes hors France", productApp.includes("Cette checklist est un outil indicatif de préparation") && productApp.includes("not an exhaustive official list") && productApp.includes("هذه القائمة أداة تحضيرية إرشادية"));
 const coverage = read("guide/couverture-provisoire.md");
 ok("matrice provisoire corrigée à 22 parcours Schengen", coverage.includes("22 combinaisons") && coverage.includes("7 destinations Schengen") && coverage.includes("5 destinations Schengen"));
 ok("matrice distingue parcours présents et validation officielle", coverage.includes("pas une validation officielle") && coverage.includes("Cela ne vaut pas certification de l'exhaustivité"));
