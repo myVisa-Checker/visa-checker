@@ -1,0 +1,18 @@
+name = "visa-chat"
+main = "worker/visa-chat-worker.js"
+compatibility_date = "2026-11-09"
+workers_dev = true
+
+# Secrets / variables à configurer séparément dans Cloudflare :
+# GEMINI_API_KEY (secret), GEMINI_MODEL, DATA_PROCESSING_APPROVED,
+# INTERVIEW_ENABLED, INTERVIEW_CODES (secret).
+# KV namespace USAGE : conserver le binding existant pour le registre des codes émis.
+# Le compteur de quotas et le rate limiting utilisent le Durable Object ci-dessous.
+
+[[durable_objects.bindings]]
+name = "RATE_LIMITER"
+class_name = "VisaCheckerCounter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["VisaCheckerCounter"]
