@@ -389,7 +389,7 @@ function chips(q,label){
   return h+'</div></div>';
 }
 /* ===== Paiement et déblocage =====
-   PAY_URL / PAY_URL2 : liens de paiement Flouci ou Paymee (10 DT conseillers, 20 DT pack recours).
+   PAY_URL / PAY_URL2 : anciens liens directs, laissés vides tant que Konnect et Flouci ne sont pas activés.
    Les codes ne sont PLUS stockés dans cette page : ils sont vérifiés par votre serveur (voir ARCHITECTURE-SECURITE.md).
    UNLOCK_URL : adresse HTTPS de l'API, par exemple "https://api.votre-domaine.tn/v1/unlock". Vide = déblocage désactivé.
    UNLOCK_DEV_MODE : true uniquement pour tester sans serveur (compare l'empreinte SHA-256 du code ; jamais en production). */
@@ -2309,9 +2309,9 @@ document.addEventListener("click",function(e){
 
 /* ===== Autres services : bientôt disponibles (aucun paiement possible) ===== */
 var SOONX={
-fr:{h:"Bientôt disponible",badge:"Bientôt",items:[["Relecture humaine de votre recours","Un conseiller relit votre lettre de recours et vous renvoie ses corrections.","45 DT"],["Vérification finale avant dépôt","Envoyez vos documents en photo : pièces manquantes ou incohérentes signalées.","15 DT"]]},
-en:{h:"Coming soon",badge:"Soon",items:[["Human review of your appeal","An advisor reads your appeal letter and sends back corrections.","45 DT"],["Final check before filing","Send your documents as photos: missing or inconsistent items are flagged.","15 DT"]]},
-ar:{h:"قريباً",badge:"قريباً",items:[["مراجعة بشرية لطعنك","يقرأ مستشار رسالة الطعن ويرسل لك التصحيحات.","45 دينار"],["تدقيق نهائي قبل الإيداع","أرسل وثائقك بالصور: يتم تنبيهك إلى الناقص أو غير المتناسق.","15 دينار"]]}};
+fr:{h:"Bientôt disponible",badge:"Bientôt",items:[["Relecture humaine de votre recours","Un conseiller relit votre lettre de recours et vous renvoie ses corrections.","Tarif annoncé avant activation."],["Vérification finale avant dépôt","Envoyez vos documents en photo : pièces manquantes ou incohérentes signalées.","Tarif annoncé avant activation."]]},
+en:{h:"Coming soon",badge:"Soon",items:[["Human review of your appeal","An advisor reads your appeal letter and sends back corrections.","Price announced before launch."],["Final check before filing","Send your documents as photos: missing or inconsistent items are flagged.","Price announced before launch."]]},
+ar:{h:"قريباً",badge:"قريباً",items:[["مراجعة بشرية لطعنك","يقرأ مستشار رسالة الطعن ويرسل لك التصحيحات.","سيُعلن عن السعر قبل التفعيل."],["تدقيق نهائي قبل الإيداع","أرسل وثائقك بالصور: يتم تنبيهك إلى الناقص أو غير المتناسق.","سيُعلن عن السعر قبل التفعيل."]]}};
 function soonHtml(){
   var X=SOONX[S.lang];
   return '<h2>'+esc(X.h)+'</h2><ul class="inc">'+X.items.map(function(i){return '<li><b>'+esc(i[0])+'</b> <span class="evtag">'+esc(X.badge)+'</span><br>'+esc(i[1])+' <b>'+esc(i[2])+'</b></li>'}).join("")+'</ul>';
