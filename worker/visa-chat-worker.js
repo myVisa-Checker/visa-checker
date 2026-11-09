@@ -78,7 +78,7 @@ export default {
     const out = (obj, status = 200) =>
       new Response(JSON.stringify(obj), {
         status,
-        headers: { ...cors, "Content-Type": "application/json", "Cache-Control": "no-store, max-age=0" },
+        headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store, max-age=0", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer" },
       });
 
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
@@ -136,13 +136,17 @@ export default {
         if (body.check) return out({ ok: true, left: env.USAGE ? IV_MAX - used : null });
       }
 
-      if (!Array.isArray(body.messages) || body.messages.length > 32) {
+      if (!Array.isArray(body.messages) || body.messages.length < 1 || body.messages.length > 32) {
         return out({ error: "invalid_messages" }, 400);
       }
+      // Reject malformed entries instead of silently filtering a partial payload.
+      const invalidMessage = body.messages.some((m) =>
+        !m || typeof m !== "object" || Array.isArray(m) ||
+        !["user", "assistant"].includes(m.role) ||
+        typeof m.text !== "string" || !m.text.trim() || m.text.length > 4000
+      );
+      if (invalidMessage) return out({ error: "invalid_messages" }, 400);
       const msgs = body.messages
-        .filter((m) => m && typeof m === "object" &&
-          (m.role === "user" || m.role === "assistant") &&
-          typeof m.text === "string" && m.text.trim().length > 0)
         .slice(interview ? -16 : -8)
         .map((m) => ({
           role: m.role === "assistant" ? "model" : "user",
