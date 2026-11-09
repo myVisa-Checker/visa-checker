@@ -2726,7 +2726,7 @@ function render(){
   if(st>0){$("nav").innerHTML='<button type="button" class="reset" data-go="-1">'+t.back+'</button>'+(st===4&&cur.id!=="us"?'<button type="button" class="pay" data-go="1">'+t.next+'</button>':'')}
   if(typeof prevStep==="number"&&prevStep!==S.step)focusStepHeading();
   prevStep=S.step;
-  if(S.origin!=="tn"){["bpn","trans","sponsors"].forEach(function(id){var x=$(id);if(x)x.hidden=true})}
+  if(S.origin!=="tn"){["bpn","sponsors"].forEach(function(id){var x=$(id);if(x)x.hidden=true})}
 }
 function go(n){if(S.step>=11){S.step=0;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(S.step>=8){S.step=S.step===8?(S.back||0):(S.step===9?8:0);save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(S.step>=6){S.step=S.step===7?6:0;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(n<0&&S.mode==="appeal"&&S.step===5)n=-4;if(n<0&&S.mode!=="appeal"&&S.step===4)n=-3;S.step=Math.max(0,Math.min(5,S.step+n));save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}}
 document.addEventListener("click",function(e){
