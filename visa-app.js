@@ -391,11 +391,10 @@ function chips(q,label){
 /* ===== Paiement : prestataires prévus, activation après validation =====
    Aucun paiement n'est actif dans cette version. Les transactions devront être
    créées et vérifiées côté serveur auprès du prestataire retenu. */
-var PAY_URL="";
-var PAY_URL2="";
 var UNLOCK_URL="";
 var PACK_URL="";
 var UNLOCK_TIMEOUT_MS=8000;
+var SVC_PRICE=15; // Affiché uniquement dans le récapitulatif de paiement.
 var N48={fr:"Modification possible pendant 48 h maximum après la demande, uniquement sur les dates. Le nom et le prénom ne sont jamais modifiables. Passé ce délai, faites une nouvelle demande.",en:"Changes are possible for 48 hours maximum after your request, dates only. First and last name can never be changed. After that, make a new request.",ar:"يمكن التعديل خلال 48 ساعة كحد أقصى بعد الطلب، وللتواريخ فقط. لا يمكن أبدًا تعديل الاسم واللقب. بعد هذه المدة قدّم طلبًا جديدًا."};
 function n48(l){l=l||S.lang;return '<p class="n48" role="note">'+(N48[l]||N48.fr)+'</p>'}
 var PAYMENT_COPY={
@@ -1398,7 +1397,7 @@ function doneHtml(t){
   if(F.mode==="sent"){
     h+='<div class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+esc(R.okT(a.name))+'</b><p>'+esc(R.okTxt(R.ch[F.chan],contactFor()))+'</p></div>'
      +'<ol class="nxt">'+NS[L].map(function(x,i){return '<li class="'+(i===0?'dn':'')+'"><i>'+(i===0?'✓':i+1)+'</i><span>'+x+'</span></li>'}).join("")+'</ol>';
-    h+=d17Later(a);
+    h+=paymentNextHtml();
   }else{
     var enc=encodeURIComponent(txt),b='';
     if(a.email)b+='<a class="pay wide" href="mailto:'+a.email+'?subject='+encodeURIComponent("Visa Checker : "+SVCFR[S.need])+'&body='+enc+'">'+R.bMail+'</a>';
