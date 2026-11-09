@@ -843,44 +843,24 @@ function trResults(){
 function renderTrans(){
   var el=$("trans");if(!el)return;
   var on=S.step===0;el.hidden=!on;if(!on)return;
-  var sig=S.lang+"|"+(TRS.pos?1:0)+"|"+TRD_COUNTRY+"|directory-v2";if(sig===trSig&&el.firstChild){var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}trSig=sig;
-  var R=TRT[S.lang]||TRT.fr,X=TRX[S.lang]||TRX.fr,cities=Object.keys(TR_CITY).filter(function(c){return TR_DATA.some(function(r){return r[1]===c})});
-  var h='<h2>'+R.t+'</h2>';
-  var DIR={
-    fr:{tn:"Demandeur tunisien",dz:"Demandeur algérien",ma:"Demandeur marocain",tnSub:"Liste des traducteurs en Tunisie pour les demandeurs tunisiens. La liste affichée est celle publiée par le Consulat général de France à Tunis.",dzSub:"Annuaire officiel du ministère de la Justice algérien : recherchez les traducteurs-interprètes officiels via le portail des auxiliaires de justice.",maSub:"Répertoire national officiel du ministère de la Justice marocain : recherchez les traducteurs assermentés par nom ou par ville.",open:"Consulter la liste officielle",extra:"Annuaire ATAJ (association professionnelle)",dzAlger:"Liste officielle — Cour d’Alger",dzBiskra:"Liste officielle — Cour de Biskra",note:"Choisissez la liste correspondant à votre pays. Avant de commander, vérifiez la combinaison linguistique autorisée et demandez à l’autorité destinataire si elle accepte cette traduction."},
-    en:{tn:"Tunisian applicant",dz:"Algerian applicant",ma:"Moroccan applicant",tnSub:"Translator list in Tunisia for Tunisian applicants. The displayed list is published by the French Consulate General in Tunis.",dzSub:"Official Algerian Ministry of Justice directory: find official translator-interpreters through the judicial auxiliaries portal.",maSub:"Official Moroccan Ministry of Justice national directory: search sworn translators by name or city.",open:"View official directory",extra:"ATAJ professional directory",dzAlger:"Official list — Algiers Court",dzBiskra:"Official list — Biskra Court",note:"Choose the directory matching your country. Before ordering, confirm the authorised language pair and ask the receiving authority whether it accepts the translation."},
-    ar:{tn:"طالب تأشيرة تونسي",dz:"طالب تأشيرة جزائري",ma:"طالب تأشيرة مغربي",tnSub:"قائمة المترجمين في تونس لفائدة طالبي التأشيرة التونسيين. القائمة المعروضة منشورة من القنصلية العامة الفرنسية بتونس.",dzSub:"الدليل الرسمي لوزارة العدل الجزائرية: ابحث عن المترجمين الرسميين عبر بوابة مساعدي العدالة.",maSub:"المرجع الوطني الرسمي لوزارة العدل المغربية: البحث عن المترجمين المحلفين بالاسم أو المدينة.",open:"الاطلاع على الدليل الرسمي",extra:"دليل جمعية ATAJ المهنية",dzAlger:"القائمة الرسمية — مجلس قضاء الجزائر",dzBiskra:"القائمة الرسمية — مجلس قضاء بسكرة",note:"اختر الدليل المطابق لبلدك. قبل الطلب، تحقق من اللغات المرخص بها واسأل الجهة المستقبلة إن كانت تقبل الترجمة."}
-  }[S.lang]||null;
-  var countries=[
-    {id:"tn",flag:"🇹🇳",name:DIR.tn,desc:DIR.tnSub,url:TR_SRC.url},
-    {id:"dz",flag:"🇩🇿",name:DIR.dz,desc:DIR.dzSub,url:"https://www.mjustice.gov.dz/ar/البحث-عن-مساعدي-العدالة/"},
-    {id:"ma",flag:"🇲🇦",name:DIR.ma,desc:DIR.maSub,url:"https://marjii.justice.gov.ma/"}
-  ];
-  if(!countries.some(function(x){return x.id===TRD_COUNTRY}))TRD_COUNTRY="tn";
-  var selected=countries.filter(function(x){return x.id===TRD_COUNTRY})[0];
-  h+='<p class="trd-sub">'+selected.desc+'</p>';
-  h+='<div class="trd-country-tabs" role="group" aria-label="'+(S.lang==="ar"?"اختر البلد":S.lang==="en"?"Choose a country":"Choisir un pays")+'">';
-  countries.forEach(function(x){h+='<button type="button" class="trd-country-tab" data-trd-country="'+x.id+'" aria-pressed="'+(x.id===TRD_COUNTRY?"true":"false")+'"><span aria-hidden="true">'+x.flag+'</span> '+x.name+'</button>'});
-  h+='</div>';
-  if(TRD_COUNTRY!=="tn"){
-    h+='<article class="trd-country trd-country-panel"><b>'+selected.flag+' '+selected.name+'</b><a href="'+selected.url+'" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a>';
-    if(TRD_COUNTRY==="ma")h+='<a class="trd-extra" href="https://atajtraduction.ma/" target="_blank" rel="noopener noreferrer">'+DIR.extra+'</a>';
-    if(TRD_COUNTRY==="dz")h+='<a class="trd-extra" href="https://cour-alger.mjustice.dz/قائمة_المترجمون" target="_blank" rel="noopener noreferrer">'+DIR.dzAlger+'</a><a class="trd-extra" href="https://courdebiskra.mjustice.dz/قائمة_المترجمون" target="_blank" rel="noopener noreferrer">'+DIR.dzBiskra+'</a>';
-    h+='</article><p class="trd-src">'+DIR.note+'</p>';
-  }
-  if(TRD_COUNTRY==="tn"){
+  var sig=S.lang+"|"+(TRS.pos?1:0)+"|tunisia-only-v1";
+  if(sig===trSig&&el.firstChild){var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}
+  trSig=sig;
+  var R=TRT[S.lang]||TRT.fr,X=TRX[S.lang]||TRX.fr;
+  var cities=Object.keys(TR_CITY).filter(function(c){return TR_DATA.some(function(r){return r[1]===c})});
+  var title={fr:"Traducteurs assermentés en Tunisie",en:"Sworn translators in Tunisia",ar:"المترجمون المحلَّفون في تونس"}[S.lang]||"Traducteurs assermentés en Tunisie";
+  var subtitle={
+    fr:"Liste officielle du Consulat général de France à Tunis (valide au "+TR_SRC.date+"), destinée aux demandeurs tunisiens. Elle répertorie les traducteurs en Tunisie pour les traductions vers et depuis le français.",
+    en:"Official list of the French Consulate General in Tunis (valid on "+TR_SRC.date+"), for Tunisian applicants. It lists translators in Tunisia for translations to and from French.",
+    ar:"القائمة الرسمية للقنصلية العامة الفرنسية بتونس (سارية بتاريخ "+TR_SRC.date+") والمخصصة لطالبي التأشيرة التونسيين. تضم المترجمين في تونس للترجمة من الفرنسية وإليها."
+  }[S.lang]||"";
+  var h='<h2>'+title+'</h2><p class="trd-sub">'+subtitle+'</p>';
   h+='<div class="trd-search"><span class="trd-lens" aria-hidden="true">🔎</span><input id="trd-q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" list="trd-dl" placeholder="'+escA(X.ph)+'" aria-label="'+escA(X.ph)+'" value="'+escA(TRS.q)+'"><datalist id="trd-dl">'+cities.map(function(c){return '<option value="'+escA(c)+'">'}).join("")+'</datalist></div>';
   h+='<button type="button" class="reset trd-near" id="trd-near" aria-pressed="'+(TRS.pos?"true":"false")+'">📍 '+R.near+'</button>';
   h+='<div class="trd-res" id="trd-res" aria-live="polite">'+trResults()+'</div>';
   h+='<p class="trd-src">'+R.src+' : <a href="'+TR_SRC.url+'" rel="noopener" target="_blank">Consulat général de France à Tunis</a>. '+R.note+(SITE.email?' <a href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Traducteurs")+'">'+SITE.email+'</a>':'')+'</p>';
-  }
   el.innerHTML=h;
 }
-document.addEventListener("click",function(e){
-  var b=e.target.closest&&e.target.closest("[data-trd-country]");if(!b)return;
-  var id=b.getAttribute("data-trd-country");if(id!=="tn"&&id!=="dz"&&id!=="ma")return;
-  TRD_COUNTRY=id;trSig="";renderTrans();
-});
 document.addEventListener("input",function(e){if(e.target&&e.target.id==="trd-q"){TRS.q=e.target.value;TRS.all=false;var rs=$("trd-res");if(rs)rs.innerHTML=trResults()}});
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("#trd-near,#trd-more");if(!b)return;
   if(b.id==="trd-more"){TRS.all=!TRS.all;var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}
