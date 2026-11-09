@@ -1,10 +1,7 @@
-// Worker « visa-chat » : assistant Visa Checker + entraînement à l'entretien (payant, par code).
-// À déployer sur Cloudflare (Workers & Pages > visa-chat > Edit code). Ce fichier n'est PAS servi par le site.
-// Variables Cloudflare : GEMINI_API_KEY (secret), INTERVIEW_CODES (secret, codes séparés par des virgules).
-// Le modèle Gemini est écrit directement dans le code (variable « model » plus bas).
-// KV nommé USAGE (Bindings) : limite par code, codes générés après paiement, commandes.
-// Paiement Konnect : KONNECT_API_KEY (secret), KONNECT_WALLET_ID, PRICE_MILLIMES (ex. 15000 = 15 DT),
-//   KONNECT_BASE (par défaut : bac à sable), SITE_URL.
+// Worker « visa-chat » : assistant Visa Checker + entraînement par code.
+// Le paiement est désactivé jusqu'au choix officiel du prestataire.
+// Variables Cloudflare : GEMINI_API_KEY (secret), INTERVIEW_CODES (secret).
+// KV nommé USAGE (Bindings) : codes d'accès existants et quotas d'entraînement.
 // Le quota KV est un contrôle best-effort : KV n'offre pas d'incrément atomique ni de cohérence forte.
 
 const SYSTEM = `Tu es l'assistant de Visa Checker, un site qui aide les voyageurs tunisiens à vérifier leur dossier de visa pour la France.
@@ -33,13 +30,8 @@ Règles strictes :
 - Réponds dans la langue du client (français, anglais ou arabe), en texte simple sans markdown, avec des tirets "-" pour les listes, 150 mots maximum.
 - Si la question sort du sujet de l'entretien de visa, ramène poliment vers l'entraînement.`;
 
-const DEFAULT_SITE = "https://checkmyvisa.org/"; // surchargé par la variable SITE_URL
 const IV_MAX = 40; // messages par code (utilisé seulement si le KV « USAGE » est relié)
 const ORIGINS = ["https://checkmyvisa.org", "https://www.checkmyvisa.org", "https://myvisa-checker.github.io"];
-const DEFAULT_KBASE = "https://api.sandbox.konnect.network/api/v2"; // production : https://api.konnect.network/api/v2
-const ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-const rid = (n) => Array.from(crypto.getRandomValues(new Uint8Array(n)), (b) => ALPHA[b % ALPHA.length]).join("");
-const TTL = 60 * 60 * 24 * 30;
 const FALLBACK = "Désolé, je n'ai pas pu répondre. Réessaie dans un instant.";
 
 // Limite de l'assistant gratuit : RL_MAX messages par RL_WINDOW et par visiteur (adresse IP).
@@ -81,85 +73,9 @@ export default {
     try {
       const body = await request.json();
       const interview = body.mode === "interview";
-      const SITE = env.SITE_URL || DEFAULT_SITE;
-      const KBASE = env.KONNECT_BASE || DEFAULT_KBASE;
-
-      // ----- Paiement : création d'une commande -----
-      if (body.action === "pay_create") {
-        const amountText = String(env.PRICE_MILLIMES || "");
-        const amount = Number(amountText);
-        if (!env.USAGE || !Number.isSafeInteger(amount) || amount <= 0) return out({ error: "config" }, 500);
-        if (!env.KONNECT_API_KEY || !env.KONNECT_WALLET_ID) return out({ error: "config" }, 500);
-        const orderId = rid(16);
-        const orderRecord = JSON.stringify({ orderId, amount, token: "TND", code: "IV-" + rid(4) + "-" + rid(4) });
-        const r = await fetch(KBASE + "/payments/init-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-api-key": env.KONNECT_API_KEY },
-          body: JSON.stringify({
-            receiverWalletId: env.KONNECT_WALLET_ID, token: "TND", amount, type: "immediate",
-            description: "Visa Checker - entrainement entretien", orderId, lifespan: 30,
-            successUrl: SITE + "?pay=1", failUrl: SITE + "?pay=fail",
-          }),
-        });
-        const d = await r.json().catch(() => ({}));
-        let payUrl;
-        try {
-          payUrl = new URL(d.payUrl);
-        } catch {
-          return out({ error: "gateway" }, 502);
-        }
-        if (!r.ok || !/^[A-Za-z0-9_-]{1,64}$/.test(String(d.paymentRef || "")) ||
-            payUrl.protocol !== "https:" ||
-            !(payUrl.hostname === "konnect.network" || payUrl.hostname.endsWith(".konnect.network"))) {
-          return out({ error: "gateway" }, 502);
-        }
-        await env.USAGE.put("order:" + d.paymentRef, orderRecord, { expirationTtl: TTL });
-        return out({ payUrl: payUrl.href, ref: d.paymentRef });
-      }
-
-      // ----- Paiement : vérification puis génération du code -----
-      if (body.action === "pay_check") {
-        const ref = String(body.ref || "");
-        if (!/^[A-Za-z0-9_-]{1,64}$/.test(ref) || !env.USAGE || !env.KONNECT_API_KEY) return out({ error: "bad" }, 400);
-        const done = await env.USAGE.get("ref:" + ref);
-        if (done) return out({ paid: true, code: done });
-        const savedOrder = await env.USAGE.get("order:" + ref);
-        if (!savedOrder) return out({ paid: false, error: "unknown" });
-        let order;
-        try {
-          order = JSON.parse(savedOrder);
-        } catch {
-          return out({ paid: false, error: "invalid_order" }, 409);
-        }
-        if (!order || typeof order.orderId !== "string" ||
-            !Number.isSafeInteger(order.amount) || order.amount <= 0 || order.token !== "TND" ||
-            typeof order.code !== "string" || !/^IV-[A-Z2-9]{4}-[A-Z2-9]{4}$/.test(order.code)) {
-          return out({ paid: false, error: "invalid_order" }, 409);
-        }
-        const ctl = new AbortController();
-        const tm = setTimeout(() => ctl.abort(), 10000);
-        let r, d;
-        try {
-          r = await fetch(KBASE + "/payments/" + encodeURIComponent(ref), {
-            headers: { "x-api-key": env.KONNECT_API_KEY },
-            signal: ctl.signal,
-          });
-          d = await r.json().catch(() => ({}));
-        } finally {
-          clearTimeout(tm);
-        }
-        const p = d.payment || d;
-        const reachedAmount = Number(p.reachedAmount);
-        const paid = r.ok && p.status === "completed" &&
-          p.orderId === order.orderId && p.token === order.token &&
-          Number.isFinite(reachedAmount) && reachedAmount >= order.amount;
-        if (!paid) return out({ paid: false });
-        // Le code est créé et stocké avec la commande avant paiement : les vérifications simultanées
-        // du même paiement retrouvent toujours le même code.
-        const code = order.code;
-        await env.USAGE.put("mint:" + code, "1", { expirationTtl: TTL });
-        await env.USAGE.put("ref:" + ref, code, { expirationTtl: TTL });
-        return out({ paid: true, code });
+      // Aucun prestataire n'est sélectionné pour le moment : pas de création ni validation de paiement.
+      if (body.action === "pay_create" || body.action === "pay_check") {
+        return out({ error: "payment_unavailable" }, 503);
       }
 
       // ----- Entraînement : accès par code -----
