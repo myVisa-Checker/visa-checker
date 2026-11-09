@@ -11,7 +11,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "bump-version.mjs"]) {
+for (const f of ["visa-app.js", "visa-chat.js", "joury.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "bump-version.mjs"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -95,6 +95,14 @@ if (loaded) {
   }
   for (const o of ["ma", "dz"]) { const miss = Object.keys(api.EVORI[o]).filter((id) => !api.EV.some((c) => c.id === id)); ok("EVORI." + o + " : tous les pays sont définis", miss.length === 0, miss.join(",")); }
 }
+
+const jouryHtml = read("joury.html"), jouryJs = read("joury.js"), worker = read("worker/visa-chat-worker.js");
+ok("ancienne bulle Assistant Visa Checker retirée", !/id="vc-btn"/.test(html) && !/id="vc-box"/.test(html));
+ok("accès flottant Joury présent", /class="joury-fab"/.test(html) && /joury.html/.test(html));
+ok("Aicha dispose d’un import documentaire", /id="aichaFile"/.test(jouryHtml) && /id="aichaAnalyse"/.test(jouryHtml));
+ok("accès entretien Aicha contrôlé par code", /id="aichaCode"/.test(jouryHtml) && /mode:"interview",check:true/.test(jouryJs));
+ok("modes Joury et Aicha séparés", /mode:mode\|\|""/.test(jouryJs) && /joury-refusal/.test(jouryJs) && /aicha-review/.test(jouryJs));
+ok("prompts spécialisés présents dans le Worker", /SYSTEM_JOURY_REFUSAL/.test(worker) && /SYSTEM_AICHA_REVIEW/.test(worker) && /Tu es Aicha/.test(worker));
 
 console.log("\n" + pass + " réussis, " + fail + " échoués");
 process.exit(fail ? 1 : 0);
