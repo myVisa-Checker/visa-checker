@@ -78,7 +78,7 @@ export default {
     const out = (obj, status = 200) =>
       new Response(JSON.stringify(obj), {
         status,
-        headers: { ...cors, "Content-Type": "application/json" },
+        headers: { ...cors, "Content-Type": "application/json", "Cache-Control": "no-store, max-age=0" },
       });
 
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
@@ -102,6 +102,7 @@ export default {
         return out({ error: "invalid_body" }, 400);
       }
       const interview = body.mode === "interview";
+      if (interview && !env.USAGE) return out({ error: "usage_unavailable" }, 503);
 
       // Paiements désactivés jusqu'à validation d'un partenaire et configuration de production.
       // Les anciens appels frontend reçoivent une réponse explicite, sans fournisseur de paiement actif.
@@ -141,6 +142,7 @@ export default {
       if (!msgs.length) return out({ error: "empty" }, 400);
       if (!interview && limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
 
+      if (!env.GEMINI_API_KEY) return out({ error: "service_unavailable", reply: FALLBACK }, 503);
       const model = env.GEMINI_MODEL || "gemini-3.5-flash-lite";
       const ctl = new AbortController();
       const tm = setTimeout(() => ctl.abort(), 20000); // délai maximum : 20 secondes
@@ -158,7 +160,7 @@ export default {
             body: JSON.stringify({
               systemInstruction: { parts: [{ text: interview ? SYSTEM_INTERVIEW : SYSTEM }] },
               contents: msgs,
-              generationConfig: { maxOutputTokens: 2500 },
+              generationConfig: { maxOutputTokens: 700 },
             }),
           }
         );
