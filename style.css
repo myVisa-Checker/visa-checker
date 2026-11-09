@@ -621,3 +621,38 @@ html[lang="ar"] .ia-badge{letter-spacing:0;text-transform:none;font-size:13px}
 .vc-aicha .vc-avatar{background:#f3eaff}.vc-joury .vc-avatar{background:#e5f4ff}
 @media(max-width:360px){.vc-advisors-grid{gap:8px}.vc-advisor-card{padding:10px 7px}.vc-avatar{width:112px}}
 @media(prefers-reduced-motion:reduce){.vc-advisor-card,.vc-avatar img{animation:none;transition:none}.vc-advisor-card:hover{transform:none}}
+
+
+/* Visa Checker — refined motion layer */
+@keyframes vc-section-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes vc-card-enter {
+  from { opacity: 0; transform: translateY(14px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.vc-advisors {
+  animation: vc-section-enter .55s cubic-bezier(.2,.7,.25,1) both;
+}
+.vc-advisor-card {
+  animation: vc-card-enter .62s cubic-bezier(.2,.7,.25,1) both;
+}
+.vc-advisor-card:nth-child(2) { animation-delay: .12s; }
+.vc-advisor-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+.vc-avatar {
+  transition: box-shadow .28s ease, transform .28s ease;
+}
+@media (hover:hover) {
+  .vc-advisor-card:hover .vc-avatar {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 5px var(--surface), 0 0 0 7px var(--accent);
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  .vc-advisors, .vc-advisor-card { animation: none !important; }
+  .vc-avatar { transition: none !important; }
+}
