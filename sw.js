@@ -6,7 +6,7 @@
    - Polices : cache d'abord, rafraîchi en arrière-plan.
    - Jamais de cache pour les requêtes POST ni pour les API (Make, déblocage) : elles passent directement.
    VERSION est estampillée par bump-version.mjs à chaque déploiement : les anciens caches sont supprimés à l'activation. */
-const VERSION = "2026.11.10.2355"; /*@version*/
+const VERSION = "2026.11.10.2410"; /*@version*/
 const SHELL = "vc-shell-" + VERSION;
 const RUNTIME = "vc-runtime-" + VERSION;
 const NET_TIMEOUT = 4000; // au-delà, on sert le cache (réseau lent = « hors-ligne » pour l'utilisateur)
@@ -16,6 +16,7 @@ const PRECACHE = [
   "joury.html",
   "joury.css",
   "joury.js",
+  "nav.css",
   "manifest.json",
   "radar.html",
   "planner.html",
@@ -38,7 +39,7 @@ self.addEventListener("install", (e) => {
       // addAll échoue si UNE ressource échoue : on tolère les absences ; cache:"reload" ignore le cache HTTP
       .then((c) => Promise.all(PRECACHE.map((u) => c.add(new Request(u, { cache: "reload" })).catch(() => null))))
   );
-  // pas de skipWaiting automatique : la nouvelle version attend un clic « Mettre à jour » (voir message SKIP_WAITING)
+  self.skipWaiting(); // active immédiatement la version publiée pour éviter de garder une ancienne interface en cache
 });
 
 self.addEventListener("activate", (e) => {
