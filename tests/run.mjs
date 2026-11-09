@@ -98,7 +98,7 @@ const productApp = read("visa-app.js");
 ok("catégories partenaires intégrées au parcours", ["SPT.sTr", "SPT.sDoc", "SPT.sEsim"].every((x) => productApp.includes(x)));
 ok("accès au programme partenaires depuis l'accueil", productApp.includes('href="partenaires.html"'));
 const ivStart = productApp.indexOf("var IVT=");
-const ivEnd = productApp.indexOf("\\nvar IVOPEN", ivStart);
+const ivEnd = productApp.indexOf("\nvar IVOPEN", ivStart);
 const ivText = productApp.slice(ivStart, ivEnd > ivStart ? ivEnd : ivStart + 6000);
 ok("conseils d'entretien non limités à la Tunisie", !/Tunisie|Tunisia|تونس/.test(ivText));
 
