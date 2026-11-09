@@ -806,7 +806,7 @@ var TRT={
  en:{t:"Sworn translators in Tunisia",sub:function(d){return "Official list of the Consulate General of France in Tunis (valid on "+d+"), for translation to and from French. For another Schengen country, ask its embassy or consulate which translations it accepts."},src:"Source",all:"All cities",unk:"City not specified",near:"Near me",nearOff:"Location denied or unavailable.",n:function(n){return n+(n>1?" translators":" translator")},call:"Call",wa:"WhatsApp",mail:"E-mail",map:"View on map",more:function(n){return "Show all ("+n+")"},less:"Show less",city:"Filter by city",appr:"Approximate distances, measured from the city centre.",note:"List provided for information by the consulate: it does not replace checking with the local authorities. To correct or remove an entry, write to us."},
  ar:{t:"المترجمون المحلَّفون في تونس",sub:function(d){return "القائمة الرسمية للقنصلية العامة لفرنسا في تونس (سارية بتاريخ "+d+")، للترجمة من الفرنسية وإليها. بالنسبة لدولة شنغن أخرى، اسأل سفارتها أو قنصليتها عن الترجمات المقبولة."},src:"المصدر",all:"كل المدن",unk:"المدينة غير محددة",near:"الأقرب إليّ",nearOff:"تم رفض الموقع أو هو غير متاح.",n:function(n){return n+" مترجم"},call:"اتصال",wa:"واتساب",mail:"بريد إلكتروني",map:"عرض على الخريطة",more:function(n){return "عرض الكل ("+n+")"},less:"عرض أقل",city:"التصفية حسب المدينة",appr:"المسافات تقريبية، محسوبة من وسط المدينة.",note:"القائمة مقدَّمة للإعلام من القنصلية ولا تغني عن التحقق لدى السلطات المحلية. لتصحيح بطاقة أو حذفها، راسلنا."}
 };
-var TRS={q:"",pos:null,posErr:false,all:false},trSig="";
+var TRS={q:"",pos:null,posErr:false,all:false},trSig="",TRD_COUNTRY="tn";
 var TR_ALIAS={"tunis":"Tunis","تونس":"Tunis","lac":"Tunis","menzah":"Tunis","manar":"Tunis","bab bnet":"Tunis","sfax":"Sfax","صفاقس":"Sfax","sousse":"Sousse","سوسة":"Sousse","nabeul":"Nabeul","نابل":"Nabeul","hammamet":"Nabeul","الحمامات":"Nabeul","beja":"Béja","باجة":"Béja","djerba":"Djerba","jerba":"Djerba","جربة":"Djerba","houmt souk":"Djerba","medenine":"Djerba","la marsa":"La Marsa","marsa":"La Marsa","المرسى":"La Marsa","la soukra":"La Soukra","soukra":"La Soukra","ariana":"La Soukra","السكرة":"La Soukra","أريانة":"La Soukra","hammam lif":"Hammam Lif","ben arous":"Hammam Lif","حمام الأنف":"Hammam Lif","grombalia":"Grombalia","قرمبالية":"Grombalia"};
 var TRX={
  fr:{ph:"Tapez votre ville…",hint:"Tapez votre ville pour voir les traducteurs assermentés près de chez vous",noRes:function(q){return "Aucun traducteur trouvé pour « "+q+" ». Essayez une ville proche ou le bouton « Près de moi »."}},
@@ -843,7 +843,7 @@ function trResults(){
 function renderTrans(){
   var el=$("trans");if(!el)return;
   var on=S.step===0;el.hidden=!on;if(!on)return;
-  var sig=S.lang+"|"+(TRS.pos?1:0)+"|directory-v1";if(sig===trSig&&el.firstChild){var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}trSig=sig;
+  var sig=S.lang+"|"+(TRS.pos?1:0)+"|"+TRD_COUNTRY+"|directory-v2";if(sig===trSig&&el.firstChild){var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}trSig=sig;
   var R=TRT[S.lang]||TRT.fr,X=TRX[S.lang]||TRX.fr,cities=Object.keys(TR_CITY).filter(function(c){return TR_DATA.some(function(r){return r[1]===c})});
   var h='<h2>'+R.t+'</h2><p class="trd-sub">'+R.sub(TR_SRC.date)+'</p>';
   var DIR={
@@ -851,17 +851,36 @@ function renderTrans(){
     en:{tn:"Tunisia",dz:"Algeria",ma:"Morocco",tnSub:"Sworn-translator directory published by the French Consulate General in Tunis.",dzSub:"Official search from Algeria’s Ministry of Justice. Search by surname, first name and judicial district.",maSub:"Morocco’s Ministry of Justice national directory: search by name or city and view professional profiles.",open:"Open official directory",extra:"ATAJ professional directory",note:"External directories are the reference sources. Confirm the authorised language pair and the translator’s status before ordering."},
     ar:{tn:"تونس",dz:"الجزائر",ma:"المغرب",tnSub:"قائمة المترجمين المحلفين المنشورة من القنصلية العامة الفرنسية بتونس.",dzSub:"البحث الرسمي لوزارة العدل الجزائرية حسب اللقب والاسم والجهة القضائية.",maSub:"المرجع الوطني لوزارة العدل المغربية: البحث بالاسم أو المدينة والاطلاع على البطاقة المهنية.",open:"فتح الدليل الرسمي",extra:"دليل جمعية ATAJ",note:"هذه الأدلة الخارجية هي المصادر المرجعية. تحقق من اللغات المرخص بها ومن الصفة الرسمية للمترجم قبل الطلب."}
   }[S.lang]||null;
-  h+='<div class="trd-country-grid">'
-    +'<article class="trd-country"><b>'+DIR.tn+'</b><p>'+DIR.tnSub+'</p><a href="'+TR_SRC.url+'" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a></article>'
-    +'<article class="trd-country"><b>'+DIR.dz+'</b><p>'+DIR.dzSub+'</p><a href="https://www.mjustice.gov.dz/ar/بحث-عن-المترجمين/" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a></article>'
-    +'<article class="trd-country"><b>'+DIR.ma+'</b><p>'+DIR.maSub+'</p><a href="https://marjii.justice.gov.ma/" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a><a class="trd-extra" href="https://atajtraduction.ma/" target="_blank" rel="noopener noreferrer">'+DIR.extra+'</a></article>'
-    +'</div><p class="trd-src">'+DIR.note+'</p>';
+  var countries=[
+    {id:"tn",flag:"🇹🇳",name:DIR.tn,desc:DIR.tnSub,url:TR_SRC.url},
+    {id:"dz",flag:"🇩🇿",name:DIR.dz,desc:DIR.dzSub,url:"https://www.mjustice.gov.dz/"},
+    {id:"ma",flag:"🇲🇦",name:DIR.ma,desc:DIR.maSub,url:"https://marjii.justice.gov.ma/"}
+  ];
+  if(!countries.some(function(x){return x.id===TRD_COUNTRY}))TRD_COUNTRY="tn";
+  var selected=countries.filter(function(x){return x.id===TRD_COUNTRY})[0];
+  h+='<div class="trd-country-tabs" role="group" aria-label="'+(S.lang==="ar"?"اختر البلد":S.lang==="en"?"Choose a country":"Choisir un pays")+'">';
+  countries.forEach(function(x){h+='<button type="button" class="trd-country-tab" data-trd-country="'+x.id+'" aria-pressed="'+(x.id===TRD_COUNTRY?"true":"false")+'"><span aria-hidden="true">'+x.flag+'</span> '+x.name+'</button>'});
+  h+='</div>';
+  if(TRD_COUNTRY==="tn"){
+    h+='<p class="trd-src">'+selected.desc+'</p>';
+  }else{
+    h+='<article class="trd-country trd-country-panel"><b>'+selected.flag+' '+selected.name+'</b><p>'+selected.desc+'</p><a href="'+selected.url+'" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a>';
+    if(TRD_COUNTRY==="ma")h+='<a class="trd-extra" href="https://atajtraduction.ma/" target="_blank" rel="noopener noreferrer">'+DIR.extra+'</a>';
+    h+='</article><p class="trd-src">'+DIR.note+'</p>';
+  }
+  if(TRD_COUNTRY==="tn"){
   h+='<div class="trd-search"><span class="trd-lens" aria-hidden="true">🔎</span><input id="trd-q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" list="trd-dl" placeholder="'+escA(X.ph)+'" aria-label="'+escA(X.ph)+'" value="'+escA(TRS.q)+'"><datalist id="trd-dl">'+cities.map(function(c){return '<option value="'+escA(c)+'">'}).join("")+'</datalist></div>';
   h+='<button type="button" class="reset trd-near" id="trd-near" aria-pressed="'+(TRS.pos?"true":"false")+'">📍 '+R.near+'</button>';
   h+='<div class="trd-res" id="trd-res" aria-live="polite">'+trResults()+'</div>';
   h+='<p class="trd-src">'+R.src+' : <a href="'+TR_SRC.url+'" rel="noopener" target="_blank">Consulat général de France à Tunis</a>. '+R.note+(SITE.email?' <a href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Traducteurs")+'">'+SITE.email+'</a>':'')+'</p>';
+  }
   el.innerHTML=h;
 }
+document.addEventListener("click",function(e){
+  var b=e.target.closest&&e.target.closest("[data-trd-country]");if(!b)return;
+  var id=b.getAttribute("data-trd-country");if(id!=="tn"&&id!=="dz"&&id!=="ma")return;
+  TRD_COUNTRY=id;trSig="";renderTrans();
+});
 document.addEventListener("input",function(e){if(e.target&&e.target.id==="trd-q"){TRS.q=e.target.value;TRS.all=false;var rs=$("trd-res");if(rs)rs.innerHTML=trResults()}});
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("#trd-near,#trd-more");if(!b)return;
   if(b.id==="trd-more"){TRS.all=!TRS.all;var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}
