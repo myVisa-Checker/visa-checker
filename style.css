@@ -603,3 +603,21 @@ html[lang="ar"] .ia-badge{letter-spacing:0;text-transform:none;font-size:13px}
 .joury-word{display:block;font:800 21px var(--f-display,Arial);letter-spacing:.06em;color:#173f8f}.joury-entry-title{display:block;font-size:13px;margin-top:2px}.joury-entry p{font-size:12px;line-height:1.6;color:#687d9a;margin:7px 0 0;max-width:520px}
 .joury-entry-button{display:inline-flex;align-items:center;gap:10px;padding:12px 15px;border-radius:10px;background:#245bd4;color:#fff;text-decoration:none;font-size:12px;font-weight:750;white-space:nowrap}.joury-entry-button:hover{background:#1749b5}
 @media(max-width:560px){.joury-entry{grid-template-columns:1fr;padding:17px}.joury-entry-head{grid-column:1}.joury-entry-button{justify-self:start}}
+
+/* AI assistant cards below flight and hotel shortcuts */
+.vc-advisors{width:100%;margin:16px 0 8px;display:flex;flex-direction:column;gap:11px}
+.vc-advisors-head{font:700 11px var(--f-mono);letter-spacing:.13em;color:var(--muted);text-align:center}
+.vc-advisors-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%}
+.vc-advisor-card{min-width:0;display:flex;flex-direction:column;align-items:center;gap:10px;padding:13px 10px 14px;text-align:center;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-card);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.vc-advisor-card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:var(--shadow-lift)}
+.vc-avatar{display:block;width:min(100%,142px);aspect-ratio:1;border-radius:50%;overflow:hidden;background:var(--accent-soft);box-shadow:0 0 0 5px var(--surface),0 0 0 6px var(--line)}
+.vc-avatar img{display:block;width:100%;height:100%;object-fit:cover;animation:vc-float 4s ease-in-out infinite}
+.vc-joury .vc-avatar img{animation-delay:-1.7s}
+@keyframes vc-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.vc-advisor-copy{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.vc-advisor-copy>b{font:800 1.15rem var(--f-display);color:var(--accent)}
+.vc-advisor-copy>small{font-size:12px;line-height:1.35;color:var(--muted)}
+.vc-advisor-copy>em{margin-top:5px;font-style:normal;font-size:12px;font-weight:700;color:var(--accent)}
+.vc-aicha .vc-avatar{background:#f3eaff}.vc-joury .vc-avatar{background:#e5f4ff}
+@media(max-width:360px){.vc-advisors-grid{gap:8px}.vc-advisor-card{padding:10px 7px}.vc-avatar{width:112px}}
+@media(prefers-reduced-motion:reduce){.vc-advisor-card,.vc-avatar img{animation:none;transition:none}.vc-advisor-card:hover{transform:none}}
