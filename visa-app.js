@@ -1655,6 +1655,17 @@ function ivCardHtml(){
   var X=IVC[S.lang]||IVC.fr;
   return '<div class="needs ivn"><h2 class="hot">'+X.t+'</h2><p class="ag-sub">'+X.s+'</p><div class="sp-chips"><button type="button" class="sp-chip iv-cta" data-iv-open><span class="iv-ico">'+IVICON+'</span><span class="iv-lbl">'+X.b+'</span></button></div><p class="ag-sub">'+X.n+'</p></div>';
 }
+/* ===== Carte « AI Visa Recovery » : immédiatement sous l'entraînement à l'entretien ===== */
+var RECOVERY={
+ fr:{d:"Votre demande de visa a été refusée ? Notre intelligence artificielle analyse votre notification de refus, identifie les points problématiques et vous accompagne dans la recherche de solutions adaptées.",s:"Visa Refusal Analysis & Assistance"},
+ en:{d:"Has your visa application been refused? Our artificial intelligence analyses your refusal notice, identifies the problematic points and helps you explore suitable solutions.",s:"Visa Refusal Analysis & Assistance"},
+ ar:{d:"هل تم رفض طلب التأشيرة؟ يحلل الذكاء الاصطناعي إشعار الرفض، ويحدد النقاط التي تحتاج إلى معالجة، ويرافقك في البحث عن الحلول المناسبة.",s:"تحليل رفض التأشيرة والمساعدة"}
+};
+var RECOVERYICON='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2.8 27 7v8.2c0 6.7-4.5 11.2-11 14-6.5-2.8-11-7.3-11-14V7z" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/><path d="m10.2 16.1 3.8 3.8 7.9-8" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M24.5 3.2v5.2M21.9 5.8h5.2" stroke="#bfdbfe" stroke-width="1.7" stroke-linecap="round"/></svg>';
+function recoveryCardHtml(){
+  var X=RECOVERY[S.lang]||RECOVERY.fr;
+  return '<div class="needs ivn recovery"><div class="sp-chips"><div class="sp-chip iv-cta recovery-cta" role="group" aria-label="AI Visa Recovery" dir="'+(S.lang==="ar"?"rtl":"ltr")+'" style="width:100%;max-width:460px;justify-content:flex-start;white-space:normal;text-align:start"><span class="iv-ico">'+RECOVERYICON+'</span><span style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;white-space:normal;text-align:start"><strong style="font-size:1.05rem;line-height:1.2">AI Visa Recovery</strong><small style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.9">AI Powered</small><span style="font-size:13px;font-weight:600;line-height:1.35">'+X.s+'</span></span></div></div><p class="ag-sub">'+X.d+'</p></div>';
+}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-iv-open]");if(b&&window.__vcInterview)window.__vcInterview()});
 /* ===== États-Unis : pas de liste de pièces, tout se joue à l'entretien ===== */
 var USX={
@@ -1672,7 +1683,7 @@ function usHtml(){
    +'<p class="ag-note">'+esc(X.n)+'</p></section>';
 }
 function renderSponsors(t){
-  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t)+(curC().id==="us"||S.step===6?'':ivCardHtml()):'');
+  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step>0&&S.step<8&&S.step!==7?needsHtml(t)+(curC().id==="us"||S.step===6?'':ivCardHtml()+recoveryCardHtml()):'');
   var h='<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
   h+='<p class="sp-join c">'+SPT.note[S.lang]+'</p>';
   $("sponsors").innerHTML=h;
