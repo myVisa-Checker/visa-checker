@@ -16,12 +16,12 @@
   color:var(--ink,#14212b);text-decoration:none;font-weight:600;font-size:14px;
   padding:6px 2px;border-bottom:2px solid transparent;display:inline-block;
 }
-.sitenav a:hover{color:#c2410c;border-bottom-color:#e8590c}
-.sitenav a[aria-current="page"]{color:#c2410c;border-bottom-color:#e8590c}
+.sitenav a:hover{color:#1e3a8a;border-bottom-color:#1d4ed8}
+.sitenav a[aria-current="page"]{color:#1e3a8a;border-bottom-color:#1d4ed8}
 .sitenav .sn-logo{font-weight:800;font-size:19px;letter-spacing:-.2px;border:0;padding:0}
-.sitenav .sn-logo b{color:#e8590c;font-weight:800}
+.sitenav .sn-logo b{color:#1d4ed8;font-weight:800}
 .sitenav .sn-logo:hover{border:0}
-.sitenav a:focus-visible{outline:3px solid #e8590c;outline-offset:2px;border-radius:4px}
+.sitenav a:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px;border-radius:4px}
 
 /* Dans l'application : la barre fait 48 px, on décale le sélecteur de langue (écran large) */
 @media (min-width:900px){
