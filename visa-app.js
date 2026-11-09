@@ -1001,9 +1001,9 @@ var ORI_SITE={
  dz:{fr:"https://france-visas.gouv.fr/algerie",es:"https://algeria.blsspainvisa.com/",it:"https://visa.vfsglobal.com/dza/fr/ita"}
 };
 var ORI_NOTE={
- fr:"Liste vérifiée en novembre 2026 d'après les sites officiels (France-Visas, centres de dépôt, ambassades). Les règles et les frais changent : confirmez-les avant de déposer. Visa Checker ne garantit pas l'obtention du visa.",
- en:"List checked in November 2026 from official sources (France-Visas, application centres, embassies). Rules and fees change: confirm them before you apply. Visa Checker does not guarantee the visa.",
- ar:"تم التحقق من القائمة في نوفمبر 2026 اعتمادًا على المواقع الرسمية (France-Visas ومراكز الإيداع والسفارات). القواعد والرسوم تتغير: تأكد منها قبل التقديم. لا يضمن Visa Checker الحصول على التأشيرة."
+ fr:"Informations préparées le 3 novembre 2026 à partir des sites officiels (France-Visas, centres de dépôt, ambassades). Les règles et les frais changent : confirmez-les avant de déposer. Cette liste n’est pas une certification officielle et Visa Checker ne garantit pas l’obtention du visa.",
+ en:"Information prepared on 3 November 2026 from official websites (France-Visas, application centres, embassies). Rules and fees change: confirm them before you apply. This is not an official certification, and Visa Checker does not guarantee a visa.",
+ ar:"أُعدّت المعلومات في 3 نوفمبر 2026 اعتمادًا على المواقع الرسمية (France-Visas ومراكز الإيداع والسفارات). القواعد والرسوم تتغير: تأكد منها قبل التقديم. هذه ليست مصادقة رسمية ولا يضمن Visa Checker الحصول على التأشيرة."
 };
 var ORI_ITEMS={
  ma:{
