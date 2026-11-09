@@ -145,6 +145,8 @@ ok("planner sauvegarde localement sans compte", plannerScript.includes("localSto
 ok("planner affiche une progression accessible", plannerPage.includes('id="progress-track"') && plannerPage.includes('role="progressbar"') && plannerScript.includes('setAttribute("aria-valuenow"'));
 ok("planner conserve les tâches cochées lors d’une mise à jour", plannerScript.includes("previousDone=plan&&plan.done?plan.done:{}"));
 ok("planner valide les dates enregistrées", plannerScript.includes("function validDate") && plannerScript.includes("validDate(saved.departure)"));
+ok("planner permet de modifier les échéances et les conserve", plannerScript.includes("dateInput.type=\"date\"") && plannerScript.includes("task.due=dateInput.value") && plannerScript.includes("adjustDate"));
+ok("planner refuse une échéance enregistrée après le départ", plannerScript.includes("validDate(x.due)&&x.due<=saved.departure"));
 ok("planner exporte un calendrier ICS", plannerScript.includes("BEGIN:VCALENDAR") && plannerScript.includes("text/calendar"));
 ok("planner affiche un lien vers la source officielle", productApp.includes("if(p.site)h+=") && productApp.includes("france-visas.gouv.fr/tunisie"));
 ok("planner ne collecte pas de numéro de passeport", !/<input[^>]*(?:passport|passeport)/i.test(plannerPage));
