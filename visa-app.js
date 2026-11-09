@@ -843,9 +843,19 @@ function trResults(){
 function renderTrans(){
   var el=$("trans");if(!el)return;
   var on=S.step===0;el.hidden=!on;if(!on)return;
-  var sig=S.lang+"|"+(TRS.pos?1:0);if(sig===trSig&&el.firstChild){var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}trSig=sig;
+  var sig=S.lang+"|"+(TRS.pos?1:0)+"|directory-v1";if(sig===trSig&&el.firstChild){var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}trSig=sig;
   var R=TRT[S.lang]||TRT.fr,X=TRX[S.lang]||TRX.fr,cities=Object.keys(TR_CITY).filter(function(c){return TR_DATA.some(function(r){return r[1]===c})});
   var h='<h2>'+R.t+'</h2><p class="trd-sub">'+R.sub(TR_SRC.date)+'</p>';
+  var DIR={
+    fr:{tn:"Tunisie",dz:"Algérie",ma:"Maroc",tnSub:"Annuaire des traducteurs assermentés publié par le Consulat général de France à Tunis.",dzSub:"Recherche officielle du ministère de la Justice algérien. Filtrez par nom, prénom et cour judiciaire.",maSub:"Référentiel national du ministère de la Justice marocain : recherche par nom ou ville, avec fiches professionnelles.",open:"Ouvrir l’annuaire officiel",extra:"Annuaire professionnel ATAJ",note:"Les annuaires externes sont les sources de référence. Vérifiez la langue autorisée et le statut du traducteur avant toute commande."},
+    en:{tn:"Tunisia",dz:"Algeria",ma:"Morocco",tnSub:"Sworn-translator directory published by the French Consulate General in Tunis.",dzSub:"Official search from Algeria’s Ministry of Justice. Search by surname, first name and judicial district.",maSub:"Morocco’s Ministry of Justice national directory: search by name or city and view professional profiles.",open:"Open official directory",extra:"ATAJ professional directory",note:"External directories are the reference sources. Confirm the authorised language pair and the translator’s status before ordering."},
+    ar:{tn:"تونس",dz:"الجزائر",ma:"المغرب",tnSub:"قائمة المترجمين المحلفين المنشورة من القنصلية العامة الفرنسية بتونس.",dzSub:"البحث الرسمي لوزارة العدل الجزائرية حسب اللقب والاسم والجهة القضائية.",maSub:"المرجع الوطني لوزارة العدل المغربية: البحث بالاسم أو المدينة والاطلاع على البطاقة المهنية.",open:"فتح الدليل الرسمي",extra:"دليل جمعية ATAJ",note:"هذه الأدلة الخارجية هي المصادر المرجعية. تحقق من اللغات المرخص بها ومن الصفة الرسمية للمترجم قبل الطلب."}
+  }[S.lang]||null;
+  h+='<div class="trd-country-grid">'
+    +'<article class="trd-country"><b>'+DIR.tn+'</b><p>'+DIR.tnSub+'</p><a href="'+TR_SRC.url+'" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a></article>'
+    +'<article class="trd-country"><b>'+DIR.dz+'</b><p>'+DIR.dzSub+'</p><a href="https://www.mjustice.dz/ar/بحث-عن-المترجمين/" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a></article>'
+    +'<article class="trd-country"><b>'+DIR.ma+'</b><p>'+DIR.maSub+'</p><a href="https://marjii.justice.gov.ma/" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a><a class="trd-extra" href="https://atajtraduction.ma/" target="_blank" rel="noopener noreferrer">'+DIR.extra+'</a></article>'
+    +'</div><p class="trd-src">'+DIR.note+'</p>';
   h+='<div class="trd-search"><span class="trd-lens" aria-hidden="true">🔎</span><input id="trd-q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" list="trd-dl" placeholder="'+escA(X.ph)+'" aria-label="'+escA(X.ph)+'" value="'+escA(TRS.q)+'"><datalist id="trd-dl">'+cities.map(function(c){return '<option value="'+escA(c)+'">'}).join("")+'</datalist></div>';
   h+='<button type="button" class="reset trd-near" id="trd-near" aria-pressed="'+(TRS.pos?"true":"false")+'">📍 '+R.near+'</button>';
   h+='<div class="trd-res" id="trd-res" aria-live="polite">'+trResults()+'</div>';
