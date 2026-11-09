@@ -695,9 +695,9 @@ var ITEM0={};
 /* Points d'attention : documents souvent refusés ou mal préparés (affichés en orange tant qu'ils ne sont pas cochés). */
 var ATTN={photos:1,bank:1,insurance:1,flight:1,passport:1};
 var STX={
- fr:{ok:"Prêt",warn:"Point d'attention",todo:"À faire",rec:"Conseillé",legend:"Légende",att:function(n){return n+(n>1?" points d'attention":" point d'attention")},step:function(n){return "Étape "+n+" sur 3"},prog:"Avancement du dossier"},
- en:{ok:"Ready",warn:"Watch out",todo:"To do",rec:"Advised",legend:"Legend",att:function(n){return n+(n>1?" points to watch":" point to watch")},step:function(n){return "Step "+n+" of 3"},prog:"File progress"},
- ar:{ok:"جاهز",warn:"انتبه",todo:"للإنجاز",rec:"مُستحسن",legend:"دليل الألوان",att:function(n){return n+" نقاط للانتباه"},step:function(n){return "الخطوة "+n+" من 3"},prog:"تقدّم الملف"}
+ fr:{ok:"Prêt",warn:"Point d'attention",todo:"À faire",rec:"Conseillé",legend:"Légende",att:function(n){return n+(n>1?" points d'attention":" point d'attention")},step:function(n){return "Étape "+n+" sur 3"},missingTitle:"Documents obligatoires manquants",allDone:"Tous les documents obligatoires sont cochés"},
+ en:{ok:"Ready",warn:"Watch out",todo:"To do",rec:"Advised",legend:"Legend",att:function(n){return n+(n>1?" points to watch":" point to watch")},step:function(n){return "Step "+n+" of 3"},missingTitle:"Missing required documents",allDone:"All required documents are checked"},
+ ar:{ok:"جاهز",warn:"انتبه",todo:"للإنجاز",rec:"مُستحسن",legend:"دليل الألوان",att:function(n){return n+" نقاط للانتباه"},step:function(n){return "الخطوة "+n+" من 3"},missingTitle:"الوثائق الإلزامية الناقصة",allDone:"تم تحديد جميع الوثائق الإلزامية"}
 };
 /* Avertissement général (accueil, e-Visa, billets/hôtels) : ne cite aucun site propre à la France. */
 var GENDISC={
@@ -2623,11 +2623,10 @@ function render(){
   if(st===4){
     var vis=(e==="reunion"?RITEMS:ITEMS).filter(function(i){return i.w(Object.assign({},S,{purpose:e}))});
     var req=vis.filter(function(i){return !i.opt}),doneReq=req.filter(function(i){return S.done[i.id]}).length;
-    var pct=req.length?Math.round(doneReq/req.length*100):0,left=req.length-doneReq;
-    $("barfill").style.width=pct+"%";$("bar").className="bar"+(left===0?" done":"");
-    var bar=$("bar");bar.setAttribute("role","progressbar");bar.setAttribute("aria-valuemin","0");bar.setAttribute("aria-valuemax","100");bar.setAttribute("aria-valuenow",pct);bar.setAttribute("aria-label",STX[S.lang].prog);
-    var nAttn=req.filter(function(i){return !S.done[i.id]&&ATTN[i.id]&&i[S.lang][1]}).length;
-    $("pnum").innerHTML='<bdi dir="ltr">'+doneReq+" / "+req.length+" · "+pct+" %</bdi>"+(nAttn&&left?' <span class="stt warn">\u26A0 '+nAttn+'</span>':'');$("pnum").title=nAttn?STX[S.lang].att(nAttn):"";
+    var left=req.length-doneReq;
+    var missing=req.filter(function(i){return !S.done[i.id]});
+    $("pnum").innerHTML='<bdi dir="ltr">'+doneReq+" / "+req.length+'</bdi>';
+    $("pnum").title="";
     $("pmsg").textContent=left===0?t.msgDone:(doneReq===0?t.msg0:t.msgN(left));
     var h="";
     ORDER.forEach(function(g){
@@ -2645,7 +2644,10 @@ function render(){
     });
     var X=STX[S.lang];
     var legend='<ul class="legend" aria-label="'+X.legend+'"><li><i class="lg ok"></i>'+X.ok+'</li><li><i class="lg warn"></i>'+X.warn+'</li><li><i class="lg todo"></i>'+X.todo+'</li></ul>';
-    $("list").innerHTML=adaptHtml(t)+legend+h+interviewHtml();
+    var missingHtml=missing.length
+      ?'<section class="missing-docs" role="status" aria-live="polite"><div class="missing-head"><b>'+X.missingTitle+'</b><span>'+missing.length+'</span></div><ul>'+missing.map(function(i){return '<li>'+i[S.lang][0]+'</li>'}).join('')+'</ul></section>'
+      :'<section class="missing-docs is-complete" role="status" aria-live="polite"><b>'+X.allDone+'</b></section>';
+    $("list").innerHTML=adaptHtml(t)+missingHtml+legend+h+interviewHtml();
     if(cur.id==="us")$("list").innerHTML=usHtml();
   }
   if(st===5){renderRefus(t)}
