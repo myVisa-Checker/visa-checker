@@ -1,8 +1,10 @@
 # Visa Checker
 
-Application web (PWA) multilingue (français, anglais, arabe) pour les voyageurs : checklist Schengen actuellement centrée sur le passeport tunisien, informations e-Visa selon le passeport (Tunisie, Maroc et Algérie), pack d'aide en cas de refus et assistant d'entretien. Les exigences doivent toujours être confirmées auprès des sources officielles.
+Plateforme web indépendante et multilingue (français, anglais, arabe) d'aide à la préparation des voyages et des demandes de visa. Le projet comprend des checklists indicatives selon les parcours actuellement couverts, des informations e-Visa pour certains passeports, un Visa Journey Planner, des guides et un assistant de préparation. Visa Radar est une fonctionnalité en préparation : aucune disponibilité de rendez-vous n'est actuellement surveillée ou garantie.
 
-Les paiements en ligne restent désactivés tant que le partenariat de paiement n'est pas finalisé. Aucun mode de paiement simulé n'est prévu en production.
+Les informations et checklists ne sont pas des décisions officielles. Les exigences doivent toujours être confirmées auprès des autorités et prestataires officiels compétents.
+
+Les paiements en ligne sont désactivés tant qu'un prestataire et les conditions de vente n'ont pas été validés. Aucun mode de paiement simulé n'est prévu en production.
 
 Site : https://checkmyvisa.org
 
