@@ -12,7 +12,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "bump-version.mjs"]) {
+for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "planner.js", "sw.js", "worker/visa-chat-worker.js", "bump-version.mjs"]) {
   try { if (f === "worker/visa-chat-worker.js") execFileSync(process.execPath, ["--input-type=module", "--check"], { input: read(f), stdio: ["pipe", "pipe", "pipe"] }); else execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -24,7 +24,7 @@ for (const f of ["manifest.json", "partners.json", "rdv.json", "reviews.json", "
 console.log("Liens et ressources locaux de toutes les pages HTML");
 const html = read("index.html");
 const htmlPages = [
-  "index.html", "partenaires.html", "a-propos.html", "contact.html",
+  "index.html", "planner.html", "partenaires.html", "a-propos.html", "contact.html",
   "confidentialite.html", "conditions.html",
   "guide/index.html", "guide/documents-visa-schengen-france-tunisie.html"
 ];
@@ -134,3 +134,13 @@ ok("conseils d'entretien non limités à la Tunisie", !/Tunisie|Tunisia|تونس
 
 console.log("\n" + pass + " réussis, " + fail + " échoués");
 process.exit(fail ? 1 : 0);
+
+console.log("Visa Journey Planner");
+const plannerPage = read("planner.html");
+const plannerScript = read("planner.js");
+ok("planner multilingue FR/EN/AR", ["fr:", "en:", "ar:"].every((x) => plannerScript.includes(x)));
+ok("planner sauvegarde localement sans compte", plannerScript.includes("localStorage.setItem") && plannerScript.includes("vc-journey-plan-v1"));
+ok("planner exporte un calendrier ICS", plannerScript.includes("BEGIN:VCALENDAR") && plannerScript.includes("text/calendar"));
+ok("planner ne demande aucune donnée de passeport", !/passport.?number|numéro de passeport|رقم جواز السفر.*input/i.test(plannerPage));
+ok("planner précise que les dates ne sont pas officielles", plannerScript.includes("not official processing deadlines") && plannerScript.includes("pas des délais officiels"));
+ok("planner n'utilise aucune bibliothèque distante", !/<script[^>]+src=["']https?:/i.test(plannerPage));
