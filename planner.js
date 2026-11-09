@@ -16,8 +16,9 @@ function save(){try{localStorage.setItem(storeKey,JSON.stringify(plan))}catch(e)
 function applyLang(next){lang=copy[next]?next:"fr";document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";document.querySelectorAll("[data-i18n]").forEach(function(el){var v=copy[lang][el.dataset.i18n];if(typeof v==="string")el.textContent=v});document.querySelectorAll("[data-lang]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.lang===lang))});if(plan)render()}
 function build(){
 var raw=$("departure").value,n=Number($("lead").value),today=new Date();today.setHours(0,0,0,0);
-if(!raw||!Number.isInteger(n)||n<14||n>240||dateLocal(raw)<=today){$("departure").setCustomValidity(copy[lang].invalid);$("departure").reportValidity();return}
-$("departure").setCustomValidity("");
+if(!raw||dateLocal(raw)<=today){$("departure").setCustomValidity(copy[lang].invalid);$("departure").reportValidity();return}
+if(!Number.isInteger(n)||n<14||n>240){$("lead").setCustomValidity(copy[lang].invalid);$("lead").reportValidity();return}
+$("departure").setCustomValidity("");$("lead").setCustomValidity("");
 var departure=dateLocal(raw);
 var previousDone=plan&&plan.done?plan.done:{};plan={departure:raw,lead:n,done:previousDone,tasks:copy.fr.tasks.map(function(t,i){return {id:"t"+i,titleIndex:i,due:iso(addDays(departure,-Math.max(1,Math.round(n*t[2]))))}})};
 save();render()
@@ -29,7 +30,7 @@ $("results").hidden=false;$("plan-meta").textContent=t.meta(fmt(dep),plan.lead);
 $("count-done").textContent=Object.keys(plan.done).filter(function(k){return plan.done[k]}).length;
 $("count-left").textContent=plan.tasks.length-Number($("count-done").textContent);
 $("days-left").textContent=Math.max(0,Math.ceil((dep-now)/86400000));
-var completed=plan.tasks.filter(function(task){return plan.done[task.id]===true}).length,percent=Math.round(completed/plan.tasks.length*100);$("progress-value").textContent=percent+"%";$("progress-fill").style.width=percent+"%";$("progress-track").setAttribute("aria-valuenow",String(percent));
+var completed=plan.tasks.filter(function(task){return plan.done[task.id]===true}).length,percent=Math.round(completed/plan.tasks.length*100);$("progress-value").textContent=percent+"%";$("progress-fill").style.width=percent+"%";$("progress-track").setAttribute("aria-valuenow",String(percent));$("progress-track").setAttribute("aria-label",t.progress);
 var root=$("timeline");root.textContent="";
 plan.tasks.forEach(function(task,i){var data=t.tasks[task.titleIndex],due=dateLocal(task.due),state=plan.done[task.id]?"done":"",status=due<now?t.past:due.getTime()===now.getTime()?t.today:t.upcoming;
 var card=document.createElement("article");card.className="task "+state;
@@ -46,7 +47,7 @@ var t=copy[lang],stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\
 var content="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Visa Checker//Journey Planner//FR\r\nCALSCALE:GREGORIAN\r\n"+events.join("\r\n")+"\r\nEND:VCALENDAR";
 var blob=new Blob([content],{type:"text/calendar;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="visa-checker-planning.ics";document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url)
 }
-var tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);$("departure").min=iso(tomorrow);$("lead").addEventListener("input",function(){$("departure").setCustomValidity("")});$("departure").addEventListener("input",function(){$("departure").setCustomValidity("")});$("build").addEventListener("click",build);
+var tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);$("departure").min=iso(tomorrow);$("lead").addEventListener("input",function(){$("lead").setCustomValidity("")});$("departure").addEventListener("input",function(){$("departure").setCustomValidity("")});$("build").addEventListener("click",build);
 $("reset").addEventListener("click",function(){plan=null;try{localStorage.removeItem(storeKey)}catch(e){}$("results").hidden=true;$("departure").value="";$("lead").value="90"});
 $("calendar").addEventListener("click",ics);
 $("print").addEventListener("click",function(){window.print()});
