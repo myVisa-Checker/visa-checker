@@ -150,6 +150,7 @@ ok("planner affiche un lien vers la source officielle", productApp.includes("if(
 ok("planner ne collecte pas de numéro de passeport", !/<input[^>]*(?:passport|passeport)/i.test(plannerPage));
 ok("planner précise que les dates ne sont pas officielles", plannerScript.includes("not official processing deadlines") && plannerScript.includes("pas des délais officiels"));
 ok("planner n'utilise aucune bibliothèque distante", !/<script[^>]+src=["']https?:/i.test(plannerPage));
+ok("planner possède les métadonnées de partage social", plannerPage.includes('property="og:title"') && plannerPage.includes('name="twitter:card"'));
 ok("planner enregistre le service worker même en accès direct", plannerScript.includes('navigator.serviceWorker.register("./sw.js"'));
 ok("planner mémorise la langue choisie", plannerScript.includes('vc-planner-lang-v1'));
 ok("service worker précache les fichiers du planner", /"planner.html"[\s\S]*"planner.js"/.test(read("sw.js")));
