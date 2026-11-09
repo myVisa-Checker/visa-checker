@@ -557,3 +557,41 @@ html[lang="ar"] .ia-badge{letter-spacing:0;text-transform:none;font-size:13px}
 @media (hover:hover){.ai-card:hover{transform:translateY(-2px);box-shadow:0 14px 26px -18px rgba(20,33,43,.5)}}
 .ai-hd{display:flex}
 @media print{.mk,.ai-load{display:none!important}}
+
+
+/* Visa Checker — payment hub and billing information */
+.payment-hub{margin:18px 0;padding:20px;border:1px solid #d7e4f5;border-radius:22px;background:linear-gradient(145deg,#fff 0%,#f6f9ff 100%);box-shadow:0 18px 44px -34px rgba(11,36,82,.55);color:#10254b}
+.payment-hub-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.payment-hub-head>div{display:flex;flex-direction:column;gap:3px}
+.payment-kicker{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#55739f}
+.payment-title{font:700 20px var(--f-display);letter-spacing:-.03em}
+.payment-state,.provider-status{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;background:#edf4ff;color:#315d9e;font-size:11px;font-weight:700;white-space:nowrap}
+.provider-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.provider-card{min-width:0;min-height:112px;padding:15px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:12px;border:1px solid #dce6f4;border-radius:16px;background:#fff}
+.provider-konnect{border-top:3px solid #9bdc36}
+.provider-flouci{border-top:3px solid #0eaa7e}
+.provider-logo-wrap{min-height:48px;display:flex;align-items:center;justify-content:flex-start;width:100%}
+.provider-logo{display:block;width:min(100%,172px);height:auto;max-height:44px}
+.payment-disclaimer{margin:14px 0 16px;color:#526782;font-size:13px;line-height:1.55}
+.billing-card{display:flex;align-items:flex-start;gap:12px;padding:15px;border:1px solid #dbe6f4;border-radius:15px;background:#f3f7fd}
+.billing-icon{width:38px;height:38px;flex:none;display:grid;place-items:center;border-radius:11px;background:#e2edff;color:#245bd4}
+.billing-icon svg{width:21px;height:21px}
+.billing-copy{min-width:0;flex:1}
+.billing-copy b{display:block;font-size:14px;color:#17365f}
+.billing-copy p{margin:4px 0 0;color:#5b6e88;font-size:12px;line-height:1.5}
+.billing-lock{width:24px;height:24px;flex:none;color:#6681a5}
+.billing-lock svg{width:100%;height:100%}
+:root[data-theme="dark"] .payment-hub{background:linear-gradient(145deg,#17283f,#122238);border-color:#2c4569;color:#e8f1ff}
+:root[data-theme="dark"] .payment-state,:root[data-theme="dark"] .provider-status{background:#20395e;color:#d7e7ff}
+:root[data-theme="dark"] .provider-card{background:#14243a;border-color:#304a6e}
+:root[data-theme="dark"] .payment-disclaimer{color:#b5c7df}
+:root[data-theme="dark"] .billing-card{background:#1b304d;border-color:#345071}
+:root[data-theme="dark"] .billing-copy b{color:#e3edff}
+:root[data-theme="dark"] .billing-copy p{color:#b7c9df}
+:root[data-theme="dark"] .billing-icon{background:#263f65;color:#9fc0ff}
+@media(max-width:430px){
+ .payment-hub{padding:16px;border-radius:18px}
+ .payment-hub-head{align-items:flex-start;flex-direction:column}
+ .provider-grid{grid-template-columns:1fr}
+ .provider-card{min-height:90px}
+}
