@@ -33,10 +33,8 @@ Règles strictes :
 - Réponds dans la langue du client (français, anglais ou arabe), en texte simple sans markdown, avec des tirets "-" pour les listes, 150 mots maximum.
 - Si la question sort du sujet de l'entretien de visa, ramène poliment vers l'entraînement.`;
 
-const DEFAULT_SITE = "https://checkmyvisa.org/"; // surchargé par la variable SITE_URL
 const IV_MAX = 40; // messages par code (utilisé seulement si le KV « USAGE » est relié)
 const ORIGINS = ["https://checkmyvisa.org", "https://www.checkmyvisa.org", "https://myvisa-checker.github.io"];
-const DEFAULT_KBASE = "https://api.sandbox.konnect.network/api/v2"; // production : https://api.konnect.network/api/v2
 const ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const rid = (n) => Array.from(crypto.getRandomValues(new Uint8Array(n)), (b) => ALPHA[b % ALPHA.length]).join("");
 const TTL = 60 * 60 * 24 * 30;
@@ -87,50 +85,28 @@ export default {
     if (request.method !== "POST") return out({ error: "POST only" }, 405);
 
     try {
-      const body = await request.json();
-      const interview = body.mode === "interview";
-      const SITE = env.SITE_URL || DEFAULT_SITE;
-      const KBASE = env.KONNECT_BASE || DEFAULT_KBASE;
-
-      // ----- Paiement : création d'une commande -----
-      if (body.action === "pay_create") {
-        const amount = parseInt(env.PRICE_MILLIMES || "0", 10);
-        if (!env.USAGE || !amount) return out({ error: "config" }, 500);
-        const orderId = rid(16);
-        if (!env.KONNECT_API_KEY || !env.KONNECT_WALLET_ID) return out({ error: "config" }, 503);
-        const r = await fetch(KBASE + "/payments/init-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-api-key": env.KONNECT_API_KEY },
-          body: JSON.stringify({
-            receiverWalletId: env.KONNECT_WALLET_ID, token: "TND", amount, type: "immediate",
-            description: "Visa Checker - entrainement entretien", orderId, lifespan: 30,
-            successUrl: SITE + "?pay=1", failUrl: SITE + "?pay=fail",
-          }),
-        });
-        const d = await r.json().catch(() => ({}));
-        if (!d.paymentRef || !d.payUrl) return out({ error: "gateway" }, 502);
-        await env.USAGE.put("order:" + d.paymentRef, orderId, { expirationTtl: TTL });
-        return out({ payUrl: d.payUrl, ref: d.paymentRef });
+      const contentType = request.headers.get("Content-Type") || "";
+      if (!contentType.toLowerCase().includes("application/json")) {
+        return out({ error: "content_type" }, 415);
       }
+      const maxBodyBytes = 24 * 1024;
+      const declaredLength = Number(request.headers.get("Content-Length") || 0);
+      if (declaredLength > maxBodyBytes) return out({ error: "body_too_large" }, 413);
+      const rawBody = await request.text();
+      if (new TextEncoder().encode(rawBody).byteLength > maxBodyBytes) {
+        return out({ error: "body_too_large" }, 413);
+      }
+      let body;
+      try { body = JSON.parse(rawBody); } catch { return out({ error: "invalid_json" }, 400); }
+      if (!body || typeof body !== "object" || Array.isArray(body)) {
+        return out({ error: "invalid_body" }, 400);
+      }
+      const interview = body.mode === "interview";
 
-      // ----- Paiement : vérification puis génération du code -----
-      if (body.action === "pay_check") {
-        const ref = String(body.ref || "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 64);
-        if (!ref || !env.USAGE) return out({ error: "bad" }, 400);
-        const done = await env.USAGE.get("ref:" + ref);
-        if (done) return out({ paid: true, code: done });
-        const orderId = await env.USAGE.get("order:" + ref);
-        if (!orderId) return out({ paid: false, error: "unknown" });
-        let paid = false;
-        const r = await fetch(KBASE + "/payments/" + ref, { headers: { "x-api-key": env.KONNECT_API_KEY } });
-        const d = await r.json().catch(() => ({}));
-        const p = d.payment || d;
-        paid = p.status === "completed" && (p.orderId == null || p.orderId === orderId);
-        if (!paid) return out({ paid: false });
-        const code = "IV-" + rid(4) + "-" + rid(4);
-        await env.USAGE.put("mint:" + code, "1");
-        await env.USAGE.put("ref:" + ref, code);
-        return out({ paid: true, code });
+      // Paiements désactivés jusqu'à validation d'un partenaire et configuration de production.
+      // Les anciens appels frontend reçoivent une réponse explicite, sans contacter Konnect.
+      if (body.action === "pay_create" || body.action === "pay_check") {
+        return out({ error: "payments_unavailable" }, 503);
       }
 
       // ----- Entraînement : accès par code -----
@@ -149,10 +125,18 @@ export default {
         if (body.check) return out({ ok: true, left: env.USAGE ? IV_MAX - used : null });
       }
 
-      const msgs = (body.messages || []).slice(interview ? -16 : -8).map((m) => ({
-        role: m.role === "assistant" ? "model" : "user",
-        parts: [{ text: String(m.text || "").slice(0, interview ? 700 : 500) }],
-      }));
+      if (!Array.isArray(body.messages) || body.messages.length > 32) {
+        return out({ error: "invalid_messages" }, 400);
+      }
+      const msgs = body.messages
+        .filter((m) => m && typeof m === "object" &&
+          (m.role === "user" || m.role === "assistant") &&
+          typeof m.text === "string" && m.text.trim().length > 0)
+        .slice(interview ? -16 : -8)
+        .map((m) => ({
+          role: m.role === "assistant" ? "model" : "user",
+          parts: [{ text: m.text.slice(0, interview ? 700 : 500) }],
+        }));
       while (msgs.length && msgs[0].role !== "user") msgs.shift();
       if (!msgs.length) return out({ error: "empty" }, 400);
       if (!interview && limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
