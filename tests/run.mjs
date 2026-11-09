@@ -143,7 +143,7 @@ if (existsSync(partnerPage)) {
   const p = read(partnerPage);
   ok("contact partenariat opérationnel", p.includes("visacheckercontact@gmail.com") && p.includes("mailto:visacheckercontact@gmail.com"));
   ok("présentation des principales catégories", ["Assurance voyage", "Traduction", "Services documentaires", "eSIM", "Conseil spécialisé"].every((x) => p.includes(x)));
-  ok("partenariat gratuit sans commission", p.includes("référencement est gratuit") && p.includes("aucune commission") && p.includes("faux documents"));
+  ok("référencement gratuit sans frais ni commission", p.includes("référencement est gratuit") && p.includes("commission n'est demandé") && p.includes("faux documents"));
 }
 const productApp = read("visa-app.js");
 console.log("Moteur de checklist et couverture");
