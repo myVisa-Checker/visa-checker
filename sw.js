@@ -6,7 +6,7 @@
    - Polices : cache d'abord, rafraîchi en arrière-plan.
    - Jamais de cache pour les requêtes POST ni pour les API (Make, déblocage) : elles passent directement.
    VERSION est estampillée par bump-version.mjs à chaque déploiement : les anciens caches sont supprimés à l'activation. */
-const VERSION = "2026.11.09.1458"; /*@version*/
+const VERSION = "2026.11.09.1530"; /*@version*/
 const SHELL = "vc-shell-" + VERSION;
 const RUNTIME = "vc-runtime-" + VERSION;
 const NET_TIMEOUT = 4000; // au-delà, on sert le cache (réseau lent = « hors-ligne » pour l'utilisateur)
@@ -56,7 +56,11 @@ self.addEventListener("message", (e) => {
 function networkFirst(req, cacheName, preload) {
   return new Promise((resolve) => {
     let settled = false;
-    const fromCache = async () => (await caches.match(req, { ignoreSearch: true })) || (await caches.match("./"));
+    const fromCache = async () => {
+      const hit = await caches.match(req, { ignoreSearch: true });
+      if (hit) return hit;
+      return req.mode === "navigate" ? await caches.match("./") : null;
+    };
     const timer = setTimeout(async () => {
       const hit = await fromCache();
       if (hit && !settled) { settled = true; resolve(hit); }
