@@ -863,7 +863,7 @@ function renderTrans(){
   countries.forEach(function(x){h+='<button type="button" class="trd-country-tab" data-trd-country="'+x.id+'" aria-pressed="'+(x.id===TRD_COUNTRY?"true":"false")+'"><span aria-hidden="true">'+x.flag+'</span> '+x.name+'</button>'});
   h+='</div>';
   if(TRD_COUNTRY!=="tn"){
-    h+='<article class="trd-country trd-country-panel"><b>'+selected.flag+' '+selected.name+'</b><p>'+selected.desc+'</p><a href="'+selected.url+'" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a>';
+    h+='<article class="trd-country trd-country-panel"><b>'+selected.flag+' '+selected.name+'</b><a href="'+selected.url+'" target="_blank" rel="noopener noreferrer">'+DIR.open+'</a>';
     if(TRD_COUNTRY==="ma")h+='<a class="trd-extra" href="https://atajtraduction.ma/" target="_blank" rel="noopener noreferrer">'+DIR.extra+'</a>';
     h+='</article><p class="trd-src">'+DIR.note+'</p>';
   }
