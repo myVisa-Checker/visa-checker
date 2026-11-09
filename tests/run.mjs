@@ -158,6 +158,17 @@ ok("planner mémorise la langue choisie", plannerScript.includes('vc-planner-lan
 ok("service worker précache les fichiers du planner", /"planner.html"[\s\S]*"planner.js"/.test(read("sw.js")));
 ok("service worker ne renvoie pas la page d’accueil pour un fichier local absent", /req.mode === "navigate" \? await caches.match\("\."\) : null/.test(read("sw.js")));
 
+console.log("Suivi des rendez-vous — sécurité et fiabilité");
+const monitoring = read("docs/appointment-monitoring-architecture.md");
+const rdvData = JSON.parse(read("rdv.json"));
+ok("architecture de suivi documentée", monitoring.includes("Architecture cible") && monitoring.includes("Conditions de mise en production"));
+ok("aucune disponibilité fictive dans les données actuelles", Object.values(rdvData.items).every((x) => x.days === null));
+ok("les erreurs et données périmées restent inconnues", monitoring.includes("`source_error`") && monitoring.includes("Une observation expirée devient `unknown`"));
+ok("aucun contournement des protections des portails", monitoring.includes("Pas de contournement de CAPTCHA"));
+ok("alertes soumises à une source autorisée", monitoring.includes("contractuellement autorisée") && monitoring.includes("source officielle"));
+ok("protection des données personnelles prévue", monitoring.includes("Ne jamais demander ni stocker le numéro de passeport") && monitoring.includes("Adresse e-mail vérifiée"));
+ok("aucune alerte sans validation complète", monitoring.includes("Ne pas activer le bouton « Créer une alerte »"));
+
 console.log("\n" + pass + " réussis, " + fail + " échoués");
 
 process.exit(fail ? 1 : 0);
