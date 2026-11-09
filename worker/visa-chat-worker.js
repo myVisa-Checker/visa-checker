@@ -63,8 +63,16 @@ function limited(ip) {
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
+    // Refuser explicitement les origines web non autorisées au lieu de leur renvoyer
+    // un en-tête CORS appartenant à un autre domaine.
+    if (origin && !ORIGINS.includes(origin)) {
+      return new Response(JSON.stringify({ error: "origin" }), {
+        status: 403,
+        headers: { "Content-Type": "application/json", "Vary": "Origin" },
+      });
+    }
     const cors = {
-      "Access-Control-Allow-Origin": ORIGINS.includes(origin) ? origin : ORIGINS[0],
+      ...(origin ? { "Access-Control-Allow-Origin": origin } : {}),
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
       "Vary": "Origin",
