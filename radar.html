@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: https:; object-src 'none'; base-uri 'self'; form-action 'none'">
+<title>Visa Radar | Suivi des rendez-vous visa — Visa Checker</title>
+<meta name="description" content="Visa Radar prépare un service d'information sur les ouvertures de rendez-vous visa, à partir de sources officielles ou autorisées. Service de surveillance non encore activé.">
+<meta name="theme-color" content="#1d4ed8">
+<link rel="canonical" href="https://checkmyvisa.org/radar.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Visa Checker">
+<meta property="og:title" content="Visa Radar — Restez informé des rendez-vous visa">
+<meta property="og:description" content="Un projet de veille transparente sur les rendez-vous visa, fondé sur des sources officielles ou autorisées.">
+<meta property="og:url" content="https://checkmyvisa.org/radar.html">
+<link rel="icon" href="./icons/icon-192.png">
+<link rel="stylesheet" href="./nav.css">
+<link rel="stylesheet" href="./site.css">
+<link rel="stylesheet" href="./brand.css">
+<style>
+:root{--radar-blue:#1d4ed8;--radar-ink:#102b5c;--radar-soft:#edf4ff}
+main{max-width:900px}
+.radar-hero{position:relative;overflow:hidden;margin:12px 0 24px;padding:clamp(24px,5vw,48px);border-radius:24px;background:linear-gradient(135deg,#102b5c 0%,#1746a2 58%,#2484d8 100%);color:#fff}
+.radar-hero:after{content:"";position:absolute;width:280px;height:280px;right:-70px;top:-90px;border:1px solid #ffffff40;border-radius:50%;box-shadow:0 0 0 28px #ffffff0d,0 0 0 58px #ffffff0a}
+.radar-kicker{display:inline-flex;align-items:center;gap:8px;padding:6px 11px;border:1px solid #ffffff55;border-radius:999px;color:#e8f2ff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.radar-dot{width:8px;height:8px;border-radius:50%;background:#fbbf24;box-shadow:0 0 0 4px #fbbf2430}
+.radar-hero h1{max-width:650px;margin:18px 0 12px;font-size:clamp(34px,6vw,58px);line-height:1.04;letter-spacing:-1.2px;color:#fff}
+.radar-hero p{max-width:620px;margin:0;color:#e5efff;font-size:18px}
+.radar-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.radar-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 18px;border-radius:999px;text-decoration:none;font-weight:700}
+.radar-primary{background:#fff;color:#123a83!important}
+.radar-secondary{border:1px solid #ffffff70;color:#fff!important}
+.radar-status{display:flex;align-items:flex-start;gap:12px;margin:20px 0;padding:16px 18px;border:1px solid #f0d28b;border-radius:14px;background:#fff9e9;color:#563c0b}
+.radar-status strong{display:block;margin-bottom:3px}
+.radar-status p{margin:0;font-size:15px}
+.radar-status .symbol{font-size:22px;line-height:1}
+.radar-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:22px 0}
+.radar-card{padding:20px;border:1px solid var(--line);border-radius:16px;background:#fff}
+.radar-card .num{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--radar-soft);color:var(--radar-blue);font-weight:800}
+.radar-card h3{margin:14px 0 6px;color:var(--radar-ink);font-size:18px}
+.radar-card p{margin:0;color:var(--muted);font-size:15px}
+.radar-band{margin:28px 0;padding:22px;border-radius:18px;background:var(--radar-soft);border:1px solid #d5e4ff}
+.radar-band h2{margin:0 0 8px;padding:0;border:0;color:var(--radar-ink)}
+.radar-band p:last-child{margin-bottom:0}
+.radar-list{padding-left:22px}
+.radar-list li{margin-bottom:8px}
+.radar-privacy{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.radar-privacy>div{padding:18px;border:1px solid var(--line);border-radius:14px}
+.radar-privacy h3{margin:0 0 6px}
+.radar-privacy p{margin:0;font-size:15px;color:var(--muted)}
+.radar-fine{font-size:14px;color:var(--muted)}
+@media(max-width:680px){.radar-grid{grid-template-columns:1fr}.radar-privacy{grid-template-columns:1fr}.radar-hero:after{right:-190px}}
+@media(prefers-reduced-motion:no-preference){.radar-card{transition:transform .18s ease,box-shadow .18s ease}.radar-card:hover{transform:translateY(-3px);box-shadow:0 12px 26px -18px #102b5c80}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Aller au contenu</a>
+<nav class="sitenav" aria-label="Navigation principale">
+  <a class="sn-logo" href="./"><b>Visa</b> Checker</a>
+  <ul>
+    <li><a href="./">Accueil</a></li>
+    <li><a href="./planner.html">Planner</a></li>
+    <li><a href="./radar.html" aria-current="page">Visa Radar</a></li>
+    <li><a href="./guide/">Guides</a></li>
+    <li><a href="./contact.html">Contact</a></li>
+  </ul>
+</nav>
+<main id="main-content" tabindex="-1">
+  <nav class="crumbs" aria-label="Fil d'Ariane"><a href="./">Accueil</a> › Visa Radar</nav>
+  <section class="radar-hero">
+    <span class="radar-kicker"><span class="radar-dot" aria-hidden="true"></span> En préparation</span>
+    <h1>Ne manquez plus une information importante sur votre rendez-vous visa.</h1>
+    <p>Visa Radar est notre projet de veille des disponibilités de rendez-vous. Notre objectif : vous aider à repérer une nouvelle information utile et à rejoindre vous-même le portail officiel pour agir.</p>
+    <div class="radar-actions">
+      <a class="radar-primary" href="mailto:visacheckercontact@gmail.com?subject=Int%C3%A9r%C3%AAt%20pour%20Visa%20Radar">Manifester mon intérêt</a>
+      <a class="radar-secondary" href="./planner.html">Découvrir le Planner</a>
+    </div>
+  </section>
+
+  <div class="radar-status" role="status">
+    <span class="symbol" aria-hidden="true">◷</span>
+    <div><strong>Le suivi en temps réel n'est pas encore activé.</strong><p>Aucune disponibilité n'est actuellement vérifiée ou garantie par Visa Checker. Nous annoncerons une intégration uniquement après validation de sa source et de son fonctionnement.</p></div>
+  </div>
+
+  <h2>Comment Visa Radar fonctionnera</h2>
+  <p class="lead">Un service utile doit être transparent sur l'origine et la fraîcheur de chaque information.</p>
+  <div class="radar-grid">
+    <article class="radar-card"><span class="num">01</span><h3>Sources vérifiées</h3><p>Nous étudierons les portails officiels, API publiques et accès expressément autorisés par les prestataires.</p></article>
+    <article class="radar-card"><span class="num">02</span><h3>Information horodatée</h3><p>Lorsqu'une source sera intégrée, chaque observation indiquera son origine et l'heure de sa dernière vérification.</p></article>
+    <article class="radar-card"><span class="num">03</span><h3>Notification utile</h3><p>Si une alerte devient disponible, vous pourrez être informé et vérifier le rendez-vous directement auprès du prestataire.</p></article>
+  </div>
+
+  <section class="radar-band">
+    <h2>Un principe non négociable : agir dans les règles</h2>
+    <p>Visa Checker ne contournera pas les CAPTCHA, les files d'attente, les connexions, les limites d'accès ou les protections anti-robot. Nous n'utiliserons pas de méthode de collecte interdite par les conditions du prestataire.</p>
+    <p>Visa Radar ne réservera jamais un rendez-vous à votre place. Une alerte ne constitue ni une réservation, ni une confirmation de disponibilité, ni une garantie d'obtenir un créneau.</p>
+  </section>
+
+  <h2>Votre confidentialité avant tout</h2>
+  <div class="radar-privacy">
+    <div><h3>Pas de documents sensibles</h3><p>La fonction Radar n'a pas besoin de votre passeport, de vos identifiants consulaires, de vos documents de voyage ou de vos données de paiement.</p></div>
+    <div><h3>Consentement et contrôle</h3><p>Si les alertes par e-mail sont lancées, l'inscription reposera sur un consentement clair, une adresse vérifiée et une désinscription simple.</p></div>
+  </div>
+
+  <h2>Un lancement progressif, pas de fausses promesses</h2>
+  <ol class="radar-list">
+    <li>Valider une première source officielle ou contractuellement autorisée.</li>
+    <li>Construire et tester une intégration fiable, y compris en cas d'erreur ou de données anciennes.</li>
+    <li>Mettre en place les abonnements, la sécurité et les notifications.</li>
+    <li>Étendre la couverture pays par pays et prestataire par prestataire, selon les autorisations obtenues.</li>
+  </ol>
+  <section class="cta">
+    <h2>Vous souhaitez suivre le lancement ?</h2>
+    <p>Écrivez-nous pour nous indiquer votre intérêt pour Visa Radar. Cet e-mail ne crée pas encore d'alerte et ne vous inscrit à aucune liste automatique.</p>
+    <a href="mailto:visacheckercontact@gmail.com?subject=Int%C3%A9r%C3%AAt%20pour%20Visa%20Radar">Contacter Visa Checker</a>
+  </section>
+  <p class="radar-fine">Visa Checker est un service indépendant d'information. Il ne représente aucun consulat, aucune administration ni aucun prestataire de prise de rendez-vous. Les règles et disponibilités doivent toujours être confirmées sur les canaux officiels.</p>
+</main>
+<footer class="site"><div class="inner">
+  <div class="fl"><a href="./">Accueil</a><a href="./planner.html">Planner</a><a href="./radar.html">Visa Radar</a><a href="./guide/">Guides</a><a href="./partenaires.html">Partenaires</a><a href="./a-propos.html">À propos</a><a href="./contact.html">Contact</a><a href="./confidentialite.html">Confidentialité</a><a href="./conditions.html">Conditions d'utilisation</a></div>
+  <p>© 2026 Visa Checker. Service d'information indépendant : nous ne sommes ni un consulat, ni une agence de visas, ni un représentant d'une administration.</p>
+</div></footer>
+</body>
+</html>
