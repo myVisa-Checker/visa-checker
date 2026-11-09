@@ -49,7 +49,9 @@ const RATE_MSG = "Trop de messages d'affilée. Réessaie dans quelques minutes. 
 async function counterRequest(env, name, action, limit, windowMs = 0) {
   if (!env.RATE_LIMITER) return { unavailable: true };
   try {
-    const id = env.RATE_LIMITER.idFromName(name);
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(name));
+    const opaqueName = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
+    const id = env.RATE_LIMITER.idFromName("counter:" + opaqueName);
     const stub = env.RATE_LIMITER.get(id);
     const response = await stub.fetch("https://counter.internal/consume", {
       method: "POST",
@@ -72,10 +74,19 @@ export default {
     if (origin && !ORIGINS.includes(origin)) {
       return new Response(JSON.stringify({ error: "origin" }), {
         status: 403,
-        headers: { "Content-Type": "application/json", "Vary": "Origin" },
+        headers: { ...security, "Content-Type": "application/json", "Cache-Control": "no-store", "Vary": "Origin" },
       });
     }
+    const security = {
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "Referrer-Policy": "no-referrer",
+      "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+      "Strict-Transport-Security": "max-age=31536000",
+      "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'; base-uri 'none'",
+    };
     const cors = {
+      ...security,
       ...(origin ? { "Access-Control-Allow-Origin": origin } : {}),
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
@@ -84,7 +95,7 @@ export default {
     const out = (obj, status = 200) =>
       new Response(JSON.stringify(obj), {
         status,
-        headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store, max-age=0", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer" },
+        headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store, max-age=0" },
       });
 
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
@@ -122,8 +133,13 @@ export default {
       if (interview && env.INTERVIEW_ENABLED !== "1") return out({ error: "interview_unavailable" }, 503);
       if (!env.RATE_LIMITER) return out({ error: "rate_limiter_unavailable" }, 503);
 
+      // Rate limit distribué par IP pour TOUS les modes, y compris l'entretien.
+      const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+      const rate = await counterRequest(env, "rate:" + ip, "consume", RATE_MAX, RATE_WINDOW);
+      if (rate.unavailable) return out({ error: "rate_limiter_unavailable" }, 503);
+      if (!rate.allowed) return out({ error: "rate", reply: RATE_MSG, retryAfter: rate.retryAfter }, 429);
+
       // Paiements désactivés jusqu'à validation d'un partenaire et configuration de production.
-      // Les anciens appels frontend reçoivent une réponse explicite, sans fournisseur de paiement actif.
       if (body.action === "pay_create" || body.action === "pay_check") {
         return out({ error: "payments_unavailable" }, 503);
       }
@@ -168,11 +184,6 @@ export default {
         const quota = await counterRequest(env, quotaName, "consume", IV_MAX);
         if (quota.unavailable) return out({ error: "quota_unavailable" }, 503);
         if (!quota.allowed) return out({ error: "limit", left: 0 }, 429);
-      } else {
-        const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-        const rate = await counterRequest(env, "rate:" + ip, "consume", RATE_MAX, RATE_WINDOW);
-        if (rate.unavailable) return out({ error: "rate_limiter_unavailable" }, 503);
-        if (!rate.allowed) return out({ error: "rate", reply: RATE_MSG, retryAfter: rate.retryAfter }, 429);
       }
 
       if (!env.GEMINI_API_KEY) return out({ error: "service_unavailable", reply: FALLBACK }, 503);
