@@ -41,12 +41,9 @@ ok("CSP interdit les objets et les formulaires externes", /object-src 'none'/.te
 const secretRe = /(AIza[0-9A-Za-z_-]{30,}|sk-[A-Za-z0-9]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----)/;
 for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "index.html", "worker/visa-chat-worker.js", "data.js", "app.js"]) ok("aucune clé secrète dans " + f, !secretRe.test(read(f)));
 const workerCode = read("worker/visa-chat-worker.js").split("\n").filter((l) => !/^\s*\/\//.test(l)).join("\n");
-ok("PAY_MOCK n'est pas activé en dur dans le Worker (commentaires ignorés)", !/PAY_MOCK\s*=\s*["']?1/.test(workerCode));
-ok("mode de paiement simulé absent du Worker", !/PAY_MOCK/.test(workerCode));
-ok("paiement lié à la commande exacte", /p\.orderId === order\.orderId/.test(workerCode));
-ok("montant et devise du paiement vérifiés", /p\.token === order\.token/.test(workerCode) && /reachedAmount >= order\.amount/.test(workerCode));
-ok("URL de paiement limitée à HTTPS Konnect", /payUrl\.protocol !== "https:"/.test(workerCode) && /hostname\.endsWith\("\.konnect\.network"\)/.test(workerCode));
-ok("code d'accès conservé dans la commande pour l'idempotence", /code: "IV-"/.test(workerCode) && /const code = order\.code/.test(workerCode));
+ok("aucun prestataire de paiement n'est codé en dur", !/KONNECT|FLOUCI|D17|PAY_MOCK/.test(workerCode));
+ok("création et vérification de paiement désactivées explicitement", /body\.action === "pay_create" \|\| body\.action === "pay_check"/.test(workerCode) && /payment_unavailable/.test(workerCode));
+ok("accès par codes existants conservé", /INTERVIEW_CODES/.test(workerCode) && /mint:/.test(workerCode));
 ok("limite KV documentée comme best-effort", /KV n'offre pas d'incrément atomique/.test(workerCode));
 
 console.log("Contraste des couleurs de marque (brand.css, WCAG AA = 4,5)");
