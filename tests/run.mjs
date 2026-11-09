@@ -105,8 +105,6 @@ ok("modes Joury et Aicha séparés", /mode:mode\|\|""/.test(jouryJs) && /joury-r
 ok("prompts spécialisés présents dans le Worker", /SYSTEM_JOURY_REFUSAL/.test(worker) && /SYSTEM_AICHA_REVIEW/.test(worker) && /Tu es Aicha/.test(worker));
 
 console.log("\n" + pass + " réussis, " + fail + " échoués");
-process.exit(fail ? 1 : 0);
-
 console.log("Checklist personnalisée et détection des pièces manquantes");
 const checklistJs = read("visa-app.js");
 const checklistHtml = read("index.html");
@@ -114,3 +112,13 @@ ok("détection dynamique des documents obligatoires manquants", /var missing=req
 ok("état vide explicite quand toutes les pièces sont cochées", /allDone:"Tous les documents obligatoires sont cochés"/.test(checklistJs));
 ok("aucun score de préparation ni pourcentage dans le rendu checklist", !/aria-valuenow|pct\+" %|Avancement du dossier|File progress/.test(checklistJs.slice(checklistJs.indexOf("function render(){"), checklistJs.indexOf("function go("))) && !/id="barfill"/.test(checklistHtml));
 ok("liste des pièces manquantes annoncée aux technologies d'assistance", /role="status" aria-live="polite"/.test(checklistJs) && /\.missing-docs/.test(checklistHtml));
+
+
+console.log("Assistants : suppression des anciens accès séparés");
+const assistantJs = read("visa-app.js");
+ok("ancienne carte Entraînement entretien retirée", !/function ivCardHtml\(/.test(assistantJs) && !/\+ivCardHtml\(\)/.test(assistantJs));
+ok("ancienne carte AI Visa Recovery retirée", !/function recoveryCardHtml\(/.test(assistantJs) && !/\+recoveryCardHtml\(\)/.test(assistantJs));
+ok("ancien bloc entretien autonome retiré de la checklist", !/\+interviewHtml\(\)/.test(assistantJs));
+ok("espace Joury/Aicha conserve ses deux cartes", (jouryHtml.match(/class="action assistant-card /g) || []).length === 2);
+
+process.exit(fail ? 1 : 0);
