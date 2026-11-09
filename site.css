@@ -1,8 +1,8 @@
 /* Style des pages de contenu (guides, à propos, contact, confidentialité, conditions).
    À utiliser avec nav.css. N'est PAS chargé par index.html. */
 :root{
-  --orange:#e8590c;
-  --orange-dark:#c2410c;
+  --orange:#1d4ed8;
+  --orange-dark:#1e3a8a;
   --orange-soft:#fff4ec;
   --text:#1f2328;
   --muted:#5b6470;
@@ -59,7 +59,7 @@ details p{margin:0 0 14px;color:#2b3138}
 .cards{display:grid;gap:14px;grid-template-columns:1fr;margin:20px 0}
 @media (min-width:640px){.cards{grid-template-columns:1fr 1fr}}
 .card{display:block;border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff;text-decoration:none;color:var(--text);transition:border-color .15s,transform .15s,box-shadow .15s}
-a.card:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:0 10px 22px -14px rgba(232,89,12,.5)}
+a.card:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:0 10px 22px -14px rgba(29,78,216,.5)}
 .card .tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--orange-dark);background:var(--orange-soft);border-radius:999px;padding:3px 10px;margin-bottom:8px}
 .card h3{margin:0 0 6px;color:var(--text);font-size:19px;line-height:1.3}
 .card p{margin:0;color:var(--muted);font-size:15.5px}
