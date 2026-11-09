@@ -58,6 +58,10 @@ for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "index.html", "wo
 const workerCode = read("worker/visa-chat-worker.js").split("\n").filter((l) => !/^\s*\/\//.test(l)).join("\n");
 ok("PAY_MOCK n'est pas activé en dur dans le Worker (commentaires ignorés)", !/PAY_MOCK\s*=\s*["']?1/.test(workerCode));
 ok("Worker refuse les origines web non autorisées", /if \(origin && !ORIGINS\.includes\(origin\)\)/.test(workerCode));
+ok("Worker exige KV pour contrôler les quotas d’entretien", /if \(interview && !env\.USAGE\)/.test(workerCode));
+ok("Worker refuse de traiter sans clé Gemini", /if \(!env\.GEMINI_API_KEY\)/.test(workerCode));
+ok("Worker limite la sortie du modèle", /maxOutputTokens: 700/.test(workerCode));
+ok("réponses Worker non mises en cache", /Cache-Control": "no-store/.test(workerCode));
 ok("Paiement manuel désactivé tant qu’aucun partenaire n’est validé", /var D17=\{num:"",name:"",tg:""/.test(read("visa-app.js")));
 const manifest = JSON.parse(read("manifest.json"));
 ok("identifiant PWA compatible avec un déploiement en sous-chemin", manifest.id.startsWith("./"));
