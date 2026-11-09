@@ -758,6 +758,15 @@ html[lang="ar"] .ptop,html[lang="ar"] .ptop-b{font-family:var(--f-ar)}
 .provider-name{font:800 15px var(--f-display);color:var(--ink)}
 .provider-status{margin-inline-start:auto;font-size:10px;line-height:1.25;color:var(--muted);text-align:end}
 .payment-next{margin:12px 0;padding:13px 15px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface);color:var(--muted);line-height:1.55}
+.billing-fields{min-width:0;margin:2px 0 0;padding:13px;border:1px solid var(--line);border-radius:12px}
+.billing-fields legend{padding:0 6px;font-weight:800;color:var(--ink)}
+.billing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.billing-grid label{min-width:0;display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:var(--muted)}
+.billing-grid input{width:100%;min-width:0;box-sizing:border-box;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.billing-grid input:disabled{opacity:.75}
+.billing-full{grid-column:1/-1}
+.billing-fields .ag-note{font-size:12px}
+@media(max-width:380px){.billing-grid{grid-template-columns:1fr}}
 @media(max-width:380px){.payment-providers{grid-template-columns:1fr}.provider-status{font-size:11px}}
 .n48{margin:12px 0;padding:10px 12px;border-inline-start:4px solid #c1121f;border-radius:var(--r-3);background:rgba(193,18,31,.08);color:#c1121f;font-weight:800;line-height:1.5}
 :root[data-theme="dark"] .n48{color:#ff8a8a;border-color:#ff8a8a;background:rgba(255,138,138,.1)}
