@@ -405,15 +405,22 @@ function d17Later(a){return '<div class="d17" role="region"><p>'+(NXT[S.lang]||N
 function paymentMethodsHtml(lang){
   var L=lang||S.lang;
   var T={
-    fr:{title:"Moyens de paiement",soon:"Bientôt disponible",desc:"Les paiements en ligne sont en préparation. Aucun paiement n'est demandé pour le moment.",bill:"Adresse de facturation",billText:"Elle sera demandée au moment du paiement sécurisé. Aucune adresse ni donnée bancaire n'est collectée ici."},
-    en:{title:"Payment methods",soon:"Coming soon",desc:"Online payments are being prepared. No payment is requested at this time.",bill:"Billing address",billText:"It will be requested during secure checkout. No address or banking details are collected here."},
-    ar:{title:"وسائل الدفع",soon:"قريبًا",desc:"نعمل على تجهيز الدفع عبر الإنترنت. لا يُطلب أي دفع في الوقت الحالي.",bill:"عنوان الفوترة",billText:"سيُطلب عند إتمام الدفع الآمن. لا نجمع هنا أي عنوان أو بيانات بنكية."}
+    fr:{title:"Moyens de paiement",soon:"Bientôt disponible",desc:"Les paiements en ligne seront activés après validation des partenariats. Aucun paiement n'est demandé pour le moment.",bill:"Adresse de facturation",billText:"Cette rubrique sera complétée lors de l’activation du paiement sécurisé. Aucune adresse ni donnée bancaire n’est collectée à ce stade.",secure:"Paiement sécurisé",pending:"Activation en cours"},
+    en:{title:"Payment methods",soon:"Coming soon",desc:"Online payments will be enabled once our provider partnerships are confirmed. No payment is requested at this time.",bill:"Billing address",billText:"This section will be completed when secure checkout is activated. No address or banking details are collected at this stage.",secure:"Secure checkout",pending:"Activation in progress"},
+    ar:{title:"وسائل الدفع",soon:"قريبًا",desc:"سيتم تفعيل الدفع عبر الإنترنت بعد تأكيد الشراكات مع مزودي الخدمة. لا يُطلب أي دفع حاليًا.",bill:"عنوان الفوترة",billText:"سيتم استكمال هذا القسم عند تفعيل الدفع الآمن. لا نجمع حاليًا أي عنوان أو بيانات مصرفية.",secure:"دفع آمن",pending:"جارٍ التفعيل"}
   };
   var t=T[L]||T.fr;
-  return '<div class="d17 pay-panel" role="region" aria-label="'+t.title+'"><b class="d17-t">'+t.title+'</b>'+
-    '<div class="pay-methods"><div class="pay-method pay-konnect"><span class="pay-mark" aria-hidden="true">K</span><span class="pay-brand"><b>Konnect</b><small>'+t.soon+'</small></span></div>'+
-    '<div class="pay-method pay-flouci"><span class="pay-mark" aria-hidden="true">f</span><span class="pay-brand"><b>flouci</b><small>'+t.soon+'</small></span></div></div>'+
-    '<p class="ag-note">'+t.desc+'</p><div class="billing-block"><b>'+t.bill+'</b><p>'+t.billText+'</p></div></div>';
+  var konnect='<svg class="provider-logo konnect-logo" viewBox="0 0 172 44" role="img" aria-label="Konnect"><g fill="none" stroke="#9bdc36" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"><path d="M8 7h12v12H8zM25 7h12v12H25zM8 24h12v12H8z"/><path d="M25 24l12 12M37 24L25 36"/></g><text x="48" y="30" fill="#12334a" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="-1">konnect</text></svg>';
+  var flouci='<svg class="provider-logo flouci-logo" viewBox="0 0 172 44" role="img" aria-label="Flouci"><g transform="translate(4 5)"><path d="M4 7c8-7 18-5 22 2 4 8-2 18-12 19-5 1-10-1-13-5 9 2 16-3 16-9 0-5-5-8-13-7z" fill="#ef8b47"/><path d="M12 25c8 2 15-3 15-10 0-4-2-7-6-9 10 3 14 14 7 22-7 8-20 6-25-1 3 0 6-1 9-2z" fill="#0eaa7e"/></g><text x="43" y="30" fill="#153b43" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="-1">flouci</text></svg>';
+  return '<section class="payment-hub" role="region" aria-label="'+t.title+'">'+
+    '<div class="payment-hub-head"><div><span class="payment-kicker">'+t.secure+'</span><b class="payment-title">'+t.title+'</b></div><span class="payment-state">'+t.pending+'</span></div>'+
+    '<div class="provider-grid">'+
+      '<div class="provider-card provider-konnect"><div class="provider-logo-wrap">'+konnect+'</div><span class="provider-status">'+t.soon+'</span></div>'+
+      '<div class="provider-card provider-flouci"><div class="provider-logo-wrap">'+flouci+'</div><span class="provider-status">'+t.soon+'</span></div>'+
+    '</div>'+
+    '<p class="payment-disclaimer">'+t.desc+'</p>'+
+    '<div class="billing-card"><div class="billing-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></div><div class="billing-copy"><b>'+t.bill+'</b><p>'+t.billText+'</p></div><span class="billing-lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span></div>'+
+  '</section>';
 }
 
 /* ===== Pages « Ma demande » : liens des mails (client, agence, Visa Checker) =====
