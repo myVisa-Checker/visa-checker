@@ -557,3 +557,33 @@ html[lang="ar"] .ia-badge{letter-spacing:0;text-transform:none;font-size:13px}
 @media (hover:hover){.ai-card:hover{transform:translateY(-2px);box-shadow:0 14px 26px -18px rgba(20,33,43,.5)}}
 .ai-hd{display:flex}
 @media print{.mk,.ai-load{display:none!important}}
+
+
+/* ===== Paiement : prestataires prévus et adresse de facturation ===== */
+.payment-panel{margin:18px 0;padding:18px;border:1px solid var(--line,#dbe3ef);border-radius:20px;background:var(--surface,#fff);box-shadow:0 12px 32px -26px rgba(15,35,70,.45)}
+.payment-panel-head{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.payment-panel-head>b{font-size:18px;letter-spacing:-.02em;color:var(--text,#172b4d)}
+.payment-panel-head>p{margin:0;color:var(--muted,#64748b);font-size:13px;line-height:1.55}
+.payment-providers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.payment-provider{position:relative;display:flex;align-items:center;gap:11px;min-width:0;padding:14px;border:1px solid var(--line,#dbe3ef);border-radius:15px;background:var(--surface-2,#f8fafc)}
+.payment-provider[aria-disabled=true]{opacity:.88}
+.provider-mark{display:grid;place-items:center;flex:none;width:40px;height:40px;border-radius:12px;font-size:19px;font-weight:850;letter-spacing:-.06em}
+.payment-konnect .provider-mark{background:#e8f1ff;color:#1458b8}
+.payment-flouci .provider-mark{background:#e8f8f2;color:#087b62}
+.provider-name{font-size:15px;font-weight:800;color:var(--text,#172b4d)}
+.provider-status{margin-inline-start:auto;padding:5px 8px;border:1px solid var(--line,#dbe3ef);border-radius:999px;color:var(--muted,#64748b);font-size:10px;font-weight:700;white-space:nowrap}
+.billing-fields{min-width:0;margin:16px 0 0;padding:14px;border:1px solid var(--line,#dbe3ef);border-radius:15px}
+.billing-fields legend{padding:0 7px;font-size:14px;font-weight:800;color:var(--text,#172b4d)}
+.billing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.billing-grid label{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:12px;font-weight:700;color:var(--muted,#64748b)}
+.billing-grid input{box-sizing:border-box;width:100%;min-height:42px;padding:9px 11px;border:1px solid var(--line,#cbd5e1);border-radius:10px;background:var(--surface,#fff);color:var(--text,#172b4d);font:inherit}
+.billing-fields:disabled{opacity:.72}
+.billing-fields:disabled input{cursor:not-allowed;background:var(--surface-2,#f8fafc)}
+.billing-full{grid-column:1/-1}
+.payment-panel>.ag-note{margin:12px 0 0;line-height:1.55}
+@media(max-width:560px){.payment-panel{padding:14px;border-radius:16px}.payment-providers{grid-template-columns:1fr}.billing-grid{grid-template-columns:1fr}.billing-full{grid-column:auto}.provider-status{font-size:10px}}
+:root[data-theme="dark"] .payment-panel{background:var(--surface,#111827);border-color:var(--line,#334155)}
+:root[data-theme="dark"] .payment-provider{background:var(--surface-2,#1f2937)}
+:root[data-theme="dark"] .payment-konnect .provider-mark{background:#172d50;color:#9fc5ff}
+:root[data-theme="dark"] .payment-flouci .provider-mark{background:#123b33;color:#8be0c5}
+:root[data-theme="dark"] .billing-grid input{background:var(--surface-2,#1f2937);color:var(--text,#f8fafc)}
