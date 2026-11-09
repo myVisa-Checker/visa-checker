@@ -140,6 +140,7 @@ ok("conseils d'entretien non limités à la Tunisie", !/Tunisie|Tunisia|تونس
 console.log("Visa Journey Planner");
 const plannerPage = read("planner.html");
 const plannerScript = read("planner.js");
+ok("planner appointment date input has valid closing markup", /<input id="appointment" type="date">/.test(plannerPage));
 ok("planner multilingue FR/EN/AR", ["fr:", "en:", "ar:"].every((x) => plannerScript.includes(x)));
 ok("planner sauvegarde localement sans compte", plannerScript.includes("localStorage.setItem") && plannerScript.includes("vc-journey-plan-v1"));
 ok("planner affiche une progression accessible", plannerPage.includes('id="progress-track"') && plannerPage.includes('role="progressbar"') && plannerScript.includes('setAttribute("aria-valuenow"'));
