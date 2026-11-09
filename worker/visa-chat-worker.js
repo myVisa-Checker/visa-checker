@@ -104,7 +104,7 @@ export default {
       const interview = body.mode === "interview";
 
       // Paiements désactivés jusqu'à validation d'un partenaire et configuration de production.
-      // Les anciens appels frontend reçoivent une réponse explicite, sans contacter Konnect.
+      // Les anciens appels frontend reçoivent une réponse explicite, sans fournisseur de paiement actif.
       if (body.action === "pay_create" || body.action === "pay_check") {
         return out({ error: "payments_unavailable" }, 503);
       }
