@@ -35,7 +35,7 @@
 <!-- Polices -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg,#fff);color:var(--ink,#000)}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
 .aibox{display:flex;flex-direction:column;gap:6px;margin-block:16px;padding:16px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface)}.aibox .pay{align-self:flex-start;margin-top:8px}.tool .sc-ok{color:var(--ok);font-weight:600}
@@ -46,8 +46,8 @@
   --bg:#ffffff; --surface:#ffffff; --ink:#14212b; --muted:#566772; --line:#e1e5e9;
   --accent:#1d4ed8; --accent-soft:#e6efff; --ok:#1f7a4d; --ok-soft:#dff1e7; --on-accent:#ffffff;
   --f-display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
-  --f-body:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --f-body:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --f-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --f-ar:"IBM Plex Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;
   --f-flag:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
 }
@@ -934,6 +934,58 @@ footer p{color:#d2e0f5!important}
 }
 </style>
 
+
+<style id="vc-mobile-performance">
+/* Mobile-first hardening and faster first paint */
+html{max-width:100%;overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+img,svg,video,canvas{max-width:100%;height:auto}
+.wrap{width:100%;min-width:0}
+.sitenav.in-app{justify-content:flex-start;overscroll-behavior-x:contain}
+.sitenav.in-app ul{flex-wrap:nowrap;white-space:nowrap}
+.hero-img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+#help,.sponsors,#bpn,#trans,#reviews,footer{content-visibility:auto;contain-intrinsic-size:auto 420px}
+@media(max-width:700px){
+  body{padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
+  .wrap{max-width:100%;margin-inline:auto}
+  header{padding-top:18px;gap:12px}
+  .top{gap:8px;flex-wrap:wrap}
+  .stamp{transform:none;max-width:100%;white-space:normal}
+  .lang{flex:none}
+  .panel,.agency,.refus,.hero,.photo,.why-showcase,.sponsors .sp{min-width:0;max-width:100%}
+  .panel{padding:14px;gap:13px}
+  .chips{gap:7px}
+  .chip{min-height:44px;padding:9px 12px}
+  input,select,textarea{font-size:16px!important;max-width:100%}
+  button,a{touch-action:manipulation}
+  .sitenav.in-app{margin-inline:-12px;padding-inline:12px}
+  .sitenav.in-app ul{gap:4px 11px!important}
+  .sitenav a{min-height:42px;align-items:center}
+  #vc-btn{width:52px;height:52px;inset-inline-end:12px;bottom:calc(74px + env(safe-area-inset-bottom,0px))}
+  #vc-box{inset-inline-end:12px;bottom:calc(136px + env(safe-area-inset-bottom,0px));width:calc(100vw - 24px);height:min(460px,calc(100dvh - 180px));max-height:calc(100dvh - 150px)}
+  .hero{padding:18px!important}
+  .why-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .why-card{min-width:0;overflow-wrap:anywhere}
+  .payment-hub{padding:15px}
+  .provider-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .provider-card{min-width:0;padding:12px}
+}
+@media(max-width:390px){
+  .why-grid,.provider-grid{grid-template-columns:minmax(0,1fr)!important}
+  .why-card{min-height:0!important}
+  .payment-hub-head{align-items:flex-start;flex-direction:column}
+  .top{align-items:flex-start}
+  .lang button{min-width:40px;padding-inline:9px}
+  .p-row{align-items:flex-start;flex-wrap:wrap}
+}
+@media(max-height:520px) and (max-width:700px){
+  #vc-box{height:calc(100dvh - 110px);bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
 </head>
 <body>
 <nav class="sitenav in-app" aria-label="Navigation principale">
@@ -1021,9 +1073,9 @@ footer p{color:#d2e0f5!important}
 </div>
 <dialog id="lg" aria-labelledby="lg-t" aria-modal="true" aria-hidden="true"><div class="lg-in"><div class="lg-top"><h2 id="lg-t"></h2><button type="button" class="lg-x" id="lg-x"></button></div><div id="lg-b"></div></div></dialog>
 
-<script src="visa-app.js"></script>
+<script src="visa-app.js" defer></script>
 
-<script src="visa-pwa.js"></script>
+<script src="visa-pwa.js" defer></script>
 
 
 <style>
@@ -1071,6 +1123,6 @@ footer p{color:#d2e0f5!important}
   <div id="vc-chips"></div>
   <div id="vc-form"><input id="vc-in" maxlength="500" autocomplete="off"><button id="vc-send" type="button"></button></div>
 </div>
-<script src="visa-chat.js"></script>
+<script src="chat-loader.js" defer></script>
 
 </body></html>
