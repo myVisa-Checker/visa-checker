@@ -52,7 +52,7 @@ const workerCode = read("worker/visa-chat-worker.js").split("\n").filter((l) => 
 ok("aucun prestataire de paiement n'est codé en dur", !/KONNECT|FLOUCI|D17|PAY_MOCK/.test(workerCode));
 ok("création et vérification de paiement désactivées explicitement", /body\.action === "pay_create" \|\| body\.action === "pay_check"/.test(workerCode) && /payment_unavailable/.test(workerCode));
 ok("accès par codes existants conservé", /INTERVIEW_CODES/.test(workerCode) && /mint:/.test(workerCode));
-ok("limite KV documentée comme best-effort", /KV n'offre pas d'incrément atomique/.test(worker));
+ok("limite KV documentée comme best-effort", /KV n'offre pas d'incrément atomique/.test(read("worker/visa-chat-worker.js")));
 
 console.log("Contraste des couleurs de marque (brand.css, WCAG AA = 4,5)");
 {
