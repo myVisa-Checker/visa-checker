@@ -20,6 +20,14 @@ for (const f of ["manifest.json", "partners.json", "rdv.json", "reviews.json", "
   try { JSON.parse(read(f)); ok(f, true); } catch (e) { ok(f, false, e.message); }
 }
 
+console.log("Paiement (préparation Konnect / Flouci)");
+const payJs = read("visa-app.js"), payHtml = read("index.html");
+ok("ancienne méthode D17 retirée", !/\\bD17\\b/.test(payJs));
+ok("aucun montant fixe dans le parcours de paiement", !/SVC_PRICE|Payer 10 DT|Pay 10 TND/.test(payJs));
+ok("Konnect et Flouci affichés comme moyens à venir", /paymentMethodsHtml/.test(payJs) && /Konnect/.test(payJs) && /flouci/.test(payJs));
+ok("adresse de facturation annoncée sans collecte prématurée", /Adresse de facturation/.test(payJs) && /Aucune adresse ni donnée bancaire n'est collectée/.test(payJs));
+ok("styles des deux moyens de paiement présents", /pay-konnect/.test(payHtml) && /pay-flouci/.test(payHtml));
+
 console.log("Fichiers référencés par index.html");
 const html = read("index.html");
 const refs = [...html.matchAll(/(?:src|href)="([^"#?]+)(?:\?[^"]*)?"/g)].map((m) => m[1])
