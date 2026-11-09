@@ -945,7 +945,10 @@ document.addEventListener("click",function(e){
 function nm(o){return o.n[S.lang]}
 function curC(){return COUNTRIES.filter(function(c){return c.id===S.country})[0]||COUNTRIES[0]}
 function eff(){if(S.purpose==="reunion")S.purpose="tourism";return S.motive==="medical"?"medical":S.purpose}
-function flag(cc){return String(cc||"").replace(/./g,function(ch){return String.fromCodePoint(127397+ch.toUpperCase().charCodeAt(0))})}
+/* Drapeaux : vraies images (flags/xx.png, flag-icons, licence MIT) car Windows n'affiche pas les emoji de drapeaux (on y voit « FR », « TN »).
+   Si une image manque, on retombe sur l'emoji (voir l'écouteur d'erreur ci-dessous). */
+function flag(cc){var c=String(cc||"").toLowerCase();if(!/^[a-z]{2}$/.test(c))return"";return'<img class="fimg" src="flags/'+c+'.png" alt="" width="28" height="21" decoding="async" data-cc="'+c+'">'}
+document.addEventListener("error",function(e){var i=e.target;if(i&&i.tagName==="IMG"&&i.classList&&i.classList.contains("fimg")&&i.getAttribute("data-cc")){var t=document.createElement("span");t.textContent=String.fromCodePoint.apply(null,i.getAttribute("data-cc").toUpperCase().split("").map(function(ch){return 127397+ch.charCodeAt(0)}));i.replaceWith(t)}},true);
 var open=false,adaptOpen=false;
 function adaptHtml(t){return '<details class="adapt"'+(adaptOpen?' open':'')+'><summary>'+t.adapt+'</summary><div class="adapt-body">'+destHtml(t)+panelHtml(t)+'</div></details>'}
 function destHtml(t){

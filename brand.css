@@ -160,3 +160,26 @@ h1,h2,h3{letter-spacing:-.025em}
   html{scroll-behavior:auto}
   .sitenav a,.pay{transition:none}
 }
+
+/* Accueil sur grand écran : .hero y est en display:contents (index.html), son fond bleu n'existe donc plus.
+   Les paragraphes héritaient quand même du blanc de .hero (.hero p{color:inherit}) et devenaient illisibles sur fond clair. */
+@media (min-width:900px){
+  body[data-step="0"] .hero{color:var(--ink)!important}
+  body[data-step="0"] .hero .ag-sub,
+  body[data-step="0"] .hero .ag-note,
+  body[data-step="0"] .hero .ag-none{color:var(--muted)}
+}
+
+/* Drapeaux en images (voir flag() dans visa-app.js) : taille stable dans les pastilles et le bandeau du bas. */
+.pill .fimg{width:22px;height:16.5px}
+.flag .fimg{flex:none}
+
+/* Les cartes claires (.panel) posées dans le bloc bleu .hero héritaient aussi du blanc : titre « Où partez-vous ? » illisible sur mobile. */
+.hero .panel{color:var(--ink)}
+.hero .panel .ag-sub,.hero .panel .ag-note,.hero .panel .ag-none{color:var(--muted)}
+
+/* Mobile : l'accueil est un grand bloc bleu foncé. La légende de la photo et les titres en dégradé y étaient foncés sur foncé. */
+@media (max-width:899px){
+  body[data-step="0"] .hero .photo figcaption{color:#fff}
+  body[data-step="0"] .hero .needs h2.hot{background:none;-webkit-text-fill-color:#fff;color:#fff}
+}
