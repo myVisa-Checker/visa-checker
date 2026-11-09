@@ -986,6 +986,20 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 </style>
 
+<style id="vc-translator-directories">
+.trd-country-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.trd-country{min-width:0;display:flex;flex-direction:column;gap:9px;padding:16px;border:1px solid #d8e4f4;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#fff);color:#142b52}
+.trd-country>b{font:700 18px var(--f-display);color:#123775}
+.trd-country>p{margin:0;color:#526783;font-size:13px;line-height:1.55;flex:1}
+.trd-country>a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 12px;border-radius:10px;background:#245bd4;color:#fff;text-decoration:none;font-size:13px;font-weight:700;text-align:center}
+.trd-country>a.trd-extra{background:#eaf2ff;color:#1749a5;border:1px solid #cbdcf4}
+.trd-country>a:hover{filter:brightness(.96)}
+:root[data-theme="dark"] .trd-country{background:#172a45;border-color:#314b70;color:#edf4ff}
+:root[data-theme="dark"] .trd-country>b{color:#d9e7ff}
+:root[data-theme="dark"] .trd-country>p{color:#b4c4dc}
+:root[data-theme="dark"] .trd-country>a.trd-extra{background:#203653;color:#d8e6fa;border-color:#34517c}
+@media(max-width:700px){.trd-country-grid{grid-template-columns:1fr;gap:9px}.trd-country{padding:14px}.trd-country>p{font-size:14px}}
+</style>
 </head>
 <body>
 <nav class="sitenav in-app" aria-label="Navigation principale">
