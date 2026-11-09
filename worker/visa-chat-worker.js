@@ -68,6 +68,14 @@ async function counterRequest(env, name, action, limit, windowMs = 0) {
 
 export default {
   async fetch(request, env) {
+    const security = {
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "Referrer-Policy": "no-referrer",
+      "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+      "Strict-Transport-Security": "max-age=31536000",
+      "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'; base-uri 'none'",
+    };
     const origin = request.headers.get("Origin") || "";
     // Refuser explicitement les origines web non autorisées au lieu de leur renvoyer
     // un en-tête CORS appartenant à un autre domaine.
@@ -77,14 +85,6 @@ export default {
         headers: { ...security, "Content-Type": "application/json", "Cache-Control": "no-store", "Vary": "Origin" },
       });
     }
-    const security = {
-      "X-Content-Type-Options": "nosniff",
-      "X-Frame-Options": "DENY",
-      "Referrer-Policy": "no-referrer",
-      "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
-      "Strict-Transport-Security": "max-age=31536000",
-      "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'; base-uri 'none'",
-    };
     const cors = {
       ...security,
       ...(origin ? { "Access-Control-Allow-Origin": origin } : {}),
