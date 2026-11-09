@@ -1612,7 +1612,14 @@ document.addEventListener('load',function(e){var i=e.target;if(i&&i.classList&&i
 document.addEventListener('error',function(e){var i=e.target;if(i&&i.classList&&i.classList.contains('need-ph'))i.remove()},true);
 var NEEDGO={fr:'Choisir',en:'Choose',ar:'اختر'};
 function needCard(k,label){return '<button type="button" class="sp-chip need-card" data-need="'+k+'"><span class="need-ic">'+NEEDART[k]+'<img class="need-ph" src="'+NEEDPHOTO[k]+'" alt="" width="136" height="136" loading="lazy" decoding="async"></span><span class="need-tx"><b>'+label+'</b><span class="need-go">'+(NEEDGO[S.lang]||NEEDGO.fr)+'</span></span></button>'}
-function needsHtml(t){return '<div class="needs"><h2 class="hot">'+t.needTitle+'</h2><p class="ag-sub">'+t.needSub+'</p><div class="sp-chips">'+needCard('flight',t.needFlight)+needCard('hotel',t.needHotel)+'</div></div>'}
+function advisorCards(){
+ var L=S.lang||'fr',c={fr:['VOS ASSISTANTES IA','Aicha','Joury','Votre guide pour préparer votre dossier','Votre assistante pour analyser et comprendre','Découvrir'],en:['YOUR AI ASSISTANTS','Aicha','Joury','Your guide to prepare your application','Your assistant to analyse and understand','Explore'],ar:['مساعدتاك الذكيتان','عائشة','جوري','مرافقتك لتحضير ملف التأشيرة','مساعدتك لفهم وتحليل ملفك','اكتشف']}[L]||[];
+ return '<section class="vc-advisors" aria-label="Assistantes IA"><div class="vc-advisors-head">'+c[0]+'</div><div class="vc-advisors-grid">'+
+ '<a class="vc-advisor-card vc-aicha" href="./aicha.html"><span class="vc-avatar"><img src="https://i.pravatar.cc/300?img=47" alt="Avatar temporaire d’Aicha" width="180" height="180"></span><span class="vc-advisor-copy"><b>'+c[1]+'</b><small>'+c[3]+'</small><em>'+c[5]+' ↗</em></span></a>'+
+ '<a class="vc-advisor-card vc-joury" href="./joury.html"><span class="vc-avatar"><img src="https://i.pravatar.cc/300?img=44" alt="Avatar temporaire de Joury" width="180" height="180"></span><span class="vc-advisor-copy"><b>'+c[2]+'</b><small>'+c[4]+'</small><em>'+c[5]+' ↗</em></span></a>'+
+ '</div></section>';
+}
+function needsHtml(t){return '<div class="needs"><h2 class="hot">'+t.needTitle+'</h2><p class="ag-sub">'+t.needSub+'</p><div class="sp-chips">'+needCard('flight',t.needFlight)+needCard('hotel',t.needHotel)+'</div></div>'+advisorCards()}
 var SPSEL={local:"",world:""};
 function spGroups(){return [
  {id:"local",title:SPT.local,cats:[["ag",SPT.sAg,SPT.cAg],["ins",SPT.sIns,SPT.cIns],["car",SPT.sCar,SPT.cCar]],list:LOCAL},
