@@ -913,7 +913,7 @@ html[lang="ar"] .why-note{border-left:0;border-right:3px solid #3b82f6;border-ra
   <div id="docs">
     <div class="progress" aria-live="polite">
       <div class="p-row"><span class="p-num" id="pnum"></span><span class="p-msg" id="pmsg"></span></div>
-      <div class="bar" id="bar"><i id="barfill"></i></div>
+      
     </div>
     <div id="list"></div>
   </div>
@@ -980,6 +980,15 @@ html[lang="ar"] .why-note{border-left:0;border-right:3px solid #3b82f6;border-ra
 #vc-form{display:flex;border-top:1px solid var(--line)}
 #vc-in{flex:1;min-width:0;border:0;padding:12px;font-size:16px;outline:none;background:var(--surface);color:var(--ink);font-family:inherit}
 #vc-send{border:0;background:var(--accent);color:var(--on-accent);padding:0 16px;cursor:pointer;font-family:inherit}
+
+/* Required-document detection: explicit live list, independent of completion counters. */
+.missing-docs{margin:14px 0 18px;padding:16px 18px;border:1px solid #e5a13a;border-inline-start:5px solid #d97706;border-radius:14px;background:#fff8eb;color:#633b08}
+.missing-head{display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:750}
+.missing-head span{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 8px;border-radius:999px;background:#f4d7a7;color:#633b08;font-weight:800;font-variant-numeric:tabular-nums}
+.missing-docs ul{margin:10px 0 0;padding-inline-start:22px;display:grid;gap:6px}
+.missing-docs li{line-height:1.45}
+.missing-docs.is-complete{border-color:#23865a;border-inline-start-color:#23865a;background:#edf8f1;color:#14532d}
+@media(prefers-reduced-motion:no-preference){.missing-docs{transition:background-color .18s,border-color .18s}}
 </style>
 <button id="vc-btn" type="button" aria-label="Assistant"></button>
 <div id="vc-box" role="dialog" aria-label="Assistant Visa Checker">
