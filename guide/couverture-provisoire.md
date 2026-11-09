@@ -1,10 +1,10 @@
 # Visa Checker — matrice de couverture provisoire
 
-> **Document interne de travail — ne pas présenter cette matrice comme une validation officielle.**
+> **Document interne de travail — cette matrice décrit les parcours présents dans le code, pas une validation officielle ou exhaustive des pièces.**
 >
-> Cette matrice reprend uniquement les destinations actuellement marquées comme disponibles dans le code de l'application. Chaque combinaison doit encore faire l'objet d'une vérification documentaire et opérationnelle avant d'être annoncée aux utilisateurs comme service disponible.
+> Les listes doivent être vérifiées et datées destination par destination avant toute communication comme service officiellement validé.
 
-## Origine : Tunisie
+## Passeport tunisien — 10 destinations Schengen
 
 - France
 - Allemagne
@@ -17,56 +17,45 @@
 - Danemark
 - Finlande
 
-**Total déclaré dans le code : 10 destinations.**
-
-## Origine : Maroc
+## Passeport marocain — 7 destinations Schengen
 
 - France
 - Espagne
 - Italie
-- Belgique
-- Pays-Bas
-- Suisse
 - Allemagne
 - Autriche
 - Danemark
 - Finlande
 
-**Total déclaré dans le code : 10 destinations.**
-
-## Origine : Algérie
+## Passeport algérien — 5 destinations Schengen
 
 - France
 - Espagne
 - Italie
-- Belgique
-- Pays-Bas
-- Suisse
 - Allemagne
 - Danemark
 
-**Total déclaré dans le code : 8 destinations.**
+## Total de couverture déclarée dans le code
 
-## Total
+**22 combinaisons passeport → destination Schengen** sont actuellement déclarées disponibles dans le code : 10 pour la Tunisie, 7 pour le Maroc et 5 pour l’Algérie.
 
-**28 combinaisons origine → destination sont actuellement déclarées disponibles dans le code.**
-
-Ce chiffre décrit l'état du code, pas le nombre de parcours déjà audités et validés.
+Ce total est un inventaire technique des parcours activés. Il ne signifie pas que toutes les pièces de chaque parcours ont été auditées, confirmées ou validées par les autorités.
 
 ## Critères obligatoires avant validation
 
 Pour chaque combinaison, vérifier et consigner :
 
-1. La liste des documents exigés, à partir de sources officielles.
+1. La liste des documents exigés, à partir des sources officielles.
 2. Les formulaires et procédures applicables.
 3. Les frais de visa et de service, avec indication de la source et de la date de consultation.
 4. Le centre de dépôt ou prestataire compétent, selon le lieu de résidence du demandeur.
 5. Les liens directs vers les sources officielles pertinentes.
+6. Les règles spécifiques au motif du voyage, à la situation familiale et professionnelle, et aux mineurs.
 
 ## Règle de publication
 
-- **Disponible** : les cinq critères ont été vérifiés pour la combinaison concernée.
-- **En vérification** : une partie des informations est disponible, mais la vérification complète n'est pas terminée.
+- **Disponible dans l’outil** : le parcours et ses données existent dans le code. Cela ne vaut pas certification de l’exhaustivité.
+- **Vérifié** : les six critères ci-dessus ont été contrôlés sur des sources officielles, avec date et liens conservés.
 - **Bientôt disponible** : le parcours ne doit pas être présenté comme opérationnel.
 
 Les règles, frais, centres de dépôt et prestataires peuvent changer. La date de dernière vérification doit être conservée pour chaque parcours.
