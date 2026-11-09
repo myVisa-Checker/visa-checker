@@ -52,10 +52,24 @@
   if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol)){
     window.addEventListener("load",function(){
       navigator.serviceWorker.register("sw.js",{scope:"./"}).then(function(reg){
-        function watch(w){w.addEventListener("statechange",function(){if(w.state==="installed"&&navigator.serviceWorker.controller){waiting=w;show("update")}})}
-        if(reg.waiting&&navigator.serviceWorker.controller){waiting=reg.waiting;show("update")}
+        function announceWaiting(){
+          if(reg.waiting&&navigator.serviceWorker.controller){waiting=reg.waiting;show("update")}
+        }
+        function watch(w){
+          if(!w)return;
+          w.addEventListener("statechange",function(){
+            if(w.state==="installed"&&navigator.serviceWorker.controller){waiting=w;show("update")}
+          });
+        }
+        // Écouter AVANT de demander la vérification : évite de manquer updatefound.
         reg.addEventListener("updatefound",function(){watch(reg.installing)});
-        setInterval(function(){reg.update().catch(function(){})},3600e3);
+        announceWaiting();
+        // Vérification immédiate, puis à chaque retour sur l'onglet et périodiquement.
+        reg.update().then(announceWaiting).catch(function(){});
+        document.addEventListener("visibilitychange",function(){
+          if(document.visibilityState==="visible")reg.update().then(announceWaiting).catch(function(){});
+        });
+        setInterval(function(){reg.update().then(announceWaiting).catch(function(){})},5*60e3);
       }).catch(function(){});
       var reloaded=false,had=!!navigator.serviceWorker.controller;
       navigator.serviceWorker.addEventListener("controllerchange",function(){if(reloaded||!had)return;reloaded=true;location.reload()});
