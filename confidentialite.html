@@ -53,7 +53,8 @@
   <p>Le site est hébergé sur GitHub Pages. Comme tout hébergeur, il peut enregistrer des données techniques de connexion (adresse IP, type de navigateur, pages consultées) pour assurer le fonctionnement et la sécurité du service. Certaines préférences (langue, thème d'affichage, progression de votre checklist) peuvent être conservées dans votre navigateur, sur votre appareil.</p>
 
   <h3>Assistant IA</h3>
-  <p>Les messages que vous écrivez dans l'assistant sont envoyés, via un serveur que nous exploitons, à un service d'intelligence artificielle tiers afin de générer une réponse. N'y saisissez pas d'informations sensibles (numéro de passeport, données bancaires, mots de passe).</p>
+  <p>Lorsque l'assistant est utilisé, les messages nécessaires à la réponse transitent par un serveur applicatif exploité avec Cloudflare Workers, puis sont transmis à l'API Google Gemini. Le contenu de la conversation peut donc être traité par ces prestataires. N'y saisissez pas de numéro de passeport, de coordonnées bancaires, de mot de passe, de document d'identité ni d'information confidentielle.</p>
+  <p>Le traitement appliqué par Google dépend du type de service API utilisé par le projet. Pour les services non payants, Google indique pouvoir utiliser les requêtes et réponses pour améliorer ses produits et autoriser une revue humaine. Pour les services payants, Google indique ne pas utiliser les requêtes et réponses pour améliorer ses produits, mais conserver certains journaux pendant une durée limitée à des fins de sécurité et de prévention des abus. Nous ne présentons donc pas l'assistant comme un service à conservation zéro. Consultez les <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener noreferrer">conditions de l'API Gemini</a> et la <a href="https://ai.google.dev/gemini-api/docs/zdr" target="_blank" rel="noopener noreferrer">documentation sur la conservation des données</a>.</p>
 
   <h3>Pack d'aide en cas de refus et analyse de lettre de refus</h3>
   <p>Si vous utilisez ces services, le texte ou le document que vous fournissez (par exemple une lettre de refus) est traité par un service d'IA tiers pour produire l'analyse et les modèles de lettres. Nous vous recommandons de masquer les informations qui ne sont pas nécessaires.</p>
@@ -92,20 +93,15 @@
   <p>Le site peut contenir des liens vers des prestataires indépendants (assurance voyage, traduction, services de documents, eSIM, transport ou hébergement). Certains liens peuvent être affiliés : nous pouvons percevoir une commission si vous effectuez un achat, sans coût supplémentaire pour vous. Le clic vers un site tiers et toute opération ultérieure sont soumis à la politique de confidentialité de ce prestataire.</p>
 
   <h2>6. Prestataires et transferts de données</h2>
-  <p>Pour fournir le service, nous faisons appel à des prestataires techniques (hébergement du site, serveurs applicatifs, services d'IA et outils de messagerie ; un prestataire de paiement pourra être ajouté si les paiements sont activés ultérieurement). Vos données peuvent donc être traitées en dehors de la Tunisie. Nous ne partageons que ce qui est nécessaire à chaque service.</p>
+  <p>Les prestataires techniques identifiés dans l'architecture actuelle comprennent GitHub Pages pour l'hébergement du site, Cloudflare Workers pour certaines fonctions serveur et Google pour l'API Gemini. Selon la fonction utilisée, des données techniques de connexion et le contenu transmis à l'assistant peuvent être traités par ces prestataires. Leurs propres conditions et politiques de confidentialité s'appliquent également à leurs traitements.</p>
+  <p>Certains traitements peuvent avoir lieu hors de Tunisie. La loi organique tunisienne n° 2004-63 encadre les transferts internationaux de données personnelles, notamment par ses articles 51 et 52. Les formalités et autorisations éventuellement requises doivent être vérifiées avant tout traitement ou transfert concerné. Pour les personnes se trouvant dans l'Union européenne, le RGPD peut également s'appliquer lorsque le service leur est proposé ou que leur comportement y est suivi, conformément à son article 3.</p>
 
   <h2>7. Durée de conservation</h2>
   <p>Nous conservons les informations uniquement le temps nécessaire à la finalité pour laquelle elles ont été collectées, puis nous les supprimons ou les anonymisons. Les messages que vous nous envoyez sont conservés le temps de traiter votre demande et de respecter nos obligations éventuelles.</p>
 
   <h2>8. Vos droits</h2>
-  <p>Conformément à la loi organique tunisienne n° 2004-63 du 27 juillet 2004 relative à la protection des données à caractère personnel et, pour les visiteurs concernés, au règlement européen (RGPD), vous pouvez demander :</p>
-  <ul>
-    <li>l'accès aux données vous concernant,</li>
-    <li>leur rectification ou leur suppression,</li>
-    <li>la limitation ou l'opposition à certains traitements,</li>
-    <li>le retrait de votre consentement à tout moment.</li>
-  </ul>
-  <p>Écrivez-nous à <a href="mailto:visacheckercontact@gmail.com">visacheckercontact@gmail.com</a>. Nous pouvons vous demander de justifier votre identité avant de répondre. Vous pouvez aussi saisir l'autorité de protection des données de votre pays (en Tunisie, l'Instance nationale de protection des données personnelles).</p>
+  <p>Selon la loi applicable à votre situation, vous pouvez notamment demander des informations sur les données traitées, exercer les droits d'accès et de rectification et, lorsque les conditions légales sont réunies, demander l'effacement ou vous opposer à certains traitements. Les droits et leurs conditions ne sont pas identiques dans tous les pays. Pour les personnes auxquelles le RGPD s'applique, les droits prévus par ce règlement s'ajoutent aux garanties applicables.</p>
+  <p>Pour exercer un droit ou poser une question, écrivez à <a href="mailto:visacheckercontact@gmail.com">visacheckercontact@gmail.com</a>. Nous pouvons demander les éléments strictement nécessaires pour vérifier votre identité. En Tunisie, vous pouvez également contacter l'<a href="https://www.inpdp.tn/" target="_blank" rel="noopener noreferrer">Instance nationale de protection des données personnelles (INPDP)</a>.</p>
 
   <h2>9. Sécurité</h2>
   <p>Nous prenons des mesures raisonnables pour protéger les informations (connexion sécurisée HTTPS, limitation des données collectées). Aucune transmission sur Internet n'étant totalement sûre, nous ne pouvons pas garantir une sécurité absolue.</p>
