@@ -25,7 +25,7 @@ console.log("Liens et ressources locaux de toutes les pages HTML");
 const html = read("index.html");
 const htmlPages = [
   "index.html", "planner.html", "partenaires.html", "a-propos.html", "contact.html",
-  "confidentialite.html", "conditions.html",
+  "confidentialite.html", "conditions.html", "radar.html",
   "guide/index.html", "guide/documents-visa-schengen-france-tunisie.html", "guide/demande-visa-france-tunisie-etapes.html", "guide/ressources-financieres-garant-assurance-schengen.html"
 ];
 for (const page of htmlPages) {
@@ -52,6 +52,15 @@ const sw = (read("sw.js").match(/const VERSION = "([^"]*)"/) || [])[1];
 ok("sw.js et version.json ont la même version", vj === sw, vj + " / " + sw);
 
 console.log("Sécurité (contrôles simples)");
+ok("fichier _headers pour Cloudflare Pages présent", existsSync("_headers"));
+if (existsSync("_headers")) {
+  const edgeHeaders = read("_headers");
+  for (const h of ["X-Content-Type-Options: nosniff", "X-Frame-Options: DENY", "Referrer-Policy:", "Permissions-Policy:", "Strict-Transport-Security:"]) ok("en-tête edge " + h, edgeHeaders.includes(h));
+  ok("_headers documente la limite GitHub Pages", edgeHeaders.includes("GitHub Pages ignores _headers"));
+}
+ok("documentation de déploiement Cloudflare présente", existsSync("docs/cloudflare-deployment.md"));
+ok("tests de concurrence Durable Object présents", existsSync("tests/durable-object.test.mjs"));
+ok("CI GitHub Actions configurée sur amelioration", existsSync(".github/workflows/ci.yml") && read(".github/workflows/ci.yml").includes("branches: [amelioration]"));
 ok("CSP présente dans index.html", /Content-Security-Policy/.test(html));
 ok("CSP interdit les objets et les formulaires externes", /object-src 'none'/.test(html) && /form-action 'none'/.test(html));
 const secretRe = /(AIza[0-9A-Za-z_-]{30,}|sk-[A-Za-z0-9]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----)/;
@@ -65,6 +74,10 @@ ok("rate limiting distribué par identifiant IP", /counterRequest\(env, "rate:" 
 ok("quota entretien atomique par code", /counterRequest\(env, quotaName, "consume", IV_MAX\)/.test(workerCode));
 ok("contrôle de code sans consommation de quota", /body\.check === true/.test(workerCode) && /counterRequest\(env, quotaName, "check", IV_MAX\)/.test(workerCode));
 ok("compteurs protégés par transaction Durable Object", /this\.state\.storage\.transaction\(async \(txn\)/.test(workerCode));
+ok("rate limit IP appliqué aussi au mode entretien", workerCode.includes("Rate limit distribué par IP pour TOUS les modes"));
+ok("identifiants Durable Object hachés avant stockage", workerCode.includes('crypto.subtle.digest("SHA-256"'));
+ok("Worker ajoute X-Frame-Options et Permissions-Policy", workerCode.includes('"X-Frame-Options": "DENY"') && workerCode.includes('"Permissions-Policy": "camera=(), microphone=(), geolocation=()"'));
+ok("Worker ajoute CSP et HSTS sur toutes les réponses", workerCode.includes('"Content-Security-Policy": "default-src') && workerCode.includes('"Strict-Transport-Security": "max-age=31536000"'));
 ok("aucune Map locale utilisée pour le rate limiting", !/const hits = new Map\(\)/.test(workerCode));
 ok("configuration Wrangler et migration Durable Object présentes", /class_name = "VisaCheckerCounter"/.test(read("wrangler.toml")) && /new_sqlite_classes = \["VisaCheckerCounter"\]/.test(read("wrangler.toml")));
 ok("entraînement payant désactivé par défaut sans validation explicite", /interview && env\.INTERVIEW_ENABLED !== "1"/.test(workerCode));
