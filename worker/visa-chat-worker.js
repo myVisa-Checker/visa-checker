@@ -40,22 +40,27 @@ const rid = (n) => Array.from(crypto.getRandomValues(new Uint8Array(n)), (b) => 
 const TTL = 60 * 60 * 24 * 30;
 const FALLBACK = "Désolé, je n'ai pas pu répondre. Réessaie dans un instant.";
 
-// Limite de l'assistant gratuit : RL_MAX messages par RL_WINDOW et par visiteur (adresse IP).
-// Le compteur est gardé en mémoire du Worker (aucune écriture dans le KV : le quota gratuit du KV reste pour l'entraînement payant).
-// C'est une limite « souple » : Cloudflare peut faire tourner plusieurs instances du Worker, chacune compte de son côté.
-const RL_MAX = 20, RL_WINDOW = 10 * 60 * 1000; // Limite locale souple uniquement : remplacer par un rate limiter distribué avant une montée en charge.
+// Compteurs distribués par Durable Object : rate limit IP et quota par code.
+const IV_MAX = 40;
+const RATE_MAX = 20, RATE_WINDOW = 10 * 60 * 1000;
 const RATE_MSG = "Trop de messages d'affilée. Réessaie dans quelques minutes. / Too many messages, please try again in a few minutes. / رسائل كثيرة، أعد المحاولة بعد دقائق.";
-const hits = new Map();
-function limited(ip) {
-  const now = Date.now();
-  if (hits.size > 5000) {
-    for (const [k, v] of hits) if (now - v.t > RL_WINDOW) hits.delete(k);
-    if (hits.size > 5000) hits.clear();
+
+async function counterRequest(env, name, action, limit, windowMs = 0) {
+  if (!env.RATE_LIMITER) return { unavailable: true };
+  try {
+    const id = env.RATE_LIMITER.idFromName(name);
+    const stub = env.RATE_LIMITER.get(id);
+    const response = await stub.fetch("https://counter.internal/consume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, limit, windowMs }),
+    });
+    if (!response.ok) return { unavailable: true };
+    return await response.json();
+  } catch (error) {
+    console.log("Counter unavailable", error && error.message);
+    return { unavailable: true };
   }
-  const h = hits.get(ip);
-  if (!h || now - h.t > RL_WINDOW) { hits.set(ip, { t: now, n: 1 }); return false; }
-  h.n++;
-  return h.n > RL_MAX;
 }
 
 export default {
@@ -114,7 +119,7 @@ export default {
       const interview = body.mode === "interview";
       // Fonction payante en préparation : activation distincte, explicite et désactivée par défaut.
       if (interview && env.INTERVIEW_ENABLED !== "1") return out({ error: "interview_unavailable" }, 503);
-      if (interview && !env.USAGE) return out({ error: "usage_unavailable" }, 503);
+      if (!env.RATE_LIMITER) return out({ error: "rate_limiter_unavailable" }, 503);
 
       // Paiements désactivés jusqu'à validation d'un partenaire et configuration de production.
       // Les anciens appels frontend reçoivent une réponse explicite, sans fournisseur de paiement actif.
@@ -122,20 +127,16 @@ export default {
         return out({ error: "payments_unavailable" }, 503);
       }
 
-      // ----- Entraînement : accès par code -----
-      let usageKey = "", used = 0;
+      // ----- Entraînement : validation du code -----
+      let quotaName = "";
       if (interview) {
+        if (!env.USAGE) return out({ error: "usage_unavailable" }, 503);
         const codes = String(env.INTERVIEW_CODES || "").split(",").map((s) => s.trim()).filter(Boolean);
         const code = String(body.code || "").trim();
         const listed = codes.includes(code);
-        const minted = !listed && code && env.USAGE ? await env.USAGE.get("mint:" + code) : null;
+        const minted = !listed && code ? await env.USAGE.get("mint:" + code) : null;
         if (!code || (!listed && !minted)) return out({ error: "code" }, 403);
-        if (env.USAGE) {
-          usageKey = "iv:" + code;
-          used = parseInt((await env.USAGE.get(usageKey)) || "0", 10) || 0;
-          if (used >= IV_MAX) return out({ error: "limit" }, 429);
-        }
-        if (body.check) return out({ ok: true, left: env.USAGE ? IV_MAX - used : null });
+        quotaName = "quota:" + code;
       }
 
       if (!Array.isArray(body.messages) || body.messages.length < 1 || body.messages.length > 32) {
@@ -156,7 +157,16 @@ export default {
         }));
       while (msgs.length && msgs[0].role !== "user") msgs.shift();
       if (!msgs.length) return out({ error: "empty" }, 400);
-      if (!interview && limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
+      if (interview) {
+        const quota = await counterRequest(env, quotaName, "consume", IV_MAX);
+        if (quota.unavailable) return out({ error: "quota_unavailable" }, 503);
+        if (!quota.allowed) return out({ error: "limit", left: 0 }, 429);
+      } else {
+        const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+        const rate = await counterRequest(env, "rate:" + ip, "consume", RATE_MAX, RATE_WINDOW);
+        if (rate.unavailable) return out({ error: "rate_limiter_unavailable" }, 503);
+        if (!rate.allowed) return out({ error: "rate", reply: RATE_MSG, retryAfter: rate.retryAfter }, 429);
+      }
 
       if (!env.GEMINI_API_KEY) return out({ error: "service_unavailable", reply: FALLBACK }, 503);
       const model = env.GEMINI_MODEL || "gemini-3.5-flash-lite";
@@ -191,7 +201,7 @@ export default {
       const cand = data?.candidates?.[0];
       const text = cand?.content?.parts?.map((p) => p.text || "").join("");
       if (!text) console.log("Gemini empty reply", r.status, cand && cand.finishReason, data && data.promptFeedback && data.promptFeedback.blockReason);
-      if (interview && env.USAGE && text) await env.USAGE.put(usageKey, String(used + 1));
+
 
       const raw = text || FALLBACK;
       const reply = raw
@@ -205,3 +215,47 @@ export default {
     }
   },
 };
+
+// Durable Object : compteur atomique, partagé entre toutes les instances du Worker.
+// Chaque nom (IP ou code) est routé vers un objet stable ; les transactions sérialisent
+// les requêtes concurrentes et empêchent les dépassements de quota.
+export class VisaCheckerCounter {
+  constructor(state, env) {
+    this.state = state;
+    this.env = env;
+  }
+
+  async fetch(request) {
+    if (request.method !== "POST") return new Response("Method not allowed", { status: 405 });
+    let body;
+    try { body = await request.json(); } catch { return new Response("Bad request", { status: 400 }); }
+    const { action, limit, windowMs = 0 } = body || {};
+    if (!["check", "consume"].includes(action) ||
+        !Number.isInteger(limit) || limit < 1 || limit > 10000 ||
+        !Number.isInteger(windowMs) || windowMs < 0 || windowMs > 86400000) {
+      return Response.json({ error: "invalid_counter_request" }, { status: 400 });
+    }
+
+    const result = await this.state.storage.transaction(async (txn) => {
+      const now = Date.now();
+      let current = await txn.get("counter");
+      if (!current || (windowMs > 0 && now - current.startedAt >= windowMs)) {
+        current = { startedAt: now, count: 0 };
+      }
+      const remainingMs = windowMs > 0 ? Math.max(0, windowMs - (now - current.startedAt)) : 0;
+      if (current.count >= limit) {
+        return { allowed: false, left: 0, retryAfter: Math.ceil(remainingMs / 1000) };
+      }
+      if (action === "consume") {
+        current.count += 1;
+        await txn.put("counter", current);
+      } else if (!await txn.get("counter")) {
+        await txn.put("counter", current);
+      }
+      return { allowed: true, left: Math.max(0, limit - current.count), retryAfter: 0 };
+    });
+    return Response.json(result, {
+      headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
+    });
+  }
+}
