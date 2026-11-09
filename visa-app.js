@@ -806,62 +806,67 @@ var TRT={
  en:{t:"Sworn translators by applicant country",sub:function(d){return "Official list of the Consulate General of France in Tunis (valid on "+d+"), for translation to and from French. For another Schengen country, ask its embassy or consulate which translations it accepts."},src:"Source",all:"All cities",unk:"City not specified",near:"Near me",nearOff:"Location denied or unavailable.",n:function(n){return n+(n>1?" translators":" translator")},call:"Call",wa:"WhatsApp",mail:"E-mail",map:"View on map",more:function(n){return "Show all ("+n+")"},less:"Show less",city:"Filter by city",appr:"Approximate distances, measured from the city centre.",note:"List provided for information by the consulate: it does not replace checking with the local authorities. To correct or remove an entry, write to us."},
  ar:{t:"المترجمون المحلَّفون حسب بلد مقدم الطلب",sub:function(d){return "القائمة الرسمية للقنصلية العامة لفرنسا في تونس (سارية بتاريخ "+d+")، للترجمة من الفرنسية وإليها. بالنسبة لدولة شنغن أخرى، اسأل سفارتها أو قنصليتها عن الترجمات المقبولة."},src:"المصدر",all:"كل المدن",unk:"المدينة غير محددة",near:"الأقرب إليّ",nearOff:"تم رفض الموقع أو هو غير متاح.",n:function(n){return n+" مترجم"},call:"اتصال",wa:"واتساب",mail:"بريد إلكتروني",map:"عرض على الخريطة",more:function(n){return "عرض الكل ("+n+")"},less:"عرض أقل",city:"التصفية حسب المدينة",appr:"المسافات تقريبية، محسوبة من وسط المدينة.",note:"القائمة مقدَّمة للإعلام من القنصلية ولا تغني عن التحقق لدى السلطات المحلية. لتصحيح بطاقة أو حذفها، راسلنا."}
 };
-var TRS={q:"",pos:null,posErr:false,all:false},trSig="",TRD_COUNTRY="tn";
+var TRS={q:"",city:"",pos:null,posErr:false,all:false},trSig="",TRD_COUNTRY="tn";
 var TR_ALIAS={"tunis":"Tunis","تونس":"Tunis","lac":"Tunis","menzah":"Tunis","manar":"Tunis","bab bnet":"Tunis","sfax":"Sfax","صفاقس":"Sfax","sousse":"Sousse","سوسة":"Sousse","nabeul":"Nabeul","نابل":"Nabeul","hammamet":"Nabeul","الحمامات":"Nabeul","beja":"Béja","باجة":"Béja","djerba":"Djerba","jerba":"Djerba","جربة":"Djerba","houmt souk":"Djerba","medenine":"Djerba","la marsa":"La Marsa","marsa":"La Marsa","المرسى":"La Marsa","la soukra":"La Soukra","soukra":"La Soukra","ariana":"La Soukra","السكرة":"La Soukra","أريانة":"La Soukra","hammam lif":"Hammam Lif","ben arous":"Hammam Lif","حمام الأنف":"Hammam Lif","grombalia":"Grombalia","قرمبالية":"Grombalia"};
 var TRX={
- fr:{ph:"Tapez votre ville…",hint:"Tapez votre ville pour voir les traducteurs assermentés près de chez vous",noRes:function(q){return "Aucun traducteur trouvé pour « "+q+" ». Essayez une ville proche ou le bouton « Près de moi »."}},
- en:{ph:"Type your city…",hint:"Type your city to see sworn translators near you",noRes:function(q){return "No translator found for “"+q+"”. Try a nearby city or the “Near me” button."}},
- ar:{ph:"اكتب مدينتك…",hint:"اكتب مدينتك لتظهر لك قائمة المترجمين المحلَّفين القريبين منك",noRes:function(q){return "لم نجد أي مترجم لـ «"+q+"». جرّب مدينة قريبة أو زر «الأقرب إليّ»."}}
+ fr:{ph:"Tapez votre ville…",fix:"Une fiche à corriger ou à retirer ?",hint:"Tapez votre ville pour voir les traducteurs assermentés près de chez vous",noRes:function(q){return "Aucun traducteur trouvé pour « "+q+" ». Essayez une ville proche ou le bouton « Près de moi »."}},
+ en:{ph:"Type your city…",fix:"An entry to correct or remove?",hint:"Type your city to see sworn translators near you",noRes:function(q){return "No translator found for “"+q+"”. Try a nearby city or the “Near me” button."}},
+ ar:{ph:"اكتب مدينتك…",fix:"بطاقة تحتاج إلى تصحيح أو حذف؟",hint:"اكتب مدينتك لتظهر لك قائمة المترجمين المحلَّفين القريبين منك",noRes:function(q){return "لم نجد أي مترجم لـ «"+q+"». جرّب مدينة قريبة أو زر «الأقرب إليّ»."}}
 };
 function trNorm(v){return String(v||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9؀-ۿ ]+/g," ").replace(/\s+/g," ").trim()}
 function trAlias(q){for(var k in TR_ALIAS){var n=trNorm(k);if(n===q||(q.length>=3&&n.indexOf(q)===0))return TR_ALIAS[k]}return ""}
 function trTel(p){return "+216"+String(p).replace(/\D/g,"")}
 function trKm(a,b,c,d){var r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,h=Math.sin(x/2)*Math.sin(x/2)+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)*Math.sin(y/2);return 12742*Math.asin(Math.sqrt(h))}
+function trCard(x,R){
+  var r=x.r,tel=r[3].map(function(p){return '<a href="tel:'+trTel(p)+'" dir="ltr">'+R.call+' '+esc(p)+'</a>'}).join("");
+  var wa=r[5]>=0?'<a href="https://wa.me/'+trTel(r[3][r[5]]).slice(1)+'" rel="noopener" target="_blank">'+R.wa+'</a>':'';
+  var ml=r[4].length?'<a href="mailto:'+escA(r[4][0])+'">'+R.mail+'</a>':'';
+  var mp=r[2]?'<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r[2]+", Tunisie")+'" rel="noopener" target="_blank">'+R.map+'</a>':'';
+  return '<article class="trd-card"><div class="trd-top"><b>'+esc(r[0])+'</b>'+(x.km!=null?'<span class="trd-city"><span class="trd-km">≈ '+Math.round(x.km)+' km</span></span>':'')+'</div>'+(r[2]?'<p class="trd-adr">'+esc(r[2])+'</p>':'')+'<div class="trd-act">'+tel+wa+ml+mp+'</div></article>';
+}
+/* Liste classée par ville : un groupe repliable par ville (Tunis en premier, « ville non précisée » en dernier). */
 function trResults(){
   var R=TRT[S.lang]||TRT.fr,X=TRX[S.lang]||TRX.fr,q=trNorm(TRS.q),rows=[];
-  if(q.length<2&&!TRS.pos)return '<p class="trd-hint"><i aria-hidden="true">👆</i>'+X.hint+'</p>';
   var ac=q.length>=2?trAlias(q):"";
   TR_DATA.forEach(function(r){
+    if(TRS.city&&r[1]!==TRS.city)return;
     var c=TR_CITY[r[1]],km=(TRS.pos&&c)?trKm(TRS.pos[0],TRS.pos[1],c[0],c[1]):null,sc=0;
     if(q.length>=2){
       if(trNorm(r[1]).indexOf(q)>-1||(ac&&r[1]===ac))sc=1;else if(trNorm(r[2]).indexOf(q)>-1)sc=2;else if(trNorm(r[0]).indexOf(q)>-1)sc=3;else return;
     }
     rows.push({r:r,km:km,sc:sc});
   });
-  rows.sort(function(a,b){return a.sc-b.sc||(a.km==null?1e9:a.km)-(b.km==null?1e9:b.km)});
   if(!rows.length)return '<p class="trd-none">'+X.noRes(esc(TRS.q.trim()))+'</p>';
-  var total=rows.length,shown=TRS.all?rows:rows.slice(0,6);
-  var h='<span class="trd-n">'+R.n(total)+(TRS.pos?' · '+R.appr:'')+(TRS.posErr?' · '+R.nearOff:'')+'</span><div class="trd-list">'+shown.map(function(x){
-    var r=x.r,tel=r[3].map(function(p){return '<a href="tel:'+trTel(p)+'" dir="ltr">'+R.call+' '+esc(p)+'</a>'}).join("");
-    var wa=r[5]>=0?'<a href="https://wa.me/'+trTel(r[3][r[5]]).slice(1)+'" rel="noopener" target="_blank">'+R.wa+'</a>':'';
-    var ml=r[4].length?'<a href="mailto:'+escA(r[4][0])+'">'+R.mail+'</a>':'';
-    var mp=r[2]?'<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r[2]+", Tunisie")+'" rel="noopener" target="_blank">'+R.map+'</a>':'';
-    return '<article class="trd-card"><div class="trd-top"><b>'+esc(r[0])+'</b><span class="trd-city">'+esc(r[1]||R.unk)+(x.km!=null?' <span class="trd-km">· ≈ '+Math.round(x.km)+' km</span>':'')+'</span></div>'+(r[2]?'<p class="trd-adr">'+esc(r[2])+'</p>':'')+'<div class="trd-act">'+tel+wa+ml+mp+'</div></article>'}).join("")+'</div>';
-  if(total>6)h+='<button type="button" class="reset trd-more" id="trd-more">'+(TRS.all?R.less:R.more(total))+'</button>';
-  return h;
+  var groups={},order=[];
+  rows.forEach(function(x){var k=x.r[1]||"",g=groups[k];if(!g){g=groups[k]={k:k,rows:[],min:1e9};order.push(g)}g.rows.push(x);if(x.km!=null&&x.km<g.min)g.min=x.km});
+  order.sort(function(a,b){if(!a.k!==!b.k)return a.k?-1:1;if(TRS.pos&&a.min!==b.min)return a.min-b.min;return b.rows.length-a.rows.length||(a.k<b.k?-1:1)});
+  var openAll=!!(TRS.city||q.length>=2||order.length===1);
+  return '<span class="trd-n">'+R.n(rows.length)+(TRS.pos?' · '+R.appr:'')+(TRS.posErr?' · '+R.nearOff:'')+'</span>'+order.map(function(g,i){
+    g.rows.sort(function(a,b){return a.sc-b.sc||(a.km==null?1e9:a.km)-(b.km==null?1e9:b.km)});
+    return '<details class="trd-grp"'+((openAll||(TRS.pos&&i===0))?' open':'')+'><summary><b>'+esc(g.k||R.unk)+'</b><span class="trd-cnt">'+g.rows.length+'</span></summary><div class="trd-list">'+g.rows.map(function(x){return trCard(x,R)}).join("")+'</div></details>';
+  }).join("");
 }
 function renderTrans(){
   var el=$("trans");if(!el)return;
   var on=S.step===0;el.hidden=!on;if(!on)return;
-  var sig=S.lang+"|"+(TRS.pos?1:0)+"|tunisia-only-v1";
+  var sig=S.lang+"|"+(TRS.pos?1:0)+"|"+TRS.city+"|tunisia-only-v2";
   if(sig===trSig&&el.firstChild){var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}
   trSig=sig;
   var R=TRT[S.lang]||TRT.fr,X=TRX[S.lang]||TRX.fr;
   var cities=Object.keys(TR_CITY).filter(function(c){return TR_DATA.some(function(r){return r[1]===c})});
   var title={fr:"Traducteurs assermentés en Tunisie",en:"Sworn translators in Tunisia",ar:"المترجمون المحلَّفون في تونس"}[S.lang]||"Traducteurs assermentés en Tunisie";
-  var subtitle={
-    fr:"Liste officielle du Consulat général de France à Tunis (valide au "+TR_SRC.date+"), destinée aux demandeurs tunisiens. Elle répertorie les traducteurs en Tunisie pour les traductions vers et depuis le français.",
-    en:"Official list of the French Consulate General in Tunis (valid on "+TR_SRC.date+"), for Tunisian applicants. It lists translators in Tunisia for translations to and from French.",
-    ar:"القائمة الرسمية للقنصلية العامة الفرنسية بتونس (سارية بتاريخ "+TR_SRC.date+") والمخصصة لطالبي التأشيرة التونسيين. تضم المترجمين في تونس للترجمة من الفرنسية وإليها."
-  }[S.lang]||"";
-  var h='<h2>'+title+'</h2><p class="trd-sub">'+subtitle+'</p>';
+  var h='<h2>'+title+'</h2>';
   h+='<div class="trd-search"><span class="trd-lens" aria-hidden="true">🔎</span><input id="trd-q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" list="trd-dl" placeholder="'+escA(X.ph)+'" aria-label="'+escA(X.ph)+'" value="'+escA(TRS.q)+'"><datalist id="trd-dl">'+cities.map(function(c){return '<option value="'+escA(c)+'">'}).join("")+'</datalist></div>';
+  var cnt={};TR_DATA.forEach(function(r){if(r[1])cnt[r[1]]=(cnt[r[1]]||0)+1});
+  var cs=Object.keys(cnt).sort(function(a,b){return cnt[b]-cnt[a]||(a<b?-1:1)});
+  h+='<div class="trd-chips" role="group" aria-label="'+escA(R.city)+'"><button type="button" class="chip" data-trc="" aria-pressed="'+(TRS.city?"false":"true")+'">'+R.all+' ('+TR_DATA.length+')</button>'+cs.map(function(c){return '<button type="button" class="chip" data-trc="'+escA(c)+'" aria-pressed="'+(TRS.city===c?"true":"false")+'">'+esc(c)+' ('+cnt[c]+')</button>'}).join("")+'</div>';
   h+='<button type="button" class="reset trd-near" id="trd-near" aria-pressed="'+(TRS.pos?"true":"false")+'">📍 '+R.near+'</button>';
   h+='<div class="trd-res" id="trd-res" aria-live="polite">'+trResults()+'</div>';
-  h+='<p class="trd-src">'+R.src+' : <a href="'+TR_SRC.url+'" rel="noopener" target="_blank">Consulat général de France à Tunis</a>. '+R.note+(SITE.email?' <a href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Traducteurs")+'">'+SITE.email+'</a>':'')+'</p>';
+  if(SITE.email)h+='<p class="trd-src">'+X.fix+' <a href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Traducteurs")+'">'+SITE.email+'</a></p>';
   el.innerHTML=h;
 }
 document.addEventListener("input",function(e){if(e.target&&e.target.id==="trd-q"){TRS.q=e.target.value;TRS.all=false;var rs=$("trd-res");if(rs)rs.innerHTML=trResults()}});
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-trc]");if(!b)return;TRS.city=b.getAttribute("data-trc")||"";TRS.q="";trSig="";renderTrans()});
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("#trd-near,#trd-more");if(!b)return;
   if(b.id==="trd-more"){TRS.all=!TRS.all;var rs=$("trd-res");if(rs)rs.innerHTML=trResults();return}
   if(TRS.pos){TRS.pos=null;trSig="";renderTrans();return}

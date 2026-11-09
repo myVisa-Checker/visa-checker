@@ -183,3 +183,19 @@ h1,h2,h3{letter-spacing:-.025em}
   body[data-step="0"] .hero .photo figcaption{color:#fff}
   body[data-step="0"] .hero .needs h2.hot{background:none;-webkit-text-fill-color:#fff;color:#fff}
 }
+
+/* Traducteurs assermentés : pastilles de villes et groupes repliables par ville. */
+.trd-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;width:100%}
+.trd-chips .chip{min-height:40px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:600 14px var(--f-body);cursor:pointer}
+.trd-chips .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.trd-grp{width:100%;border:1px solid var(--line);border-radius:var(--r-6);background:var(--surface);overflow:hidden}
+.trd-grp>summary{display:flex;align-items:center;gap:10px;min-height:52px;padding:12px 16px;cursor:pointer;list-style:none;font:700 16px var(--f-body);color:var(--ink)}
+.trd-grp>summary::-webkit-details-marker{display:none}
+.trd-grp>summary b{flex:1}
+.trd-grp>summary::after{content:"";width:9px;height:9px;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg);transition:transform .2s;flex:none;margin-inline-start:4px}
+.trd-grp[open]>summary::after{transform:rotate(-135deg)}
+.trd-grp[open]>summary{border-bottom:1px solid var(--line)}
+.trd-cnt{font:600 13px var(--f-mono);color:var(--accent-ink);background:var(--accent-soft);border-radius:999px;padding:2px 10px}
+.trd-grp .trd-list{padding:12px}
+.trd-grp .trd-card{box-shadow:none}
+.trd-grp>summary{text-align:start}
