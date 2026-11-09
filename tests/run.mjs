@@ -25,7 +25,7 @@ const payJs = read("visa-app.js"), payHtml = read("index.html");
 ok("ancienne méthode D17 retirée", !/\bD17\b/.test(payJs));
 ok("aucun montant fixe dans le parcours de paiement", !/SVC_PRICE|Payer 10 DT|Pay 10 TND/.test(payJs));
 ok("Konnect et Flouci affichés comme moyens à venir", /paymentMethodsHtml/.test(payJs) && /Konnect/.test(payJs) && /flouci/.test(payJs));
-ok("adresse de facturation annoncée sans collecte prématurée", /Adresse de facturation/.test(payJs) && /Aucune adresse ni donnée bancaire n'est collectée/.test(payJs));
+ok("adresse de facturation annoncée sans collecte prématurée", /Adresse de facturation/.test(payJs) && /Aucune adresse ni donnée bancaire n’est collectée/.test(payJs));
 ok("styles des deux moyens de paiement présents", /pay-konnect/.test(payHtml) && /pay-flouci/.test(payHtml));
 
 console.log("Fichiers référencés par index.html");
@@ -52,7 +52,7 @@ const workerCode = read("worker/visa-chat-worker.js").split("\n").filter((l) => 
 ok("aucun prestataire de paiement n'est codé en dur", !/KONNECT|FLOUCI|D17|PAY_MOCK/.test(workerCode));
 ok("création et vérification de paiement désactivées explicitement", /body\.action === "pay_create" \|\| body\.action === "pay_check"/.test(workerCode) && /payment_unavailable/.test(workerCode));
 ok("accès par codes existants conservé", /INTERVIEW_CODES/.test(workerCode) && /mint:/.test(workerCode));
-ok("limite KV documentée comme best-effort", /KV n'offre pas d'incrément atomique/.test(workerCode));
+ok("limite KV documentée comme best-effort", /KV n'offre pas d'incrément atomique/.test(worker));
 
 console.log("Contraste des couleurs de marque (brand.css, WCAG AA = 4,5)");
 {
