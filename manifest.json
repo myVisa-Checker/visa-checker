@@ -1,24 +1,55 @@
 {
-  "id": "/?app=visa-checker",
+  "id": "./?app=visa-checker",
   "name": "Visa Checker : dossier visa vérifié avant le dépôt",
   "short_name": "Visa Checker",
-  "description": "Checklist des documents de visa pour voyageurs tunisiens, pack recours, billets et hôtels via agences partenaires. FR · EN · عربي",
+  "description": "Visa preparation tools for travellers, with selected guided checklists, passport-specific e-Visa information and partner services. French, English and Arabic.",
   "lang": "fr",
   "dir": "auto",
   "start_url": "./?source=pwa",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "portrait-primary",
   "theme_color": "#1d4ed8",
   "background_color": "#ffffff",
-  "categories": ["travel", "utilities"],
+  "categories": [
+    "travel",
+    "utilities"
+  ],
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
-    { "name": "Vérifier mes documents", "short_name": "Documents", "url": "./?source=shortcut", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+    {
+      "name": "Vérifier mes documents",
+      "short_name": "Documents",
+      "url": "./?source=shortcut",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ]
 }
