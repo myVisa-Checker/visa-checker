@@ -1,7 +1,8 @@
 // Worker « visa-chat » : assistant Visa Checker + entraînement à l'entretien (payant, par code).
 // À déployer sur Cloudflare (Workers & Pages > visa-chat > Edit code). Ce fichier n'est PAS servi par le site.
 // Variables Cloudflare : GEMINI_API_KEY (secret), GEMINI_MODEL (facultatif), INTERVIEW_CODES (secret, codes séparés par des virgules).
-// KV nommé USAGE (Bindings) : limite par code, codes générés après paiement, commandes.
+// KV USAGE : registre des codes générés après validation du paiement.
+// Durable Object RATE_LIMITER : compteurs distribués et quotas atomiques.
 // Paiements : intégration reportée. Aucun fournisseur ni endpoint de paiement actif pour le moment ; Flouci sera évalué séparément.
 
 const SYSTEM = `Tu es l'assistant de Visa Checker, un service indépendant d'aide à la préparation des dossiers de visa et à la compréhension des formalités de voyage.
@@ -33,7 +34,7 @@ Règles strictes :
 - Réponds dans la langue du client (français, anglais ou arabe), en texte simple sans markdown, avec des tirets "-" pour les listes, 150 mots maximum.
 - Si la question sort du sujet de l'entretien de visa, ramène poliment vers l'entraînement.`;
 
-const IV_MAX = 40; // messages par code (utilisé seulement si le KV « USAGE » est relié)
+
 const ORIGINS = ["https://checkmyvisa.org", "https://www.checkmyvisa.org", "https://myvisa-checker.github.io"];
 const ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const rid = (n) => Array.from(crypto.getRandomValues(new Uint8Array(n)), (b) => ALPHA[b % ALPHA.length]).join("");
@@ -137,6 +138,12 @@ export default {
         const minted = !listed && code ? await env.USAGE.get("mint:" + code) : null;
         if (!code || (!listed && !minted)) return out({ error: "code" }, 403);
         quotaName = "quota:" + code;
+        if (body.check === true) {
+          const quota = await counterRequest(env, quotaName, "check", IV_MAX);
+          if (quota.unavailable) return out({ error: "quota_unavailable" }, 503);
+          if (!quota.allowed) return out({ error: "limit", left: 0 }, 429);
+          return out({ ok: true, left: quota.left });
+        }
       }
 
       if (!Array.isArray(body.messages) || body.messages.length < 1 || body.messages.length > 32) {
