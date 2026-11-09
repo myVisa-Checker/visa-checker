@@ -119,6 +119,7 @@ const assistantJs = read("visa-app.js");
 ok("ancienne carte Entraînement entretien retirée", !/function ivCardHtml\(/.test(assistantJs) && !/\+ivCardHtml\(\)/.test(assistantJs));
 ok("ancienne carte AI Visa Recovery retirée", !/function recoveryCardHtml\(/.test(assistantJs) && !/\+recoveryCardHtml\(\)/.test(assistantJs));
 ok("ancien bloc entretien autonome retiré de la checklist", !/\+interviewHtml\(\)/.test(assistantJs));
+ok("ancien bouton entretien autonome (dont USA) retiré", !assistantJs.includes("data-iv-open") && !assistantJs.includes("IVICON"));
 ok("espace Joury/Aicha conserve ses deux cartes", (jouryHtml.match(/class="action assistant-card /g) || []).length === 2);
 
 process.exit(fail ? 1 : 0);
