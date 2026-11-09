@@ -26,7 +26,7 @@ const html = read("index.html");
 const htmlPages = [
   "index.html", "planner.html", "partenaires.html", "a-propos.html", "contact.html",
   "confidentialite.html", "conditions.html",
-  "guide/index.html", "guide/documents-visa-schengen-france-tunisie.html"
+  "guide/index.html", "guide/documents-visa-schengen-france-tunisie.html", "guide/demande-visa-france-tunisie-etapes.html", "guide/ressources-financieres-garant-assurance-schengen.html"
 ];
 for (const page of htmlPages) {
   ok(page + " : CSP présente", /Content-Security-Policy/.test(read(page)));
@@ -59,7 +59,14 @@ for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "index.html", "wo
 const workerCode = read("worker/visa-chat-worker.js").split("\n").filter((l) => !/^\s*\/\//.test(l)).join("\n");
 ok("PAY_MOCK n'est pas activé en dur dans le Worker (commentaires ignorés)", !/PAY_MOCK\s*=\s*["']?1/.test(workerCode));
 ok("Worker refuse les origines web non autorisées", /if \(origin && !ORIGINS\.includes\(origin\)\)/.test(workerCode));
-ok("Worker exige KV pour contrôler les quotas d’entretien", /if \(interview && !env\.USAGE\)/.test(workerCode));
+ok("Worker exige KV pour valider les codes émis", /if \(!env\.USAGE\)/.test(workerCode));
+ok("Worker exige le Durable Object avant de traiter les requêtes", /if \(!env\.RATE_LIMITER\)/.test(workerCode));
+ok("rate limiting distribué par identifiant IP", /counterRequest\(env, "rate:" \+ ip, "consume", RATE_MAX, RATE_WINDOW\)/.test(workerCode));
+ok("quota entretien atomique par code", /counterRequest\(env, quotaName, "consume", IV_MAX\)/.test(workerCode));
+ok("contrôle de code sans consommation de quota", /body\.check === true/.test(workerCode) && /counterRequest\(env, quotaName, "check", IV_MAX\)/.test(workerCode));
+ok("compteurs protégés par transaction Durable Object", /this\.state\.storage\.transaction\(async \(txn\)/.test(workerCode));
+ok("aucune Map locale utilisée pour le rate limiting", !/const hits = new Map\(\)/.test(workerCode));
+ok("configuration Wrangler et migration Durable Object présentes", /class_name = "VisaCheckerCounter"/.test(read("wrangler.toml")) && /new_sqlite_classes = \["VisaCheckerCounter"\]/.test(read("wrangler.toml")));
 ok("entraînement payant désactivé par défaut sans validation explicite", /interview && env\.INTERVIEW_ENABLED !== "1"/.test(workerCode));
 ok("Worker refuse de traiter sans clé Gemini", /if \(!env\.GEMINI_API_KEY\)/.test(workerCode));
 ok("Worker limite la sortie du modèle", /maxOutputTokens: 700/.test(workerCode));
