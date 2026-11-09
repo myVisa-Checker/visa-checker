@@ -395,8 +395,8 @@ function chips(q,label){
    UNLOCK_DEV_MODE : true uniquement pour tester sans serveur (compare l'empreinte SHA-256 du code ; jamais en production). */
 var PAY_URL="";
 var PAY_URL2="";
-var UNLOCK_URL="https://visa-proxy.rabehfly.workers.dev/unlock";
-var PACK_URL="https://visa-proxy.rabehfly.workers.dev/pack";
+var UNLOCK_URL=""; // Déblocage payant désactivé jusqu'à validation juridique et paiement.
+var PACK_URL=""; // Pack payant non commercialisé à ce stade.
 var UNLOCK_TIMEOUT_MS=8000;
 /* ===== Paiements désactivés jusqu'à la validation d'un partenaire =====
    Ne jamais publier de numéro de compte ou de coordonnées de paiement personnelles
@@ -1313,7 +1313,7 @@ var ICONS={
 /* ===== Demande de documents de voyage (billet d'avion / hôtel) =====
    REQUEST_URL : adresse qui reçoit la demande en POST JSON (Make, n8n, Zapier, Formspree...). Vide = mode test (envoi manuel par bouton).
    Chaque agence a ses contacts (email, telegram, whatsapp). Les données personnelles ne sont pas gardées dans le navigateur. */
-var REQUEST_URL="https://visa-proxy.rabehfly.workers.dev";
+var REQUEST_URL=""; // Désactivé : aucun partenaire contractuellement validé pour recevoir des données voyageurs.
 /* REQUEST_MODE : "opaque" = envoi sans lecture de la réponse (aucun en-tête CORS requis ; on ne connaît que l'échec réseau)
                   "cors"   = envoi JSON et lecture du statut HTTP (le serveur doit renvoyer les en-têtes CORS : voir ARCHITECTURE-SECURITE.md). */
 var REQUEST_MODE="cors";
