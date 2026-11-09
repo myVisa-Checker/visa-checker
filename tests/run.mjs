@@ -100,7 +100,7 @@ ok("marque du parcours neutre selon le passeport", productApp.includes('stamp:"V
 ok("interface sans promesse de liste exacte ou exhaustive", !/liste exacte des documents|exact list of documents|القائمة الدقيقة للوثائق/.test(productApp));
 ok("disclaimer France-Visas personnalisé et caractère non officiel", productApp.includes("la liste personnalisée générée par France-Visas fait foi") && productApp.includes("the personalised France-Visas checklist is authoritative") && productApp.includes("القائمة الشخصية الصادرة عن France-Visas المرجع المعتمد"));
 ok("photos : fond blanc interdit et fond clair", productApp.includes("blanc interdit") && productApp.includes("white is not allowed") && productApp.includes("الأبيض ممنوع") && !/fond blanc ou très clair|white or very light background|خلفية بيضاء أو فاتحة جدًا/.test(productApp));
-ok("traduction assermentée non présentée comme obligatoire partout", productApp.includes("Une traduction assermentée n’est pas à présenter comme systématiquement obligatoire") && productApp.includes("Do not present a sworn translation as universally mandatory"));
+ok("traduction assermentée non présentée comme obligatoire partout", productApp.includes("Do not present a sworn translation as universally mandatory") && productApp.includes("لا تعتبر الترجمة المحلّفة شرطًا عامًا"));
 ok("ressources sans exigence générique de 3 mois ni RIB", !productApp.includes("Relevés bancaires des 3 derniers mois et RIB") && !productApp.includes("Bank statements for the last 3 months and your RIB"));
 ok("transport conditionnel selon la liste personnalisée", /id:"flight",g:"stay",w:any,opt:1/.test(productApp) && productApp.includes("Transport evidence or itinerary, if requested"));
 const coverage = read("guide/couverture-provisoire.md");
