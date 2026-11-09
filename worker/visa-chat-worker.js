@@ -3,8 +3,9 @@
 // Variables Cloudflare : GEMINI_API_KEY (secret), INTERVIEW_CODES (secret, codes séparés par des virgules).
 // Le modèle Gemini est écrit directement dans le code (variable « model » plus bas).
 // KV nommé USAGE (Bindings) : limite par code, codes générés après paiement, commandes.
-// Paiement Konnect (cartes, e-Dinar, Flouci...) : KONNECT_API_KEY (secret), KONNECT_WALLET_ID, PRICE_MILLIMES (ex. 15000 = 15 DT),
-//   KONNECT_BASE (par défaut : bac à sable), SITE_URL, PAY_MOCK=1 (TEST ONLY : paiement simulé, ne jamais laisser en production).
+// Paiement Konnect : KONNECT_API_KEY (secret), KONNECT_WALLET_ID, PRICE_MILLIMES (ex. 15000 = 15 DT),
+//   KONNECT_BASE (par défaut : bac à sable), SITE_URL.
+// Le quota KV est un contrôle best-effort : KV n'offre pas d'incrément atomique ni de cohérence forte.
 
 const SYSTEM = `Tu es l'assistant de Visa Checker, un site qui aide les voyageurs tunisiens à vérifier leur dossier de visa pour la France.
 Règles :
@@ -85,14 +86,12 @@ export default {
 
       // ----- Paiement : création d'une commande -----
       if (body.action === "pay_create") {
-        const amount = parseInt(env.PRICE_MILLIMES || "0", 10);
-        if (!env.USAGE || !amount) return out({ error: "config" }, 500);
-        const orderId = rid(16);
-        if (env.PAY_MOCK === "1") {
-          await env.USAGE.put("order:" + orderId, orderId, { expirationTtl: TTL });
-          return out({ payUrl: SITE + "?pay=1&mock=1", ref: orderId });
-        }
+        const amountText = String(env.PRICE_MILLIMES || "");
+        const amount = Number(amountText);
+        if (!env.USAGE || !Number.isSafeInteger(amount) || amount <= 0) return out({ error: "config" }, 500);
         if (!env.KONNECT_API_KEY || !env.KONNECT_WALLET_ID) return out({ error: "config" }, 500);
+        const orderId = rid(16);
+        const orderRecord = JSON.stringify({ orderId, amount, token: "TND" });
         const r = await fetch(KBASE + "/payments/init-payment", {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-api-key": env.KONNECT_API_KEY },
@@ -103,31 +102,66 @@ export default {
           }),
         });
         const d = await r.json().catch(() => ({}));
-        if (!d.paymentRef || !d.payUrl) return out({ error: "gateway" }, 502);
-        await env.USAGE.put("order:" + d.paymentRef, orderId, { expirationTtl: TTL });
-        return out({ payUrl: d.payUrl, ref: d.paymentRef });
+        let payUrl;
+        try {
+          payUrl = new URL(d.payUrl);
+        } catch {
+          return out({ error: "gateway" }, 502);
+        }
+        if (!r.ok || !/^[A-Za-z0-9_-]{1,64}$/.test(String(d.paymentRef || "")) ||
+            payUrl.protocol !== "https:" ||
+            !(payUrl.hostname === "konnect.network" || payUrl.hostname.endsWith(".konnect.network"))) {
+          return out({ error: "gateway" }, 502);
+        }
+        await env.USAGE.put("order:" + d.paymentRef, orderRecord, { expirationTtl: TTL });
+        return out({ payUrl: payUrl.href, ref: d.paymentRef });
       }
 
       // ----- Paiement : vérification puis génération du code -----
       if (body.action === "pay_check") {
-        const ref = String(body.ref || "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 64);
-        if (!ref || !env.USAGE) return out({ error: "bad" }, 400);
+        const ref = String(body.ref || "");
+        if (!/^[A-Za-z0-9_-]{1,64}$/.test(ref) || !env.USAGE || !env.KONNECT_API_KEY) return out({ error: "bad" }, 400);
         const done = await env.USAGE.get("ref:" + ref);
         if (done) return out({ paid: true, code: done });
-        const orderId = await env.USAGE.get("order:" + ref);
-        if (!orderId) return out({ paid: false, error: "unknown" });
-        let paid = false;
-        if (env.PAY_MOCK === "1") paid = true;
-        else {
-          const r = await fetch(KBASE + "/payments/" + ref, { headers: { "x-api-key": env.KONNECT_API_KEY } });
-          const d = await r.json().catch(() => ({}));
-          const p = d.payment || d;
-          paid = p.status === "completed" && (p.orderId == null || p.orderId === orderId);
+        const savedOrder = await env.USAGE.get("order:" + ref);
+        if (!savedOrder) return out({ paid: false, error: "unknown" });
+        let order;
+        try {
+          order = JSON.parse(savedOrder);
+        } catch {
+          return out({ paid: false, error: "invalid_order" }, 409);
         }
+        if (!order || typeof order.orderId !== "string" ||
+            !Number.isSafeInteger(order.amount) || order.amount <= 0 || order.token !== "TND") {
+          return out({ paid: false, error: "invalid_order" }, 409);
+        }
+        const ctl = new AbortController();
+        const tm = setTimeout(() => ctl.abort(), 10000);
+        let r, d;
+        try {
+          r = await fetch(KBASE + "/payments/" + encodeURIComponent(ref), {
+            headers: { "x-api-key": env.KONNECT_API_KEY },
+            signal: ctl.signal,
+          });
+          d = await r.json().catch(() => ({}));
+        } finally {
+          clearTimeout(tm);
+        }
+        const p = d.payment || d;
+        const reachedAmount = Number(p.reachedAmount);
+        const paid = r.ok && p.status === "completed" &&
+          p.orderId === order.orderId && p.token === order.token &&
+          Number.isFinite(reachedAmount) && reachedAmount >= order.amount;
         if (!paid) return out({ paid: false });
-        const code = "IV-" + rid(4) + "-" + rid(4);
-        await env.USAGE.put("mint:" + code, "1");
-        await env.USAGE.put("ref:" + ref, code);
+        // Code déterministe par commande : deux vérifications simultanées du même paiement
+        // ne peuvent pas créer deux codes distincts (KV n'a pas de compare-and-swap).
+        const digest = new Uint8Array(await crypto.subtle.digest(
+          "SHA-256", new TextEncoder().encode(ref + ":" + order.orderId)
+        ));
+        const code = "IV-" + Array.from(digest.slice(0, 4), (b) => ALPHA[b % ALPHA.length]).join("") +
+          "-" + Array.from(digest.slice(4, 8), (b) => ALPHA[b % ALPHA.length]).join("");
+        await env.USAGE.put("mint:" + code, "1", { expirationTtl: TTL });
+        await env.USAGE.put("ref:" + ref, code, { expirationTtl: TTL });
         return out({ paid: true, code });
       }
 
