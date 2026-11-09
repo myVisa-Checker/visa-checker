@@ -767,9 +767,7 @@ function applyCountry0(t){
   return o;
 }
 /* Partner agencies by governorate id. Despina Travel and Events is an example entry: edit or remove it. */
-var PARTNERS={
- nabeul:[{id:"despina",name:"Despina Travel and Events",city:"Hammamet",svc:["flight","hotel"],what:{fr:"Réservations d'hôtel et de vol",en:"Hotel and flight reservations",ar:"حجوزات الفنادق والطيران"},adv:{fr:"Conseil pour votre dossier de visa",en:"Advice on your visa file",ar:"نصائح لملف التأشيرة"},contact:"",email:"despinatravelandevents@gmail.com",telegram:"",whatsapp:""}]
-};
+var PARTNERS={}; // Aucun partenaire n'est publié sans vérification et accord préalable.
 /* Agences : la liste ci-dessus sert de secours ; partners.json (même dossier) la remplace s'il est valide. */
 function cleanPartners(j){
   var out={},n=0;if(!j||typeof j!=="object"||!j.partners||typeof j.partners!=="object")return null;
