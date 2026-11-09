@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://myvisa-checker.github.io/visa-checker/sitemap.xml
+Sitemap: https://checkmyvisa.org/sitemap.xml
