@@ -85,5 +85,22 @@ if (loaded) {
   for (const o of ["ma", "dz"]) { const miss = Object.keys(api.EVORI[o]).filter((id) => !api.EV.some((c) => c.id === id)); ok("EVORI." + o + " : tous les pays sont définis", miss.length === 0, miss.join(",")); }
 }
 
+console.log("Programme partenaires");
+const partnerPage = "partenaires.html";
+ok("page partenaires présente", existsSync(partnerPage));
+if (existsSync(partnerPage)) {
+  const p = read(partnerPage);
+  ok("contact partenariat opérationnel", p.includes("visacheckercontact@gmail.com") && p.includes("mailto:visacheckercontact@gmail.com"));
+  ok("présentation des principales catégories", ["Assurance voyage", "Traduction", "Services documentaires", "eSIM", "Conseil spécialisé"].every((x) => p.includes(x)));
+  ok("règles de transparence partenaires", p.includes("Aucune commission ne peut influencer") && p.includes("faux documents"));
+}
+const productApp = read("visa-app.js");
+ok("catégories partenaires intégrées au parcours", ["SPT.sTr", "SPT.sDoc", "SPT.sEsim"].every((x) => productApp.includes(x)));
+ok("accès au programme partenaires depuis l'accueil", productApp.includes('href="partenaires.html"'));
+const ivStart = productApp.indexOf("var IVT=");
+const ivEnd = productApp.indexOf("\\nvar IVOPEN", ivStart);
+const ivText = productApp.slice(ivStart, ivEnd > ivStart ? ivEnd : ivStart + 6000);
+ok("conseils d'entretien non limités à la Tunisie", !/Tunisie|Tunisia|تونس/.test(ivText));
+
 console.log("\n" + pass + " réussis, " + fail + " échoués");
 process.exit(fail ? 1 : 0);
