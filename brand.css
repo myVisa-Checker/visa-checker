@@ -108,3 +108,55 @@ th{background:var(--ice-50)}
 @media (prefers-reduced-motion:reduce){
   .pay,.pay:hover{transition:none;transform:none}
 }
+
+
+/* Visa Checker — unified premium blue system */
+:root{
+  --royal-950:#081b3d;--royal-900:#0b2452;--royal-800:#123775;
+  --royal-700:#1749a5;--royal-600:#245bd4;--royal-500:#3478ed;
+  --royal-100:#e8f1ff;--royal-50:#f5f8ff;
+  --brand-border:#d9e5f5;
+}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{background:radial-gradient(ellipse at 88% -8%,rgba(96,165,250,.16),transparent 34rem),var(--bg);color:var(--ink)}
+.sitenav{
+  min-height:68px;background:rgba(255,255,255,.9)!important;
+  border-bottom:1px solid rgba(191,210,239,.85)!important;
+  box-shadow:0 8px 28px -25px rgba(8,27,61,.55);
+  backdrop-filter:blur(18px) saturate(1.35);
+}
+.sitenav .sn-logo{font-weight:800;letter-spacing:-.045em}
+.sitenav .sn-logo b{color:var(--royal-600)}
+.sitenav ul{align-items:center}
+.sitenav a{border-radius:9px;transition:color .18s,background .18s,border-color .18s}
+.sitenav a:hover{background:var(--royal-50)}
+.sitenav a[aria-current="page"]{font-weight:700}
+.panel,.agency,.refus,.aibox,.evdetail,.lt,.adapt,.sponsors .sp{
+  border-color:var(--brand-border);
+  box-shadow:0 12px 34px -29px rgba(11,36,82,.42);
+}
+.panel{background:color-mix(in srgb,var(--surface) 96%,#edf4ff)}
+h1,h2,h3{letter-spacing:-.025em}
+.q-label,.tag{color:var(--muted)}
+.pay{
+  background:linear-gradient(120deg,var(--royal-600),var(--royal-800));
+  box-shadow:0 10px 22px -13px rgba(36,91,212,.8);
+}
+.pay:hover{filter:brightness(1.06);box-shadow:0 14px 28px -14px rgba(36,91,212,.72)}
+.chip[aria-pressed="true"],.mcard[aria-pressed="true"]{border-color:var(--royal-600)}
+:root[data-theme="dark"] .sitenav{background:rgba(11,27,57,.92)!important;border-bottom-color:#29436d!important}
+:root[data-theme="dark"] .sitenav a:hover{background:#172f57}
+:root[data-theme="dark"] .panel,:root[data-theme="dark"] .agency,:root[data-theme="dark"] .refus{
+  background:linear-gradient(145deg,#17283f,#142235);border-color:#2b4263;
+}
+:root[data-theme="dark"] .pay{background:linear-gradient(120deg,#3478ed,#1749a5)}
+@media(max-width:700px){
+  .sitenav{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none}
+  .sitenav::-webkit-scrollbar{display:none}
+  .sitenav.in-app ul{flex-wrap:nowrap;white-space:nowrap}
+  .sitenav a{min-height:38px;display:inline-flex;align-items:center}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .sitenav a,.pay{transition:none}
+}
