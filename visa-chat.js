@@ -75,7 +75,7 @@
   function api(p){return fetch(CHAT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)}).then(function(r){return r.json();});}
   function openBox(){if(box.style.display!=="flex")$("vc-btn").click();}
   function chip(label,fn){var b=document.createElement("button");b.type="button";b.className="vc-chip";b.textContent=label;b.onclick=fn;chips.appendChild(b);}
-  function payChip(){chips.innerHTML="";chip(L().payb,startPay);}
+  function payChip(){chips.innerHTML="";add(L().paye,"vc-a");}
   function verifySaved(sv){
     var l=L();
     api({mode:"interview",check:true,code:sv}).then(function(j){
