@@ -22,7 +22,7 @@ for (const f of ["manifest.json", "partners.json", "rdv.json", "reviews.json", "
 
 console.log("Paiement (préparation Konnect / Flouci)");
 const payJs = read("visa-app.js"), payHtml = read("index.html");
-ok("ancienne méthode D17 retirée", !/\\bD17\\b/.test(payJs));
+ok("ancienne méthode D17 retirée", !/\bD17\b/.test(payJs));
 ok("aucun montant fixe dans le parcours de paiement", !/SVC_PRICE|Payer 10 DT|Pay 10 TND/.test(payJs));
 ok("Konnect et Flouci affichés comme moyens à venir", /paymentMethodsHtml/.test(payJs) && /Konnect/.test(payJs) && /flouci/.test(payJs));
 ok("adresse de facturation annoncée sans collecte prématurée", /Adresse de facturation/.test(payJs) && /Aucune adresse ni donnée bancaire n'est collectée/.test(payJs));
