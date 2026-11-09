@@ -2,7 +2,7 @@
 // À déployer sur Cloudflare (Workers & Pages > visa-chat > Edit code). Ce fichier n'est PAS servi par le site.
 // Variables Cloudflare : GEMINI_API_KEY (secret), GEMINI_MODEL (facultatif), INTERVIEW_CODES (secret, codes séparés par des virgules).
 // KV nommé USAGE (Bindings) : limite par code, codes générés après paiement, commandes.
-// Paiement Konnect (à activer uniquement après finalisation du partenariat) : KONNECT_API_KEY, KONNECT_WALLET_ID, PRICE_MILLIMES, KONNECT_BASE, SITE_URL. Aucun paiement simulé.
+// Paiements : intégration reportée. Aucun fournisseur ni endpoint de paiement actif pour le moment ; Flouci sera évalué séparément.
 
 const SYSTEM = `Tu es l'assistant de Visa Checker, un service indépendant d'aide à la préparation des dossiers de visa et à la compréhension des formalités de voyage.
 Règles :

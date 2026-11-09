@@ -13,7 +13,7 @@ const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
 for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "bump-version.mjs"]) {
-  try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
+  try { if (f === "worker/visa-chat-worker.js") execFileSync(process.execPath, ["--input-type=module", "--check"], { input: read(f), stdio: ["pipe", "pipe", "pipe"] }); else execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
 console.log("JSON");
