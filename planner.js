@@ -13,7 +13,7 @@ function addDays(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x}
 function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function fmt(d){return new Intl.DateTimeFormat(lang==="ar"?"ar":lang==="en"?"en-GB":"fr-FR",{day:"numeric",month:"short",year:"numeric"}).format(d)}
 function save(){try{localStorage.setItem(storeKey,JSON.stringify(plan))}catch(e){}}
-function applyLang(next){lang=copy[next]?next:"fr";document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";document.querySelectorAll("[data-i18n]").forEach(function(el){var v=copy[lang][el.dataset.i18n];if(typeof v==="string")el.textContent=v});document.querySelectorAll("[data-lang]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.lang===lang))});if(plan)render()}
+function applyLang(next){lang=copy[next]?next:"fr";try{localStorage.setItem("vc-planner-lang-v1",lang)}catch(e){}document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";document.querySelectorAll("[data-i18n]").forEach(function(el){var v=copy[lang][el.dataset.i18n];if(typeof v==="string")el.textContent=v});document.querySelectorAll("[data-lang]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.lang===lang))});if(plan)render()}
 function build(){
 var raw=$("departure").value,n=Number($("lead").value),today=new Date();today.setHours(0,0,0,0);
 if(!raw||dateLocal(raw)<=today){$("departure").setCustomValidity(copy[lang].invalid);$("departure").reportValidity();return}
@@ -45,12 +45,15 @@ function ics(){
 if(!plan)return;
 var t=copy[lang],stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,""),events=plan.tasks.map(function(task,i){var d=task.due.replace(/-/g,"");return "BEGIN:VEVENT\r\nUID:"+task.id+"-"+plan.departure+"@checkmyvisa.org\r\nDTSTAMP:"+stamp+"\r\nDTSTART;VALUE=DATE:"+d+"\r\nSUMMARY:"+esc(t.tasks[task.titleIndex][0])+"\r\nDESCRIPTION:"+esc(t.tasks[task.titleIndex][1])+"\r\nBEGIN:VALARM\r\nTRIGGER:-P1D\r\nACTION:DISPLAY\r\nDESCRIPTION:"+esc(t.tasks[task.titleIndex][0])+"\r\nEND:VALARM\r\nEND:VEVENT"})
 var content="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Visa Checker//Journey Planner//FR\r\nCALSCALE:GREGORIAN\r\n"+events.join("\r\n")+"\r\nEND:VCALENDAR";
-var blob=new Blob([content],{type:"text/calendar;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="visa-checker-planning.ics";document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url)
+var blob=new Blob([content],{type:"text/calendar;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="visa-checker-planning.ics";document.body.append(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000)
 }
 var tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);$("departure").min=iso(tomorrow);$("lead").addEventListener("input",function(){$("lead").setCustomValidity("")});$("departure").addEventListener("input",function(){$("departure").setCustomValidity("")});$("build").addEventListener("click",build);
 $("reset").addEventListener("click",function(){plan=null;try{localStorage.removeItem(storeKey)}catch(e){}$("results").hidden=true;$("departure").value="";$("lead").value="90"});
 $("calendar").addEventListener("click",ics);
 $("print").addEventListener("click",function(){window.print()});
 document.querySelectorAll("[data-lang]").forEach(function(b){b.addEventListener("click",function(){applyLang(b.dataset.lang)})});
+try{var preferred=localStorage.getItem("vc-planner-lang-v1");if(copy[preferred])applyLang(preferred)}catch(e){}
 try{var saved=JSON.parse(localStorage.getItem(storeKey)||"null");var valid=saved&&validDate(saved.departure)&&Number.isInteger(saved.lead)&&saved.lead>=14&&saved.lead<=240&&Array.isArray(saved.tasks)&&saved.tasks.length===7&&saved.tasks.every(function(x,i){return x&&x.id==="t"+i&&x.titleIndex===i&&validDate(x.due)})&&saved.done&&typeof saved.done==="object"&&!Array.isArray(saved.done)&&Object.keys(saved.done).every(function(k){return /^t[0-6]$/.test(k)&&typeof saved.done[k]==="boolean"});if(valid){plan=saved;$("departure").value=saved.departure;$("lead").value=saved.lead;render()}else if(saved)localStorage.removeItem(storeKey)}catch(e){plan=null}
+if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol)){navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(function(){});}
+
 })();
