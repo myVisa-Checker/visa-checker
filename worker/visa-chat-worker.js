@@ -91,7 +91,7 @@ export default {
         if (!env.USAGE || !Number.isSafeInteger(amount) || amount <= 0) return out({ error: "config" }, 500);
         if (!env.KONNECT_API_KEY || !env.KONNECT_WALLET_ID) return out({ error: "config" }, 500);
         const orderId = rid(16);
-        const orderRecord = JSON.stringify({ orderId, amount, token: "TND" });
+        const orderRecord = JSON.stringify({ orderId, amount, token: "TND", code: "IV-" + rid(4) + "-" + rid(4) });
         const r = await fetch(KBASE + "/payments/init-payment", {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-api-key": env.KONNECT_API_KEY },
@@ -132,7 +132,8 @@ export default {
           return out({ paid: false, error: "invalid_order" }, 409);
         }
         if (!order || typeof order.orderId !== "string" ||
-            !Number.isSafeInteger(order.amount) || order.amount <= 0 || order.token !== "TND") {
+            !Number.isSafeInteger(order.amount) || order.amount <= 0 || order.token !== "TND" ||
+            typeof order.code !== "string" || !/^IV-[A-Z2-9]{4}-[A-Z2-9]{4}$/.test(order.code)) {
           return out({ paid: false, error: "invalid_order" }, 409);
         }
         const ctl = new AbortController();
@@ -153,13 +154,9 @@ export default {
           p.orderId === order.orderId && p.token === order.token &&
           Number.isFinite(reachedAmount) && reachedAmount >= order.amount;
         if (!paid) return out({ paid: false });
-        // Code déterministe par commande : deux vérifications simultanées du même paiement
-        // ne peuvent pas créer deux codes distincts (KV n'a pas de compare-and-swap).
-        const digest = new Uint8Array(await crypto.subtle.digest(
-          "SHA-256", new TextEncoder().encode(ref + ":" + order.orderId)
-        ));
-        const code = "IV-" + Array.from(digest.slice(0, 4), (b) => ALPHA[b % ALPHA.length]).join("") +
-          "-" + Array.from(digest.slice(4, 8), (b) => ALPHA[b % ALPHA.length]).join("");
+        // Le code est créé et stocké avec la commande avant paiement : les vérifications simultanées
+        // du même paiement retrouvent toujours le même code.
+        const code = order.code;
         await env.USAGE.put("mint:" + code, "1", { expirationTtl: TTL });
         await env.USAGE.put("ref:" + ref, code, { expirationTtl: TTL });
         return out({ paid: true, code });
