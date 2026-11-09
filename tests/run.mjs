@@ -42,7 +42,7 @@ for (const page of htmlPages) {
 }
 
 console.log("Sitemap");
-const urls = [...read("sitemap.xml").matchAll(/<loc>https:\/\/checkmyvisa\.org\/([^<]*)<\/loc>/g)].map((m) => m[1]);
+const urls = [...read("sitemap.xml").matchAll(/<loc>https:\/\/myvisa-checker\.github\.io\/visa-checker\/([^<]*)<\/loc>/g)].map((m) => m[1]);
 for (const u of urls) { const p = u === "" ? "index.html" : u.endsWith("/") ? u + "index.html" : u; ok("sitemap : " + (u || "/"), existsSync(p)); }
 
 console.log("Version");

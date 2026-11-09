@@ -4,7 +4,7 @@ Application web (PWA) multilingue (français, anglais, arabe) pour les voyageurs
 
 Les paiements en ligne restent désactivés tant que le partenariat de paiement n'est pas finalisé. Aucun mode de paiement simulé n'est prévu en production.
 
-Site : https://checkmyvisa.org
+Site : https://myvisa-checker.github.io/visa-checker/
 
 ## Tests de base
 
