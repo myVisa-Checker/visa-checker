@@ -16,3 +16,7 @@ Le script vérifie la syntaxe des scripts, les fichiers JSON, les fichiers réf�
 
 - `main` : version en ligne.
 - `amelioration` : travaux d'amélioration, à relire avant tout passage sur `main`.
+
+## Design
+
+L'identité visuelle bleue (marine, bleu royal, bleu clair, blanc) est définie dans `brand.css`, chargé en dernier par toutes les pages. Pour revenir à l'ancien rendu, retirer la ligne `<link rel="stylesheet" href="/brand.css">`.

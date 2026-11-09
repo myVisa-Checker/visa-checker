@@ -43,6 +43,23 @@ for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "index.html", "wo
 const workerCode = read("worker/visa-chat-worker.js").split("\n").filter((l) => !/^\s*\/\//.test(l)).join("\n");
 ok("PAY_MOCK n'est pas activé en dur dans le Worker (commentaires ignorés)", !/PAY_MOCK\s*=\s*["']?1/.test(workerCode));
 
+console.log("Contraste des couleurs de marque (brand.css, WCAG AA = 4,5)");
+{
+  const css = read("brand.css");
+  const grab = (re) => { const m = css.match(re); const o = {}; if (m) for (const x of m[1].matchAll(/(--[a-z0-9-]+)\s*:\s*([^;]+);/g)) o[x[1]] = x[2].trim(); return o; };
+  const light = grab(/:root\{([\s\S]*?)\n\}/), dark = { ...light, ...grab(/:root\[data-theme="dark"\]\{([\s\S]*?)\n\}/) };
+  const res = (map, v, d = 0) => { v = v.trim(); const m = v.match(/^var\((--[a-z0-9-]+)\)$/); return m && d < 8 ? res(map, map[m[1]] || "", d + 1) : v; };
+  const rgb = (h) => { h = h.replace("#", ""); if (h.length === 3) h = [...h].map((c) => c + c).join(""); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255); };
+  const lum = (h) => { const [r, g, b] = rgb(h).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+  const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+  const pairs = [["--ink", "--bg"], ["--ink", "--surface"], ["--muted", "--bg"], ["--muted", "--surface"], ["--accent", "--surface"], ["--accent-ink", "--surface"], ["--on-accent", "--accent"]];
+  for (const [name, map] of [["clair", light], ["sombre", dark]]) for (const [f, g] of pairs) {
+    const a = res(map, map[f] || ""), b = res(map, map[g] || "");
+    if (!/^#[0-9a-f]{3,6}$/i.test(a) || !/^#[0-9a-f]{3,6}$/i.test(b)) { ok(name + " " + f + " sur " + g, false, "valeur illisible : " + a + " / " + b); continue; }
+    const r = ratio(a, b); ok(name + " " + f + " sur " + g + " = " + r.toFixed(1), r >= 4.5);
+  }
+}
+
 console.log("Section e-Visa (tn, ma, dz × fr, en, ar)");
 const src = read("visa-app.js").split("\n");
 const a = src.findIndex((l) => l.startsWith("/* ===== e-Visa section"));
