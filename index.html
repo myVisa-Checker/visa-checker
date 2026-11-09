@@ -1027,9 +1027,9 @@ img,svg,video,canvas{max-width:100%;height:auto}
     <li><a href="./a-propos.html">À propos</a></li>
     <li><a href="./contact.html">Contact</a></li>
   </ul>
-  <a class="sn-profile" href="./joury.html" aria-label="Ouvrir l’espace personnel Joury" title="Mon espace Joury">
+  <a class="sn-profile" href="./joury.html" aria-label="Ouvrir Joury" title="Joury">
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 21a8 8 0 0 0-16 0M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-    <span>Mon espace</span>
+    <span>Joury</span>
   </a>
 </nav>
 <div class="wrap">
@@ -1146,15 +1146,14 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .missing-docs.is-complete{border-color:#23865a;border-inline-start-color:#23865a;background:#edf8f1;color:#14532d}
 @media(prefers-reduced-motion:no-preference){.missing-docs{transition:background-color .18s,border-color .18s}}
 </style>
-<button id="vc-btn" type="button" aria-label="Assistant"></button>
-<div id="vc-box" role="dialog" aria-label="Assistant Visa Checker">
-  <div id="vc-head"><span class="vc-av"></span><div><div id="vc-name">Assistant Visa Checker</div><div id="vc-on"></div></div></div>
-  <div id="vc-hello" aria-hidden="true"></div>
-  <div id="vc-social"></div>
-  <div id="vc-msgs" aria-live="polite"></div>
-  <div id="vc-chips"></div>
-  <div id="vc-form"><input id="vc-in" maxlength="500" autocomplete="off"><button id="vc-send" type="button"></button></div>
-</div>
-<script src="chat-loader.js" defer></script>
+<a class="joury-fab" href="./joury.html" aria-label="Ouvrir Joury, analyse des refus de visa" title="Joury — Analyse des refus"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="#ffe7f1"/><path d="M10 32C8 12 19 5 33 5s24 11 21 29l-4 18H14z" fill="#3a2630"/><ellipse cx="32" cy="31" rx="17" ry="20" fill="#f4c6a9"/><path d="M15 25C15 11 25 7 34 7c8 0 14 5 17 15-8 1-15-2-20-8-3 6-8 9-16 11" fill="#3a2630"/><circle cx="25" cy="31" r="6" fill="none" stroke="#6a4058" stroke-width="2.4"/><circle cx="39" cy="31" r="6" fill="none" stroke="#6a4058" stroke-width="2.4"/><path d="M31 31h2" stroke="#6a4058" stroke-width="2"/><path d="M26 41q6 6 12 0" fill="none" stroke="#ad5b66" stroke-width="2.2" stroke-linecap="round"/><path d="M18 55q14-11 28 0" fill="#ec8fb6"/></svg><span>Joury</span></a>
+<style>
+.joury-fab{position:fixed;right:20px;bottom:22px;z-index:120;display:flex;align-items:center;gap:9px;padding:7px 15px 7px 7px;border:1px solid #efb4cf;border-radius:999px;background:#fff7fb;color:#813c61;text-decoration:none;font:700 14px system-ui;box-shadow:0 12px 34px rgba(94,37,67,.22);transition:transform .18s,box-shadow .18s}
+.joury-fab svg{width:48px;height:48px;display:block;border-radius:50%}
+.joury-fab:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(94,37,67,.28)}
+.joury-fab:focus-visible{outline:3px solid #c65b91;outline-offset:4px}
+@media(max-width:600px){.joury-fab{right:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));padding:5px 12px 5px 5px}.joury-fab svg{width:42px;height:42px}}
+@media(prefers-reduced-motion:reduce){.joury-fab{transition:none}}
+</style>
 
 </body></html>
