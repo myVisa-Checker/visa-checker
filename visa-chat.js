@@ -64,9 +64,9 @@
   function stopHello(){clearInterval(timer);hello.hidden=true;}
   greet=add(L().hi,"vc-a");labels();refresh();
   document.addEventListener("click",function(e){
-    if(e.target.closest&&e.target.closest(".crow")){picked=true;setTimeout(refresh,80);}
+    if(e.target.closest&&e.target.closest(".crow")){picked=true;setTimeout(refresh,80);return;}
+    if(e.target.closest&&e.target.closest("#l-fr,#l-en,#l-ar"))setTimeout(refresh,0);
   });
-  setInterval(refresh,800);
   $("vc-btn").onclick=function(){
     var open=box.style.display==="flex";box.style.display=open?"none":"flex";
     if(open){clearInterval(timer);return;}
