@@ -2,7 +2,7 @@
 document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&t.classList.contains("fav")&&t.parentNode){t.parentNode.classList.add("fb");t.remove()}},true);
 (function(){
 var UI={
-fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destination, puis cochez chaque document au fur et à mesure.",
+fr:{stamp:"Voyageurs",h1:"Visa Checker",sub:"Choisissez votre destination, puis cochez chaque document au fur et à mesure.",
  s_country:"Destination",cAvail:"Disponible",cSoon:"Bientôt",soonText:"La liste des pièces pour ce pays arrive bientôt.",
  agTitle:"Besoin d'un conseiller visa ?",agSub:"Voir ses coordonnées coûte 10 DT, en paiement unique.",
  gov:"Gouvernorat",govPick:"Choisir un gouvernorat",agCount:function(n){return n+(n>1?" conseillers":" conseiller")},
@@ -20,7 +20,7 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  linkFV:"France-Visas Tunisie (officiel)",linkTLS:"TLScontact Tunisie",
  disc:"Les pièces exigées peuvent évoluer. Confirmez toujours la liste sur France-Visas et auprès de TLScontact. Cet outil aide à préparer le dossier et ne garantit pas l'obtention du visa. Il n'est lié à aucune ambassade. Passez uniquement par le portail officiel et méfiez-vous des intermédiaires qui promettent des facilités.",
  reset:"Tout décocher",
- brand:"Visa Checker",slogan:"Déposez votre dossier visa sans rien oublier.",homeSub:"Choisissez votre destination, dites-nous pourquoi vous voyagez, puis suivez la liste exacte des documents.",
+ brand:"Visa Checker",slogan:"Déposez votre dossier visa sans rien oublier.",homeSub:"Choisissez votre destination, dites-nous pourquoi vous voyagez, puis suivez une liste de préparation adaptée à votre profil.",
  s_pass:"Passeport",passName:"Tunisie",s_dest:"Destination",s_motive:"Motif du voyage",
  motive:{medical:"Visite médicale",other:"Autre motif"},motiveHint:{medical:"Soins, consultation ou opération",other:"Tourisme, famille, affaires"},
  start:"Commencer",back:"Retour",next:"Continuer",stepWord:function(n){return "Étape "+n+" sur 2"},stepNames:["Motif","Profil","Documents","Aide en plus"],
@@ -28,7 +28,7 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  medNote:"Visite médicale : le consulat veut voir un rendez-vous réel en France, le coût des soins et la preuve que vous pouvez les payer.",gMed:"Votre visite médicale",
  destTitle:"Votre voyage",destSub:"Pourquoi voyagez-vous ?",
  sloganA:"Votre dossier visa, vérifié",sloganB:"avant le dépôt",homeSub2:"Votre conseiller visa : nous vérifions que rien ne manque. Nous ne déposons pas votre demande."
- ,modeTitle:"Que voulez-vous faire ?",modeSub:"Visa Checker conseille et vérifie. Nous ne déposons pas votre demande.",mode:{check:["Vérifier mon dossier","Avant le dépôt : la liste exacte des documents à préparer."],appeal:["Recours après un refus","Lettre de recours, conseils pour redéposer, lettres modèles."]},apTitle:"Recours après un refus",apSub:"Reprenez votre dossier avec nos conseils.",adapt:"Adapter la liste à ma situation",ask:"Où partez-vous ?",
+ ,modeTitle:"Que voulez-vous faire ?",modeSub:"Visa Checker conseille et vérifie. Nous ne déposons pas votre demande.",mode:{check:["Vérifier mon dossier","Avant le dépôt : une liste de préparation adaptée à votre profil, à confirmer sur le site officiel."],appeal:["Recours après un refus","Lettre de recours, conseils pour redéposer, lettres modèles."]},apTitle:"Recours après un refus",apSub:"Reprenez votre dossier avec nos conseils.",adapt:"Adapter la liste à ma situation",ask:"Où partez-vous ?",
  howTitle:"Comment ça marche",how:[["Choisissez","Votre destination et le motif du voyage."],["Répondez","Quelques questions sur votre situation."],["Cochez","Chaque document, au fur et à mesure."]],
  whyTitle:"Pourquoi choisir Visa Checker",why:["Guidé étape par étape, en quelques minutes","Liste adaptée à votre situation : motif, activité, famille","Disponible en français, anglais et arabe","Votre progression reste enregistrée sur cet appareil","Aide en cas de refus : recours et lettres modèles"],whyNote:"Visa Checker conseille et vérifie votre dossier. Il ne dépose pas la demande, ne garantit pas le visa et n'est lié à aucune ambassade.",
  needTitle:"Besoin de documents de voyage ?",needSub:"Billet d'avion, réservation d'hôtel… Pour le visa, prenez des réservations annulables",needFlight:"Billet d'avion",needHotel:"Réservation d'hôtel",spTitle:"Nos partenaires",spSub:"Agences de voyage locales et partenaires dans le monde.",spLocal:"Agence de voyage locale",spWorld:"Partenaire dans le monde",spSlot:"Espace disponible",spTag:"Sponsorisé",spJoin:"Devenir partenaire",spSoon:"Contact à venir",
@@ -42,7 +42,7 @@ fr:{stamp:"Voyageurs tunisiens",h1:"Visa Checker",sub:"Choisissez votre destinat
  rfNote:"Les lettres sont en français, car elles sont adressées aux autorités françaises. Remplacez tout ce qui est entre [crochets]. Collez le texte dans Word ou Google Docs, puis imprimez.",
  rfNoGuar:"Ces modèles aident à présenter votre dossier. Ils ne garantissent pas le visa.",copy:"Copier le texte",copied:"Copié",selected:"Texte sélectionné, copiez-le",
  adv:["Lisez le formulaire de refus. La case cochée indique le motif à corriger.","Choisissez : un recours (délai court, indiqué sur la notification) ou une nouvelle demande, qui entraîne de nouveaux frais.","Corrigez le motif avec des preuves nouvelles. Moyens financiers : relevés réguliers, sans gros dépôt soudain. Objet du séjour : programme clair et réservations réelles. Retour en Tunisie : preuves d'attaches (emploi, famille, logement).","Restez cohérent avec la première demande. Le consulat garde votre dossier : dates, emploi et revenus doivent être identiques.","Il n'existe pas de délai légal d'attente avant de redéposer, mais ne redéposez pas le même dossier sans changement.","Aucun intermédiaire ne peut promettre un visa. Un faux document peut entraîner de graves conséquences, dont une interdiction d'entrée."]},
-en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, then tick each document as you collect it.",
+en:{stamp:"Travellers",h1:"Visa Checker",sub:"Pick your destination, then tick each document as you collect it.",
  s_country:"Destination",cAvail:"Available",cSoon:"Coming soon",soonText:"The document list for this country is coming soon.",
  agTitle:"Need a visa advisor?",agSub:"Seeing his contact details costs 10 TND, paid once.",
  gov:"Governorate",govPick:"Choose a governorate",agCount:function(n){return n+(n>1?" advisors":" advisor")},
@@ -60,7 +60,7 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  linkFV:"France-Visas Tunisia (official)",linkTLS:"TLScontact Tunisia",
  disc:"Required documents can change. Always confirm the list on France-Visas and with TLScontact. This tool helps you prepare your file and does not guarantee a visa. It is not affiliated with any embassy. Use the official portal only, and be wary of intermediaries who promise shortcuts.",
  reset:"Untick everything",
- brand:"Visa Checker",slogan:"Apply for your visa without missing a document.",homeSub:"Pick your destination, tell us why you travel, then follow the exact list of documents.",
+ brand:"Visa Checker",slogan:"Apply for your visa without missing a document.",homeSub:"Pick your destination, tell us why you travel, then follow a preparation checklist adapted to your profile.",
  s_pass:"Passport",passName:"Tunisia",s_dest:"Destination",s_motive:"Reason for travel",
  motive:{medical:"Medical visit",other:"Other reason"},motiveHint:{medical:"Treatment, consultation or surgery",other:"Tourism, family, business"},
  start:"Start",back:"Back",next:"Continue",stepWord:function(n){return "Step "+n+" of 2"},stepNames:["Reason","Profile","Documents","Extra help"],
@@ -68,7 +68,7 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  medNote:"Medical visit: the consulate wants a real appointment in France, the cost of care and proof you can pay for it.",gMed:"Your medical visit",
  destTitle:"Your trip",destSub:"Why are you travelling?",
  sloganA:"Your visa file, checked",sloganB:"before you apply",homeSub2:"Your visa advisor: we check that nothing is missing. We do not file your application."
- ,modeTitle:"What do you want to do?",modeSub:"Visa Checker advises and checks. We do not file your application.",mode:{check:["Check my file","Before you apply: the exact list of documents to prepare."],appeal:["Appeal after a refusal","Appeal letter, advice for applying again, sample letters."]},apTitle:"Appeal after a refusal",apSub:"Rebuild your file with our advice.",adapt:"Adjust the list to my situation",ask:"Where are you headed?",
+ ,modeTitle:"What do you want to do?",modeSub:"Visa Checker advises and checks. We do not file your application.",mode:{check:["Check my file","Before you apply: a preparation checklist adapted to your profile. Confirm it on the official website."],appeal:["Appeal after a refusal","Appeal letter, advice for applying again, sample letters."]},apTitle:"Appeal after a refusal",apSub:"Rebuild your file with our advice.",adapt:"Adjust the list to my situation",ask:"Where are you headed?",
  howTitle:"How it works",how:[["Choose","Your destination and reason for travel."],["Answer","A few questions about your situation."],["Tick","Each document as you collect it."]],
  whyTitle:"Why travellers choose Visa Checker",why:["Guided step by step, in minutes","List fitted to your situation: reason, work, family","Available in French, English and Arabic","Your progress stays saved on this device","Help after a refusal: appeal and sample letters"],whyNote:"Visa Checker advises and checks your file. It does not file the application, does not guarantee a visa and is not affiliated with any embassy.",
  needTitle:"Need travel documents?",needSub:"Flight ticket, hotel booking… For the visa, choose cancellable bookings",needFlight:"Flight ticket",needHotel:"Hotel booking",spTitle:"Our partners",spSub:"Local travel agencies and partners around the world.",spLocal:"Local travel agency",spWorld:"Partner worldwide",spSlot:"Space available",spTag:"Sponsored",spJoin:"Become a partner",spSoon:"Contact coming soon",
@@ -82,7 +82,7 @@ en:{stamp:"Tunisian travellers",h1:"Visa Checker",sub:"Pick your destination, th
  rfNote:"The letters are in French because they go to the French authorities. Replace everything in [brackets]. Paste the text into Word or Google Docs, then print.",
  rfNoGuar:"These models help you present your file. They do not guarantee a visa.",copy:"Copy the text",copied:"Copied",selected:"Text selected, copy it",
  adv:["Read the refusal form. The ticked box shows the reason to fix.","Choose: an appeal (short deadline, shown on the notification) or a new application, which means new fees.","Fix the reason with new evidence. Funds: regular statements, no sudden large deposit. Purpose of stay: a clear plan and real bookings. Return to Tunisia: proof of ties (job, family, home).","Stay consistent with your first application. The consulate keeps your file: dates, job and income must be identical.","There is no legal waiting period before you apply again, but do not resubmit the same file unchanged.","No intermediary can promise a visa. A false document can have serious consequences, including an entry ban."]},
-ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اختر وجهتك ثم علّم كل وثيقة بعد تجهيزها.",
+ar:{stamp:"المسافرون",h1:"Visa Checker",sub:"اختر وجهتك ثم علّم كل وثيقة بعد تجهيزها.",
  s_country:"الوجهة",cAvail:"متاحة",cSoon:"قريبًا",soonText:"قائمة وثائق هذا البلد قادمة قريبًا.",
  agTitle:"هل تحتاج إلى مستشار تأشيرة؟",agSub:"مشاهدة بيانات الاتصال تكلّف 10 دنانير، تُدفع مرة واحدة.",
  gov:"الولاية",govPick:"اختر الولاية",agCount:function(n){return n===1?"مستشار واحد":n+" مستشارين"},
@@ -100,7 +100,7 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  linkFV:"France-Visas تونس (الموقع الرسمي)",linkTLS:"TLScontact تونس",
  disc:"قد تتغير الوثائق المطلوبة. تأكد دائمًا من القائمة على موقع France-Visas ولدى TLScontact. هذه الأداة تساعدك على تحضير ملفك ولا تضمن الحصول على التأشيرة، وهي غير تابعة لأي سفارة. اعتمد البوابة الرسمية فقط واحذر من الوسطاء الذين يعدون بتسهيلات.",
  reset:"إلغاء كل العلامات",
- brand:"Visa Checker",slogan:"قدّم ملف تأشيرتك دون أن تنسى أي وثيقة.",homeSub:"اختر وجهتك، وأخبرنا سبب سفرك، ثم اتبع قائمة الوثائق الدقيقة.",
+ brand:"Visa Checker",slogan:"قدّم ملف تأشيرتك دون أن تنسى أي وثيقة.",homeSub:"اختر وجهتك وسبب سفرك، ثم اتبع قائمة تحضيرية ملائمة لوضعك.",
  s_pass:"جواز السفر",passName:"تونس",s_dest:"الوجهة",s_motive:"سبب السفر",
  motive:{medical:"زيارة طبية",other:"سبب آخر"},motiveHint:{medical:"علاج أو استشارة أو عملية",other:"سياحة أو عائلة أو أعمال"},
  start:"ابدأ",back:"رجوع",next:"متابعة",stepWord:function(n){return "الخطوة "+n+" من 2"},stepNames:["السبب","ملفك","الوثائق","مساعدة"],
@@ -108,7 +108,7 @@ ar:{stamp:"المسافرون التونسيون",h1:"Visa Checker",sub:"اخت�
  medNote:"زيارة طبية: تريد القنصلية موعدًا حقيقيًا في فرنسا وتكلفة العلاج وإثبات قدرتك على دفعها.",gMed:"زيارتك الطبية",
  destTitle:"رحلتك",destSub:"ما سبب سفرك؟",
  sloganA:"ملف تأشيرتك، مُراجَع",sloganB:"قبل تقديمه",homeSub2:"مستشارك للتأشيرة: نتحقق من أنه لا ينقصك شيء. نحن لا نودع طلبك."
- ,modeTitle:"ماذا تريد أن تفعل؟",modeSub:"Visa Checker ينصح ويتحقق. نحن لا نودع طلبك.",mode:{check:["تحقق من ملفي","قبل التقديم: القائمة الدقيقة للوثائق المطلوبة."],appeal:["طعن بعد الرفض","رسالة طعن ونصائح لإعادة التقديم ورسائل نموذجية."]},apTitle:"طعن بعد الرفض",apSub:"أعد بناء ملفك بمساعدة نصائحنا.",adapt:"تكييف القائمة مع وضعي",ask:"إلى أين تسافر؟",
+ ,modeTitle:"ماذا تريد أن تفعل؟",modeSub:"Visa Checker ينصح ويتحقق. نحن لا نودع طلبك.",mode:{check:["تحقق من ملفي","قبل التقديم: قائمة تحضيرية ملائمة لوضعك. تأكد منها على الموقع الرسمي."],appeal:["طعن بعد الرفض","رسالة طعن ونصائح لإعادة التقديم ورسائل نموذجية."]},apTitle:"طعن بعد الرفض",apSub:"أعد بناء ملفك بمساعدة نصائحنا.",adapt:"تكييف القائمة مع وضعي",ask:"إلى أين تسافر؟",
  howTitle:"كيف يعمل",how:[["اختر","وجهتك وسبب السفر."],["أجب","عن بضعة أسئلة حول وضعك."],["علّم","كل وثيقة بعد تجهيزها."]],
  whyTitle:"لماذا يختار المسافرون Visa Checker",why:["إرشاد خطوة بخطوة في دقائق","قائمة مناسبة لوضعك: السبب والعمل والعائلة","متاح بالفرنسية والإنجليزية والعربية","يبقى تقدّمك محفوظًا على هذا الجهاز","مساعدة عند الرفض: طعن ورسائل نموذجية"],whyNote:"Visa Checker ينصح ويتحقق من ملفك. لا يودع الطلب ولا يضمن التأشيرة وهو غير تابع لأي سفارة.",
  needTitle:"تحتاج وثائق السفر؟",needSub:"تذكرة طيران، حجز فندق… للتأشيرة، اختر حجوزات قابلة للإلغاء",needFlight:"تذكرة طيران",needHotel:"حجز فندق",spTitle:"شركاؤنا",spSub:"وكالات سفر محلية وشركاء حول العالم.",spLocal:"وكالة سفر محلية",spWorld:"شريك حول العالم",spSlot:"مساحة متاحة",spTag:"برعاية",spJoin:"كن شريكًا",spSoon:"بيانات الاتصال قريبًا",
@@ -987,7 +987,7 @@ function photoHtml(){
   return '<img class="hero-img" src="hero-voyage.jpg" width="1200" height="675" alt="'+tx[0]+'" decoding="async" fetchpriority="high"><figcaption><b>'+tx[1]+'</b><span>'+tx[2]+'</span></figcaption>';
 }
 /* ===== Pays du passeport (Tunisie, Maroc, Algérie) =====
-   ORI_READY : destinations dont la liste de pièces est prête pour chaque pays de départ. Maroc et Algérie : vides tant que les listes ne sont pas vérifiées sur sources officielles. */
+   ORI_READY est initialisé avec les destinations de base, puis complété ci-dessous par les destinations disposant de données spécifiques. "Disponible" signifie que le parcours existe dans le code, pas que chaque pièce a été certifiée exhaustive. */
 var ORIS=[{id:"tn",n:{fr:"Tunisie",en:"Tunisia",ar:"تونس"}},{id:"ma",n:{fr:"Maroc",en:"Morocco",ar:"المغرب"}},{id:"dz",n:{fr:"Algérie",en:"Algeria",ar:"الجزائر"}}];
 var ORI_READY={ma:["fr","es","it"],dz:["fr","es","it"]};
 var ORI_SOON={ma:{fr:"Cette destination n'est pas encore prête pour les voyageurs marocains : la liste des pièces est en cours de vérification sur les sources officielles.",en:"This destination is not ready yet for Moroccan travellers: the document list is being checked against official sources.",ar:"هذه الوجهة غير جاهزة بعد للمسافرين المغاربة: قائمة الوثائق قيد التحقق من المصادر الرسمية."},dz:{fr:"Cette destination n'est pas encore prête pour les voyageurs algériens : la liste des pièces est en cours de vérification sur les sources officielles.",en:"This destination is not ready yet for Algerian travellers: the document list is being checked against official sources.",ar:"هذه الوجهة غير جاهزة بعد للمسافرين الجزائريين: قائمة الوثائق قيد التحقق من المصادر الرسمية."}};
@@ -1231,7 +1231,12 @@ function genCountry(o){
   var r=Object.assign({},o);
   r.msgDone=({fr:"Dossier complet. Vérifiez une dernière fois sur le site officiel "+de+".",en:"File complete. Check once more on the official website of "+en+".",ar:"الملف مكتمل. تحقق مرة أخيرة على الموقع الرسمي لدولة "+c.n.ar+"."})[S.lang];
   r.medNote=genText(r.medNote,S.lang,c);
-  r.disc=String(r.disc).replace(/France-Visas, /g,"").replace(/France-Visas و/g,"");
+  if(S.origin==="tn")r.disc=({
+    fr:"Les exigences peuvent évoluer. Confirmez chaque pièce sur le site officiel de "+c.n.fr+" et auprès du centre de dépôt compétent. Cette checklist est un outil indicatif de préparation, pas une liste officielle exhaustive. Visa Checker ne garantit pas l'obtention du visa et n'est lié à aucune ambassade.",
+    en:"Requirements can change. Confirm each document on the official website of "+c.n.en+" and with the competent application centre. This checklist is a preparation aid, not an exhaustive official list. Visa Checker does not guarantee a visa and is not affiliated with any embassy.",
+    ar:"قد تتغير الشروط. تأكد من كل وثيقة على الموقع الرسمي لدولة "+c.n.ar+" ولدى مركز الإيداع المختص. هذه القائمة أداة تحضيرية إرشادية وليست قائمة رسمية شاملة. لا يضمن Visa Checker الحصول على التأشيرة وليس تابعًا لأي سفارة."
+  })[S.lang];
+  else r.disc=String(r.disc).replace(/France-Visas, /g,"").replace(/France-Visas و/g,"");
   return r;
 }
 function applyCountry(t){restoreItems();return genCountry(applyOriginItems(applyCountry0(t)))}
