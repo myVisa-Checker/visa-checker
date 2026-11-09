@@ -49,5 +49,5 @@ $("reset").addEventListener("click",function(){plan=null;try{localStorage.remove
 $("calendar").addEventListener("click",ics);
 $("print").addEventListener("click",function(){window.print()});
 document.querySelectorAll("[data-lang]").forEach(function(b){b.addEventListener("click",function(){applyLang(b.dataset.lang)})});
-try{var saved=JSON.parse(localStorage.getItem(storeKey)||"null");if(saved&&/^\d{4}-\d{2}-\d{2}$/.test(saved.departure)&&Array.isArray(saved.tasks)){plan=saved;$("departure").value=saved.departure;$("lead").value=saved.lead||90;render()}}catch(e){plan=null}
+try{var saved=JSON.parse(localStorage.getItem(storeKey)||"null");var valid=saved&&/^\\d{4}-\\d{2}-\\d{2}$/.test(saved.departure)&&Number.isInteger(saved.lead)&&saved.lead>=14&&saved.lead<=240&&Array.isArray(saved.tasks)&&saved.tasks.length===7&&saved.tasks.every(function(x,i){return x&&x.id==="t"+i&&x.titleIndex===i&&/^\\d{4}-\\d{2}-\\d{2}$/.test(x.due)})&&saved.done&&typeof saved.done==="object";if(valid){plan=saved;$("departure").value=saved.departure;$("lead").value=saved.lead;render()}else if(saved)localStorage.removeItem(storeKey)}catch(e){plan=null}
 })();

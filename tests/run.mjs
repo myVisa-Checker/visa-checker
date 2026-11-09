@@ -132,7 +132,6 @@ const ivEnd = productApp.indexOf("\nvar IVOPEN", ivStart);
 const ivText = productApp.slice(ivStart, ivEnd > ivStart ? ivEnd : ivStart + 6000);
 ok("conseils d'entretien non limités à la Tunisie", !/Tunisie|Tunisia|تونس/.test(ivText));
 
-console.log("\n" + pass + " réussis, " + fail + " échoués");
 console.log("Visa Journey Planner");
 const plannerPage = read("planner.html");
 const plannerScript = read("planner.js");
@@ -142,5 +141,7 @@ ok("planner exporte un calendrier ICS", plannerScript.includes("BEGIN:VCALENDAR"
 ok("planner ne collecte pas de numéro de passeport", !/<input[^>]*(?:passport|passeport)/i.test(plannerPage));
 ok("planner précise que les dates ne sont pas officielles", plannerScript.includes("not official processing deadlines") && plannerScript.includes("pas des délais officiels"));
 ok("planner n'utilise aucune bibliothèque distante", !/<script[^>]+src=["']https?:/i.test(plannerPage));
+
+console.log("\n" + pass + " réussis, " + fail + " échoués");
 
 process.exit(fail ? 1 : 0);
