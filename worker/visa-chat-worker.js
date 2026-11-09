@@ -94,10 +94,32 @@ export default {
         if (body.check) return out({ ok: true, left: env.USAGE ? IV_MAX - used : null });
       }
 
+      const attachments = Array.isArray(body.attachments) ? body.attachments : [];
+      if (attachments.length > 3) return out({ error: "attachments" }, 400);
+      let attachmentBytes = 0;
+      for (const file of attachments) {
+        const mime = String(file && file.mimeType || "");
+        const data = String(file && file.data || "");
+        if (!["application/pdf", "image/jpeg", "image/png"].includes(mime) || !/^[A-Za-z0-9+/]+={0,2}$/.test(data)) {
+          return out({ error: "attachments" }, 400);
+        }
+        attachmentBytes += Math.floor(data.length * 3 / 4);
+      }
+      if (attachmentBytes > 15 * 1024 * 1024) return out({ error: "attachments" }, 413);
+
       const msgs = (body.messages || []).slice(interview ? -16 : -8).map((m) => ({
         role: m.role === "assistant" ? "model" : "user",
         parts: [{ text: String(m.text || "").slice(0, interview ? 700 : 500) }],
       }));
+      if (attachments.length) {
+        if (interview) return out({ error: "attachments" }, 400);
+        let lastUser = -1;
+        for (let i = msgs.length - 1; i >= 0; i--) if (msgs[i].role === "user") { lastUser = i; break; }
+        if (lastUser < 0) return out({ error: "empty" }, 400);
+        for (const file of attachments) {
+          msgs[lastUser].parts.push({ inlineData: { mimeType: file.mimeType, data: file.data } });
+        }
+      }
       while (msgs.length && msgs[0].role !== "user") msgs.shift();
       if (!msgs.length) return out({ error: "empty" }, 400);
       if (!interview && limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
