@@ -1,0 +1,12 @@
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-site
+  Strict-Transport-Security: max-age=31536000
+
+# Cloudflare Pages applies this file at the edge. GitHub Pages ignores _headers.
+# CSP remains declared per HTML document in meta tags until response policies are
+# validated page-by-page against inline script hashes and API connect-src needs.
