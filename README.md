@@ -1,36 +1,76 @@
 # Visa Checker
 
-Application web (PWA) multilingue (français, anglais, arabe) pour les voyageurs tunisiens, marocains et algériens : documents de visa, pack recours, e-Visa par passeport, assistant d'entretien.
+Application web statique (PWA) multilingue pour préparer les dossiers de voyage et consulter des informations indicatives sur les visas. Le dépôt contient également un Worker Cloudflare séparé pour les contrôles d'éligibilité et de validité du passeport.
 
-Site : https://checkmyvisa.org
+Site public : https://checkmyvisa.org
 
-## Tests de base
+## Déploiement Cloudflare
 
-Aucune dépendance. Avec Node 18 ou plus récent :
+### 1. Site web — Cloudflare Pages
 
-    node tests/run.mjs
+Depuis la racine du dépôt :
 
-Le script vérifie la syntaxe des scripts et des deux Workers, les fichiers JSON, les fichiers référencés par `index.html`, le précache du service worker, le sitemap, la version, la CSP de chaque page, quelques contrôles de sécurité simples et le rendu de la section e-Visa pour les trois passeports dans les trois langues.
+```bash
+npx wrangler pages deploy . --project-name visa-checker
+```
 
-## Déploiement
+Le fichier racine `wrangler.toml` est la configuration Pages (`pages_build_output_dir = "."`). Le dossier racine contient le site statique existant.
 
-1. Site : `node bump-version.mjs` (estampille `sw.js` et `version.json`), puis commit et push sur `main` : GitHub Pages publie `checkmyvisa.org`.
-2. Workers Cloudflare : voir `worker/README.md`. Cloudflare ne lit pas ce dépôt : coller le fichier dans Cloudflare > Edit code > Deploy.
+### 2. API d'éligibilité — Cloudflare Worker
+
+Depuis la racine du dépôt :
+
+```bash
+npx wrangler deploy --config worker/wrangler.toml
+```
+
+Le Worker utilise `worker/visa-rules-worker.js`. Sa configuration est isolée dans `worker/wrangler.toml` afin de ne pas confondre le déploiement Pages et le déploiement Worker.
+
+Routes :
+- `GET /health` — état du service.
+- `GET /v1/rules` — nationalités, destinations et paramètres de contrôle connus.
+- `POST /v1/check` — évaluation indicative d'une combinaison nationalité/destination et de dates/validité du passeport.
+
+Exemple de corps JSON :
+
+```json
+{
+  "nationality": "TN",
+  "destination": "SCHENGEN",
+  "departureDate": "2027-06-01",
+  "returnDate": "2027-06-14",
+  "passportIssueDate": "2024-01-01",
+  "passportExpiry": "2027-12-31",
+  "blankPages": 2
+}
+```
+
+**Limites importantes :** le jeu de règles intégré est volontairement restreint à TN/MA/DZ et à SCHENGEN/FR. Les destinations absentes retournent `unknown`, jamais une exemption inventée. Les résultats sont informatifs, non décisionnels, et ne remplacent pas les autorités consulaires. Le Worker ne demande ni ne stocke de numéro de passeport ou d'image de document. L'interface principale n'est pas encore connectée à l'URL publique du Worker : après le premier déploiement du Worker, cette URL devra être configurée dans l'application avant d'activer le parcours utilisateur.
+
+## Tests
+
+Aucune dépendance externe. Avec Node.js 18 ou plus récent :
+
+```bash
+node tests/run.mjs
+```
+
+Le script vérifie la syntaxe des scripts existants, les fichiers et JSON référencés, plusieurs contrôles de sécurité, la cohérence PWA, les contenus e-Visa et les réponses principales du Worker d'éligibilité.
+
+GitHub Actions conserve uniquement le déclenchement manuel (`workflow_dispatch`) ; aucun test automatique n'est lancé à chaque push.
 
 ## Structure
 
-- `index.html` + `visa-app.js` : application principale (checklists, e-Visa, pack recours, commandes agences).
-- `joury.html`, `aicha.html` + `joury.js`, `avatar3d.js` : assistants IA Joury et Aicha.
-- `partenaires.html` + `partner-form.js` : candidatures partenaires.
-- `sw.js`, `visa-pwa.js`, `manifest.json` : PWA et hors-ligne.
-- `partners.json`, `rdv.json`, `deals.json` : données éditables.
-- `worker/` : code des Workers `visa-proxy` et `visa-chat`.
+- `index.html` + `visa-app.js` : application principale.
+- `joury.html`, `aicha.html` + scripts associés : assistants.
+- `partenaires.html` + `partner-form.js` : espace partenaires.
+- `sw.js`, `visa-pwa.js`, `manifest.json` : PWA.
+- `worker/visa-rules-worker.js` : API indicative d'éligibilité et contrôles passeport.
+- `worker/visa-proxy-worker.js`, `worker/visa-chat-worker.js` : Workers existants pour les fonctions proxy et assistants.
+- `worker/wrangler.toml` : configuration de déploiement de l'API d'éligibilité.
+- `wrangler.toml` : configuration Cloudflare Pages à la racine.
+- `tests/` : tests de régression.
 
-## Branches
+## Données personnelles et sécurité
 
-- `main` : version en ligne.
-- `amelioration` : travaux d'amélioration, à relire avant tout passage sur `main`.
-
-## Design
-
-L'identité visuelle bleue (marine, bleu royal, bleu clair, blanc) est définie dans `brand.css`, chargé en dernier par toutes les pages. Pour revenir à l'ancien rendu, retirer la ligne `<link rel="stylesheet" href="/brand.css">`.
+Ne jamais ajouter de clés API, secrets, numéros de passeport ou scans de documents dans le dépôt. Les règles sont indicatives et doivent être vérifiées auprès de sources officielles avant tout voyage.
