@@ -72,7 +72,6 @@ const unsupported = await request("/v1/check", {
 });
 assert.equal((await unsupported.json()).error, "unsupported_nationality");
 
-const malformed = await request("/v1/check", { method: "POST", headers: { "Content-Type": "application/json" }, body: "not-json" }).catch(() => null);
 // Request helper serializes JSON; explicitly exercise malformed input separately.
 const badJson = await worker.fetch(new Request("https://worker.test/v1/check", {
   method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: "{"
