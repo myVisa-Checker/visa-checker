@@ -56,3 +56,18 @@
 @media(max-width:520px){.joury-mission-grid{grid-template-columns:1fr}.joury-mission{min-height:105px}}
 html[dir=rtl] .joury-mission{text-align:right;align-items:flex-start}
 html[dir=rtl] .joury-mission-arrow{right:auto;left:13px}
+
+/* Masquage local des images (redact.js) */
+.file-item{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.redact-btn{border:1px solid #245bd4;background:#fff;color:#245bd4;border-radius:999px;padding:8px 14px;font:600 14px 'DM Sans',Arial,sans-serif;min-height:40px;cursor:pointer}
+.redact-note{flex-basis:100%;color:#7b8ba2;font-size:13px;line-height:1.45}
+.rd{border:0;border-radius:20px;padding:0;width:min(96vw,720px);max-height:94vh;color:#1a2e4d;background:#fff}
+.rd::backdrop{background:rgba(8,20,45,.62)}
+.rd-in{padding:16px;display:flex;flex-direction:column;gap:10px}
+.rd-in h2{margin:0;font-size:1.2rem}
+.rd-help{margin:0;font-size:14px;line-height:1.5;color:#526783}
+.rd-cv{width:100%;height:auto;max-height:62vh;object-fit:contain;background:#000;border-radius:12px;touch-action:none;cursor:crosshair}
+.rd-msg{margin:0;min-height:20px;font-size:14px;color:#14366f}
+.rd-bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.rd-b{border:1px solid #c8d9ff;background:#fff;color:#14366f;border-radius:12px;padding:10px 16px;font:600 15px 'DM Sans',Arial,sans-serif;min-height:44px;cursor:pointer}
+.rd-go{background:#245bd4;border-color:#245bd4;color:#fff}

@@ -11,7 +11,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["visa-app.js", "joury.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "bump-version.mjs"]) {
+for (const f of ["visa-app.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "bump-version.mjs"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -138,7 +138,7 @@ const swSrc = read("sw.js");
 const pre = [...(swSrc.match(/const PRECACHE = \[([\s\S]*?)\];/) || ["", ""])[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
 ok("liste de précache lue", pre.length > 10, String(pre.length));
 for (const u of pre) ok("précache : " + u, u === "./" ? existsSync("index.html") : existsSync(u));
-for (const f of ["visa-app.js", "visa-pwa.js", "avatar3d.js"]) ok("précache contient " + f, pre.includes(f));
+for (const f of ["visa-app.js", "visa-pwa.js", "avatar3d.js", "redact.js"]) ok("précache contient " + f, pre.includes(f));
 
 console.log("Pages : CSP, 404, fichiers hérités");
 for (const f of ["index.html", "joury.html", "aicha.html", "partenaires.html", "a-propos.html", "contact.html", "conditions.html", "confidentialite.html"]) {

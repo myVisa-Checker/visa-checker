@@ -1238,21 +1238,21 @@ fr:{t:"Questions fréquentes",items:[
  ["Que fait Visa Checker ?","Il vous aide à vérifier que votre dossier est complet avant le dépôt : liste de pièces adaptée à votre situation, conseils et aide en cas de refus. Il ne dépose pas la demande à votre place."],
  ["Visa Checker garantit-il l'obtention du visa ?","Non. La décision appartient toujours au consulat, et même un dossier complet peut être refusé. Visa Checker vous aide à éviter les erreurs courantes."],
  ["Pour quels pays ça fonctionne ?","Choisissez votre destination dans la liste en haut de cette page. Les pays pas encore disponibles sont signalés « bientôt »."],
- ["Mes données sont-elles protégées ?","Ne tapez jamais votre numéro de passeport ni vos données bancaires dans un message. Si Joury ou Aicha vous demandent un document, joignez seulement la page utile en masquant le numéro et les lignes de chiffres en bas : gardez le nom et les dates visibles. Les documents sont analysés par un service d'IA tiers ; la page Confidentialité détaille ce qui est utilisé."],
+ ["Mes données sont-elles protégées ?","Ne tapez jamais votre numéro de passeport ni vos données bancaires dans un message. Si Joury ou Aicha vous demandent un document, joignez seulement la page utile après avoir masqué le numéro et les lignes de chiffres en bas (bouton « Masquer des zones ») : gardez le nom et les dates visibles. Les documents sont analysés par un service d'IA tiers ; la page Confidentialité détaille ce qui est utilisé."],
  ["Que faire après un refus ?","Choisissez l'aide en cas de refus : lettre de recours et conseils. Respectez le délai indiqué sur votre lettre de refus."],
  ["Une question ?","Envoyez-nous un message privé : il arrive directement à l'administrateur.","social"]]},
 en:{t:"Frequently asked questions",items:[
  ["What does Visa Checker do?","It helps you check that your file is complete before you apply: a document list adapted to your situation, advice and help after a refusal. It does not submit the application for you."],
  ["Does Visa Checker guarantee a visa?","No. The decision always belongs to the consulate, and even a complete file can be refused. Visa Checker helps you avoid common mistakes."],
  ["Which countries does it cover?","Pick your destination from the list at the top of this page. Countries not yet available are marked \"soon\"."],
- ["Is my data protected?","Never type your passport number or banking details in a message. If Joury or Aicha ask for a document, attach only the useful page and cover the number and the lines of digits at the bottom: keep the name and dates visible. Documents are analysed by a third-party AI service; the Privacy page explains what is used."],
+ ["Is my data protected?","Never type your passport number or banking details in a message. If Joury or Aicha ask for a document, attach only the useful page after covering the number and the lines of digits at the bottom (“Hide areas” button): keep the name and dates visible. Documents are analysed by a third-party AI service; the Privacy page explains what is used."],
  ["What if my visa is refused?","Choose the refusal help: appeal letter and advice. Follow the deadline written on your refusal letter."],
  ["Another question?","Send us a private message: it goes straight to the administrator.","social"]]},
 ar:{t:"الأسئلة الشائعة",items:[
  ["ماذا يفعل Visa Checker؟","يساعدك على التأكد من اكتمال ملفك قبل الإيداع: قائمة وثائق تناسب وضعك، ونصائح، ومساعدة في حالة الرفض. وهو لا يودع الطلب نيابةً عنك."],
  ["هل يضمن Visa Checker الحصول على التأشيرة؟","لا. القرار يعود دائماً إلى القنصلية، وقد يُرفض حتى الملف المكتمل. يساعدك Visa Checker على تفادي الأخطاء الشائعة."],
  ["ما هي البلدان المتاحة؟","اختر وجهتك من القائمة في أعلى هذه الصفحة. البلدان غير المتاحة بعد مكتوب عليها «قريباً»."],
- ["هل بياناتي محمية؟","لا تكتب رقم جواز سفرك ولا بياناتك البنكية في أي رسالة. إذا طلبت منك جوري أو عائشة وثيقة، أرفق الصفحة اللازمة فقط وغطِّ الرقم وسطور الأرقام في الأسفل، وأبقِ الاسم والتواريخ ظاهرة. تُحلَّل الوثائق بواسطة خدمة ذكاء اصطناعي تابعة لطرف ثالث، وتشرح صفحة الخصوصية ما يُستعمل."],
+ ["هل بياناتي محمية؟","لا تكتب رقم جواز سفرك ولا بياناتك البنكية في أي رسالة. إذا طلبت منك جوري أو عائشة وثيقة، أرفق الصفحة اللازمة فقط بعد تغطية الرقم وسطور الأرقام في الأسفل (زر «إخفاء مناطق»)، وأبقِ الاسم والتواريخ ظاهرة. تُحلَّل الوثائق بواسطة خدمة ذكاء اصطناعي تابعة لطرف ثالث، وتشرح صفحة الخصوصية ما يُستعمل."],
  ["ماذا أفعل بعد الرفض؟","اختر مساعدة الرفض: رسالة طعن ونصائح. التزم بالأجل المكتوب في رسالة الرفض."],
  ["عندك سؤال؟","أرسل لنا رسالة خاصة: تصل مباشرة إلى المسؤول.","social"]]}
 };
