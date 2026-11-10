@@ -39,3 +39,20 @@
 @media(max-width:650px){.assistant-cards{grid-template-columns:1fr;gap:12px}.assistant-card{min-height:190px}.aicha-interview-link{align-items:flex-start;flex-direction:column}.secondary{width:100%}}
 
 .assistant-card-avatar img,.joury-avatar img,.aicha-avatar img,.assistant-card-avatar canvas.a3d,.joury-avatar canvas.a3d,.aicha-avatar canvas.a3d{display:block;width:100%;height:100%;object-fit:cover}
+
+/* Joury 2.0 — mission selector */
+.joury-missions{margin:28px 0 14px}
+.joury-missions-title{margin:0 0 6px;color:#15366f;font:800 17px Manrope,sans-serif}
+.joury-missions-lead{margin:0 0 14px;color:#7c8ba0;font-size:11px;line-height:1.6;max-width:680px}
+.joury-mission-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.joury-mission{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-height:125px;padding:15px 16px;border:1px solid #e2e9f3;border-radius:13px;background:#fff;text-align:left;cursor:pointer;transition:border-color .18s,box-shadow .18s,transform .18s}
+.joury-mission:hover{transform:translateY(-2px);border-color:#b8cdf5;box-shadow:0 8px 20px #19375b0d}
+.joury-mission.selected{border-color:#245bd4;background:linear-gradient(145deg,#f2f6ff,#fff);box-shadow:inset 0 0 0 1px #245bd4}
+.joury-mission-icon{display:grid;place-items:center;width:29px;height:29px;border-radius:9px;background:#edf3ff;color:#245bd4;font-size:19px;font-weight:700}
+.joury-mission b{font-size:11px;color:#19345f}
+.joury-mission small{font-size:10px;line-height:1.5;color:#7b8ba2;max-width:92%}
+.joury-mission-arrow{position:absolute;right:13px;top:13px;color:#9babc0;font-size:13px}
+.joury-selected-task{min-height:16px;margin:0 0 13px;color:#245bd4;font-size:10px;font-weight:600}
+@media(max-width:520px){.joury-mission-grid{grid-template-columns:1fr}.joury-mission{min-height:105px}}
+html[dir=rtl] .joury-mission{text-align:right;align-items:flex-start}
+html[dir=rtl] .joury-mission-arrow{right:auto;left:13px}
