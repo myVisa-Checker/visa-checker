@@ -1094,6 +1094,10 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .hfaq-i[open] summary::after{content:"\2212"}
 .hfaq-i p{margin:0;padding:0 16px 16px;font-size:15px;line-height:1.55;color:#526783}
 .hfaq-i a{color:#1d4ed8;font-weight:600}
+.hfaq-i p:has(+ .hfaq-soc){padding-bottom:10px}
+.hfaq-soc{display:flex;gap:12px;padding:0 16px 16px}
+.hfaq-i .hfaq-soc a{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff!important;background:linear-gradient(135deg,#3b82f6,#1d4ed8);box-shadow:0 8px 18px -10px rgba(29,78,216,.7)}
+.hfaq-soc svg{width:24px;height:24px}
 html[lang="ar"] .hfaq,html[lang="ar"] .hfaq summary{font-family:var(--f-ar)}
 :root[data-theme="dark"] .hfaq{background:linear-gradient(145deg,#14243d,#17222f);border-color:#34517c;color:#edf4ff}
 :root[data-theme="dark"] .hfaq h2{color:#edf4ff}

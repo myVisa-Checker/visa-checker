@@ -1238,28 +1238,36 @@ fr:{t:"Questions fréquentes",items:[
  ["Que fait Visa Checker ?","Il vous aide à vérifier que votre dossier est complet avant le dépôt : liste de pièces adaptée à votre situation, conseils et aide en cas de refus. Il ne dépose pas la demande à votre place."],
  ["Visa Checker garantit-il l'obtention du visa ?","Non. La décision appartient toujours au consulat, et même un dossier complet peut être refusé. Visa Checker vous aide à éviter les erreurs courantes."],
  ["Pour quels pays ça fonctionne ?","Choisissez votre destination dans la liste en haut de cette page. Les pays pas encore disponibles sont signalés « bientôt »."],
- ["Mes données sont-elles protégées ?","Ne saisissez jamais votre numéro de passeport. La page Confidentialité explique en détail ce qui est utilisé et conservé."],
+ ["Mes données sont-elles protégées ?","Ne tapez jamais votre numéro de passeport ni vos données bancaires dans un message. Si Joury ou Aicha vous demandent un document, joignez seulement la page utile en masquant le numéro et les lignes de chiffres en bas : gardez le nom et les dates visibles. Les documents sont analysés par un service d'IA tiers ; la page Confidentialité détaille ce qui est utilisé."],
  ["Que faire après un refus ?","Choisissez l'aide en cas de refus : lettre de recours et conseils. Respectez le délai indiqué sur votre lettre de refus."],
- ["Une question ?","Écrivez-nous depuis la page Contact.","Page Contact"]]},
+ ["Une question ?","Envoyez-nous un message privé : il arrive directement à l'administrateur.","social"]]},
 en:{t:"Frequently asked questions",items:[
  ["What does Visa Checker do?","It helps you check that your file is complete before you apply: a document list adapted to your situation, advice and help after a refusal. It does not submit the application for you."],
  ["Does Visa Checker guarantee a visa?","No. The decision always belongs to the consulate, and even a complete file can be refused. Visa Checker helps you avoid common mistakes."],
  ["Which countries does it cover?","Pick your destination from the list at the top of this page. Countries not yet available are marked \"soon\"."],
- ["Is my data protected?","Never enter your passport number. The Privacy page explains in detail what is used and kept."],
+ ["Is my data protected?","Never type your passport number or banking details in a message. If Joury or Aicha ask for a document, attach only the useful page and cover the number and the lines of digits at the bottom: keep the name and dates visible. Documents are analysed by a third-party AI service; the Privacy page explains what is used."],
  ["What if my visa is refused?","Choose the refusal help: appeal letter and advice. Follow the deadline written on your refusal letter."],
- ["Another question?","Write to us from the Contact page.","Contact page"]]},
+ ["Another question?","Send us a private message: it goes straight to the administrator.","social"]]},
 ar:{t:"الأسئلة الشائعة",items:[
  ["ماذا يفعل Visa Checker؟","يساعدك على التأكد من اكتمال ملفك قبل الإيداع: قائمة وثائق تناسب وضعك، ونصائح، ومساعدة في حالة الرفض. وهو لا يودع الطلب نيابةً عنك."],
  ["هل يضمن Visa Checker الحصول على التأشيرة؟","لا. القرار يعود دائماً إلى القنصلية، وقد يُرفض حتى الملف المكتمل. يساعدك Visa Checker على تفادي الأخطاء الشائعة."],
  ["ما هي البلدان المتاحة؟","اختر وجهتك من القائمة في أعلى هذه الصفحة. البلدان غير المتاحة بعد مكتوب عليها «قريباً»."],
- ["هل بياناتي محمية؟","لا تُدخل رقم جواز سفرك أبداً. توضّح صفحة الخصوصية بالتفصيل ما يُستعمل وما يُحفظ."],
+ ["هل بياناتي محمية؟","لا تكتب رقم جواز سفرك ولا بياناتك البنكية في أي رسالة. إذا طلبت منك جوري أو عائشة وثيقة، أرفق الصفحة اللازمة فقط وغطِّ الرقم وسطور الأرقام في الأسفل، وأبقِ الاسم والتواريخ ظاهرة. تُحلَّل الوثائق بواسطة خدمة ذكاء اصطناعي تابعة لطرف ثالث، وتشرح صفحة الخصوصية ما يُستعمل."],
  ["ماذا أفعل بعد الرفض؟","اختر مساعدة الرفض: رسالة طعن ونصائح. التزم بالأجل المكتوب في رسالة الرفض."],
- ["عندك سؤال؟","راسلنا من صفحة الاتصال.","صفحة الاتصال"]]}
+ ["عندك سؤال؟","أرسل لنا رسالة خاصة: تصل مباشرة إلى المسؤول.","social"]]}
 };
+/* Réseaux pour poser une question : l'icône Facebook n'apparaît que lorsque l'adresse de la page est renseignée. */
+var HFAQ_SOCIAL={ig:"https://www.instagram.com/visacheckerrr/",fb:""};
+function hfaqSocialHtml(){
+  var h='<div class="hfaq-soc">';
+  if(HFAQ_SOCIAL.ig)h+='<a href="'+escA(HFAQ_SOCIAL.ig)+'" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>';
+  if(HFAQ_SOCIAL.fb)h+='<a href="'+escA(HFAQ_SOCIAL.fb)+'" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8.2h2.8l.5-3.3h-3.3V8.4c0-.9.4-1.7 1.8-1.7H17V3.8c-.3 0-1.3-.2-2.5-.2-2.5 0-4.2 1.5-4.2 4.3v2.6H7.5v3.3h2.8V22z"/></svg></a>';
+  return h+'</div>';
+}
 function hfaqHtml(){
   var F=HFAQ[S.lang]||HFAQ.fr;
   return '<section class="hfaq" aria-labelledby="hfaq-t"><h2 id="hfaq-t">'+esc(F.t)+'</h2><div class="hfaq-list">'+F.items.map(function(x){
-    return '<details class="hfaq-i"><summary>'+esc(x[0])+'</summary><p>'+esc(x[1])+(x[2]?' <a href="./contact.html">'+esc(x[2])+'</a>':'')+'</p></details>'}).join("")+'</div></section>';
+    return '<details class="hfaq-i"><summary>'+esc(x[0])+'</summary><p>'+esc(x[1])+'</p>'+(x[2]==="social"?hfaqSocialHtml():'')+'</details>'}).join("")+'</div></section>';
 }
 function homeHtml(t){
   var cur=curC(),L=S.lang;
