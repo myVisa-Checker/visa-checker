@@ -1,12 +1,12 @@
 /* Visa Checker : Service Worker
    - Précache de la « coquille » de l'appli (HTML, manifeste, icônes).
    - Pages (navigation) : réseau d'abord, repli sur le cache, puis sur la page d'accueil hors-ligne.
-   - Fichiers locaux (dont partners/reviews/deals/rdv.json) : réseau d'abord (HTTP no-cache), repli sur le cache.
+   - Fichiers locaux (dont partners/deals/rdv.json) : réseau d'abord (HTTP no-cache), repli sur le cache.
    - version.json : toujours le réseau, jamais mis en cache (sert à détecter un déploiement).
    - Polices : cache d'abord, rafraîchi en arrière-plan.
    - Jamais de cache pour les requêtes POST ni pour les API (Make, déblocage) : elles passent directement.
    VERSION est estampillée par bump-version.mjs à chaque déploiement : les anciens caches sont supprimés à l'activation. */
-const VERSION = "2026.11.10.2103"; /*@version*/
+const VERSION = "2026.11.10.2131"; /*@version*/
 const SHELL = "vc-shell-" + VERSION;
 const RUNTIME = "vc-runtime-" + VERSION;
 const NET_TIMEOUT = 4000; // au-delà, on sert le cache (réseau lent = « hors-ligne » pour l'utilisateur)

@@ -756,47 +756,6 @@ function loadPartners(){
   try{var c=new AbortController(),tm=setTimeout(function(){c.abort()},6000);
     fetch("partners.json",{signal:c.signal,cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(function(j){clearTimeout(tm);var p=cleanPartners(j);if(p){PARTNERS=p;if(S.step===8)render()}}).catch(function(){})}catch(e){}
 }
-/* Avis : les avis viennent uniquement de reviews.json (vrais clients, avec leur accord). Rien n'est inventé. */
-var REVIEWS=[],rvSig="";
-var RVT={
- fr:{t:"Avis de nos voyageurs",none:"Vous avez utilisé Visa Checker ? Partagez votre expérience, elle aidera d'autres voyageurs.",cta:"Laisser un avis",of:"sur 5",n:function(n){return n+(n>1?" avis":" avis")},prev:"Avis précédents",next:"Avis suivants",sub:"Visa Checker - Mon avis",body:"Ma note (1 à 5) : \nMon avis : \nMon prénom : \n\nJ'accepte que mon avis soit publié sur le site."},
- en:{t:"Traveller reviews",none:"Used Visa Checker? Share your experience, it will help other travellers.",cta:"Leave a review",of:"out of 5",n:function(n){return n+(n>1?" reviews":" review")},prev:"Previous reviews",next:"Next reviews",sub:"Visa Checker - My review",body:"My rating (1 to 5): \nMy review: \nMy first name: \n\nI agree that my review is published on the site."},
- ar:{t:"آراء المسافرين",none:"هل استعملت Visa Checker؟ شاركنا تجربتك، فهي تساعد مسافرين آخرين.",cta:"اترك رأيك",of:"من 5",n:function(n){return n+" تقييم"},prev:"الآراء السابقة",next:"الآراء التالية",sub:"Visa Checker - رأيي",body:"تقييمي (من 1 إلى 5): \nرأيي: \nاسمي الأول: \n\nأوافق على نشر رأيي في الموقع."}
-};
-function cleanReviews(j){
-  if(!j||!Array.isArray(j.reviews))return [];
-  var out=[];
-  j.reviews.slice(0,12).forEach(function(r){
-    if(!r||typeof r!=="object")return;
-    var rt=Math.round(Number(r.rating)),nm=typeof r.name==="string"?cleanTxt(r.name).slice(0,40):"",tx={};
-    if(typeof r.text==="string")tx={fr:r.text,en:r.text,ar:r.text};else if(r.text&&typeof r.text==="object")tx=r.text;
-    ["fr","en","ar"].forEach(function(l){tx[l]=typeof tx[l]==="string"?cleanTxt(tx[l]).slice(0,320):""});
-    if(!(rt>=1&&rt<=5)||!nm||!(tx.fr||tx.en||tx.ar))return;
-    out.push({rating:rt,name:nm,text:tx,place:typeof r.place==="string"?cleanTxt(r.place).slice(0,40):""});
-  });
-  return out;
-}
-function starsHtml(n){var s="";for(var i=1;i<=5;i++)s+=i<=n?"★":"<i>★</i>";return '<span class="rv-stars" role="img" aria-label="'+n+' / 5" dir="ltr">'+s+'</span>'}
-function renderReviews(){
-  var el=$("reviews");if(!el)return;
-  var on=true;el.hidden=false;
-  var sig=S.lang+"|"+REVIEWS.length;if(sig===rvSig&&el.firstChild)return;rvSig=sig;
-  var R=RVT[S.lang]||RVT.fr,L=S.lang,n=REVIEWS.length,h='';
-  var mail=SITE.email?'<a class="pay rv-cta" href="mailto:'+SITE.email+'?subject='+encodeURIComponent(R.sub)+'&body='+encodeURIComponent(R.body)+'">'+R.cta+'</a>':'';
-  if(!n){el.classList.add("empty");el.innerHTML='<h2 id="rv-t">'+R.t+'</h2><p class="rv-empty">'+R.none+'</p><div class="rv-nav solo">'+mail+'</div>';return}
-  el.classList.remove("empty");
-  var avg=REVIEWS.reduce(function(a,r){return a+r.rating},0)/n;
-  h+='<div class="rv-head"><h2 id="rv-t">'+R.t+'</h2><div class="rv-sum">'+starsHtml(Math.round(avg))+'<span dir="ltr">'+avg.toFixed(1)+' '+R.of+'</span><span>· '+R.n(n)+'</span></div></div>';
-  h+='<div class="rv-track" id="rv-track" tabindex="0">'+REVIEWS.map(function(r){
-    return '<article class="rv-card">'+starsHtml(r.rating)+'<p>'+esc(r.text[L]||r.text.fr||r.text.en||r.text.ar)+'</p><div class="rv-by"><b>'+esc(r.name)+'</b><span>'+esc(r.place)+'</span></div></article>'}).join("")+'</div>';
-  h+='<div class="rv-nav"><button type="button" class="rv-b" data-rv="-1" aria-label="'+R.prev+'">‹</button><button type="button" class="rv-b" data-rv="1" aria-label="'+R.next+'">›</button>'+mail+'</div>';
-  el.innerHTML=h;
-}
-function loadReviews(){
-  try{var c=new AbortController(),tm=setTimeout(function(){c.abort()},6000);
-    fetch("reviews.json",{signal:c.signal,cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(function(j){clearTimeout(tm);REVIEWS=cleanReviews(j);rvSig="";renderReviews()}).catch(function(){})}catch(e){}
-}
-document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-rv]");if(!b)return;var t=$("rv-track");if(t)t.scrollBy({left:(b.dataset.rv==="1"?1:-1)*(document.documentElement.dir==="rtl"?-1:1)*Math.min(320,t.clientWidth),behavior:"smooth"})});
 /* Traducteurs assermentés : données reprises de la liste officielle du Consulat général de France à Tunis (valide au 10/06/2026). Format : [nom, ville, adresse, téléphones, e-mails, index du téléphone WhatsApp ou -1] */
 var TR_SRC={date:"10/06/2026",url:"https://tn.diplomatie.gouv.fr/files/tn/files/Consulat/traducteurs-et-interpretes-assermentes-en-langue-francaise_liste-valide-au-10062026.pdf"};
 var TR_CITY={"Tunis":[36.8065,10.1815],"Hammam Lif":[36.73,10.335],"La Soukra":[36.878,10.251],"La Marsa":[36.878,10.325],"Grombalia":[36.599,10.5],"Nabeul":[36.4561,10.7376],"Sousse":[35.8256,10.636],"Béja":[36.7256,9.1817],"Sfax":[34.7406,10.7603],"Djerba":[33.875,10.8575]};
@@ -1273,6 +1232,35 @@ document.addEventListener("change",function(e){
   var o=b.value;if(o===S.origin||["tn","ma","dz"].indexOf(o)<0)return;
   S.origin=o;S.country="fr";S.step=0;applyOrigin();save();render();
 });
+/* FAQ de l'accueil : pas de montants de frais, aucune promesse de visa. */
+var HFAQ={
+fr:{t:"Questions fréquentes",items:[
+ ["Que fait Visa Checker ?","Il vous aide à vérifier que votre dossier est complet avant le dépôt : liste de pièces adaptée à votre situation, conseils et aide en cas de refus. Il ne dépose pas la demande à votre place."],
+ ["Visa Checker garantit-il l'obtention du visa ?","Non. La décision appartient toujours au consulat, et même un dossier complet peut être refusé. Visa Checker vous aide à éviter les erreurs courantes."],
+ ["Pour quels pays ça fonctionne ?","Choisissez votre destination dans la liste en haut de cette page. Les pays pas encore disponibles sont signalés « bientôt »."],
+ ["Mes données sont-elles protégées ?","Ne saisissez jamais votre numéro de passeport. La page Confidentialité explique en détail ce qui est utilisé et conservé."],
+ ["Que faire après un refus ?","Choisissez l'aide en cas de refus : lettre de recours et conseils. Respectez le délai indiqué sur votre lettre de refus."],
+ ["Une question ?","Écrivez-nous depuis la page Contact.","Page Contact"]]},
+en:{t:"Frequently asked questions",items:[
+ ["What does Visa Checker do?","It helps you check that your file is complete before you apply: a document list adapted to your situation, advice and help after a refusal. It does not submit the application for you."],
+ ["Does Visa Checker guarantee a visa?","No. The decision always belongs to the consulate, and even a complete file can be refused. Visa Checker helps you avoid common mistakes."],
+ ["Which countries does it cover?","Pick your destination from the list at the top of this page. Countries not yet available are marked \"soon\"."],
+ ["Is my data protected?","Never enter your passport number. The Privacy page explains in detail what is used and kept."],
+ ["What if my visa is refused?","Choose the refusal help: appeal letter and advice. Follow the deadline written on your refusal letter."],
+ ["Another question?","Write to us from the Contact page.","Contact page"]]},
+ar:{t:"الأسئلة الشائعة",items:[
+ ["ماذا يفعل Visa Checker؟","يساعدك على التأكد من اكتمال ملفك قبل الإيداع: قائمة وثائق تناسب وضعك، ونصائح، ومساعدة في حالة الرفض. وهو لا يودع الطلب نيابةً عنك."],
+ ["هل يضمن Visa Checker الحصول على التأشيرة؟","لا. القرار يعود دائماً إلى القنصلية، وقد يُرفض حتى الملف المكتمل. يساعدك Visa Checker على تفادي الأخطاء الشائعة."],
+ ["ما هي البلدان المتاحة؟","اختر وجهتك من القائمة في أعلى هذه الصفحة. البلدان غير المتاحة بعد مكتوب عليها «قريباً»."],
+ ["هل بياناتي محمية؟","لا تُدخل رقم جواز سفرك أبداً. توضّح صفحة الخصوصية بالتفصيل ما يُستعمل وما يُحفظ."],
+ ["ماذا أفعل بعد الرفض؟","اختر مساعدة الرفض: رسالة طعن ونصائح. التزم بالأجل المكتوب في رسالة الرفض."],
+ ["عندك سؤال؟","راسلنا من صفحة الاتصال.","صفحة الاتصال"]]}
+};
+function hfaqHtml(){
+  var F=HFAQ[S.lang]||HFAQ.fr;
+  return '<section class="hfaq" aria-labelledby="hfaq-t"><h2 id="hfaq-t">'+esc(F.t)+'</h2><div class="hfaq-list">'+F.items.map(function(x){
+    return '<details class="hfaq-i"><summary>'+esc(x[0])+'</summary><p>'+esc(x[1])+(x[2]?' <a href="./contact.html">'+esc(x[2])+'</a>':'')+'</p></details>'}).join("")+'</div></section>';
+}
 function homeHtml(t){
   var cur=curC(),L=S.lang;
   var h='<div class="panel hcard"><div class="ask"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg><span>'+t.ask+'</span></div>';
@@ -1288,6 +1276,7 @@ function homeHtml(t){
   h+=evCardHtml();
   h+='</div>';
   h+='<div class="side">'+(S.origin==='tn'?needsHtml(t):'')+photoHtml()+'</div>';
+  h+=hfaqHtml();
   var whyIcons=["✦","◎","文","↗","✓"];
   h+='<section class="why why-showcase" aria-labelledby="why-title"><div class="why-head"><span class="why-eyebrow">'+(L==="ar"?"لماذا نحن؟":L==="en"?"THE VISA CHECKER ADVANTAGE":"L’AVANTAGE VISA CHECKER")+'</span><h2 id="why-title">'+t.whyTitle+'</h2><p class="why-lead">'+(L==="ar"?"مرافقة أوضح لتحضير ملف تأشيرتك بثقة.":L==="en"?"A clearer way to prepare your visa file with confidence.":"Une façon plus claire de préparer votre dossier visa, en toute confiance.")+'</p></div><ul class="why-grid">'+t.why.map(function(x,i){return '<li class="why-card"><span class="why-icon" aria-hidden="true">'+whyIcons[i%whyIcons.length]+'</span><span class="why-copy">'+x+'</span><span class="why-check" aria-hidden="true">✓</span></li>'}).join("")+'</ul><p class="why-note">'+t.whyNote+'</p></section>';
   return h;
@@ -2670,7 +2659,7 @@ function render(){
   setLogo(st>=8&&st<=10?(S.need==="flight"?"plane":S.need==="hotel"?"bed":"check"):"check");$("stamp").hidden=true;
   if(st===0){$("h1").innerHTML=t.sloganA+'<span class="acc">'+t.sloganB+'</span>'}else{$("h1").textContent=[0,t.modeTitle,t.destTitle,t.pTitle,t.dTitle,S.mode==="appeal"?t.apTitle:t.hTitle,EVT[S.lang].listTitle,evTitle(),rq(8),rq(9),rq(10),TLS[S.lang].t11,TLS[S.lang].t12,TLS[S.lang].t13][st]}
   $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10),TLS[S.lang].s11,TLS[S.lang].s12,TLS[S.lang].s13][st];document.body.dataset.step=st;
-  $("disc").textContent=(st===0||st>=6)?GENDISC[S.lang]:t.disc;renderLegal();renderBpn();renderTrans();renderReviews();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
+  $("disc").textContent=(st===0||st>=6)?GENDISC[S.lang]:t.disc;renderLegal();renderBpn();renderTrans();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
   $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+oriLink(cur)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
   var showSt=st>=4&&st<=5&&!(st===5&&S.mode==="appeal");$("stepper").hidden=!showSt;
@@ -2926,7 +2915,7 @@ document.addEventListener("keydown",function(e){
 });
 ["fr","en","ar"].forEach(function(l){$("l-"+l).onclick=function(){S.lang=l;save();render()}});
 $("reset").onclick=function(){S.done={};save();render()};
-loadPartners();loadReviews();loadDeals();
+loadPartners();loadDeals();
 (function(){var b=document.getElementById("totop");if(!b)return;
   function chk(){b.classList.toggle("on",(window.pageYOffset||document.documentElement.scrollTop)>400)}
   window.addEventListener("scroll",chk,{passive:true});chk();

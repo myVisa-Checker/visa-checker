@@ -329,7 +329,7 @@ body[data-step="0"] .side{grid-column:2;grid-row:1/3;align-self:start}
 body[data-step="0"] .photo{max-width:none;margin:0}
 body[data-step="0"] .side{margin-top:56px}
 body[data-step="0"] .why{grid-column:1/-1;margin-top:40px}
-body[data-step="0"] .sponsors,body[data-step="0"] .avs,body[data-step="0"] .trd,body[data-step="0"] .bpn,body[data-step="0"] footer{grid-column:1/-1}
+body[data-step="0"] .sponsors,body[data-step="0"] .trd,body[data-step="0"] .bpn,body[data-step="0"] footer{grid-column:1/-1}
 body{position:relative}
 .lang{position:absolute;top:26px;right:24px;z-index:6}
 body[data-step="0"] .lang{top:34px}
@@ -619,7 +619,6 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
 }
 </style>
 <style>
-/* Avis voyageurs : n'affiche que les avis réels de reviews.json */
 /* Répertoire des traducteurs assermentés (liste officielle du Consulat général de France à Tunis) */
 /* Bons plans et réductions partenaires : alimenté par deals.json. Centré, coloré, animé ; l'offre s'affiche quand le client choisit une catégorie */
 .bpn{margin:36px auto 0;width:100%;max-width:760px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
@@ -699,25 +698,6 @@ html[dir="rtl"] .trd-search input{padding:12px 48px 12px 18px}
 .trd-more{align-self:center}
 .trd-near{align-self:center}
 html[lang="ar"] .trd h2,html[lang="ar"] .trd-card{font-family:var(--f-ar)}
-.avs{margin:32px auto 0;width:100%;max-width:760px;display:flex;flex-direction:column;gap:18px}
-.avs[hidden]{display:none}
-.rv-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px}
-.avs h2{margin:0;font-family:var(--f-display);font-size:1.6rem;line-height:1.15}
-.rv-sum{display:flex;align-items:center;gap:10px;font-weight:600}
-.rv-stars{color:var(--accent-2);letter-spacing:2px;font-size:20px;line-height:1;white-space:nowrap}
-.rv-stars i{font-style:normal;color:var(--line)}
-.rv-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:thin}
-.rv-card{flex:0 0 min(300px,82%);scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-6);padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow-card)}
-.rv-card p{margin:0;font-size:15px;line-height:1.55;flex:1}
-.rv-by{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted)}
-.rv-by b{color:var(--ink)}
-.rv-nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.rv-nav button.rv-b{width:44px;height:44px;border-radius:50%;border:0;background:var(--accent);color:var(--on-accent);font-size:20px;cursor:pointer}
-.rv-nav .rv-cta{margin-inline-start:auto}
-.rv-nav.solo{justify-content:center}.rv-nav.solo .rv-cta{margin:0}
-.rv-empty{text-align:center}.avs.empty h2{text-align:center}
-.rv-empty{margin:0;color:var(--muted);font-size:15px}
-html[lang="ar"] .avs h2,html[lang="ar"] .rv-card{font-family:var(--f-ar)}
 .ag-card.ag-anon{grid-template-columns:1fr;text-align:center}
 .ag-card.ag-anon .ag-body{align-items:center}
 .srv-sub{text-align:center}
@@ -810,7 +790,7 @@ header .sub{max-width:680px;font-size:clamp(1.05rem,1.6vw,1.25rem);line-height:1
 .item{border-radius:16px!important;border-color:#dce6f3!important;padding:16px!important;transition:transform .18s,box-shadow .18s,border-color .18s}
 .item:hover{transform:translateY(-2px);border-color:#91b5ed!important;box-shadow:0 12px 28px -22px #1746a2}
 .group{gap:12px}
-.agency,.book,.aibox,.trd-card,.rv-card{border-radius:20px!important;box-shadow:var(--vc-shadow)}
+.agency,.book,.aibox,.trd-card{border-radius:20px!important;box-shadow:var(--vc-shadow)}
 .pay,.reset,.chip,.sel,button{transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
 .pay{border-radius:13px!important;min-height:48px;font-weight:700}
 .pay:hover,.reset:hover{transform:translateY(-2px)}
@@ -945,7 +925,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .sitenav.in-app{justify-content:flex-start;overscroll-behavior-x:contain}
 .sitenav.in-app ul{flex-wrap:nowrap;white-space:nowrap}
 .hero-img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
-#help,.sponsors,#bpn,#trans,#reviews,footer{content-visibility:auto;contain-intrinsic-size:auto 420px}
+#help,.sponsors,#bpn,#trans,footer{content-visibility:auto;contain-intrinsic-size:auto 420px}
 @media(max-width:700px){
   body{padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
   .wrap{max-width:100%;margin-inline:auto}
@@ -1081,7 +1061,6 @@ img,svg,video,canvas{max-width:100%;height:auto}
   <button type="button" class="totop" id="totop" aria-label="Haut de page" title="Haut de page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
   <section class="bpn" id="bpn" aria-label="Bons plans" hidden></section>
   <section class="trd" id="trans" aria-label="Traducteurs assermentés" hidden></section>
-  <section class="avs" id="reviews" aria-labelledby="rv-t" hidden></section>
   <footer>
     <div class="links"><a href="./partenaires.html">Partenaires</a><a href="./a-propos.html">À propos</a><a href="./contact.html">Contact</a><a href="./confidentialite.html">Confidentialité</a><a href="./conditions.html">Conditions d'utilisation</a></div>
     <div class="links" id="links"></div>
@@ -1102,6 +1081,31 @@ img,svg,video,canvas{max-width:100%;height:auto}
 
 <script src="visa-pwa.js" defer></script>
 <script src="avatar3d.js" defer></script>
+
+<style id="vc-hfaq">
+/* FAQ de l'accueil : sous le titre et le formulaire, avant « L'avantage Visa Checker ». Carte claire, lisible aussi sur le bandeau bleu mobile. */
+.hfaq{width:100%;max-width:1080px;margin:28px auto 0;padding:clamp(18px,3vw,28px);border:1px solid #c8d9ff;border-radius:24px;background:linear-gradient(145deg,#f5f8ff 0%,#fff 58%,#eef5ff 100%);color:#142b52;box-shadow:0 16px 38px -28px rgba(29,78,216,.42);display:flex;flex-direction:column;gap:14px}
+.hfaq h2{margin:0;color:#142b52;font-family:var(--f-display);font-size:clamp(1.3rem,2.6vw,1.7rem);line-height:1.15;text-align:center}
+.hfaq-list{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.hfaq-i{border:1px solid #dce6f7;border-radius:var(--r-4);background:#fff;color:#142b52}
+.hfaq-i summary{padding:14px 16px;font-weight:600;color:#142b52;cursor:pointer;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none}
+.hfaq-i summary::-webkit-details-marker{display:none}
+.hfaq-i summary::after{content:"+";flex:none;font-size:22px;line-height:1;color:#1d4ed8}
+.hfaq-i[open] summary::after{content:"\2212"}
+.hfaq-i p{margin:0;padding:0 16px 16px;font-size:15px;line-height:1.55;color:#526783}
+.hfaq-i a{color:#1d4ed8;font-weight:600}
+html[lang="ar"] .hfaq,html[lang="ar"] .hfaq summary{font-family:var(--f-ar)}
+:root[data-theme="dark"] .hfaq{background:linear-gradient(145deg,#14243d,#17222f);border-color:#34517c;color:#edf4ff}
+:root[data-theme="dark"] .hfaq h2{color:#edf4ff}
+:root[data-theme="dark"] .hfaq-i{background:#1b2c47;border-color:#34517c;color:#edf4ff}
+:root[data-theme="dark"] .hfaq-i summary{color:#edf4ff}
+:root[data-theme="dark"] .hfaq-i summary::after,:root[data-theme="dark"] .hfaq-i a{color:#93c5fd}
+:root[data-theme="dark"] .hfaq-i p{color:#b8c9e6}
+@media (min-width:900px){
+.hfaq-list{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+body[data-step="0"] .hfaq{grid-column:1/-1;grid-row:3}
+}
+</style>
 
 
 <style>

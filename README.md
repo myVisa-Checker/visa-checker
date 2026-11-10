@@ -23,7 +23,7 @@ Le script vérifie la syntaxe des scripts et des deux Workers, les fichiers JSON
 - `joury.html`, `aicha.html` + `joury.js`, `avatar3d.js` : assistants IA Joury et Aicha.
 - `partenaires.html` + `partner-form.js` : candidatures partenaires.
 - `sw.js`, `visa-pwa.js`, `manifest.json` : PWA et hors-ligne.
-- `partners.json`, `rdv.json`, `deals.json`, `reviews.json` : données éditables.
+- `partners.json`, `rdv.json`, `deals.json` : données éditables.
 - `worker/` : code des Workers `visa-proxy` et `visa-chat`.
 
 ## Branches

@@ -16,7 +16,7 @@ for (const f of ["visa-app.js", "joury.js", "avatar3d.js", "partner-form.js", "v
 }
 
 console.log("JSON");
-for (const f of ["manifest.json", "partners.json", "rdv.json", "reviews.json", "deals.json", "version.json"]) {
+for (const f of ["manifest.json", "partners.json", "rdv.json", "deals.json", "version.json"]) {
   try { JSON.parse(read(f)); ok(f, true); } catch (e) { ok(f, false, e.message); }
 }
 
