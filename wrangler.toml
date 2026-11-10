@@ -1,4 +1,0 @@
-# Cloudflare Pages configuration for the static Visa Checker PWA.
-name = "visa-checker"
-compatibility_date = "2026-11-11"
-pages_build_output_dir = "."
