@@ -1,8 +1,6 @@
 name = "visa-checker"
-main = "worker/visa-rules-worker.js"
+pages_build_output_dir = "."
 compatibility_date = "2026-11-11"
 
-[vars]
-ALLOWED_ORIGIN = "https://checkmyvisa.org,https://www.checkmyvisa.org"
-
-# Advisory eligibility API only. No KV, passport-number storage, or secrets required.
+# Cloudflare Pages: deploy the existing static website from the repository root.
+# The eligibility API has its own Worker config at worker/wrangler.toml.
