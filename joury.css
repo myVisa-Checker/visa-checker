@@ -37,3 +37,5 @@
 .secondary{flex:none;border:1px solid #cbdaf0;border-radius:9px;background:#fff;color:#245bd4;padding:11px 14px;font:700 11px 'DM Sans';cursor:pointer}
 .secondary:hover{background:#edf3ff}
 @media(max-width:650px){.assistant-cards{grid-template-columns:1fr;gap:12px}.assistant-card{min-height:190px}.aicha-interview-link{align-items:flex-start;flex-direction:column}.secondary{width:100%}}
+
+.assistant-card-avatar img,.joury-avatar img,.aicha-avatar img{display:block;width:100%;height:100%;object-fit:cover}

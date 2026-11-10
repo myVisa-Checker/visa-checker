@@ -1012,8 +1012,8 @@ function setLogo(g){var b=$("brand");if(!b)return;if(!b.querySelector(".logo")){
 function photoHtml(){
   var tx={fr:{head:"CHOISISSEZ VOTRE ASSISTANTE",a:"Préparer et vérifier mon dossier",j:"Analyser un refus de visa",go:"Accéder à l’assistante"},en:{head:"CHOOSE YOUR ASSISTANT",a:"Prepare and check my application",j:"Analyse a visa refusal",go:"Open assistant"},ar:{head:"اختر مساعدتك",a:"تحضير ملفي والتحقق منه",j:"تحليل رفض التأشيرة",go:"فتح المساعدة"}}[S.lang]||{head:"CHOISISSEZ VOTRE ASSISTANTE",a:"Préparer et vérifier mon dossier",j:"Analyser un refus de visa",go:"Accéder à l’assistante"};
   return '<div class="vc-hero-assistants"><div class="vc-hero-assistants-head">'+tx.head+'</div><div class="vc-hero-assistants-grid">'+
-    '<a class="vc-hero-assistant vc-hero-aicha" href="./aicha.html?assistant=aicha"><img src="./images/aicha-avatar.svg" width="220" height="220" alt="Aicha"><span class="vc-hero-assistant-copy"><b>Aicha</b><small>'+tx.a+'</small><em>'+tx.go+' ↗</em></span></a>'+
-    '<a class="vc-hero-assistant vc-hero-joury" href="./joury.html?assistant=joury"><img src="./images/joury-avatar.svg" width="220" height="220" alt="Joury"><span class="vc-hero-assistant-copy"><b>Joury</b><small>'+tx.j+'</small><em>'+tx.go+' ↗</em></span></a>'+
+    '<a class="vc-hero-assistant vc-hero-aicha" href="./aicha.html?assistant=aicha"><img src="./images/aicha-avatar.webp" width="112" height="112" alt="Aicha" loading="lazy" decoding="async"><span class="vc-hero-assistant-copy"><b>Aicha</b><small>'+tx.a+'</small><em>'+tx.go+' ↗</em></span></a>'+
+    '<a class="vc-hero-assistant vc-hero-joury" href="./joury.html?assistant=joury"><img src="./images/joury-avatar.webp" width="112" height="112" alt="Joury" loading="lazy" decoding="async"><span class="vc-hero-assistant-copy"><b>Joury</b><small>'+tx.j+'</small><em>'+tx.go+' ↗</em></span></a>'+
     '</div></div>';
 }
 /* ===== Pays du passeport (Tunisie, Maroc, Algérie) =====
@@ -1290,7 +1290,7 @@ function homeHtml(t){
   if(!cur.ready){h+='<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+(S.origin==='tn'?t.soonText:ORI_SOON[S.origin][L])+'</p></div>'}
   h+=evCardHtml();
   h+='</div>';
-  h+='<div class="side"><figure class="photo">'+photoHtml()+'</figure>'+(S.origin==='tn'?needsHtml(t):'')+'</div>';
+  h+='<div class="side">'+(S.origin==='tn'?needsHtml(t):'')+photoHtml()+'</div>';
   var whyIcons=["✦","◎","文","↗","✓"];
   h+='<section class="why why-showcase" aria-labelledby="why-title"><div class="why-head"><span class="why-eyebrow">'+(L==="ar"?"لماذا نحن؟":L==="en"?"THE VISA CHECKER ADVANTAGE":"L’AVANTAGE VISA CHECKER")+'</span><h2 id="why-title">'+t.whyTitle+'</h2><p class="why-lead">'+(L==="ar"?"مرافقة أوضح لتحضير ملف تأشيرتك بثقة.":L==="en"?"A clearer way to prepare your visa file with confidence.":"Une façon plus claire de préparer votre dossier visa, en toute confiance.")+'</p></div><ul class="why-grid">'+t.why.map(function(x,i){return '<li class="why-card"><span class="why-icon" aria-hidden="true">'+whyIcons[i%whyIcons.length]+'</span><span class="why-copy">'+x+'</span><span class="why-check" aria-hidden="true">✓</span></li>'}).join("")+'</ul><p class="why-note">'+t.whyNote+'</p></section>';
   return h;
@@ -1618,8 +1618,8 @@ function needCard(k,label){return '<button type="button" class="sp-chip need-car
 function advisorCards(){
  var L=S.lang||'fr',c={fr:['VOS ASSISTANTES IA','Aicha','Joury','Votre guide pour préparer votre dossier','Votre assistante pour analyser et comprendre','Découvrir'],en:['YOUR AI ASSISTANTS','Aicha','Joury','Your guide to prepare your application','Your assistant to analyse and understand','Explore'],ar:['مساعدتاك الذكيتان','عائشة','جوري','مرافقتك لتحضير ملف التأشيرة','مساعدتك لفهم وتحليل ملفك','اكتشف']}[L]||[];
  return '<section class="vc-advisors" aria-label="Assistantes IA"><div class="vc-advisors-head">'+c[0]+'</div><div class="vc-advisors-grid">'+
- '<a class="vc-advisor-card vc-aicha" href="./aicha.html"><span class="vc-avatar"><img src="./images/aicha-avatar.svg" alt="Portrait illustré d’Aicha" width="180" height="180"></span><span class="vc-advisor-copy"><b>'+c[1]+'</b><small>'+c[3]+'</small><em>'+c[5]+' ↗</em></span></a>'+
- '<a class="vc-advisor-card vc-joury" href="./joury.html"><span class="vc-avatar"><img src="./images/joury-avatar.svg" alt="Portrait illustré de Joury" width="180" height="180"></span><span class="vc-advisor-copy"><b>'+c[2]+'</b><small>'+c[4]+'</small><em>'+c[5]+' ↗</em></span></a>'+
+ '<a class="vc-advisor-card vc-aicha" href="./aicha.html"><span class="vc-avatar"><img src="./images/aicha-avatar.webp" alt="Portrait illustré d’Aicha" width="180" height="180"></span><span class="vc-advisor-copy"><b>'+c[1]+'</b><small>'+c[3]+'</small><em>'+c[5]+' ↗</em></span></a>'+
+ '<a class="vc-advisor-card vc-joury" href="./joury.html"><span class="vc-avatar"><img src="./images/joury-avatar.webp" alt="Portrait illustré de Joury" width="180" height="180"></span><span class="vc-advisor-copy"><b>'+c[2]+'</b><small>'+c[4]+'</small><em>'+c[5]+' ↗</em></span></a>'+
  '</div></section>';
 }
 function needsHtml(t){return '<div class="needs"><h2 class="hot">'+t.needTitle+'</h2><p class="ag-sub">'+t.needSub+'</p><div class="sp-chips">'+needCard('flight',t.needFlight)+needCard('hotel',t.needHotel)+'</div></div>'}
