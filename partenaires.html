@@ -3,18 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://visa-chat.rabehfly.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#12306b">
 <title>Partenaires | Visa Checker</title>
-<meta name="description" content="Découvrez les partenaires de Visa Checker et proposez votre collaboration : agences de voyages, hôtels et services utiles aux voyageurs.">
+<meta name="description" content="Devenez partenaire de Visa Checker : agences de voyages, hôtels, transport, assurance et services utiles aux voyageurs. Remplissez votre demande en quelques minutes.">
 <link rel="canonical" href="https://checkmyvisa.org/partenaires.html">
-<link rel="stylesheet" href="./nav.css"><link rel="stylesheet" href="./brand.css">
+<link rel="stylesheet" href="./nav.css"><link rel="stylesheet" href="./brand.css"><link rel="stylesheet" href="./partner-form.css">
 <style>
 :root{--blue:#1d4ed8;--navy:#10234b;--ink:#14212b;--muted:#617080;--line:#e4eaf2;--bg:#f5f8ff}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,sans-serif}
 main{max-width:1000px;margin:auto;padding:22px 18px 56px}.hero{padding:clamp(24px,5vw,44px);border-radius:26px;color:#fff;background:radial-gradient(circle at 90% 10%,#60a5fa 0,transparent 35%),linear-gradient(130deg,#10234b,#1d4ed8 68%,#38bdf8);box-shadow:0 18px 44px #163b8130}.kicker{font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;opacity:.85}.hero h1{font-size:clamp(32px,6vw,48px);line-height:1.08;margin:8px 0 12px}.hero p{max-width:720px;margin:0;color:#e7efff}.section{margin:22px 0;padding:24px;border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:0 8px 24px #10234b0a}.section h2{margin:0 0 10px;font-size:23px}.muted{color:var(--muted)}.partner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:18px;border:1px solid var(--line);border-radius:16px;background:#fbfdff}.partner h3{margin:0 0 4px}.tag{display:inline-block;padding:4px 10px;border-radius:30px;background:#eaf1ff;color:#1743a3;font-size:12px;font-weight:800}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:11px 18px;border-radius:12px;background:var(--blue);color:#fff;text-decoration:none;font-weight:750}.btn:hover{background:#163eaf}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.item{padding:15px;border-radius:14px;background:#f5f8ff}.item b{display:block;margin-bottom:4px}footer{max-width:1000px;margin:auto;padding:0 18px 32px;color:var(--muted);font-size:13px}footer a{color:var(--blue)}
 @media(max-width:640px){.grid{grid-template-columns:1fr}.section{padding:18px}.partner{align-items:flex-start}}
+.hero h1{color:#fff}
 </style>
 </head>
 <body>
@@ -28,31 +29,31 @@ main{max-width:1000px;margin:auto;padding:22px 18px 56px}.hero{padding:clamp(24p
 <h1>Construisons un meilleur parcours voyageur.</h1>
 <p>Nous développons un réseau de professionnels fiables pour aider les voyageurs à préparer leur séjour : agences de voyages, hôtels, transporteurs, assurances et services numériques.</p>
 </section>
-<section class="section">
-<h2>Partenaire référencé</h2>
-<p class="muted">Les coordonnées ci-dessous sont publiées comme contact partenaire. Vérifiez directement les disponibilités, tarifs et conditions auprès du prestataire.</p>
-<div class="partner">
-<div><span class="tag">Agence de voyages · Hammamet</span><h3>Despina Travel and Events</h3><p class="muted">Réservations d'hôtel et de vol · Conseil pour votre dossier de voyage</p></div>
-<a class="btn" href="mailto:despinatravelandevents@gmail.com?subject=Demande%20de%20renseignement%20via%20Visa%20Checker">Contacter l'agence</a>
+<section class="section" id="choisir" aria-labelledby="pf-h">
+<h2 id="pf-h">Devenir partenaire</h2>
+<p class="muted">Vous représentez une entreprise utile aux voyageurs ? Choisissez votre profil, puis remplissez votre demande : elle nous parvient par e-mail et chaque proposition est examinée avant toute publication. Aucun partenariat ni avantage commercial n'est présumé.</p>
+<ol class="pf-steps" aria-label="Les étapes">
+<li><b>1</b><span>Choisissez votre profil</span></li>
+<li><b>2</b><span>Remplissez la demande</span></li>
+<li><b>3</b><span>Nous vous répondons par e-mail</span></li>
+</ol>
+<div class="pf-cards" role="list">
+<button type="button" class="pf-card" role="listitem" data-cat="agence"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg><b>Agence de voyages</b><span>Billets, réservations et accompagnement voyage.</span><i>Continuer</i></button>
+<button type="button" class="pf-card" role="listitem" data-cat="hotel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19V6h2v8h14v-3a3 3 0 0 0-3-3h-6v6H5v5zm4-7.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM19 19v-2H5v2z"/></svg><b>Hôtel et hébergement</b><span>Hôtels, résidences, maisons d'hôtes et riads.</span><i>Continuer</i></button>
+<button type="button" class="pf-card" role="listitem" data-cat="transport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11a2 2 0 0 1 2 2v4h-2v1.5a1.5 1.5 0 0 1-3 0V17H8v1.5a1.5 1.5 0 0 1-3 0V17H3v-4a2 2 0 0 1 2-2zm2.2 0h9.6l-1.2-3.5H8.4zM7 15a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg><b>Transport et mobilité</b><span>Transferts aéroport, location de véhicules, chauffeurs.</span><i>Continuer</i></button>
+<button type="button" class="pf-card" role="listitem" data-cat="assurance"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5zm-1 14l6-6-1.4-1.4L11 13.2 8.4 10.6 7 12z"/></svg><b>Assurance et services digitaux</b><span>Assurance voyage, eSIM, transfert d'argent, cartes.</span><i>Continuer</i></button>
+<button type="button" class="pf-card" role="listitem" data-cat="autre"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 3.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg><b>Autre activité</b><span>Un autre service utile aux voyageurs ? Présentez-le-nous.</span><i>Continuer</i></button>
 </div>
-</section>
-<section class="section">
-<h2>Nous recherchons des partenaires</h2>
-<p class="muted">Vous représentez une entreprise qui fournit un service utile aux voyageurs ? Présentez-nous votre activité. Chaque proposition est examinée avant publication ; aucun partenariat ni avantage commercial n'est présumé.</p>
-<div class="grid">
-<div class="item"><b>Agences de voyages</b><span class="muted">Billets, réservations et accompagnement voyage.</span></div>
-<div class="item"><b>Hôtels et hébergements</b><span class="muted">Séjours, tarifs négociés et conditions flexibles.</span></div>
-<div class="item"><b>Transport et mobilité</b><span class="muted">Transferts aéroport et location de véhicules.</span></div>
-<div class="item"><b>Assurance et services digitaux</b><span class="muted">Assurance voyage, eSIM et services pratiques.</span></div>
-</div>
-<p style="margin:18px 0 0"><a class="btn" href="mailto:visacheckercontact@gmail.com?subject=Proposition%20de%20partenariat%20Visa%20Checker&body=Nom%20de%20l'entreprise%20%3A%0AVille%20%3A%0ASite%20web%20%3A%0AActivit%C3%A9%20%3A%0AProposition%20%3A%0ANom%20et%20contact%20%3A">Proposer un partenariat</a></p>
-</section>
-<section class="section">
-<h2>Our partner network · English</h2>
-<p class="muted">We welcome travel agencies, hotels, transport providers, travel insurers and digital travel services. Send us your company details and proposal. Every submission is reviewed before publication.</p>
-<h2 style="margin-top:22px">شبكة الشركاء · العربية</h2>
-<p class="muted" dir="rtl">نرحب بوكالات السفر والفنادق وشركات النقل والتأمين والخدمات الرقمية للمسافرين. أرسلوا إلينا معلومات مؤسستكم ومقترح التعاون. تتم مراجعة كل طلب قبل نشره.</p>
 </section>
 </main>
 <footer><a href="./">Accueil</a> · <a href="./contact.html">Contact</a> · <a href="./confidentialite.html">Confidentialité</a><p>Visa Checker est un service d'information indépendant. Les partenaires restent responsables de leurs prestations, tarifs et conditions.</p></footer>
+<dialog id="pf-dlg" class="pf-dlg" aria-labelledby="pf-title">
+<form id="pf-form" novalidate autocomplete="on">
+<header class="pf-head"><div><span class="tag" id="pf-tag"></span><h2 id="pf-title">Demande de partenariat</h2></div><button type="button" class="pf-x" id="pf-close" aria-label="Fermer la fenêtre">&times;</button></header>
+<div id="pf-body" class="pf-body"></div>
+<footer class="pf-foot"><p class="pf-sum" id="pf-sum" role="alert" hidden></p><div class="pf-actions"><button type="button" class="pf-btn pf-ghost" id="pf-cancel">Annuler</button><button type="submit" class="pf-btn" id="pf-send">Envoyer ma demande</button></div></footer>
+</form>
+<div id="pf-done" class="pf-done" hidden tabindex="-1"></div>
+</dialog>
+<script src="./partner-form.js" defer></script>
 </body></html>
