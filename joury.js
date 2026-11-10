@@ -46,4 +46,6 @@ bindFilePicker("aichaFile","aichaFileHint","aichaSelectedFiles","aichaAnalyse",a
 el("analyseFiles").addEventListener("click",function(){if(!pendingFiles.length||busy)return;var files=pendingFiles.slice();pendingFiles=[];el("file").value="";el("analyseFiles").hidden=true;startChat("joury-refusal",tr("analysePrompt"),files)});
 el("aichaAnalyse").addEventListener("click",function(){if(!aichaPendingFiles.length||busy)return;var files=aichaPendingFiles.slice();aichaPendingFiles=[];el("aichaFile").value="";el("aichaAnalyse").hidden=true;startChat("aicha-review",tr("aichaReviewPrompt"),files)});
 translate();
+var requestedAssistant=new URLSearchParams(location.search).get('assistant');
+if(requestedAssistant==='aicha')show('review');else if(requestedAssistant==='joury')show('recovery');
 })();
