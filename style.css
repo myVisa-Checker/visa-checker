@@ -611,7 +611,7 @@ html[lang="ar"] .ia-badge{letter-spacing:0;text-transform:none;font-size:13px}
 .vc-advisor-card{min-width:0;display:flex;flex-direction:column;align-items:center;gap:10px;padding:13px 10px 14px;text-align:center;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-card);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
 .vc-advisor-card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:var(--shadow-lift)}
 .vc-avatar{display:block;width:min(100%,142px);aspect-ratio:1;border-radius:50%;overflow:hidden;background:var(--accent-soft);box-shadow:0 0 0 5px var(--surface),0 0 0 6px var(--line)}
-.vc-avatar img{display:block;width:100%;height:100%;object-fit:cover;animation:vc-float 4s ease-in-out infinite}
+.vc-avatar img,.vc-avatar canvas.a3d{display:block;width:100%;height:100%;object-fit:cover;animation:vc-float 4s ease-in-out infinite}
 .vc-joury .vc-avatar img{animation-delay:-1.7s}
 @keyframes vc-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 .vc-advisor-copy{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
@@ -663,13 +663,13 @@ html[lang="ar"] .ia-badge{letter-spacing:0;text-transform:none;font-size:13px}
 .vc-hero-assistants-head{text-align:center;margin:0 0 18px;font:800 11px var(--f-mono);letter-spacing:.12em;color:var(--muted)}
 .vc-hero-assistants-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(10px,2vw,18px)}
 .vc-hero-assistant{min-width:0;display:flex;flex-direction:column;align-items:center;gap:11px;padding:clamp(10px,2vw,17px) 8px;border:1px solid var(--line);border-radius:20px;background:var(--surface);color:var(--ink);text-align:center;text-decoration:none;box-shadow:0 10px 24px rgba(22,61,130,.07);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
-.vc-hero-assistant img{display:block;width:min(100%,190px);aspect-ratio:1;border-radius:50%;object-fit:cover;box-shadow:0 0 0 5px var(--surface),0 0 0 7px var(--line);transition:transform .25s ease,box-shadow .25s ease}
+.vc-hero-assistant img,.vc-hero-assistant canvas.a3d{display:block;width:min(100%,190px);aspect-ratio:1;border-radius:50%;object-fit:cover;box-shadow:0 0 0 5px var(--surface),0 0 0 7px var(--line);transition:transform .25s ease,box-shadow .25s ease}
 .vc-hero-assistant-copy{display:flex;flex-direction:column;align-items:center;gap:5px}
 .vc-hero-assistant-copy>b{font:800 clamp(17px,2vw,21px) var(--f-display);color:var(--accent)}
 .vc-hero-assistant-copy>small{min-height:2.7em;font-size:12px;line-height:1.45;color:var(--muted)}
 .vc-hero-assistant-copy>em{font-style:normal;font-size:11px;font-weight:800;color:var(--accent);margin-top:3px}
 .vc-hero-aicha img{background:#e9e0fb}.vc-hero-joury img{background:#dceeff}
-@media(hover:hover){.vc-hero-assistant:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:var(--shadow-lift)}.vc-hero-assistant:hover img{transform:scale(1.025);box-shadow:0 0 0 5px var(--surface),0 0 0 8px var(--accent)}}
+@media(hover:hover){.vc-hero-assistant:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:var(--shadow-lift)}.vc-hero-assistant:hover img,.vc-hero-assistant:hover canvas.a3d{transform:scale(1.025);box-shadow:0 0 0 5px var(--surface),0 0 0 8px var(--accent)}}
 .vc-hero-assistant:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
-@media(max-width:380px){.vc-hero-assistants{padding:12px}.vc-hero-assistant{padding:9px 5px}.vc-hero-assistant img{width:min(100%,132px)}.vc-hero-assistant-copy>small{font-size:11px}}
-@media(prefers-reduced-motion:reduce){.vc-hero-assistant,.vc-hero-assistant img{transition:none}.vc-hero-assistant:hover,.vc-hero-assistant:hover img{transform:none}}
+@media(max-width:380px){.vc-hero-assistants{padding:12px}.vc-hero-assistant{padding:9px 5px}.vc-hero-assistant img,.vc-hero-assistant canvas.a3d{width:min(100%,132px)}.vc-hero-assistant-copy>small{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.vc-hero-assistant,.vc-hero-assistant img,.vc-hero-assistant canvas.a3d{transition:none}.vc-hero-assistant:hover,.vc-hero-assistant:hover img,.vc-hero-assistant:hover canvas.a3d{transform:none}}
