@@ -905,8 +905,6 @@ function renderTrans(){
   h+='<div class="trd-chips" role="group" aria-label="'+escA(R.city)+'"><button type="button" class="chip" data-trc="*" aria-pressed="'+(TRS.every?"true":"false")+'">'+R.all+' ('+(hasD?D.data.length:D.lists.length)+')</button>'+cs.map(function(c){return '<button type="button" class="chip" data-trc="'+escA(c)+'" aria-pressed="'+(TRS.city===c?"true":"false")+'">'+esc(c)+(hasD?' ('+cnt[c]+')':'')+'</button>'}).join("")+'</div>';
   if(hasD)h+='<button type="button" class="reset trd-near" id="trd-near" aria-pressed="'+(TRS.pos?"true":"false")+'">📍 '+R.near+'</button>';
   h+='<div class="trd-res" id="trd-res" aria-live="polite">'+trResults()+'</div>';
-  h+='<p class="trd-src">'+(hasD?'':TRL.disc[S.lang]+' ')+TRL.src[S.lang]+' : <a href="'+escA(D.src.u)+'" rel="noopener" target="_blank">'+esc(D.src.l[S.lang]||D.src.l.fr)+'</a>'+(D.src.d?' ('+esc(D.src.d)+')':'')+'</p>';
-  if(SITE.email)h+='<p class="trd-src">'+X.fix+' <a href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Traducteurs")+'">'+SITE.email+'</a></p>';
   el.innerHTML=h;
 }
 document.addEventListener("input",function(e){if(e.target&&e.target.id==="trd-q"){TRS.q=e.target.value;TRS.all=false;TRS.every=false;var rs=$("trd-res");if(rs)rs.innerHTML=trResults()}});
