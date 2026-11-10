@@ -1,6 +1,0 @@
-VISA CHECKER v5 : liens « Confirmer et payer » / « Modifier mes dates » (48 h).
-
-1) Cloudflare > Workers > visa-proxy > Edit code : remplacer TOUT par le contenu de worker.js > Deploy.
-   (la liaison KV et les secrets existants ne changent pas)
-2) GitHub (Add file > Upload files > Commit) : visa-app.js, index.html, sw.js, version.json. Puis Ctrl+F5.
-3) Make : mettre à jour le mail du client (voir les explications dans le chat).

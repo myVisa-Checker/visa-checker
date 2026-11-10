@@ -52,7 +52,7 @@ Règles strictes :
 - Si la question sort du sujet de l'entretien de visa, ramène poliment vers l'entraînement.`;
 
 const IV_MAX = 40; // messages par code (utilisé seulement si le KV « USAGE » est relié)
-const ORIGINS = ["https://checkmyvisa.org", "https://www.checkmyvisa.org", "https://myvisa-checker.github.io"];
+const ORIGINS = ["https://checkmyvisa.org", "https://www.checkmyvisa.org"];
 const FALLBACK = "Désolé, je n'ai pas pu répondre. Réessaie dans un instant.";
 
 // Limite de l'assistant gratuit : RL_MAX messages par RL_WINDOW et par visiteur (adresse IP).

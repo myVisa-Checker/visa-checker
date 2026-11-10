@@ -11,7 +11,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["visa-app.js", "visa-chat.js", "joury.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "bump-version.mjs"]) {
+for (const f of ["visa-app.js", "joury.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "bump-version.mjs"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -47,7 +47,7 @@ console.log("Sécurité (contrôles simples)");
 ok("CSP présente dans index.html", /Content-Security-Policy/.test(html));
 ok("CSP interdit les objets et les formulaires externes", /object-src 'none'/.test(html) && /form-action 'none'/.test(html));
 const secretRe = /(AIza[0-9A-Za-z_-]{30,}|sk-[A-Za-z0-9]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----)/;
-for (const f of ["visa-app.js", "visa-chat.js", "visa-pwa.js", "index.html", "worker/visa-chat-worker.js", "data.js", "app.js"]) ok("aucune clé secrète dans " + f, !secretRe.test(read(f)));
+for (const f of ["visa-app.js", "joury.js", "visa-pwa.js", "index.html", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js"]) ok("aucune clé secrète dans " + f, !secretRe.test(read(f)));
 const workerCode = read("worker/visa-chat-worker.js").split("\n").filter((l) => !/^\s*\/\//.test(l)).join("\n");
 ok("aucun prestataire de paiement n'est codé en dur", !/KONNECT|FLOUCI|D17|PAY_MOCK/.test(workerCode));
 ok("création et vérification de paiement désactivées explicitement", /body\.action === "pay_create" \|\| body\.action === "pay_check"/.test(workerCode) && /payment_unavailable/.test(workerCode));
@@ -98,13 +98,14 @@ if (loaded) {
 
 const jouryHtml = read("joury.html"), jouryJs = read("joury.js"), worker = read("worker/visa-chat-worker.js");
 ok("ancienne bulle Assistant Visa Checker retirée", !/id="vc-btn"/.test(html) && !/id="vc-box"/.test(html));
-ok("accès flottant Joury présent", /class="joury-fab"/.test(html) && /joury.html/.test(html));
+const appSrc = read("visa-app.js");
+ok("accès Joury et Aicha depuis l'accueil", /vc-hero-assistant/.test(appSrc) && /joury\.html/.test(appSrc) && /aicha\.html/.test(appSrc));
+ok("ancien bouton flottant Joury retiré (HTML et CSS)", !/joury-fab/.test(html));
 ok("Aicha dispose d’un import documentaire", /id="aichaFile"/.test(jouryHtml) && /id="aichaAnalyse"/.test(jouryHtml));
 ok("accès entretien Aicha contrôlé par code", /id="aichaCode"/.test(jouryHtml) && /mode:"interview",check:true/.test(jouryJs));
 ok("modes Joury et Aicha séparés", /mode:mode\|\|""/.test(jouryJs) && /joury-refusal/.test(jouryJs) && /aicha-review/.test(jouryJs));
 ok("prompts spécialisés présents dans le Worker", /SYSTEM_JOURY_REFUSAL/.test(worker) && /SYSTEM_AICHA_REVIEW/.test(worker) && /Tu es Aicha/.test(worker));
 
-console.log("\n" + pass + " réussis, " + fail + " échoués");
 console.log("Checklist personnalisée et détection des pièces manquantes");
 const checklistJs = read("visa-app.js");
 const checklistHtml = read("index.html");
@@ -121,5 +122,34 @@ ok("ancienne carte AI Visa Recovery retirée", !/function recoveryCardHtml\(/.te
 ok("ancien bloc entretien autonome retiré de la checklist", !/\+interviewHtml\(\)/.test(assistantJs));
 ok("ancien bouton entretien autonome (dont USA) retiré", !assistantJs.includes("data-iv-open") && !assistantJs.includes("IVICON"));
 ok("espace Joury/Aicha conserve ses deux cartes", (jouryHtml.match(/class="action assistant-card /g) || []).length === 2);
+
+console.log("Worker visa-proxy (versionné dans le dépôt)");
+const proxy = read("worker/visa-proxy-worker.js");
+const proxyCode = proxy.split("\n").filter((l) => !/^\s*(\/\/|\/?\*)/.test(l)).join("\n");
+ok("PACK du recours et des 4 motivations présent", /const PACK = \[/.test(proxy) && ["recours", "m_employee", "m_self", "m_student", "m_retired"].every((id) => proxy.includes('"id":"' + id + '"')));
+ok("aucun reste du fournisseur IA abandonné (ANTHROPIC, x-api-key)", !/ANTHROPIC|x-api-key|AI_MODEL/.test(proxyCode));
+ok("aucune route du Radar RDV supprimé", !/\/radar|RADAR_/.test(proxyCode));
+ok("origines par défaut : domaine officiel seulement", /DEFAULT_ORIGINS = "https:\/\/checkmyvisa\.org,https:\/\/www\.checkmyvisa\.org"/.test(proxy));
+ok("chaque route payante vérifie l'origine et le jeton", (proxyCode.match(/checkToken\(env, tok, "pack"\)/g) || []).length >= 3);
+ok("visa-chat : ancien domaine github.io retiré des origines", !/github\.io/.test(read("worker/visa-chat-worker.js")));
+
+console.log("Service worker : précache");
+const swSrc = read("sw.js");
+const pre = [...(swSrc.match(/const PRECACHE = \[([\s\S]*?)\];/) || ["", ""])[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+ok("liste de précache lue", pre.length > 10, String(pre.length));
+for (const u of pre) ok("précache : " + u, u === "./" ? existsSync("index.html") : existsSync(u));
+for (const f of ["visa-app.js", "visa-pwa.js", "avatar3d.js"]) ok("précache contient " + f, pre.includes(f));
+
+console.log("Pages : CSP, 404, fichiers hérités");
+for (const f of ["index.html", "joury.html", "aicha.html", "partenaires.html", "a-propos.html", "contact.html", "conditions.html", "confidentialite.html"]) {
+  const h = read(f);
+  ok("CSP dans " + f, /Content-Security-Policy/.test(h) && /object-src 'none'/.test(h) && /script-src 'self'/.test(h));
+}
+ok("404.html présente", existsSync("404.html"));
+for (const f of ["app.js", "data.js", "style.css", "visa-chat.js", "chat-loader.js", "LISEZMOI.txt", "icon-192.png", "icon-512.png", "maskable-512.png", "apple-touch-icon.png", "icons/radar-rdv.webp"]) ok("fichier hérité absent : " + f, !existsSync(f));
+ok("index.html : canonical et og:image", /rel="canonical"/.test(html) && /property="og:image"/.test(html));
+ok("index.html : plus de règles CSS de l'ancienne bulle", !/#vc-(btn|box|head|msgs)/.test(html));
+
+console.log("\n" + pass + " réussis, " + fail + " échoués");
 
 process.exit(fail ? 1 : 0);
