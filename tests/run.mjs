@@ -150,6 +150,14 @@ for (const f of ["app.js", "data.js", "style.css", "visa-chat.js", "chat-loader.
 ok("index.html : canonical et og:image", /rel="canonical"/.test(html) && /property="og:image"/.test(html));
 ok("index.html : plus de règles CSS de l'ancienne bulle", !/#vc-(btn|box|head|msgs)/.test(html));
 
+console.log("Worker visa-rules : tests d'exécution");
+try {
+  execFileSync(process.execPath, ["tests/visa-rules-worker.test.mjs"], { stdio: "inherit" });
+  ok("visa-rules-worker : API, règles, validation et CORS", true);
+} catch (e) {
+  ok("visa-rules-worker : API, règles, validation et CORS", false, String(e.stderr || e.message).split("\n")[0]);
+}
+
 console.log("\n" + pass + " réussis, " + fail + " échoués");
 
 process.exit(fail ? 1 : 0);
