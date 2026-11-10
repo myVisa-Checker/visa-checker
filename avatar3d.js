@@ -58,9 +58,11 @@
     if (G) return G.ok;
     G = { ok: false };
     try {
-      var c = document.createElement("canvas");
+      var c = document.createElement("canvas"), soft = false;
       c.width = c.height = 256;
-      var gl = c.getContext("webgl", { alpha: false, antialias: false, depth: false, stencil: false, preserveDrawingBuffer: false, powerPreference: "low-power", failIfMajorPerformanceCaveat: !window.__A3D_ALLOW_SOFTWARE });
+      var o = { alpha: false, antialias: false, depth: false, stencil: false, preserveDrawingBuffer: false, powerPreference: "low-power", failIfMajorPerformanceCaveat: true };
+      var gl = c.getContext("webgl", o);
+      if (!gl) { o.failIfMajorPerformanceCaveat = false; gl = c.getContext("webgl", o) || c.getContext("experimental-webgl", o); soft = true; }
       if (!gl) return false;
       var sh = function (t, s) {
         var o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o);
@@ -79,7 +81,7 @@
       var u = {}; ["uImg", "uDep", "uCam", "uLight", "uAmp", "uZoom", "uRel", "uPx"].forEach(function (n) { u[n] = gl.getUniformLocation(pr, n); });
       gl.uniform1i(u.uImg, 0); gl.uniform1i(u.uDep, 1); gl.uniform1f(u.uPx, 1 / DN);
       c.addEventListener("webglcontextlost", function (e) { e.preventDefault(); G.ok = false; G.dead = true; items.forEach(function (it) { release(it, true); }); });
-      G = { ok: true, c: c, gl: gl, u: u };
+      G = { ok: true, c: c, gl: gl, u: u, soft: soft };
       return true;
     } catch (e) { G = { ok: false, dead: true }; return false; }
   }
@@ -245,7 +247,7 @@
     if (document.hidden || reduce) return;
     prune();
     if (!anyVisible()) return;
-    raf = requestAnimationFrame(tick);
+    if (!(G && G.soft)) raf = requestAnimationFrame(tick);   /* pas de boucle en rendu logiciel : trop coûteux */
     if (now - last < 1000 / FPS - 3) return;
     last = now;
     for (var i = 0; i < items.length; i++) { var it = items[i]; if (!it.dead && (it.visI || it.visC)) drawItem(it, now / 1000, null); }
@@ -257,6 +259,20 @@
     }
   }
   function stills() { prune(); items.forEach(function (it) { if (!it.dead && (it.visI || it.visC)) drawItem(it, 0, STILL); }); }
+  var lt = 0, lp = 0;
+  function liteMove() { /* rendu logiciel : le regard suit le pointeur, mais on ne redessine que sur mouvement, 8 fois/s au plus */
+    if (!G || !G.soft || reduce || document.hidden || lp) return;
+    var d = 125 - (performance.now() - lt);
+    lp = setTimeout(function () {
+      lp = 0; lt = performance.now();
+      items.forEach(function (it) {
+        if (it.dead || !(it.visI || it.visC)) return;
+        var r = it.cv.getBoundingClientRect(), dx = mouse.x - (r.left + r.width / 2), dy = mouse.y - (r.top + r.height / 2), k = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 520);
+        var px = Math.max(-1, Math.min(1, dx / 240)) * k, py = Math.max(-1, Math.min(1, dy / 240)) * k;
+        drawItem(it, 0, [0.28 + px * 0.9, 0.12 + py * 0.7, STILL[2] + px * 0.25, STILL[3] - py * 0.2]);
+      });
+    }, Math.max(0, d));
+  }
   function wake() {
     if (reduce) { setTimeout(stills, 0); return; }
     if (!raf && !document.hidden && anyVisible()) raf = requestAnimationFrame(tick);
@@ -273,10 +289,21 @@
       mo.observe(document.body, { childList: true, subtree: true });
     }
     document.addEventListener("visibilitychange", wake);
-    window.addEventListener("resize", function () { if (reduce) wake(); }, { passive: true });
-    window.addEventListener("pointermove", function (e) { mouse.x = e.clientX; mouse.y = e.clientY; mouse.t = performance.now(); }, { passive: true });
+    window.addEventListener("resize", function () { if (reduce || (G && G.soft)) wake(); }, { passive: true });
+    window.addEventListener("pointermove", function (e) { mouse.x = e.clientX; mouse.y = e.clientY; mouse.t = performance.now(); liteMove(); }, { passive: true });
     if (mq && mq.addEventListener) mq.addEventListener("change", function (e) { reduce = e.matches; wake(); });
   }
-  window.Avatar3D = { version: 1, _items: items, _state: function () { return { gl: !!(G && G.ok), dead: !!(G && G.dead), items: items.length, shown: items.filter(function (i) { return i.shown; }).length, running: !!raf }; } };
+  window.Avatar3D = { version: 1, _items: items, _state: function () { return { soft: !!(G && G.soft), gl: !!(G && G.ok), dead: !!(G && G.dead), items: items.length, shown: items.filter(function (i) { return i.shown; }).length, running: !!raf }; } };
+  function info() { /* ajouter ?a3d=info à l'adresse : affiche l'état du moteur (diagnostic) */
+    var b = document.createElement("pre"); b.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:99999;margin:0;padding:8px 10px;background:#0b1f4d;color:#fff;font:12px/1.4 monospace;border-radius:8px;max-width:92vw;white-space:pre-wrap";
+    document.body.appendChild(b);
+    function up() {
+      var st = window.Avatar3D._state(), r = "?";
+      try { var e = G && G.gl && G.gl.getExtension("WEBGL_debug_renderer_info"); if (e) r = G.gl.getParameter(e.UNMASKED_RENDERER_WEBGL); } catch (x) {}
+      b.textContent = "Avatar3D v1 | webgl: " + (st.gl ? (st.soft ? "logiciel (mode léger)" : "matériel") : (st.dead ? "indisponible" : "pas encore")) + " | avatars: " + st.shown + "/" + st.items + " | économiseur de données: " + !!disabled + " | animations réduites: " + !!reduce + " | carte: " + r;
+    }
+    up(); setInterval(up, 1000);
+  }
+  if (/[?&]a3d=info\b/.test(location.search)) document.addEventListener("DOMContentLoaded", info);
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
