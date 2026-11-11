@@ -2,7 +2,7 @@
   "id": "/?app=visa-checker",
   "name": "Visa Checker : dossier visa vérifié avant le dépôt",
   "short_name": "Visa Checker",
-  "description": "Checklist des documents de visa pour voyageurs tunisiens, pack recours, billets et hôtels via agences partenaires. FR · EN · عربي",
+  "description": "Checklist des documents de visa pour voyageurs de toutes nationalités, pack recours, billets et hôtels via agences partenaires. FR · EN · عربي",
   "lang": "fr",
   "dir": "auto",
   "start_url": "./?source=pwa",
