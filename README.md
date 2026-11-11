@@ -18,6 +18,8 @@ Le fichier racine `wrangler.toml` est la configuration Pages (`pages_build_outpu
 
 ### 2. API d'éligibilité — Cloudflare Worker
 
+URL de production configurée dans le frontend : `https://visa-proxy.rabehfly.workers.dev`.
+
 Depuis la racine du dépôt :
 
 ```bash
