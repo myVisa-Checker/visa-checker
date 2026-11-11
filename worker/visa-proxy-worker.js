@@ -189,8 +189,6 @@ export default {
         job: t(b.job, 120), income: t(b.income, 40), budget: t(b.budget, 40), lodging: t(b.lodging, 160), ties: t(b.ties, 300), notes: t(b.notes, 500)
       };
       if (!f.profile || !f.country || !f.dateFrom || !f.dateTo) return out({ ok: false, error: "missing" }, 400);
-      await env.KV.put(uk, String(un + 1), { expirationTtl: 90000 });
-      await env.KV.put(gk, String(gn + 1), { expirationTtl: 90000 });
       const system = "Tu rédiges des lettres de motivation pour une demande de visa Schengen de court séjour, au nom du demandeur, pour un voyageur (de toute nationalité ; adapte la lettre au pays de résidence et au passeport indiqués). " +
         "Règles : n'invente aucun fait, chiffre, date, nom, employeur ou lieu ; quand une information manque, écris un crochet [à compléter]. Ne demande ni n'écris de numéro de passeport. " +
         "Ton formel, clair et sincère, 250 à 350 mots. Structure : coordonnées entre crochets, lieu et date, destinataire (consulat du pays de destination dans la ville du demandeur), objet, présentation du demandeur, but et durée du séjour, financement, hébergement, attaches dans son pays de résidence, engagement de retour, formule de politesse, liste des pièces jointes. " +
@@ -209,6 +207,8 @@ export default {
       let j; try { j = await r.json(); } catch { return out({ ok: false, error: "upstream" }, 502); }
       const text = (j.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n").trim();
       if (!text) return out({ ok: false, error: "empty" }, 502);
+      await env.KV.put(uk, String(un + 1), { expirationTtl: 90000 });
+      await env.KV.put(gk, String(gn + 1), { expirationTtl: 90000 });
       return out({ ok: true, letter: text.slice(0, 6000) }, 200);
     }
 
@@ -230,8 +230,6 @@ export default {
       const uk = "an:" + (await sha256(tok)).slice(0, 24) + ":" + day, gk = "aig:" + day;
       const un = parseInt((await env.KV.get(uk)) || "0", 10), gn = parseInt((await env.KV.get(gk)) || "0", 10);
       if (un >= AN_DAILY || gn >= AI_GLOBAL_DAILY) return out({ ok: false, error: "rate" }, 429);
-      await env.KV.put(uk, String(un + 1), { expirationTtl: 90000 });
-      await env.KV.put(gk, String(gn + 1), { expirationTtl: 90000 });
       const system = "Tu aides un voyageur (de toute nationalité) dont la demande de visa Schengen de court séjour a été refusée. " +
         "À partir du motif de refus et de sa situation, produis en texte simple (sans markdown), dans la langue demandée, quatre parties numérotées : " +
         "1. Ce que signifie le motif. 2. Pièces à corriger ou à ajouter. 3. Plan d'action pas à pas (recours ou nouvelle demande, selon le cas). " +
@@ -251,6 +249,8 @@ export default {
       let j; try { j = await r.json(); } catch { return out({ ok: false, error: "upstream" }, 502); }
       const text = (j.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n").trim();
       if (!text) return out({ ok: false, error: "empty" }, 502);
+      await env.KV.put(uk, String(un + 1), { expirationTtl: 90000 });
+      await env.KV.put(gk, String(gn + 1), { expirationTtl: 90000 });
       return out({ ok: true, analysis: text.slice(0, 7000) }, 200);
     }
 
@@ -288,12 +288,12 @@ export default {
       if (!isoOk(d1) || d1 < td || d1 > lim) return out({ ok: false, error: "date" }, 400);
       if (o.d2 ? (!isoOk(d2) || d2 < d1 || d2 > lim || (new Date(d2) - new Date(d1)) / 864e5 > 365) : d2 !== "") return out({ ok: false, error: "date" }, 400);
       const old1 = o.d1, old2 = o.d2;
-      o.d1 = d1; o.d2 = d2; o.edits = (o.edits || 0) + 1;
-      await env.KV.put("ord:" + id, JSON.stringify(o), { expirationTtl: ORDER_TTL });
+      const updated = { ...o, d1, d2, edits: (o.edits || 0) + 1 };
       const msg = "MODIFICATION DES DATES (dans les 48 h) : " + ordRef(id) + "\nNom : " + o.ln + "\nPrénom(s) : " + o.fn +
         "\nAnciennes dates : " + old1 + (old2 ? " → " + old2 : "") + "\nNOUVELLES DATES : " + d1 + (d2 ? " → " + d2 : "") +
         "\nAgence : " + o.agn + "\nLe nom et le prénom ne sont jamais modifiables.";
-      if (!(await toMake(env, ordPayload(id, o, "update", msg, await ordUrls(env, id))))) return out({ ok: false, error: "upstream" }, 502);
+      if (!(await toMake(env, ordPayload(id, updated, "update", msg, await ordUrls(env, id))))) return out({ ok: false, error: "upstream" }, 502);
+      await env.KV.put("ord:" + id, JSON.stringify(updated), { expirationTtl: ORDER_TTL });
       return out({ ok: true, d1, d2 }, 200);
     }
 
@@ -311,14 +311,14 @@ export default {
       const RANK = { new: 0, claimed: 1, paid: 2, sent: 3 }, cur = o.status || "new";
       if (to === "sent" && RANK[cur] < 2) return out({ ok: false, error: "not_paid" }, 409);
       if (RANK[cur] >= RANK[to]) return out({ ok: true, status: cur }, 200);      /* déjà fait : pas de second mail */
-      o.status = to; o[to + "At"] = Date.now();
-      await env.KV.put("ord:" + id, JSON.stringify(o), { expirationTtl: ORDER_TTL });
+      const updated = { ...o, status: to, [to + "At"]: Date.now() };
       const MSG = {
         claimed: "LE CLIENT DIT AVOIR PAYÉ : " + ordRef(id) + ". Vérifiez dans votre app D17 (montant et référence), puis cliquez sur « Paiement reçu ».",
         paid: "PAIEMENT CONFIRMÉ : " + ordRef(id) + ". L'agence peut émettre le document.",
         sent: "DOCUMENT ENVOYÉ : " + ordRef(id) + "."
       };
-      if (!(await toMake(env, ordPayload(id, o, to, MSG[to], await ordUrls(env, id))))) return out({ ok: false, error: "upstream" }, 502);
+      if (!(await toMake(env, ordPayload(id, updated, to, MSG[to], await ordUrls(env, id))))) return out({ ok: false, error: "upstream" }, 502);
+      await env.KV.put("ord:" + id, JSON.stringify(updated), { expirationTtl: ORDER_TTL });
       return out({ ok: true, status: to }, 200);
     }
 
