@@ -16,6 +16,14 @@
 <div class="jy-letter-fields"><label>Autorité / pays de décision<input class="vc-input" id="jy-authority" placeholder="Ex. Consulat de France à Tunis"></label><label>Date de la décision<input class="vc-input" id="jy-date" type="date"></label><label>Référence du dossier<input class="vc-input" id="jy-reference" placeholder="Référence indiquée sur la notification"></label></div><label class="jy-facts-label" for="jy-facts">Faits complémentaires à prendre en compte</label><textarea class="vc-input jy-facts" id="jy-facts" placeholder="Situation professionnelle, ressources, attaches, changements depuis le dépôt…"></textarea><div class="jy-letter-output" id="jy-letter-output" hidden></div><div class="jy-report-actions"><button class="vc-btn vc-btn-primary" id="jy-generate-letter" type="button" disabled>Générer la lettre de recours</button><button class="vc-btn" id="jy-copy-letter" type="button" disabled>Copier la lettre</button></div></section>
 <section class="vc-card jy-chat-card"><div class="jy-panel-head"><div><span class="vc-eyebrow">VOTRE ASSISTANTE</span><h2>Une question pour Joury ?</h2><p>Échangez sur un motif précis ou demandez une clarification du rapport.</p></div><span class="vc-status"><i></i> Joury</span></div><div class="jy-chat-log" id="jy-chat-log" role="log" aria-live="polite"><div class="vc-message assistant"><small>Joury</small>Bonjour, je suis Joury. Ajoutez votre notification de refus pour que je puisse examiner les motifs exacts. Je ne supposerai aucun motif avant d'avoir lu la décision.</div></div><form class="jy-chat-compose" id="jy-chat-form"><label class="vc-sr" for="jy-chat-input">Votre question à Joury</label><textarea class="vc-input" id="jy-chat-input" rows="2" placeholder="Posez votre question sur le refus…" required></textarea><button class="vc-btn vc-btn-primary" type="submit">Envoyer</button></form></section><p class="jy-disclaimer">Joury fournit une aide informative fondée sur les documents transmis. Elle ne remplace pas un avocat ni l'autorité consulaire. Aucun recours n'est garanti et aucune pièce ne doit être modifiée ou fabriquée.</p>
 </section></div></main><div id="vc-bottomnav"></div>
+<div class="pwa" id="pwa" role="region" aria-live="polite" aria-labelledby="pwa-t" hidden>
+  <img src="icons/icon-192.png" alt="" width="44" height="44">
+  <div class="pwa-t"><b id="pwa-t"></b><span id="pwa-d"></span><ol class="pwa-steps" id="pwa-s" hidden></ol></div>
+  <button type="button" class="pwa-go" id="pwa-go"></button>
+  <button type="button" class="pwa-x" id="pwa-x"></button>
+</div>
+<script src="visa-pwa.js" defer></script>
+
 <script>
 (function(){'use strict';var $=function(id){return document.getElementById(id);},refusalFiles=[],supportFiles=[],report='',letter='',chatHistory=[],busy=false,allowed=['application/pdf','image/jpeg','image/png','image/webp'],max=5*1024*1024;VC.init({},'joury');
 function toast(s){VC.toast(s);}function allFiles(){return refusalFiles.concat(supportFiles);}
