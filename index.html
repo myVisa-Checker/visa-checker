@@ -16,5 +16,5 @@
 <script>
 (function(){var $=function(id){return document.getElementById(id);};VC.init({},'hub');$('hub-lang').value=VC.lang;$('hub-lang').addEventListener('change',function(){VC.setLang(this.value);});$('hub-theme').addEventListener('click',VC.toggleTheme);document.addEventListener('vc:lang',function(){$('hub-lang').value=VC.lang;});})();
 </script>
-<script src="visa-pwa.js" defer></script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js",{scope:"./"}).catch(function(){});});}</script>
 </body></html>
