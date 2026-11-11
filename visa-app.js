@@ -969,7 +969,7 @@ function setLogo(g){var b=$("brand");if(!b)return;if(!b.querySelector(".logo")){
 function photoHtml(){
   var tx={fr:{head:"CHOISISSEZ VOTRE ASSISTANTE",a:"Préparer et vérifier mon dossier",j:"Analyser un refus de visa",go:"Accéder à l’assistante"},en:{head:"CHOOSE YOUR ASSISTANT",a:"Prepare and check my application",j:"Analyse a visa refusal",go:"Open assistant"},ar:{head:"اختر مساعدتك",a:"تحضير ملفي والتحقق منه",j:"تحليل رفض التأشيرة",go:"فتح المساعدة"}}[S.lang]||{head:"CHOISISSEZ VOTRE ASSISTANTE",a:"Préparer et vérifier mon dossier",j:"Analyser un refus de visa",go:"Accéder à l’assistante"};
   return '<div class="vc-hero-assistants"><div class="vc-hero-assistants-head">'+tx.head+'</div><div class="vc-hero-assistants-grid">'+
-    '<a class="vc-hero-assistant vc-hero-aicha" href="./aicha.html?assistant=aicha"><img src="./images/aicha-avatar.webp" data-a3d="aicha" width="112" height="112" alt="Aicha" loading="lazy" decoding="async"><span class="vc-hero-assistant-copy"><b>Aicha</b><small>'+tx.a+'</small><em>'+tx.go+' ↗</em></span></a>'+
+    '<a class="vc-hero-assistant vc-hero-aicha" href="./view-dossier.html"><img src="./images/aicha-avatar.webp" data-a3d="aicha" width="112" height="112" alt="Aicha" loading="lazy" decoding="async"><span class="vc-hero-assistant-copy"><b>Aicha</b><small>'+tx.a+'</small><em>'+tx.go+' ↗</em></span></a>'+
     '<a class="vc-hero-assistant vc-hero-joury" href="./view-joury.html"><img src="./images/joury-avatar.webp" data-a3d="joury" width="112" height="112" alt="Joury" loading="lazy" decoding="async"><span class="vc-hero-assistant-copy"><b>Joury</b><small>'+tx.j+'</small><em>'+tx.go+' ↗</em></span></a>'+
     '</div></div>';
 }
@@ -1613,7 +1613,7 @@ function needCard(k,label){return '<button type="button" class="sp-chip need-car
 function advisorCards(){
  var L=S.lang||'fr',c={fr:['VOS ASSISTANTES IA','Aicha','Joury','Votre guide pour préparer votre dossier','Votre assistante pour analyser et comprendre','Découvrir'],en:['YOUR AI ASSISTANTS','Aicha','Joury','Your guide to prepare your application','Your assistant to analyse and understand','Explore'],ar:['مساعدتاك الذكيتان','عائشة','جوري','مرافقتك لتحضير ملف التأشيرة','مساعدتك لفهم وتحليل ملفك','اكتشف']}[L]||[];
  return '<section class="vc-advisors" aria-label="Assistantes IA"><div class="vc-advisors-head">'+c[0]+'</div><div class="vc-advisors-grid">'+
- '<a class="vc-advisor-card vc-aicha" href="./aicha.html"><span class="vc-avatar"><img src="./images/aicha-avatar.webp" data-a3d="aicha" alt="Portrait illustré d’Aicha" width="180" height="180"></span><span class="vc-advisor-copy"><b>'+c[1]+'</b><small>'+c[3]+'</small><em>'+c[5]+' ↗</em></span></a>'+
+ '<a class="vc-advisor-card vc-aicha" href="./view-dossier.html"><span class="vc-avatar"><img src="./images/aicha-avatar.webp" data-a3d="aicha" alt="Portrait illustré d’Aicha" width="180" height="180"></span><span class="vc-advisor-copy"><b>'+c[1]+'</b><small>'+c[3]+'</small><em>'+c[5]+' ↗</em></span></a>'+
  '<a class="vc-advisor-card vc-joury" href="./view-joury.html"><span class="vc-avatar"><img src="./images/joury-avatar.webp" data-a3d="joury" alt="Portrait illustré de Joury" width="180" height="180"></span><span class="vc-advisor-copy"><b>'+c[2]+'</b><small>'+c[4]+'</small><em>'+c[5]+' ↗</em></span></a>'+
  '</div></section>';
 }

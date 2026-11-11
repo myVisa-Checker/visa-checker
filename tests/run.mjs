@@ -99,7 +99,7 @@ if (loaded) {
 const jouryHtml = read("joury.html"), jouryJs = read("joury.js"), worker = read("worker/visa-chat-worker.js");
 ok("ancienne bulle Assistant Visa Checker retirée", !/id="vc-btn"/.test(html) && !/id="vc-box"/.test(html));
 const appSrc = read("visa-app.js");
-ok("accès Joury et Aicha depuis l'accueil", /vc-hero-assistant/.test(appSrc) && /joury\.html/.test(appSrc) && /aicha\.html/.test(appSrc));
+ok("accès Joury et Aicha depuis l'accueil", /vc-hero-assistant/.test(appSrc) && /joury\.html/.test(appSrc) && /view-dossier\.html/.test(appSrc));
 ok("ancien bouton flottant Joury retiré (HTML et CSS)", !/joury-fab/.test(html));
 ok("Aicha dispose d’un import documentaire", /id="aichaFile"/.test(jouryHtml) && /id="aichaAnalyse"/.test(jouryHtml));
 ok("accès entretien Aicha contrôlé par code", /id="aichaCode"/.test(jouryHtml) && /mode:"interview",check:true/.test(jouryJs));
