@@ -357,26 +357,27 @@ export default {
     if (!/^\+?[0-9 ]{6,20}$/.test(d.phone)) return out({ ok: false, error: "phone" }, 400);
     if (d.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)) return out({ ok: false, error: "email" }, 400);
 
+    let rateKey = "", rateCount = 0, duplicateKey = "";
     if (env.KV) {
       const ip = req.headers.get("CF-Connecting-IP") || "?";
-      const rk = "rl:" + ip, n = parseInt((await env.KV.get(rk)) || "0", 10);
-      if (n >= RATE_MAX) return out({ ok: false, error: "rate" }, 429);
-      const dk = "id:" + d.requestId;
-      if (await env.KV.get(dk)) return out({ ok: true, duplicate: true }, 200);
-      await env.KV.put(rk, String(n + 1), { expirationTtl: RATE_WINDOW });
-      await env.KV.put(dk, "1", { expirationTtl: 86400 });
+      rateKey = "rl:" + ip;
+      rateCount = parseInt((await env.KV.get(rateKey)) || "0", 10);
+      if (rateCount >= RATE_MAX) return out({ ok: false, error: "rate" }, 429);
+      duplicateKey = "id:" + d.requestId;
+      if (await env.KV.get(duplicateKey)) return out({ ok: true, duplicate: true }, 200);
     }
 
-    /* enregistre la demande (48 h pour modifier les dates) et fabrique les liens du mail client */
+    /* prépare la demande et les liens ; aucune écriture KV avant le succès de Make */
     d.kind = "new"; d.ref = ordRef(d.requestId); d.payUrl = ""; d.editUrl = ""; d.sentUrl = ""; d.confirmUrl = ""; d.deadline = ""; d.status = "new";
+    let orderRecord = null;
     if (env.KV && env.SECRET) {
-      if (await env.KV.get("ord:" + d.requestId)) return out({ ok: true, duplicate: true }, 200);   /* ne jamais écraser une commande existante (le verrou « id: » ne dure que 24 h) */
+      if (await env.KV.get("ord:" + d.requestId)) return out({ ok: true, duplicate: true }, 200);   /* ne jamais écraser une commande existante */
       const created = Date.now();
-      await env.KV.put("ord:" + d.requestId, JSON.stringify({
+      orderRecord = {
         ln: d.lastName, fn: d.firstName, d1: d.date1, d2: d.date2, svc: d.service, dest: d.destination, city: d.city,
         phone: d.phone, tg: d.telegram, mail: d.email, chan: d.channel, lang: d.lang,
         ag: d.agency, agn: d.agencyName, age: d.agencyEmail, agt: d.agencyTelegram, agw: d.agencyWhatsapp, created, edits: 0, status: "new"
-      }), { expirationTtl: ORDER_TTL });
+      };
       Object.assign(d, await ordUrls(env, d.requestId)); d.deadline = new Date(created + ORDER_HOURS * 3600e3).toISOString();
     }
     const body = new URLSearchParams();
@@ -386,6 +387,9 @@ export default {
       r = await fetch(env.MAKE_URL, { method: "POST", body, headers: { "Content-Type": "application/x-www-form-urlencoded" } });
     } catch { return out({ ok: false, error: "upstream" }, 502); }
     if (!r.ok) return out({ ok: false, error: "upstream", status: r.status }, 502);
+    if (orderRecord) await env.KV.put("ord:" + d.requestId, JSON.stringify(orderRecord), { expirationTtl: ORDER_TTL });
+    if (duplicateKey) await env.KV.put(duplicateKey, "1", { expirationTtl: 86400 });
+    if (rateKey) await env.KV.put(rateKey, String(rateCount + 1), { expirationTtl: RATE_WINDOW });
     return out({ ok: true }, 200);
   }
 };
