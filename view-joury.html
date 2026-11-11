@@ -31,7 +31,7 @@ function bubble(role,text){var b=VC.el('div','vc-message '+(role==='assistant'?'
 function parseIssues(t){
  var blocks=t.split(/(?=^MOTIF\s*[:：])/im).filter(function(x){return /^MOTIF\s*[:：]/i.test(x.trim());});
  return blocks.slice(0,12).map(function(block){
-  function field(name){var m=block.match(new RegExp('^(?:'+name+')\\s*[:：]\\s*(.*)
+  function field(name){var m=block.match(new RegExp('^(?:'+name+')\\s*[:：]\\s*(.*)$','im'));return m?m[1].trim():'';}
   return {title:field('MOTIF'),explanation:field('EXPLICATION'),severity:field('SÉVÉRITÉ|SEVERITE'),evidence:field('PIÈCES À JOINDRE|PIECES A JOINDRE|PIÈCES'),argument:field('ARGUMENT À ÉCRIRE|ARGUMENT')};
  });
 }
