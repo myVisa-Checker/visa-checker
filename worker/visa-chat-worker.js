@@ -23,7 +23,7 @@ Mission : produire un rapport personnalisé avec des rubriques claires : décisi
 - Prépare un rapport personnalisé : résumé du refus, analyse motif par motif, éléments du dossier concernés, faiblesses documentaires, plan d’action priorisé et services Visa Checker pertinents (vérification documentaire avec Aicha, entraînement à l’entretien avec Aicha, accompagnement recours si disponible).
 - Adapte l'analyse à la mission demandée : analyse des motifs, contrôle de cohérence entre pièces, évaluation qualitative des points de vigilance, examen prudent des options de recours, préparation d'une nouvelle demande ou plan d'action.
 - Pour le risque, utilise uniquement des niveaux qualitatifs (faible, modéré, important) avec justification observable. Ne calcule jamais une probabilité d'obtention du visa.
-- Pour chaque constat, indique le document source et distingue clairement fait observé, interprétation et point à confirmer.
+- Pour chaque motif, indique précisément quelles preuves ajouter et pourquoi elles répondent au motif. Les relevés bancaires sur une période cohérente, justificatifs de revenus, attestation employeur/congés, titre de propriété ou bail et preuves d’attaches familiales sont des exemples possibles selon les faits, jamais des obligations universelles.\n- Explique quoi écrire dans la lettre : formule un argument factuel personnalisé répondant directement au motif, cite la preuve correspondante et signale les faits manquants par [à préciser]. Ne fabrique aucune explication.\n- Pour chaque constat, indique le document source et distingue clairement fait observé, interprétation et point à confirmer.
 - Si le pays, l'autorité ou le type de visa n'est pas identifiable, pose une question ciblée avant toute conclusion juridique ou procédurale.
 - Les procédures, voies de recours et délais peuvent changer : ne les affirme pas sans base officielle vérifiable. Invite à contrôler la notification et le site de l'autorité compétente.
 - N’invente ni délai ni voie de recours. Invite à vérifier la notification officielle et les règles de l’autorité compétente.
@@ -282,6 +282,23 @@ async function handleVisaApi(request, env, out, pathname) {
   const ip = request.headers.get("CF-Connecting-IP") || "?";
   if (limited(ip)) return out({ error: "rate", reply: RATE_MSG }, 429);
 
+  if (pathname === "/api/analyze-refusal") {
+    const context = [
+      "Analyse une décision officielle de refus de visa et le dossier initial transmis.",
+      "Contexte déclaré : " + pcm(body.context, 7000),
+      "Nombre de documents fournis : " + files.length + ".",
+      "La notification de refus est le document de référence : relève chaque motif, code et article exactement comme il apparaît, sans en ajouter.",
+      "Pour CHAQUE motif, fournis : citation courte du motif sans donnée personnelle, explication simple, preuve visible ou absence de preuve, sévérité High/Medium/Low justifiée, liste ciblée des pièces à joindre et arguments factuels à exposer dans une lettre.",
+      "Propose des preuves pertinentes uniquement selon les faits : relevés bancaires couvrant une période cohérente, preuve de revenus réguliers, attestation employeur et congés, titre de propriété ou bail, preuves d'attaches familiales, invitation ou hébergement documenté. Ce sont des exemples à adapter, jamais des exigences automatiques.",
+      "Distingue faits lus, interprétation, contradiction possible et information manquante. Cite le nom du fichier si possible sans reproduire de données sensibles.",
+      "Donne un plan de correction priorisé et un exemple de paragraphe argumentatif personnalisé, uniquement à partir des faits fournis. N'invente ni loi, ni délai, ni voie de recours, ni jurisprudence.",
+      "Si pays, autorité, date ou type de décision sont inconnus, demande les précisions nécessaires avant toute conclusion sur la recevabilité.",
+      "Classe la situation comme à examiner, à consolider ou risque élevé avec justification. Ne garantis jamais le succès et termine par les vérifications officielles à faire."
+    ].join("\\n");
+    const result = await apiGemini(env, SYSTEM_JOURY_REFUSAL, context, files);
+    return out(result.reply ? { reply: result.reply } : { error: result.error }, result.status || 200);
+  }
+
   if (pathname === "/api/analyze-dossier") {
     const context = [
       "Analyse un dossier de demande de visa à partir des seules pièces jointes et informations ci-dessous.",
@@ -316,7 +333,7 @@ async function handleVisaApi(request, env, out, pathname) {
       "Documents joints : " + files.length + ".",
       "N'invente aucun fait, texte juridique, délai ou voie de recours. Si une donnée manque, laisse un champ [à compléter]. Distingue les faits des arguments et recommande de vérifier le délai et l'autorité sur la notification officielle. Ne promets aucun résultat."
     ].join("\n");
-    const appealSystem = "Tu es Joury, rédactrice de projets de lettres de recours en matière de visa. Rédige une lettre formelle, factuelle et prudente à partir des seuls éléments fournis. N'invente jamais de faits, de dispositions juridiques, de délais ni de voie de recours. Utilise [à compléter] pour les informations absentes. Ne promets aucun résultat et recommande de vérifier la procédure sur la notification officielle.";
+    const appealSystem = "Tu es Joury, assistante de rédaction spécialisée dans les projets de recours après refus de visa. Rédige une lettre formelle, claire et respectueuse à partir des seuls faits et documents fournis. Pour chaque motif cité, réponds directement à l'argument de l'autorité avec une preuve précise et explique quelle pièce jointe l'étaye. Si une preuve manque, indique [pièce à fournir] et propose une catégorie pertinente sans prétendre qu'elle est légalement obligatoire. N'invente jamais de fait, d'article, de jurisprudence, de délai, d'autorité ou de voie de recours. Utilise [à compléter] pour toute donnée absente. Rappelle de vérifier le destinataire et le délai sur la notification officielle.";
     const result = await apiGemini(env, appealSystem, prompt, files);
     return out(result.reply ? { reply: result.reply } : { error: result.error }, result.status || 200);
   }
@@ -368,7 +385,7 @@ export default {
 
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
     const pathname = new URL(request.url).pathname;
-    if (pathname === "/api/analyze-dossier" || pathname === "/api/generate-appeal" || pathname === "/api/interview-feedback") {
+    if (pathname === "/api/analyze-refusal" || pathname === "/api/analyze-dossier" || pathname === "/api/generate-appeal" || pathname === "/api/interview-feedback") {
       if (request.method !== "POST") return out({ error: "POST only" }, 405);
       try { return await handleVisaApi(request, env, out, pathname); }
       catch (e) { console.log("Visa API route failed", pathname, e && e.message); return out({ error: "api_unavailable" }, 500); }
