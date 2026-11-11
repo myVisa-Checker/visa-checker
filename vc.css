@@ -1227,3 +1227,30 @@ body.vc-app{margin:0;background:var(--vc-bg);color:var(--vc-ink);font-family:Int
 .jy-selected-issue[hidden]{display:none}
 .jy-steps a{color:inherit;text-decoration:none;display:block}
 .jy-steps a:focus-visible{outline:2px solid #2457e6;outline-offset:3px;border-radius:6px}
+
+
+/* Joury Vidicy dashboard refinement: refusal workflow only in the sidebar. */
+.vc-joury-workspace .jy-layout{grid-template-columns:248px minmax(0,1fr);gap:1.2rem}
+.vc-joury-workspace .jy-sidebar{position:sticky;top:86px}
+.vc-joury-workspace .jy-workflow{width:100%}
+.vc-joury-workspace .jy-steps{gap:.45rem}
+.vc-joury-workspace .jy-steps li{padding:.8rem .55rem;min-height:48px}
+.vc-joury-workspace .jy-steps small{display:none}
+.vc-joury-workspace .jy-main{gap:1rem}
+.jy-dashboard-top{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(270px,.85fr);gap:.9rem;align-items:stretch}
+.vc-joury-workspace .jy-review-summary,.vc-joury-workspace .jy-severity-panel{min-width:0}
+.jy-review-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin:1.15rem 0 .75rem}
+.jy-review-metrics>div{min-width:0;padding:.75rem;background:#f8fafc;border:1px solid #edf0f4;border-radius:10px}
+.jy-review-metrics small,.jy-review-metrics span{display:block;color:#8993a4;font-size:.66rem;line-height:1.4}
+.jy-review-metrics strong{display:block;margin:.35rem 0;font-size:1.45rem;line-height:1.2;color:#1e293b;overflow-wrap:anywhere}
+.jy-review-metrics .jy-status{font-size:1rem;color:#64748b}
+.jy-doc-total{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #edf0f4;padding-top:.7rem;color:#7b8798;font-size:.72rem}
+.jy-doc-total strong{color:#29364a}
+.vc-joury-workspace .jy-severity-panel .jy-severity-grid{grid-template-columns:1fr;margin:.9rem 0 0;gap:.5rem}
+.vc-joury-workspace .jy-severity-panel .jy-severity{display:grid;grid-template-columns:10px 1fr;align-items:center;column-gap:.55rem;padding:.6rem .7rem}
+.vc-joury-workspace .jy-severity-panel .jy-severity-dot{grid-row:1 / span 2;margin:0}
+.vc-joury-workspace .jy-severity-panel .jy-severity p{grid-column:2;margin:.15rem 0 0}
+.jy-issues-table th:last-child,.jy-issues-table td:last-child{width:90px}
+.jy-issues-table .vc-btn{white-space:nowrap}
+@media(max-width:980px){.vc-joury-workspace .jy-layout{grid-template-columns:1fr}.vc-joury-workspace .jy-sidebar{position:static}.vc-joury-workspace .jy-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.jy-dashboard-top{grid-template-columns:1fr}}
+@media(max-width:600px){.vc-joury-workspace .jy-steps{grid-template-columns:1fr 1fr}.jy-review-metrics{gap:.35rem}.jy-review-metrics>div{padding:.55rem}.jy-review-metrics strong{font-size:1.15rem}.jy-review-metrics small,.jy-review-metrics span{font-size:.59rem}}
