@@ -233,6 +233,7 @@ export default {
           if (used >= IV_MAX) return out({ error: "limit" }, 429);
         }
         if (body.check) return out({ ok: true, left: env.USAGE ? IV_MAX - used : null });
+        if (limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
       }
 
       const attachments = Array.isArray(body.attachments) ? body.attachments : [];
@@ -265,7 +266,7 @@ export default {
       if (!msgs.length) return out({ error: "empty" }, 400);
       if (!interview && limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
 
-      const model = "gemini-3.5-flash-lite"; // écrit en dur : ignore la variable GEMINI_MODEL
+      const model = String(env.MODEL || env.GEMINI_MODEL || "gemini-3.5-flash-lite").trim();
       const ctl = new AbortController();
       const tm = setTimeout(() => ctl.abort(), 20000); // délai maximum : 20 secondes
       let r;
@@ -280,7 +281,7 @@ export default {
               "x-goog-api-key": env.GEMINI_API_KEY || "",
             },
             body: JSON.stringify({
-              systemInstruction: { parts: [{ text: assistantSystem }] },
+              systemInstruction: { parts: [{ text: assistantSystem + "\n\nContexte déclaré par le demandeur (ne rien déduire si absent) : nationalité/passeport = " + String(body.nationality || body.passportCountry || "non indiqué").slice(0, 80) + "; pays de résidence = " + String(body.residenceCountry || body.country || "non indiqué").slice(0, 80) + ". Adapte les explications à ces informations uniquement." }] },
               contents: msgs,
               generationConfig: { maxOutputTokens: 2500 },
             }),
@@ -297,7 +298,7 @@ export default {
       const cand = data?.candidates?.[0];
       const text = cand?.content?.parts?.map((p) => p.text || "").join("");
       if (!text) console.log("Gemini empty reply", r.status, cand && cand.finishReason, data && data.promptFeedback && data.promptFeedback.blockReason);
-      if (interview && env.USAGE && text) await env.USAGE.put(usageKey, String(used + 1));
+      if (interview && env.USAGE && r.ok && !data.error && text) await env.USAGE.put(usageKey, String(used + 1));
 
       const raw = text || FALLBACK;
       const reply = raw
