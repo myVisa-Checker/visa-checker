@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f7fc">
+<title>Préparation &amp; Analyse de Dossier – Visa Checker</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="vc.css">
+<script src="vc-shared.js"></script>
+</head>
+<body class="pb-24 md:pb-10">
+<div id="vc-header"></div>
+
+<main class="mx-auto max-w-6xl px-4 py-5 md:py-8">
+  <!-- Titre -->
+  <div class="mb-5">
+    <span class="vc-badge vc-badge-info" data-i18n="assistant">Assistant 1</span>
+    <h1 class="mt-2 text-2xl font-extrabold tracking-tight md:text-3xl" data-i18n="h1">Préparation &amp; Analyse de Dossier</h1>
+    <p class="vc-mute mt-1 max-w-2xl text-sm md:text-base" data-i18n="lead"></p>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-5">
+    <!-- COLONNE GAUCHE : contexte + dépôt -->
+    <section class="space-y-4 lg:col-span-3" aria-labelledby="ctx-h">
+      <div class="vc-card">
+        <h2 id="ctx-h" class="vc-card-h" data-i18n="ctx">Votre demande</h2>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label class="vc-label" for="f-passport" data-i18n="passport">Passeport</label>
+            <select id="f-passport" class="vc-input">
+              <option value="tn">Tunisie</option><option value="ma">Maroc</option><option value="dz">Algérie</option>
+            </select>
+          </div>
+          <div>
+            <label class="vc-label" for="f-dest" data-i18n="dest">Destination</label>
+            <select id="f-dest" class="vc-input">
+              <option value="fr">France</option><option value="es">España</option><option value="it">Italia</option>
+            </select>
+          </div>
+          <div>
+            <label class="vc-label" for="f-purpose" data-i18n="purpose">Motif du voyage</label>
+            <select id="f-purpose" class="vc-input">
+              <option value="tourism" data-i18n="p_tourism">Tourisme</option>
+              <option value="visit" data-i18n="p_visit">Visite familiale / privée</option>
+              <option value="business" data-i18n="p_business">Affaires</option>
+              <option value="study" data-i18n="p_study">Études</option>
+            </select>
+          </div>
+          <div>
+            <label class="vc-label" for="f-status" data-i18n="status">Situation professionnelle</label>
+            <select id="f-status" class="vc-input">
+              <option value="employee" data-i18n="s_employee">Salarié(e)</option>
+              <option value="self" data-i18n="s_self">Indépendant / commerçant</option>
+              <option value="student" data-i18n="s_student">Étudiant(e)</option>
+              <option value="retired" data-i18n="s_retired">Retraité(e)</option>
+              <option value="none" data-i18n="s_none">Sans emploi</option>
+            </select>
+          </div>
+          <div>
+            <label class="vc-label" for="f-dep" data-i18n="dep">Départ</label>
+            <input id="f-dep" type="date" class="vc-input">
+          </div>
+          <div>
+            <label class="vc-label" for="f-ret" data-i18n="ret">Retour</label>
+            <input id="f-ret" type="date" class="vc-input">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="vc-label" for="f-exp" data-i18n="exp">Fin de validité du passeport</label>
+            <input id="f-exp" type="date" class="vc-input">
+          </div>
+        </div>
+      </div>
+
+      <div class="vc-card">
+        <h2 class="vc-card-h" data-i18n="drop_h">Vos justificatifs</h2>
+        <label id="drop" class="vc-drop cursor-pointer" tabindex="0" for="f-files">
+          <span class="vc-accent" aria-hidden="true" id="drop-ico"></span>
+          <strong data-i18n="drop_t">Déposez vos documents ici</strong>
+          <span class="vc-mute text-sm" data-i18n="drop_s">ou touchez pour choisir · PDF, JPG, PNG, WebP · 5 Mo max par fichier</span>
+          <input id="f-files" type="file" class="sr-only-vc" multiple accept="application/pdf,image/jpeg,image/png,image/webp">
+        </label>
+        <div class="mt-2 flex flex-wrap gap-2">
+          <label class="vc-btn vc-btn-sm cursor-pointer" for="f-cam">
+            <span id="cam-ico" aria-hidden="true"></span><span data-i18n="scan">Scanner avec la caméra</span>
+          </label>
+          <input id="f-cam" type="file" class="sr-only-vc" accept="image/jpeg,image/png,image/webp" capture="environment">
+        </div>
+        <p class="vc-mute mt-3 text-xs" data-i18n="privacy"></p>
+
+        <ul id="files" class="mt-4 space-y-2" aria-live="polite"></ul>
+      </div>
+    </section>
+
+    <!-- COLONNE DROITE : rapport -->
+    <aside class="space-y-4 lg:col-span-2 lg:sticky lg:top-20 lg:self-start" aria-labelledby="rep-h">
+      <div class="vc-card">
+        <div class="flex items-center justify-between gap-2">
+          <h2 id="rep-h" class="vc-card-h !mb-0" data-i18n="rep_h">Rapport d’anomalies</h2>
+          <span id="score-badge" class="vc-badge vc-badge-muted" data-i18n="rep_wait">En attente</span>
+        </div>
+
+        <div class="mt-3">
+          <div class="mb-1 flex justify-between text-xs font-semibold">
+            <span class="vc-mute" data-i18n="readiness">Dossier prêt à</span>
+            <span id="score-txt">0 %</span>
+          </div>
+          <div class="vc-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="score-bar"><i></i></div>
+        </div>
+
+        <div id="counts" class="mt-4 grid grid-cols-3 gap-2 text-center"></div>
+
+        <h3 class="mt-5 mb-2 text-sm font-bold" data-i18n="issues">Points à corriger</h3>
+        <ul id="issues" class="space-y-2"></ul>
+        <section id="ai-report" class="vc-ai-report mt-4" aria-live="polite" hidden></section>
+
+        <h3 class="mt-5 mb-2 text-sm font-bold" data-i18n="checklist">Pièces attendues</h3>
+        <ul id="checklist" class="space-y-1.5"></ul>
+
+        <div class="mt-5 flex flex-wrap gap-2">
+          <button type="button" id="btn-analyze" class="vc-btn vc-btn-primary grow" data-i18n="analyze">Analyser mon dossier</button>
+          <button type="button" id="btn-copy" class="vc-btn" data-i18n="copy">Copier le rapport</button>
+        </div>
+        <a href="view-recours.html" id="to-appeal" class="vc-accent mt-3 hidden text-sm font-semibold" data-i18n="to_appeal">Dossier déjà refusé ? Préparer un recours →</a>
+      </div>
+      <p class="vc-mute text-xs" data-i18n="disclaimer"></p>
+    </aside>
+  </div>
+</main>
+
+<div id="vc-bottomnav"></div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- Traductions ---------- */
+  var DICT = {
+    fr: {
+      doc_title: 'Préparation & Analyse de Dossier – Visa Checker', assistant: 'Assistant 1',
+      h1: 'Préparation & Analyse de Dossier',
+      lead: 'Déposez vos justificatifs : l’assistant vérifie les pièces, les dates et la qualité des scans avant votre rendez-vous.',
+      ctx: 'Votre demande', passport: 'Passeport', dest: 'Destination', purpose: 'Motif du voyage', status: 'Situation professionnelle',
+      p_tourism: 'Tourisme', p_visit: 'Visite familiale / privée', p_business: 'Affaires', p_study: 'Études',
+      s_employee: 'Salarié(e)', s_self: 'Indépendant / commerçant', s_student: 'Étudiant(e)', s_retired: 'Retraité(e)', s_none: 'Sans emploi',
+      dep: 'Départ', ret: 'Retour', exp: 'Fin de validité du passeport',
+      drop_h: 'Vos justificatifs', drop_t: 'Déposez vos documents ici', drop_s: 'ou touchez pour choisir · PDF, JPG, PNG, WebP · 5 Mo max par fichier',
+      scan: 'Scanner avec la caméra', rep_h: 'Rapport d’anomalies', rep_wait: 'En attente', readiness: 'Dossier prêt à',
+      issues: 'Points à corriger', checklist: 'Pièces attendues', analyze: 'Analyser mon dossier', copy: 'Copier le rapport',
+      to_appeal: 'Dossier déjà refusé ? Préparer un recours →',
+      no_files: 'Aucun fichier pour le moment.', type_lbl: 'Type de pièce', remove: 'Retirer',
+      c_ok: 'Conforme', c_warn: 'À vérifier', c_err: 'Bloquant', st_ok: 'OK', st_warn: 'À vérifier', st_err: 'Problème',
+      st_ready: 'Prêt', st_todo: 'À corriger', st_blocked: 'Bloquant',
+      no_issues: 'Aucune anomalie détectée pour l’instant.', run_first: 'Lancez l’analyse pour voir le rapport.',
+      t_unknown: 'À classer', copied: 'Rapport copié', copy_fail: 'Copie impossible',
+      i_passport_exp: 'Le passeport expire trop tôt : il doit rester valable au moins 3 mois après la date de retour.',
+      i_passport_short: 'Le passeport a moins de 2 pages vierges ou une validité courte : vérifiez avant le dépôt.',
+      i_dates: 'La date de retour est antérieure à la date de départ.',
+      i_dates_miss: 'Renseignez les dates de départ et de retour pour vérifier la cohérence.',
+      i_past: 'La date de départ est déjà passée.',
+      i_missing: 'Pièce manquante : {doc}.',
+      i_unclassified: '« {name} » n’est pas classé : choisissez son type de pièce.',
+      i_big: '« {name} » dépasse 5 Mo : compressez-le avant dépôt.',
+      i_lowres: '« {name} » a une faible résolution ({w}×{h}) : texte probablement illisible, refaites le scan.',
+      i_format: '« {name} » : format non accepté.',
+      i_dup: '« {name} » semble en double (même taille que un autre fichier).',
+      i_dest_check: 'Vérifiez sur le site officiel du centre de visa que la liste est à jour pour votre cas.',
+      d_passport: 'Passeport (page d’identité)', d_photo: 'Photo d’identité', d_bank: 'Relevés bancaires (3 mois)',
+      d_work: 'Attestation de travail / justificatif d’activité', d_insurance: 'Assurance voyage', d_lodging: 'Réservation d’hébergement',
+      d_flight: 'Réservation de vol', d_invite: 'Invitation / attestation d’accueil', d_enrol: 'Certificat de scolarité',
+      d_pension: 'Attestation de pension', d_reg: 'Registre de commerce / patente', d_mission: 'Ordre de mission',
+      d_form: 'Formulaire de demande rempli', d_civil: 'Acte de naissance / état civil',
+      r_title: 'Rapport Visa Checker', r_ready: 'Dossier prêt à'
+    },
+    en: {
+      doc_title: 'File Preparation & Analysis – Visa Checker', assistant: 'Assistant 1', h1: 'File Preparation & Analysis',
+      lead: 'Drop your supporting documents: the assistant checks the papers, dates and scan quality before your appointment.',
+      ctx: 'Your application', passport: 'Passport', dest: 'Destination', purpose: 'Purpose of travel', status: 'Occupation',
+      p_tourism: 'Tourism', p_visit: 'Family / private visit', p_business: 'Business', p_study: 'Studies',
+      s_employee: 'Employee', s_self: 'Self-employed / trader', s_student: 'Student', s_retired: 'Retired', s_none: 'Unemployed',
+      dep: 'Departure', ret: 'Return', exp: 'Passport expiry date',
+      drop_h: 'Your documents', drop_t: 'Drop your documents here', drop_s: 'or tap to choose · PDF, JPG, PNG, WebP · 5 MB max per file',
+      scan: 'Scan with camera', rep_h: 'Anomaly report', rep_wait: 'Waiting', readiness: 'File readiness',
+      issues: 'Items to fix', checklist: 'Expected documents', analyze: 'Analyze my file', copy: 'Copy report',
+      to_appeal: 'Already refused? Prepare an appeal →',
+      no_files: 'No files yet.', type_lbl: 'Document type', remove: 'Remove',
+      c_ok: 'Compliant', c_warn: 'To check', c_err: 'Blocking', st_ok: 'OK', st_warn: 'To check', st_err: 'Issue',
+      st_ready: 'Ready', st_todo: 'To fix', st_blocked: 'Blocking',
+      no_issues: 'No anomaly detected so far.', run_first: 'Run the analysis to see the report.',
+      t_unknown: 'Unclassified', copied: 'Report copied', copy_fail: 'Copy failed',
+      i_passport_exp: 'The passport expires too early: it must remain valid at least 3 months after the return date.',
+      i_passport_short: 'The passport may have fewer than 2 blank pages or short validity: check before filing.',
+      i_dates: 'The return date is before the departure date.',
+      i_dates_miss: 'Enter departure and return dates to check consistency.',
+      i_past: 'The departure date has already passed.',
+      i_missing: 'Missing document: {doc}.',
+      i_unclassified: '“{name}” is unclassified: choose its document type.',
+      i_big: '“{name}” exceeds 5 MB: compress it before filing.',
+      i_lowres: '“{name}” has low resolution ({w}×{h}): text is probably unreadable, rescan it.',
+      i_format: '“{name}”: unsupported format.',
+      i_dup: '“{name}” looks like a duplicate (same size as another file).',
+      i_dest_check: 'Check on the visa centre’s official site that the list is current for your case.',
+      d_passport: 'Passport (ID page)', d_photo: 'Passport photo', d_bank: 'Bank statements (3 months)',
+      d_work: 'Employment letter / proof of activity', d_insurance: 'Travel insurance', d_lodging: 'Accommodation booking',
+      d_flight: 'Flight booking', d_invite: 'Invitation / host certificate', d_enrol: 'Enrolment certificate',
+      d_pension: 'Pension certificate', d_reg: 'Trade register / licence', d_mission: 'Mission order',
+      d_form: 'Completed application form', d_civil: 'Birth certificate / civil status',
+      r_title: 'Visa Checker report', r_ready: 'File readiness'
+    },
+    ar: {
+      doc_title: 'تحضير وتحليل الملف – Visa Checker', assistant: 'المساعد 1', h1: 'تحضير وتحليل الملف',
+      lead: 'ضع وثائقك: يتحقق المساعد من الأوراق والتواريخ وجودة المسح قبل موعدك.',
+      ctx: 'طلبك', passport: 'جواز السفر', dest: 'الوجهة', purpose: 'سبب السفر', status: 'الوضع المهني',
+      p_tourism: 'سياحة', p_visit: 'زيارة عائلية / خاصة', p_business: 'أعمال', p_study: 'دراسة',
+      s_employee: 'موظف', s_self: 'عمل حر / تاجر', s_student: 'طالب', s_retired: 'متقاعد', s_none: 'بدون عمل',
+      dep: 'تاريخ الذهاب', ret: 'تاريخ العودة', exp: 'نهاية صلاحية الجواز',
+      drop_h: 'وثائقك', drop_t: 'أفلت وثائقك هنا', drop_s: 'أو المس للاختيار · PDF, JPG, PNG, WebP · 5 ميغابايت كحد أقصى',
+      scan: 'مسح بالكاميرا', rep_h: 'تقرير الملاحظات', rep_wait: 'في الانتظار', readiness: 'جاهزية الملف',
+      issues: 'نقاط تحتاج إلى تصحيح', checklist: 'الوثائق المطلوبة', analyze: 'حلّل ملفي', copy: 'نسخ التقرير',
+      to_appeal: 'تم رفض ملفك؟ حضّر طعناً ←',
+      no_files: 'لا توجد ملفات بعد.', type_lbl: 'نوع الوثيقة', remove: 'إزالة',
+      c_ok: 'مطابق', c_warn: 'للتحقق', c_err: 'مانع', st_ok: 'سليم', st_warn: 'للتحقق', st_err: 'مشكلة',
+      st_ready: 'جاهز', st_todo: 'للتصحيح', st_blocked: 'مانع',
+      no_issues: 'لم تُكتشف أي ملاحظة حتى الآن.', run_first: 'شغّل التحليل لعرض التقرير.',
+      t_unknown: 'غير مصنّف', copied: 'تم نسخ التقرير', copy_fail: 'تعذّر النسخ',
+      i_passport_exp: 'جواز السفر ينتهي مبكراً: يجب أن يبقى صالحاً 3 أشهر على الأقل بعد تاريخ العودة.',
+      i_passport_short: 'قد يحتوي الجواز على أقل من صفحتين فارغتين أو صلاحية قصيرة: تحقق قبل الإيداع.',
+      i_dates: 'تاريخ العودة سابق لتاريخ الذهاب.',
+      i_dates_miss: 'أدخل تاريخي الذهاب والعودة للتحقق من الانسجام.',
+      i_past: 'تاريخ الذهاب مضى بالفعل.',
+      i_missing: 'وثيقة ناقصة: {doc}.',
+      i_unclassified: '«{name}» غير مصنّف: اختر نوع الوثيقة.',
+      i_big: '«{name}» يتجاوز 8 ميغابايت: اضغطه قبل الإيداع.',
+      i_lowres: '«{name}» دقته منخفضة ({w}×{h}): النص غالباً غير مقروء، أعد المسح.',
+      i_format: '«{name}»: صيغة غير مقبولة.',
+      i_dup: '«{name}» يبدو مكرراً (نفس حجم ملف آخر).',
+      i_dest_check: 'تحقق من الموقع الرسمي لمركز التأشيرات أن القائمة محدّثة لحالتك.',
+      d_passport: 'جواز السفر (صفحة الهوية)', d_photo: 'صورة شخصية', d_bank: 'كشوف الحساب البنكي (3 أشهر)',
+      d_work: 'شهادة عمل / إثبات النشاط', d_insurance: 'تأمين السفر', d_lodging: 'حجز الإقامة',
+      d_flight: 'حجز الطيران', d_invite: 'دعوة / شهادة إيواء', d_enrol: 'شهادة مدرسية',
+      d_pension: 'شهادة تقاعد', d_reg: 'السجل التجاري / الرخصة', d_mission: 'أمر مهمة',
+      d_form: 'استمارة الطلب مملوءة', d_civil: 'عقد الولادة / الحالة المدنية',
+      r_title: 'تقرير Visa Checker', r_ready: 'جاهزية الملف'
+    }
+  };
+
+  /* ---------- Règles : pièces attendues selon le profil (indicatif) ---------- */
+  var BASE_DOCS = ['form', 'passport', 'photo', 'insurance', 'flight', 'lodging', 'bank', 'civil'];
+  function expectedDocs() {
+    var docs = BASE_DOCS.slice(), s = $('f-status').value, p = $('f-purpose').value;
+    if (s === 'employee') docs.push('work');
+    if (s === 'self') docs.push('reg');
+    if (s === 'student') docs.push('enrol');
+    if (s === 'retired') docs.push('pension');
+    if (p === 'visit') docs.push('invite');
+    if (p === 'business') docs.push('mission');
+    return docs;
+  }
+
+  var files = [];   // {id, file, type, w, h, lowres}
+  var analyzed = false;
+  var nextId = 1;
+
+  /* ---------- Gestion des fichiers ---------- */
+  var OK_TYPES = /^(application\/pdf|image\/(jpeg|png|webp))$/;
+  function addFiles(list) {
+    var incoming = Array.prototype.slice.call(list || []);
+    if (files.length + incoming.length > 10) { VC.toast('Maximum 10 fichiers.'); return; }
+    try { VC.api.validateFiles(incoming); } catch (e) { VC.toast(VC.api.errorMessage(e)); return; }
+    incoming.forEach(function (f) {
+      var rec = { id: nextId++, file: f, type: '', w: 0, h: 0 };
+      files.push(rec);
+      if (/^image\//.test(f.type) && OK_TYPES.test(f.type)) {
+        var url = URL.createObjectURL(f), img = new Image();
+        img.onload = function () { rec.w = img.naturalWidth; rec.h = img.naturalHeight; URL.revokeObjectURL(url); renderFiles(); if (analyzed) analyze(); };
+        img.onerror = function () { URL.revokeObjectURL(url); };
+        img.src = url;
+      }
+    });
+    renderFiles();
+    if (analyzed) analyze();
+  }
+
+  function fileIssues(r) {
+    var out = [], f = r.file;
+    if (!OK_TYPES.test(f.type)) out.push({ lvl: 'err', msg: VC.t('i_format', { name: f.name }) });
+    if (f.size > 5 * 1048576) out.push({ lvl: 'err', msg: VC.t('i_big', { name: f.name }) });
+    if (r.w && Math.max(r.w, r.h) < 1000) out.push({ lvl: 'warn', msg: VC.t('i_lowres', { name: f.name, w: r.w, h: r.h }) });
+    if (!r.type) out.push({ lvl: 'warn', msg: VC.t('i_unclassified', { name: f.name }) });
+    var dup = files.some(function (o) { return o.id < r.id && o.file.size === f.size; });
+    if (dup) out.push({ lvl: 'warn', msg: VC.t('i_dup', { name: f.name }) });
+    return out;
+  }
+
+  function renderFiles() {
+    var ul = $('files'); ul.textContent = '';
+    if (!files.length) { ul.appendChild(VC.el('li', 'vc-mute text-sm', VC.t('no_files'))); return; }
+    var allDocs = Object.keys(DICT.fr).filter(function (k) { return k.indexOf('d_') === 0; });
+    files.forEach(function (r) {
+      var li = VC.el('li', 'vc-row');
+      var name = VC.el('div', 'min-w-0 grow');
+      name.appendChild(VC.el('div', 'truncate text-sm font-semibold', r.file.name));
+      name.appendChild(VC.el('div', 'vc-mute text-xs', VC.fmtSize(r.file.size) + (r.w ? ' · ' + r.w + '×' + r.h : '')));
+      li.appendChild(name);
+
+      var iss = fileIssues(r), lvl = iss.some(function (x) { return x.lvl === 'err'; }) ? 'err' : (iss.length ? 'warn' : 'ok');
+      li.appendChild(VC.badge(lvl, VC.t('st_' + lvl)));
+
+      var sel = VC.el('select', 'vc-input');
+      sel.style.cssText = 'width:auto;min-height:2.25rem;padding:.2rem .5rem;font-size:14px;max-width:100%';
+      sel.setAttribute('aria-label', VC.t('type_lbl'));
+      var o0 = VC.el('option', null, VC.t('t_unknown')); o0.value = ''; sel.appendChild(o0);
+      allDocs.forEach(function (k) {
+        var o = VC.el('option', null, VC.t(k)); o.value = k.slice(2); if (r.type === o.value) o.selected = true; sel.appendChild(o);
+      });
+      sel.addEventListener('change', function () { r.type = sel.value; renderFiles(); if (analyzed) analyze(); });
+      li.appendChild(sel);
+
+      var rm = VC.el('button', 'vc-btn vc-btn-sm vc-btn-icon', '✕');
+      rm.type = 'button'; rm.setAttribute('aria-label', VC.t('remove')); rm.title = VC.t('remove');
+      rm.addEventListener('click', function () { files = files.filter(function (x) { return x.id !== r.id; }); renderFiles(); if (analyzed) analyze(); });
+      li.appendChild(rm);
+      ul.appendChild(li);
+    });
+  }
+
+  /* ---------- Analyse locale ---------- */
+  var lastReport = '';
+  function analyze(remote) {
+    analyzed = true;
+    var issues = [], today = new Date(); today.setHours(0, 0, 0, 0);
+    var dep = $('f-dep').value ? new Date($('f-dep').value) : null;
+    var ret = $('f-ret').value ? new Date($('f-ret').value) : null;
+    var exp = $('f-exp').value ? new Date($('f-exp').value) : null;
+
+    if (!dep || !ret) issues.push({ lvl: 'warn', msg: VC.t('i_dates_miss') });
+    else if (ret < dep) issues.push({ lvl: 'err', msg: VC.t('i_dates') });
+    if (dep && dep < today) issues.push({ lvl: 'warn', msg: VC.t('i_past') });
+    if (exp) {
+      var limit = new Date(ret || dep || today); limit.setMonth(limit.getMonth() + 3);
+      if (exp < limit) issues.push({ lvl: 'err', msg: VC.t('i_passport_exp') });
+    }
+
+    var have = {}; files.forEach(function (r) { if (r.type) have[r.type] = true; });
+    var exps = expectedDocs(), done = 0;
+    var cl = $('checklist'); cl.textContent = '';
+    exps.forEach(function (k) {
+      var ok = !!have[k]; if (ok) done++; else issues.push({ lvl: 'err', msg: VC.t('i_missing', { doc: VC.t('d_' + k) }), missing: true });
+      var li = VC.el('li', 'flex items-center gap-2 text-sm');
+      li.appendChild(VC.badge(ok ? 'ok' : 'muted', ok ? '✓' : '·'));
+      li.appendChild(VC.el('span', ok ? '' : 'vc-mute', VC.t('d_' + k)));
+      cl.appendChild(li);
+    });
+
+    files.forEach(function (r) { fileIssues(r).forEach(function (x) { issues.push(x); }); });
+
+    /* Score : pièces (70 %) puis pénalités qualité/dates */
+    var score = Math.round((done / exps.length) * 70);
+    var errs = issues.filter(function (x) { return x.lvl === 'err' && !x.missing; }).length;
+    var warns = issues.filter(function (x) { return x.lvl === 'warn'; }).length;
+    score = Math.max(0, Math.min(100, score + 30 - errs * 12 - warns * 5));
+    if (!files.length) score = 0;
+
+    $('score-txt').textContent = score + ' %';
+    var bar = $('score-bar'); bar.setAttribute('aria-valuenow', score); bar.firstElementChild.style.width = score + '%';
+    var anyErr = issues.some(function (x) { return x.lvl === 'err'; });
+    var sb = $('score-badge');
+    var k = anyErr ? 'err' : (issues.length ? 'warn' : 'ok');
+    sb.className = 'vc-badge vc-badge-' + k;
+    sb.textContent = VC.t(k === 'err' ? 'st_blocked' : k === 'warn' ? 'st_todo' : 'st_ready');
+
+    var nOk = done, nWarn = warns, nErr = issues.filter(function (x) { return x.lvl === 'err'; }).length;
+    var cEl = $('counts'); cEl.textContent = '';
+    [['ok', nOk, 'c_ok'], ['warn', nWarn, 'c_warn'], ['err', nErr, 'c_err']].forEach(function (c) {
+      var box = VC.el('div', 'vc-soft p-2');
+      box.appendChild(VC.el('div', 'text-xl font-extrabold', String(c[1])));
+      box.appendChild(VC.badge(c[0], VC.t(c[2])));
+      cEl.appendChild(box);
+    });
+
+    var ul = $('issues'); ul.textContent = '';
+    issues.sort(function (a, b) { return (a.lvl === 'err' ? 0 : 1) - (b.lvl === 'err' ? 0 : 1); });
+    if (!issues.length) ul.appendChild(VC.el('li', 'vc-mute text-sm', VC.t('no_issues')));
+    issues.forEach(function (x) {
+      var li = VC.el('li', 'vc-row !flex-nowrap items-start');
+      li.appendChild(VC.badge(x.lvl, VC.t('st_' + x.lvl)));
+      li.appendChild(VC.el('span', 'text-sm', x.msg));
+      ul.appendChild(li);
+    });
+    ul.appendChild(VC.el('li', 'vc-mute text-xs', VC.t('i_dest_check')));
+
+    $('to-appeal').classList.remove('hidden');
+    lastReport = VC.t('r_title') + ' — ' + VC.t('r_ready') + ' ' + score + ' %\n' +
+      issues.map(function (x) { return '• ' + x.msg; }).join('\n');
+
+    if (remote) {
+      if (!files.length) { VC.toast('Ajoutez au moins un document avant l’analyse IA.'); return; }
+      if (!window.confirm('En lançant l’analyse, vos documents et les informations saisies seront transmis au service IA Visa Checker pour produire le rapport. Continuer ?')) return;
+      var report = $('ai-report');
+      report.hidden = false;
+      report.textContent = 'Analyse IA en cours…';
+      var payload = {
+        passportCountry: $('f-passport').value,
+        destination: $('f-dest').value,
+        purpose: $('f-purpose').value,
+        occupation: $('f-status').value,
+        departure: $('f-dep').value,
+        returnDate: $('f-ret').value,
+        passportExpiry: $('f-exp').value
+      };
+      VC.api.withBusy($('btn-analyze'), function () {
+        return VC.api.analyzeDossier(payload, files.map(function (r) { return r.file; }));
+      }).then(function (data) {
+        report.textContent = data.reply || 'Aucun rapport reçu.';
+        lastReport += '\n\nAnalyse IA :\n' + report.textContent;
+      }).catch(function (e) {
+        report.textContent = VC.api.errorMessage(e);
+        VC.toast(VC.api.errorMessage(e));
+      });
+    }
+  }
+
+  function idleReport() {
+    $('checklist').textContent = '';
+    expectedDocs().forEach(function (k) {
+      var li = VC.el('li', 'flex items-center gap-2 text-sm');
+      li.appendChild(VC.badge('muted', '·')); li.appendChild(VC.el('span', 'vc-mute', VC.t('d_' + k)));
+      $('checklist').appendChild(li);
+    });
+    $('issues').textContent = '';
+    $('issues').appendChild(VC.el('li', 'vc-mute text-sm', VC.t('run_first')));
+  }
+
+  /* ---------- Événements ---------- */
+  var drop = $('drop');
+  ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('is-over'); }); });
+  ['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('is-over'); }); });
+  drop.addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files); });
+  drop.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('f-files').click(); } });
+  $('f-files').addEventListener('change', function (e) { addFiles(e.target.files); e.target.value = ''; });
+  $('f-cam').addEventListener('change', function (e) { addFiles(e.target.files); e.target.value = ''; });
+  $('btn-analyze').addEventListener('click', function () { analyze(true); });
+  $('btn-copy').addEventListener('click', function () {
+    if (!lastReport) analyze();
+    VC.copy(lastReport).then(function () { VC.toast(VC.t('copied')); }, function () { VC.toast(VC.t('copy_fail')); });
+  });
+  ['f-status', 'f-purpose'].forEach(function (id) { $(id).addEventListener('change', function () { analyzed ? analyze() : idleReport(); }); });
+  ['f-dep', 'f-ret', 'f-exp', 'f-passport', 'f-dest'].forEach(function (id) { $(id).addEventListener('change', function () { if (analyzed) analyze(); }); });
+  document.addEventListener('vc:lang', function () { renderFiles(); analyzed ? analyze() : idleReport(); });
+
+  /* ---------- Démarrage ---------- */
+  VC.init(DICT, 'dossier');
+  $('drop-ico').innerHTML = VC.icon('M12 16V4m0 0l-4 4m4-4l4 4M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3', 36);
+  $('cam-ico').innerHTML = VC.icon('M4 8h3l2-3h6l2 3h3v11H4zM12 17a3.5 3.5 0 100-7 3.5 3.5 0 000 7z', 18);
+  renderFiles(); idleReport();
+})();
+</script>
+</body>
+</html>
