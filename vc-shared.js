@@ -21,19 +21,19 @@
 
   var BASE = {
     fr: {
-      hub: 'Retour au hub', nav_dossier: 'Dossier', nav_recours: 'Recours', nav_entretien: 'Entretien',
+      hub: 'Retour au hub', nav_dossier: 'Aïcha', nav_recours: 'Recours', nav_entretien: 'Consulat Saden', nav_joury: 'Joury',
       theme_toggle: 'Changer de thème', lang_label: 'Langue', preview: 'Aperçu',
       privacy: 'Les fichiers sont envoyés au service IA uniquement lorsque vous lancez explicitement l’analyse.',
       disclaimer: 'Outil d’aide indicatif : il ne remplace ni le consulat ni un conseil juridique. Vérifiez toujours les exigences officielles.'
     },
     en: {
-      hub: 'Back to hub', nav_dossier: 'File', nav_recours: 'Appeal', nav_entretien: 'Interview',
+      hub: 'Back to hub', nav_dossier: 'Aïcha', nav_recours: 'Appeal', nav_entretien: 'Consulat Saden', nav_joury: 'Joury',
       theme_toggle: 'Toggle theme', lang_label: 'Language', preview: 'Preview',
       privacy: 'Files are sent to the AI service only when you explicitly start the analysis.',
       disclaimer: 'Indicative help tool: it does not replace the consulate or legal advice. Always check the official requirements.'
     },
     ar: {
-      hub: 'العودة إلى الرئيسية', nav_dossier: 'الملف', nav_recours: 'الطعن', nav_entretien: 'المقابلة',
+      hub: 'العودة إلى الرئيسية', nav_dossier: 'عائشة', nav_recours: 'الطعن', nav_entretien: 'القنصل سادن', nav_joury: 'جوري',
       theme_toggle: 'تبديل المظهر', lang_label: 'اللغة', preview: 'معاينة',
       privacy: 'لا تُرسل الملفات إلى خدمة الذكاء الاصطناعي إلا عند بدء التحليل صراحةً.',
       disclaimer: 'أداة مساعدة إرشادية: لا تغني عن القنصلية ولا عن الاستشارة القانونية. تحقق دائماً من الشروط الرسمية.'
@@ -219,8 +219,8 @@
 
   /* ---------- Coquille commune : en-tête + barre mobile ---------- */
   var NAV = [
+    ['joury', 'view-joury.html', 'M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1m8.6 8.6l2.1 2.1m0-12.8l-2.1 2.1m-8.6 8.6l-2.1 2.1M12 8a4 4 0 100 8 4 4 0 000-8z'],
     ['dossier', 'view-dossier.html', 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4'],
-    ['recours', 'view-recours.html', 'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6'],
     ['entretien', 'view-entretien.html', 'M12 14a3 3 0 003-3V6a3 3 0 00-6 0v5a3 3 0 003 3zM6 11a6 6 0 0012 0M12 17v4']
   ];
   function icon(path, size) {
