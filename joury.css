@@ -71,3 +71,40 @@ html[dir=rtl] .joury-mission-arrow{right:auto;left:13px}
 .rd-bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
 .rd-b{border:1px solid #c8d9ff;background:#fff;color:#14366f;border-radius:12px;padding:10px 16px;font:600 15px 'DM Sans',Arial,sans-serif;min-height:44px;cursor:pointer}
 .rd-go{background:#245bd4;border-color:#245bd4;color:#fff}
+
+
+/* Joury workspace — unified desktop/mobile chat viewport */
+body.chat-open{height:100vh;overflow:hidden}
+.layout{min-height:100vh}
+body.chat-open .layout{height:100vh;min-height:0}
+body.chat-open .sidebar{height:100vh}
+body.chat-open .main{height:100vh;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+body.chat-open .topbar{flex:0 0 70px}
+body.chat-open .content{flex:1 1 auto;min-height:0;height:calc(100vh - 70px);overflow:hidden;padding-top:22px;padding-bottom:12px}
+body.chat-open .page.chat-page{display:flex;flex:1 1 auto;min-height:0;height:100%;max-width:100%;width:100%;overflow:hidden}
+body.chat-open .chat-title{flex:0 0 auto}
+body.chat-open .messages{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:20px 4px}
+body.chat-open .composer{position:sticky;bottom:0;z-index:4;flex:0 0 auto;margin-top:auto;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:#fff;border:1px solid #dce5f1;box-shadow:0 -8px 24px rgba(25,55,91,.07)}
+body.chat-open .composer textarea{display:block;min-height:48px;max-height:120px;resize:none;overflow-y:auto;padding:7px 2px}
+body.chat-open .composer small{line-height:1.45}
+body.chat-open footer{display:none}
+@supports(height:100dvh){
+ body.chat-open,body.chat-open .layout,body.chat-open .sidebar,body.chat-open .main{height:100dvh}
+ body.chat-open .content{height:calc(100dvh - 70px)}
+}
+@media(max-width:800px){
+ body.chat-open .topbar{flex-basis:62px;height:62px}
+ body.chat-open .content{height:calc(100vh - 62px);padding:10px 12px calc(8px + env(safe-area-inset-bottom))}
+ body.chat-open .page.chat-page{max-width:none}
+ body.chat-open .chat-title{padding:5px 2px 12px;gap:10px}
+ body.chat-open .chat-title .joury-avatar,body.chat-open .chat-title .aicha-avatar{width:42px;height:42px;flex-basis:42px}
+ body.chat-open .messages{padding:14px 2px;gap:10px}
+ body.chat-open .bubble{max-width:92%;overflow-wrap:anywhere}
+ body.chat-open .composer{border-radius:14px;padding:9px 10px calc(9px + env(safe-area-inset-bottom))}
+ body.chat-open .composer textarea{font-size:16px;min-height:44px;max-height:112px}
+ body.chat-open .composer>button{width:40px;height:40px}
+ body.chat-open .composer small{font-size:10px;padding-top:8px}
+}
+@supports(height:100dvh){
+ @media(max-width:800px){body.chat-open .content{height:calc(100dvh - 62px)}}
+}
