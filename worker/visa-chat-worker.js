@@ -341,7 +341,7 @@ async function handleVisaApi(request, env, out, pathname) {
       "Retourne un feedback concis : ce qui est clair, ce qui reste flou ou incohérent, une reformulation fidèle aux seuls faits fournis, puis UNE seule question suivante.",
       "Ne crée aucune information, ne conseille jamais de mentir ou de cacher un refus."
     ].join("\n");
-    const result = await apiGemini(env, SYSTEM_INTERVIEW, prompt, []);
+    const result = await apiGemini(env, SYSTEM_INTERVIEW + "\n\nPour cet endpoint, donne uniquement le feedback et la reformulation de la réponse. Ne pose pas la question suivante : elle est gérée par l'interface.", prompt, []);
     if (!result.reply) return out({ error: result.error }, result.status || 502);
     if (env.USAGE) await env.USAGE.put(usageKey, String(used + 1));
     return out({ reply: result.reply, left: env.USAGE ? Math.max(0, IV_MAX - used - 1) : null });
