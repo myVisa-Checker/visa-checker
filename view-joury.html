@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F9FAFB"><title>Joury — Assistant Visa Checker</title>
+<link rel="manifest" href="manifest.json"><link rel="stylesheet" href="vc.css"><script src="vc-shared.js"></script>
+</head>
+<body class="vc-app">
+<div id="vc-header"></div>
+<main class="vc-page vc-joury">
+  <header class="vc-page-head"><span class="vc-eyebrow">VISA CHECKER · ASSISTANT IA</span><h1>Parlons de votre projet de voyage.</h1><p>Joury vous aide à comprendre le type de visa adapté, à clarifier votre situation et à préparer les prochaines étapes.</p></header>
+  <section class="vc-chat-layout">
+    <aside class="vc-card vc-joury-aside"><div class="vc-avatar vc-avatar-green">J</div><h2>Joury</h2><p class="vc-mute">Votre guide conversationnel</p><div class="vc-note"><strong>Comment Joury vous aide</strong><ul><li>Comprendre votre projet et votre situation</li><li>Vous orienter vers le type de visa pertinent</li><li>Repérer les points à clarifier</li><li>Vous diriger vers Aïcha pour vérifier vos documents</li></ul></div><a class="vc-btn vc-btn-primary vc-full" href="view-dossier.html">Ouvrir Aïcha — Analyse de dossier</a></aside>
+    <section class="vc-card vc-chat-card" aria-label="Conversation avec Joury">
+      <div class="vc-chat-top"><div><strong>Conversation avec Joury</strong><div class="vc-mute vc-small">Réponses en français, anglais ou arabe</div></div><span class="vc-status"><i></i> Prête à vous aider</span></div>
+      <div id="joury-log" class="vc-chat-log" role="log" aria-live="polite"><div class="vc-message assistant"><small>Joury</small>Bonjour ! Pour commencer, quel est votre pays de résidence et quel est le motif de votre voyage ?</div></div>
+      <div class="vc-suggestions"><button type="button" data-prompt="Je souhaite voyager pour le tourisme. Aidez-moi à comprendre le visa adapté.">Tourisme</button><button type="button" data-prompt="Je souhaite rendre visite à ma famille ou à des proches.">Visite familiale</button><button type="button" data-prompt="Je souhaite voyager pour les études.">Études</button><button type="button" data-prompt="Je souhaite voyager pour affaires.">Affaires</button></div>
+      <form id="joury-form" class="vc-chat-compose"><label class="vc-sr" for="joury-input">Votre message</label><textarea id="joury-input" rows="2" placeholder="Écrivez votre message…" required></textarea><button class="vc-btn vc-btn-primary" id="joury-send" type="submit">Envoyer</button></form>
+      <p class="vc-disclaimer">Joury fournit une orientation informative. Seule l’autorité consulaire décide de l’octroi du visa. Évitez de partager des numéros de passeport ou des données sensibles.</p>
+    </section>
+  </section>
+</main>
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id);}, history=[{role:'assistant',text:'Bonjour ! Pour commencer, quel est votre pays de résidence et quel est le motif de votre voyage ?'}], busy=false;
+function bubble(role,text){var box=VC.el('div','vc-message '+(role==='assistant'?'assistant':'user'));var who=VC.el('small','',role==='assistant'?'Joury':'Vous');box.appendChild(who);box.appendChild(document.createTextNode(text));$('joury-log').appendChild(box);$('joury-log').scrollTop=$('joury-log').scrollHeight;}
+function send(text){if(busy||!text.trim())return;busy=true;history.push({role:'user',text:text});bubble('user',text);$('joury-input').value='';return VC.api.withBusy($('joury-send'),function(){return fetch(VC.api.base,{method:'POST',cache:'no-store',credentials:'omit',redirect:'error',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history.slice(-12),mode:'joury'})}).then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.error||'service');return d;});});}).then(function(data){var reply=data.reply||'Je n’ai pas reçu de réponse. Pouvez-vous reformuler ?';history.push({role:'assistant',text:reply});bubble('assistant',reply);}).catch(function(e){VC.toast(VC.api.errorMessage(e));}).finally(function(){busy=false;$('joury-input').focus();});}
+$('joury-form').addEventListener('submit',function(e){e.preventDefault();send($('joury-input').value);});
+document.querySelectorAll('[data-prompt]').forEach(function(b){b.addEventListener('click',function(){send(b.getAttribute('data-prompt'));});});
+$('joury-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('joury-form').requestSubmit();}});
+VC.init({},'joury');
+})();
+</script>
+</body></html>
