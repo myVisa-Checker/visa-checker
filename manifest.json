@@ -1,8 +1,8 @@
 {
   "id": "/?app=visa-checker",
-  "name": "Visa Checker : dossier visa vérifié avant le dépôt",
+  "name": "Visa Checker — Espace de préparation visa",
   "short_name": "Visa Checker",
-  "description": "Checklist des documents de visa pour voyageurs de toutes nationalités, pack recours, billets et hôtels via agences partenaires. FR · EN · عربي",
+  "description": "Un hub de préparation visa avec orientation IA, analyse documentaire et préparation consulaire. FR · EN · عربي",
   "lang": "fr",
   "dir": "auto",
   "start_url": "./?source=pwa",
@@ -10,7 +10,7 @@
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait-primary",
-  "theme_color": "#1d4ed8",
+  "theme_color": "#2563eb",
   "background_color": "#ffffff",
   "categories": ["travel", "utilities"],
   "icons": [
