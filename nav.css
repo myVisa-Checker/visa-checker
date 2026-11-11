@@ -3,7 +3,7 @@
    Ne contient QUE les règles de la barre : sans danger pour l'application. */
 .sitenav{
   display:flex;align-items:center;gap:6px 18px;height:48px;box-sizing:border-box;
-  padding:0 max(16px,calc((100% - 1080px)/2));
+  padding:0 max(var(--padx,16px),calc((100% - var(--wrap,1080px))/2 + var(--padx,16px)));
   background:var(--surface,#fff);border-bottom:1px solid var(--line,#e1e5e9);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   overflow-x:auto;white-space:nowrap;scrollbar-width:none;
@@ -31,13 +31,12 @@
 
 /* Petits écrans : tout reste visible sans défilement */
 @media (max-width:480px){
-  .sitenav{gap:8px;padding:0 12px}
+  .sitenav{gap:8px}
   .sitenav .sn-logo{font-size:16px}
   .sitenav ul{gap:4px 11px}
   .sitenav a{font-size:13px}
 }
 @media (max-width:380px){
-  .sitenav{padding:0 8px}
   .sitenav ul{gap:4px 8px}
   .sitenav a{font-size:12.5px}
   .sitenav .sn-logo{font-size:15px}
