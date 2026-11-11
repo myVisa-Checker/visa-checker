@@ -88,7 +88,8 @@
       var v = VC.t(n[i].getAttribute('data-i18n-title'));
       n[i].setAttribute('title', v); n[i].setAttribute('aria-label', v);
     }
-    d.title = VC.t('doc_title');
+    var pageTitle = VC.t('doc_title');
+    if (pageTitle !== 'doc_title') d.title = pageTitle;
   };
 
   /* ---------- Utilitaires DOM ---------- */
