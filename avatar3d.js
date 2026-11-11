@@ -8,7 +8,7 @@
    - un seul contexte WebGL pour tous les avatars (le résultat est copié dans chaque canvas) ;
    - rien n'est chargé ni calculé tant qu'aucun avatar n'est visible ; pause hors écran et onglet masqué ;
    - 30 images/s maximum, résolution plafonnée à 2x, textures partagées entre les avatars identiques ;
-   - repli sur l'image d'origine si WebGL est absent, lent (rendu logiciel), si l'économiseur de données est actif
+   - repli sur l'image d'origine si WebGL est absent, lent (rendu logiciel), (le mode économiseur de données ne le coupe plus)
      ou si le contexte est perdu ; « réduire les animations » => une seule image fixe avec relief. */
 (function () {
   "use strict";
@@ -26,7 +26,7 @@
   var mq = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
   var reduce = !!(mq && mq.matches);
   var conn = navigator.connection || {};
-  var disabled = !!conn.saveData || typeof WeakSet !== "function";
+  var saver = !!conn.saveData, disabled = typeof WeakSet !== "function"; /* l'économiseur de données ne coupe plus le 3D : le moteur ne télécharge rien de plus que le portrait */
   var items = [], seen = disabled ? null : new WeakSet(), bad = disabled ? null : new WeakSet();
   var G = null, T = {}, raf = 0, last = 0, io = null, mo = null, mouse = { x: 0, y: 0, t: -1e9 };
 
@@ -166,10 +166,24 @@
   }
 
   /* ---------- Éléments ---------- */
+  /* Repli sans WebGL (vieux Windows, pilote bloqué, contexte perdu) : léger effet de profondeur en CSS, sur l'image d'origine. */
+  var cssDone = false;
+  function cssFallback(img) {
+    if (!img) return;
+    if (!cssDone) {
+      cssDone = true;
+      var st = document.createElement("style");
+      st.textContent = "@keyframes a3dFloat{0%,100%{transform:perspective(520px) rotateY(-7deg) rotateX(2deg) scale(1.03)}50%{transform:perspective(520px) rotateY(7deg) rotateX(-1deg) translateY(-2px) scale(1.05)}}" +
+        "img.a3d-css{transform-origin:50% 100%;animation:a3dFloat 7s ease-in-out infinite;will-change:transform}" +
+        "@media (prefers-reduced-motion:reduce){img.a3d-css{animation:none;transform:perspective(520px) rotateY(-6deg) scale(1.03)}}";
+      (document.head || document.documentElement).appendChild(st);
+    }
+    img.classList.add("a3d-css");
+  }
   function release(it, perm) { /* retour à l'image d'origine ; perm : ne plus jamais réessayer pour cette image */
     it.dead = true;
     if (perm) bad.add(it.img); else seen["delete"](it.img);  /* canvas retiré par la page : l'image pourra être remontée */
-    if (it.img) it.img.style.display = "";
+    if (it.img) { it.img.style.display = ""; if (perm) cssFallback(it.img); }
     if (it.cv && it.cv.parentNode) it.cv.parentNode.removeChild(it.cv);
     if (io) { io.unobserve(it.img); io.unobserve(it.cv); }
   }
@@ -280,7 +294,7 @@
 
   /* ---------- Démarrage ---------- */
   function start() {
-    if (disabled) return;
+    if (disabled) { Array.prototype.forEach.call(document.querySelectorAll(SEL), cssFallback); return; }
     if ("IntersectionObserver" in window) io = new IntersectionObserver(onVis, { rootMargin: "80px" });
     scan();
     if ("MutationObserver" in window) {

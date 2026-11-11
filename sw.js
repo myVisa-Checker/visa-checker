@@ -1,6 +1,6 @@
 /* Visa Checker – cache limité au shell et aux assets statiques.
    Aucune API, donnée utilisateur ou requête POST n'est mise en cache. */
-const VERSION = "2026.11.11.2110";
+const VERSION = "2026.11.11.2125";
 const SHELL = "vc-shell-" + VERSION;
 const PRECACHE = [
   "./",

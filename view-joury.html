@@ -2,6 +2,7 @@
 <div class="jy-breadcrumb"><a href="index.html">Visa Checker</a><span>/</span><span>Joury · Refus de visa</span></div>
 <header class="jy-heading"><div><span class="vc-eyebrow">JOURY · VISA REFUSAL REVIEW</span><h1>Comprendre le refus. Préparer la suite.</h1><p>Analysez la décision consulaire, vérifiez les preuves de votre dossier et construisez une réponse structurée.</p></div><div class="jy-head-actions"><button class="vc-btn" id="jy-download" type="button" disabled>↓ Télécharger le rapport</button><button class="vc-btn vc-btn-primary" id="jy-appeal" type="button" disabled>Générer la lettre de recours</button></div></header>
 <div class="jy-layout"><aside class="jy-sidebar">
+<section class="vc-card jy-persona-card"><div class="jy-persona"><img class="jy-avatar" data-a3d="joury" src="./images/joury-avatar.webp" width="88" height="88" alt="Portrait de Joury" decoding="async"><div><strong>Joury</strong><small>Assistante IA · refus de visa</small></div></div></section>
 <section class="vc-card jy-workflow"><div class="jy-side-title"><span>JOURY WORKFLOW</span><span class="vc-badge vc-badge-info">4 étapes</span></div><ol class="jy-steps"><li class="is-current"><span class="jy-step-no">1</span><div><strong>Upload refusal document</strong></div></li><li><span class="jy-step-no">2</span><div><strong>Review checks</strong></div></li><li><span class="jy-step-no">3</span><div><strong>Resolve issues</strong></div></li><li><span class="jy-step-no">4</span><div><strong>Appeal report</strong></div></li></ol></section></aside>
 <section class="jy-main">
 <section class="vc-card jy-upload-card" id="jy-upload-section"><div class="jy-card-title"><span class="jy-icon">↥</span><div><h2>1. Upload documents</h2><p>Ajoutez la décision et les pièces liées aux motifs.</p></div></div>
@@ -23,6 +24,7 @@
   <button type="button" class="pwa-x" id="pwa-x"></button>
 </div>
 <script src="visa-pwa.js" defer></script>
+<script src="avatar3d.js" defer></script>
 
 <script>
 (function(){'use strict';var $=function(id){return document.getElementById(id);},refusalFiles=[],supportFiles=[],report='',letter='',chatHistory=[],busy=false,allowed=['application/pdf','image/jpeg','image/png','image/webp'],max=5*1024*1024;VC.init({},'joury');

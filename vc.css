@@ -1254,3 +1254,9 @@ body.vc-app{margin:0;background:var(--vc-bg);color:var(--vc-ink);font-family:Int
 .jy-issues-table .vc-btn{white-space:nowrap}
 @media(max-width:980px){.vc-joury-workspace .jy-layout{grid-template-columns:1fr}.vc-joury-workspace .jy-sidebar{position:static}.vc-joury-workspace .jy-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.jy-dashboard-top{grid-template-columns:1fr}}
 @media(max-width:600px){.vc-joury-workspace .jy-steps{grid-template-columns:1fr 1fr}.jy-review-metrics{gap:.35rem}.jy-review-metrics>div{padding:.55rem}.jy-review-metrics strong{font-size:1.15rem}.jy-review-metrics small,.jy-review-metrics span{font-size:.59rem}}
+
+/* Portraits 3D des assistantes (Joury / Aïcha) sur les pages de travail */
+.jy-persona{display:flex;align-items:center;gap:.9rem}.jy-persona strong{display:block;font-size:1rem;color:#1b2a47}.jy-persona small{display:block;font-size:.72rem;color:#7b8798;margin-top:.15rem}
+.jy-avatar,.jy-persona canvas.a3d{width:88px;height:88px;flex:none;border-radius:24px;object-fit:cover;display:block;background:linear-gradient(145deg,#e9f0ff,#f6f8ff);box-shadow:0 10px 22px -12px rgba(23,48,102,.45)}
+.jy-persona-card{overflow:hidden}
+@media(max-width:600px){.jy-avatar,.jy-persona canvas.a3d{width:72px;height:72px;border-radius:20px}}
