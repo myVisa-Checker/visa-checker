@@ -1,5 +1,5 @@
 /**
- * Visa Checker eligibility API.
+ * CheckMyVisa eligibility API.
  * Advisory rules only: never represents a visa grant or replaces an authority decision.
  * No passport number or document image is accepted or stored.
  */

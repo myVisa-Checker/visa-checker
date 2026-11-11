@@ -1,4 +1,4 @@
-/* Visa Checker – socle UI partagé (JavaScript vanilla, sans dépendance)
+/* CheckMyVisa – socle UI partagé (JavaScript vanilla, sans dépendance)
    - thème clair/sombre, langues FR/EN/AR (RTL automatique)
    - en-tête + barre de navigation mobile commune aux 3 vues
    - petits utilitaires (el, badge, toast, tailles de fichiers)
@@ -249,7 +249,7 @@
         '<div class="mx-auto flex max-w-6xl items-center gap-3 px-4 py-2.5">' +
         '<a href="index.html" class="flex items-center gap-2 font-bold" style="color:var(--ink);text-decoration:none" title="' + VC.t('hub') + '">' +
         '<span style="display:grid;place-items:center;width:2rem;height:2rem;border-radius:.6rem;background:var(--royal);color:#fff">' +
-        icon('M5 12.5l4.5 4.5L19 7.5', 18) + '</span><span>Visa Checker</span></a>' +
+        icon('M5 12.5l4.5 4.5L19 7.5', 18) + '</span><span>CheckMyVisa</span></a>' +
         '<nav class="hidden md:flex ms-4 gap-1" aria-label="Navigation">' + tabs + '</nav>' +
         '<div class="ms-auto flex items-center gap-2">' +
         '<select id="vc-lang" class="vc-input" style="width:auto;min-height:2.25rem;padding:.2rem .5rem;font-size:14px" aria-label="' + VC.t('lang_label') + '">' + opts + '</select>' +

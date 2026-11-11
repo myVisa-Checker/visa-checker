@@ -1,7 +1,7 @@
 {
   "id": "/?app=visa-checker",
-  "name": "Visa Checker — Espace de préparation visa",
-  "short_name": "Visa Checker",
+  "name": "CheckMyVisa — Espace de préparation visa",
+  "short_name": "CheckMyVisa",
   "description": "Un hub de préparation visa avec orientation IA, analyse documentaire et préparation consulaire. FR · EN · عربي",
   "lang": "fr",
   "dir": "auto",

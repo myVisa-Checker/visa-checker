@@ -1,13 +1,13 @@
 /* PWA : enregistrement du Service Worker + bannière d'installation (Android/Chrome : invite native ; iOS : mode d'emploi) */
 (function(){
   var T={
-    fr:{it:"Installer Visa Checker",id:"Accès rapide depuis l'écran d'accueil, même sans connexion.",ig:"Installer",x:"Plus tard",
+    fr:{it:"Installer CheckMyVisa",id:"Accès rapide depuis l'écran d'accueil, même sans connexion.",ig:"Installer",x:"Plus tard",
         ios:"Sur iPhone : touchez Partager, puis « Sur l'écran d'accueil ».",ios1:"Touchez le bouton Partager",ios2:"Choisissez « Sur l'écran d'accueil »",ios3:"Touchez Ajouter",ok:"Compris",
         ut:"Nouvelle version disponible",ud:"Rechargez pour profiter des dernières mises à jour.",ug:"Mettre à jour"},
-    en:{it:"Install Visa Checker",id:"Quick access from your home screen, even offline.",ig:"Install",x:"Later",
+    en:{it:"Install CheckMyVisa",id:"Quick access from your home screen, even offline.",ig:"Install",x:"Later",
         ios:"On iPhone: tap Share, then “Add to Home Screen”.",ios1:"Tap the Share button",ios2:"Choose “Add to Home Screen”",ios3:"Tap Add",ok:"Got it",
         ut:"New version available",ud:"Reload to get the latest updates.",ug:"Update"},
-    ar:{it:"ثبّت Visa Checker",id:"وصول سريع من الشاشة الرئيسية، حتى دون اتصال.",ig:"تثبيت",x:"لاحقًا",
+    ar:{it:"ثبّت CheckMyVisa",id:"وصول سريع من الشاشة الرئيسية، حتى دون اتصال.",ig:"تثبيت",x:"لاحقًا",
         ios:"على الآيفون: اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية».",ios1:"اضغط على زر المشاركة",ios2:"اختر «إضافة إلى الشاشة الرئيسية»",ios3:"اضغط إضافة",ok:"حسنًا",
         ut:"إصدار جديد متاح",ud:"أعد التحميل للحصول على آخر التحديثات.",ug:"تحديث"}
   };

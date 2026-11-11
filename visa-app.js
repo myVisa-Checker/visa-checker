@@ -2,13 +2,13 @@
 document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&t.classList.contains("fav")&&t.parentNode){t.parentNode.classList.add("fb");t.remove()}},true);
 (function(){
 var UI={
-fr:{stamp:"Voyageurs de toutes nationalités",h1:"Visa Checker",sub:"Choisissez votre destination, puis cochez chaque document au fur et à mesure.",
+fr:{stamp:"Voyageurs de toutes nationalités",h1:"CheckMyVisa",sub:"Choisissez votre destination, puis cochez chaque document au fur et à mesure.",
  s_country:"Destination",cAvail:"Disponible",cSoon:"Bientôt",soonText:"La liste des pièces pour ce pays arrive bientôt.",
  agTitle:"Besoin d'un conseiller visa ?",agSub:"Consultez les coordonnées des conseillers indépendants.",
  gov:"Gouvernorat",govPick:"Choisir un gouvernorat",agCount:function(n){return n+(n>1?" conseillers":" conseiller")},
  agNone:"Pas encore de conseiller disponible.",payBtn:"Voir les options de paiement",payWait:"Lien de paiement bientôt",
  codeLabel:"Vous avez reçu un code d’accès ? Saisissez-le",unlock:"Débloquer",badCode:"Code incorrect.",contactSoon:"Coordonnées à venir",
- agNote:"Les conseillers sont indépendants. Visa Checker ne garantit pas l'obtention du visa.",
+ agNote:"Les conseillers sont indépendants. CheckMyVisa ne garantit pas l'obtention du visa.",
  s_status:"Votre activité",s_party:"Vous voyagez",s_stay:"Hébergement",s_pay:"Qui finance le voyage",
  status:{employee:"Salarié",self:"Indépendant / entrepreneur",student:"Étudiant",retired:"Retraité"},
  party:{alone:"Seul(e)",family:"En famille"},stay:{hotel:"Hôtel / location",hosted:"Chez un hôte"},pay:{self:"Moi-même",sponsor:"Un garant"},
@@ -20,7 +20,7 @@ fr:{stamp:"Voyageurs de toutes nationalités",h1:"Visa Checker",sub:"Choisissez 
  linkFV:"France-Visas Tunisie (officiel)",linkTLS:"TLScontact Tunisie",
  disc:"Les pièces exigées peuvent évoluer. Confirmez toujours la liste sur France-Visas et auprès de TLScontact. Cet outil aide à préparer le dossier et ne garantit pas l'obtention du visa. Il n'est lié à aucune ambassade. Passez uniquement par le portail officiel et méfiez-vous des intermédiaires qui promettent des facilités.",
  reset:"Tout décocher",
- brand:"Visa Checker",slogan:"Déposez votre dossier visa sans rien oublier.",homeSub:"Choisissez votre destination, dites-nous pourquoi vous voyagez, puis suivez la liste exacte des documents.",
+ brand:"CheckMyVisa",slogan:"Déposez votre dossier visa sans rien oublier.",homeSub:"Choisissez votre destination, dites-nous pourquoi vous voyagez, puis suivez la liste exacte des documents.",
  s_pass:"Passeport",passName:"Tunisie",s_dest:"Destination",s_motive:"Motif du voyage",
  motive:{medical:"Visite médicale",other:"Autre motif"},motiveHint:{medical:"Soins, consultation ou opération",other:"Tourisme, famille, affaires"},
  start:"Commencer",back:"Retour",next:"Continuer",stepWord:function(n){return "Étape "+n+" sur 2"},stepNames:["Motif","Profil","Documents","Aide en plus"],
@@ -28,9 +28,9 @@ fr:{stamp:"Voyageurs de toutes nationalités",h1:"Visa Checker",sub:"Choisissez 
  medNote:"Visite médicale : le consulat veut voir un rendez-vous réel en France, le coût des soins et la preuve que vous pouvez les payer.",gMed:"Votre visite médicale",
  destTitle:"Votre voyage",destSub:"Pourquoi voyagez-vous ?",
  sloganA:"Votre dossier visa, vérifié",sloganB:"avant le dépôt",homeSub2:"Votre conseiller visa : nous vérifions que rien ne manque. Nous ne déposons pas votre demande."
- ,modeTitle:"Que voulez-vous faire ?",modeSub:"Visa Checker conseille et vérifie. Nous ne déposons pas votre demande.",mode:{check:["Vérifier mon dossier","Avant le dépôt : la liste exacte des documents à préparer."],appeal:["Recours après un refus","Lettre de recours, conseils pour redéposer, lettres modèles."]},apTitle:"Recours après un refus",apSub:"Reprenez votre dossier avec nos conseils.",adapt:"Adapter la liste à ma situation",ask:"Où partez-vous ?",
+ ,modeTitle:"Que voulez-vous faire ?",modeSub:"CheckMyVisa conseille et vérifie. Nous ne déposons pas votre demande.",mode:{check:["Vérifier mon dossier","Avant le dépôt : la liste exacte des documents à préparer."],appeal:["Recours après un refus","Lettre de recours, conseils pour redéposer, lettres modèles."]},apTitle:"Recours après un refus",apSub:"Reprenez votre dossier avec nos conseils.",adapt:"Adapter la liste à ma situation",ask:"Où partez-vous ?",
  howTitle:"Comment ça marche",how:[["Choisissez","Votre destination et le motif du voyage."],["Répondez","Quelques questions sur votre situation."],["Cochez","Chaque document, au fur et à mesure."]],
- whyTitle:"Pourquoi choisir Visa Checker",why:["Guidé étape par étape, en quelques minutes","Liste adaptée à votre situation : motif, activité, famille","Disponible en français, anglais et arabe","Votre progression reste enregistrée sur cet appareil","Aide en cas de refus : recours et lettres modèles"],whyNote:"Visa Checker conseille et vérifie votre dossier. Il ne dépose pas la demande, ne garantit pas le visa et n'est lié à aucune ambassade.",
+ whyTitle:"Pourquoi choisir CheckMyVisa",why:["Guidé étape par étape, en quelques minutes","Liste adaptée à votre situation : motif, activité, famille","Disponible en français, anglais et arabe","Votre progression reste enregistrée sur cet appareil","Aide en cas de refus : recours et lettres modèles"],whyNote:"CheckMyVisa conseille et vérifie votre dossier. Il ne dépose pas la demande, ne garantit pas le visa et n'est lié à aucune ambassade.",
  needTitle:"Besoin de documents de voyage ?",needSub:"Billet d'avion, réservation d'hôtel… Pour le visa, prenez des réservations annulables",needFlight:"Billet d'avion",needHotel:"Réservation d'hôtel",spTitle:"Nos partenaires",spSub:"Agences de voyage locales et partenaires dans le monde.",spLocal:"Agence de voyage locale",spWorld:"Partenaire dans le monde",spSlot:"Espace disponible",spTag:"Sponsorisé",spJoin:"Devenir partenaire",spSoon:"Contact à venir",
  s_purpose:"Type de visa",purpose:{tourism:"Tourisme",family:"Visite familiale ou amicale",business:"Affaires"},
  reunTitle:"Visa de long séjour",reunText:"Procédure différente d'un voyage touristique : la personne qui vit en France dépose d'abord la demande de regroupement familial auprès de l'OFII. Cette liste est générale. Confirmez les pièces sur France-Visas et auprès du consulat, car elles varient selon votre cas.",
@@ -42,13 +42,13 @@ fr:{stamp:"Voyageurs de toutes nationalités",h1:"Visa Checker",sub:"Choisissez 
  rfNote:"Les lettres sont en français, car elles sont adressées aux autorités françaises. Remplacez tout ce qui est entre [crochets]. Collez le texte dans Word ou Google Docs, puis imprimez.",
  rfNoGuar:"Ces modèles aident à présenter votre dossier. Ils ne garantissent pas le visa.",copy:"Copier le texte",copied:"Copié",selected:"Texte sélectionné, copiez-le",
  adv:["Lisez le formulaire de refus. La case cochée indique le motif à corriger.","Choisissez : un recours (délai court, indiqué sur la notification) ou une nouvelle demande, qui entraîne de nouveaux frais.","Corrigez le motif avec des preuves nouvelles. Moyens financiers : relevés réguliers, sans gros dépôt soudain. Objet du séjour : programme clair et réservations réelles. Retour dans votre pays de résidence : preuves d'attaches (emploi, famille, logement).","Restez cohérent avec la première demande. Le consulat garde votre dossier : dates, emploi et revenus doivent être identiques.","Il n'existe pas de délai légal d'attente avant de redéposer, mais ne redéposez pas le même dossier sans changement.","Aucun intermédiaire ne peut promettre un visa. Un faux document peut entraîner de graves conséquences, dont une interdiction d'entrée."]},
-en:{stamp:"Travellers of all nationalities",h1:"Visa Checker",sub:"Pick your destination, then tick each document as you collect it.",
+en:{stamp:"Travellers of all nationalities",h1:"CheckMyVisa",sub:"Pick your destination, then tick each document as you collect it.",
  s_country:"Destination",cAvail:"Available",cSoon:"Coming soon",soonText:"The document list for this country is coming soon.",
  agTitle:"Need a visa advisor?",agSub:"View contact details for independent visa advisors.",
  gov:"Governorate",govPick:"Choose a governorate",agCount:function(n){return n+(n>1?" advisors":" advisor")},
  agNone:"No advisor available yet.",payBtn:"View payment options",payWait:"Payment link coming soon",
  codeLabel:"Have you received an access code? Enter it",unlock:"Unlock",badCode:"Incorrect code.",contactSoon:"Contact details coming",
- agNote:"Advisors are independent. Visa Checker does not guarantee a visa.",
+ agNote:"Advisors are independent. CheckMyVisa does not guarantee a visa.",
  s_status:"Your activity",s_party:"You travel",s_stay:"Accommodation",s_pay:"Who pays for the trip",
  status:{employee:"Employee",self:"Self-employed / business owner",student:"Student",retired:"Retired"},
  party:{alone:"Alone",family:"With family"},stay:{hotel:"Hotel / rental",hosted:"With a host"},pay:{self:"Myself",sponsor:"A sponsor"},
@@ -60,7 +60,7 @@ en:{stamp:"Travellers of all nationalities",h1:"Visa Checker",sub:"Pick your des
  linkFV:"France-Visas Tunisia (official)",linkTLS:"TLScontact Tunisia",
  disc:"Required documents can change. Always confirm the list on France-Visas and with TLScontact. This tool helps you prepare your file and does not guarantee a visa. It is not affiliated with any embassy. Use the official portal only, and be wary of intermediaries who promise shortcuts.",
  reset:"Untick everything",
- brand:"Visa Checker",slogan:"Apply for your visa without missing a document.",homeSub:"Pick your destination, tell us why you travel, then follow the exact list of documents.",
+ brand:"CheckMyVisa",slogan:"Apply for your visa without missing a document.",homeSub:"Pick your destination, tell us why you travel, then follow the exact list of documents.",
  s_pass:"Passport",passName:"Tunisia",s_dest:"Destination",s_motive:"Reason for travel",
  motive:{medical:"Medical visit",other:"Other reason"},motiveHint:{medical:"Treatment, consultation or surgery",other:"Tourism, family, business"},
  start:"Start",back:"Back",next:"Continue",stepWord:function(n){return "Step "+n+" of 2"},stepNames:["Reason","Profile","Documents","Extra help"],
@@ -68,9 +68,9 @@ en:{stamp:"Travellers of all nationalities",h1:"Visa Checker",sub:"Pick your des
  medNote:"Medical visit: the consulate wants a real appointment in France, the cost of care and proof you can pay for it.",gMed:"Your medical visit",
  destTitle:"Your trip",destSub:"Why are you travelling?",
  sloganA:"Your visa file, checked",sloganB:"before you apply",homeSub2:"Your visa advisor: we check that nothing is missing. We do not file your application."
- ,modeTitle:"What do you want to do?",modeSub:"Visa Checker advises and checks. We do not file your application.",mode:{check:["Check my file","Before you apply: the exact list of documents to prepare."],appeal:["Appeal after a refusal","Appeal letter, advice for applying again, sample letters."]},apTitle:"Appeal after a refusal",apSub:"Rebuild your file with our advice.",adapt:"Adjust the list to my situation",ask:"Where are you headed?",
+ ,modeTitle:"What do you want to do?",modeSub:"CheckMyVisa advises and checks. We do not file your application.",mode:{check:["Check my file","Before you apply: the exact list of documents to prepare."],appeal:["Appeal after a refusal","Appeal letter, advice for applying again, sample letters."]},apTitle:"Appeal after a refusal",apSub:"Rebuild your file with our advice.",adapt:"Adjust the list to my situation",ask:"Where are you headed?",
  howTitle:"How it works",how:[["Choose","Your destination and reason for travel."],["Answer","A few questions about your situation."],["Tick","Each document as you collect it."]],
- whyTitle:"Why travellers choose Visa Checker",why:["Guided step by step, in minutes","List fitted to your situation: reason, work, family","Available in French, English and Arabic","Your progress stays saved on this device","Help after a refusal: appeal and sample letters"],whyNote:"Visa Checker advises and checks your file. It does not file the application, does not guarantee a visa and is not affiliated with any embassy.",
+ whyTitle:"Why travellers choose CheckMyVisa",why:["Guided step by step, in minutes","List fitted to your situation: reason, work, family","Available in French, English and Arabic","Your progress stays saved on this device","Help after a refusal: appeal and sample letters"],whyNote:"CheckMyVisa advises and checks your file. It does not file the application, does not guarantee a visa and is not affiliated with any embassy.",
  needTitle:"Need travel documents?",needSub:"Flight ticket, hotel booking… For the visa, choose cancellable bookings",needFlight:"Flight ticket",needHotel:"Hotel booking",spTitle:"Our partners",spSub:"Local travel agencies and partners around the world.",spLocal:"Local travel agency",spWorld:"Partner worldwide",spSlot:"Space available",spTag:"Sponsored",spJoin:"Become a partner",spSoon:"Contact coming soon",
  s_purpose:"Visa type",purpose:{tourism:"Tourism",family:"Family or friends visit",business:"Business"},
  reunTitle:"Long-stay visa",reunText:"This is a different procedure from a tourist trip: the person living in France first files the family reunification request with the OFII. This list is general. Confirm the documents on France-Visas and with the consulate, because they vary by case.",
@@ -82,13 +82,13 @@ en:{stamp:"Travellers of all nationalities",h1:"Visa Checker",sub:"Pick your des
  rfNote:"The letters are in French because they go to the French authorities. Replace everything in [brackets]. Paste the text into Word or Google Docs, then print.",
  rfNoGuar:"These models help you present your file. They do not guarantee a visa.",copy:"Copy the text",copied:"Copied",selected:"Text selected, copy it",
  adv:["Read the refusal form. The ticked box shows the reason to fix.","Choose: an appeal (short deadline, shown on the notification) or a new application, which means new fees.","Fix the reason with new evidence. Funds: regular statements, no sudden large deposit. Purpose of stay: a clear plan and real bookings. Return to your home country: proof of ties (job, family, home).","Stay consistent with your first application. The consulate keeps your file: dates, job and income must be identical.","There is no legal waiting period before you apply again, but do not resubmit the same file unchanged.","No intermediary can promise a visa. A false document can have serious consequences, including an entry ban."]},
-ar:{stamp:"المسافرون من كل الجنسيات",h1:"Visa Checker",sub:"اختر وجهتك ثم علّم كل وثيقة بعد تجهيزها.",
+ar:{stamp:"المسافرون من كل الجنسيات",h1:"CheckMyVisa",sub:"اختر وجهتك ثم علّم كل وثيقة بعد تجهيزها.",
  s_country:"الوجهة",cAvail:"متاحة",cSoon:"قريبًا",soonText:"قائمة وثائق هذا البلد قادمة قريبًا.",
  agTitle:"هل تحتاج إلى مستشار تأشيرة؟",agSub:"عرض بيانات الاتصال بالمستشارين المستقلين.",
  gov:"الولاية",govPick:"اختر الولاية",agCount:function(n){return n===1?"مستشار واحد":n+" مستشارين"},
  agNone:"لا يوجد مستشار متاح بعد.",payBtn:"خيارات الدفع",payWait:"رابط الدفع قريبًا",
  codeLabel:"هل تلقيت رمز دخول؟ أدخله هنا",unlock:"فتح",badCode:"الرمز غير صحيح.",contactSoon:"بيانات الاتصال قريبًا",
- agNote:"المستشارون مستقلون. Visa Checker لا يضمن الحصول على التأشيرة.",
+ agNote:"المستشارون مستقلون. CheckMyVisa لا يضمن الحصول على التأشيرة.",
  s_status:"نشاطك",s_party:"تسافر",s_stay:"الإقامة",s_pay:"من يموّل السفر",
  status:{employee:"موظف",self:"عمل حر / صاحب مشروع",student:"طالب",retired:"متقاعد"},
  party:{alone:"بمفردي",family:"مع العائلة"},stay:{hotel:"فندق / كراء",hosted:"عند مضيف"},pay:{self:"أنا",sponsor:"كفيل"},
@@ -100,7 +100,7 @@ ar:{stamp:"المسافرون من كل الجنسيات",h1:"Visa Checker",sub:
  linkFV:"France-Visas تونس (الموقع الرسمي)",linkTLS:"TLScontact تونس",
  disc:"قد تتغير الوثائق المطلوبة. تأكد دائمًا من القائمة على موقع France-Visas ولدى TLScontact. هذه الأداة تساعدك على تحضير ملفك ولا تضمن الحصول على التأشيرة، وهي غير تابعة لأي سفارة. اعتمد البوابة الرسمية فقط واحذر من الوسطاء الذين يعدون بتسهيلات.",
  reset:"إلغاء كل العلامات",
- brand:"Visa Checker",slogan:"قدّم ملف تأشيرتك دون أن تنسى أي وثيقة.",homeSub:"اختر وجهتك، وأخبرنا سبب سفرك، ثم اتبع قائمة الوثائق الدقيقة.",
+ brand:"CheckMyVisa",slogan:"قدّم ملف تأشيرتك دون أن تنسى أي وثيقة.",homeSub:"اختر وجهتك، وأخبرنا سبب سفرك، ثم اتبع قائمة الوثائق الدقيقة.",
  s_pass:"جواز السفر",passName:"تونس",s_dest:"الوجهة",s_motive:"سبب السفر",
  motive:{medical:"زيارة طبية",other:"سبب آخر"},motiveHint:{medical:"علاج أو استشارة أو عملية",other:"سياحة أو عائلة أو أعمال"},
  start:"ابدأ",back:"رجوع",next:"متابعة",stepWord:function(n){return "الخطوة "+n+" من 2"},stepNames:["السبب","ملفك","الوثائق","مساعدة"],
@@ -108,9 +108,9 @@ ar:{stamp:"المسافرون من كل الجنسيات",h1:"Visa Checker",sub:
  medNote:"زيارة طبية: تريد القنصلية موعدًا حقيقيًا في فرنسا وتكلفة العلاج وإثبات قدرتك على دفعها.",gMed:"زيارتك الطبية",
  destTitle:"رحلتك",destSub:"ما سبب سفرك؟",
  sloganA:"ملف تأشيرتك، مُراجَع",sloganB:"قبل تقديمه",homeSub2:"مستشارك للتأشيرة: نتحقق من أنه لا ينقصك شيء. نحن لا نودع طلبك."
- ,modeTitle:"ماذا تريد أن تفعل؟",modeSub:"Visa Checker ينصح ويتحقق. نحن لا نودع طلبك.",mode:{check:["تحقق من ملفي","قبل التقديم: القائمة الدقيقة للوثائق المطلوبة."],appeal:["طعن بعد الرفض","رسالة طعن ونصائح لإعادة التقديم ورسائل نموذجية."]},apTitle:"طعن بعد الرفض",apSub:"أعد بناء ملفك بمساعدة نصائحنا.",adapt:"تكييف القائمة مع وضعي",ask:"إلى أين تسافر؟",
+ ,modeTitle:"ماذا تريد أن تفعل؟",modeSub:"CheckMyVisa ينصح ويتحقق. نحن لا نودع طلبك.",mode:{check:["تحقق من ملفي","قبل التقديم: القائمة الدقيقة للوثائق المطلوبة."],appeal:["طعن بعد الرفض","رسالة طعن ونصائح لإعادة التقديم ورسائل نموذجية."]},apTitle:"طعن بعد الرفض",apSub:"أعد بناء ملفك بمساعدة نصائحنا.",adapt:"تكييف القائمة مع وضعي",ask:"إلى أين تسافر؟",
  howTitle:"كيف يعمل",how:[["اختر","وجهتك وسبب السفر."],["أجب","عن بضعة أسئلة حول وضعك."],["علّم","كل وثيقة بعد تجهيزها."]],
- whyTitle:"لماذا يختار المسافرون Visa Checker",why:["إرشاد خطوة بخطوة في دقائق","قائمة مناسبة لوضعك: السبب والعمل والعائلة","متاح بالفرنسية والإنجليزية والعربية","يبقى تقدّمك محفوظًا على هذا الجهاز","مساعدة عند الرفض: طعن ورسائل نموذجية"],whyNote:"Visa Checker ينصح ويتحقق من ملفك. لا يودع الطلب ولا يضمن التأشيرة وهو غير تابع لأي سفارة.",
+ whyTitle:"لماذا يختار المسافرون CheckMyVisa",why:["إرشاد خطوة بخطوة في دقائق","قائمة مناسبة لوضعك: السبب والعمل والعائلة","متاح بالفرنسية والإنجليزية والعربية","يبقى تقدّمك محفوظًا على هذا الجهاز","مساعدة عند الرفض: طعن ورسائل نموذجية"],whyNote:"CheckMyVisa ينصح ويتحقق من ملفك. لا يودع الطلب ولا يضمن التأشيرة وهو غير تابع لأي سفارة.",
  needTitle:"تحتاج وثائق السفر؟",needSub:"تذكرة طيران، حجز فندق… للتأشيرة، اختر حجوزات قابلة للإلغاء",needFlight:"تذكرة طيران",needHotel:"حجز فندق",spTitle:"شركاؤنا",spSub:"وكالات سفر محلية وشركاء حول العالم.",spLocal:"وكالة سفر محلية",spWorld:"شريك حول العالم",spSlot:"مساحة متاحة",spTag:"برعاية",spJoin:"كن شريكًا",spSoon:"بيانات الاتصال قريبًا",
  s_purpose:"نوع التأشيرة",purpose:{tourism:"سياحة",family:"زيارة عائلية أو للأصدقاء",business:"أعمال"},
  reunTitle:"تأشيرة الإقامة الطويلة",reunText:"الإجراء يختلف عن السفر السياحي: يقدّم الشخص المقيم في فرنسا أولًا طلب لمّ الشمل لدى المكتب الفرنسي للهجرة والاندماج (OFII). هذه القائمة عامة. تأكد من الوثائق على موقع France-Visas ولدى القنصلية لأنها تختلف حسب حالتك.",
@@ -424,7 +424,7 @@ function paymentMethodsHtml(lang){
   '</section>';
 }
 
-/* ===== Pages « Ma demande » : liens des mails (client, agence, Visa Checker) =====
+/* ===== Pages « Ma demande » : liens des mails (client, agence, CheckMyVisa) =====
    Le Worker garde la demande, vérifie le délai de 48 h et les droits de chaque lien : ces pages affichent et envoient. */
 var ORDER_URL=UNLOCK_URL.replace(/\/unlock$/,"/order");
 function ordRef(id){return "VC-"+String(id||"").replace(/[^A-Za-z0-9]/g,"").slice(0,6).toUpperCase()}
@@ -453,7 +453,7 @@ function ordRecap(L,od){
   rows.push(["Réf.",od.ref]);
   return '<div class="recap"><h2>'+X.recap+'</h2><dl>'+rows.map(function(r){return '<div><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>'}).join("")+'</dl></div>';
 }
-function ordBad(){ordShell(OV.L,'<h1>Visa Checker</h1><p class="n48" role="alert">'+(OVX[OV.L]||OVX.fr).bad+'</p><button type="button" class="pay wide" data-ovnew>'+(OVX[OV.L]||OVX.fr).newReq+'</button>')}
+function ordBad(){ordShell(OV.L,'<h1>CheckMyVisa</h1><p class="n48" role="alert">'+(OVX[OV.L]||OVX.fr).bad+'</p><button type="button" class="pay wide" data-ovnew>'+(OVX[OV.L]||OVX.fr).newReq+'</button>')}
 /* ---- client : confirmer et payer ---- */
 function ordPayView(){
   var L=OV.L,X=OVX[L],od=OV.od;
@@ -482,7 +482,7 @@ function ordSentView(){
   else h+='<p class="n48" role="alert">Le paiement n\'est pas encore confirmé : n\'envoyez pas le document.</p>';
   ordShell("fr",h);
 }
-/* ---- Visa Checker : paiement reçu ---- */
+/* ---- CheckMyVisa : paiement reçu ---- */
 function ordConfirmView(){
   var od=OV.od,h='<h1>Paiement reçu ?</h1>'+ordRecap("fr",od);
   if(od.status==="paid"||od.status==="sent")h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>Paiement déjà confirmé.</b></p>';
@@ -611,7 +611,7 @@ function renderRefus(t){
     h+=PAY_URL2?'<a class="pay" href="'+PAY_URL2+'" target="_blank" rel="noopener">'+t.rfPay+'</a>':paymentMethodsHtml();
     h+='<div class="q"><label class="q-label" for="code2">'+t.codeLabel+'</label><div class="code-row"><input class="sel" id="code2" type="text" autocomplete="off" aria-describedby="err2" aria-invalid="false"><button type="button" class="reset" id="unlock2">'+t.unlock+'</button></div><span class="ag-err" id="err2" role="alert"></span></div>';
   }else{
-    h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("Visa Checker - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
+    h+='<div class="act"><button type="button" class="pay wide" data-print="1">'+t.pdfBtn+'</button><p class="rf-sub">'+t.pdfHint+'</p>'+(SITE.email?'<a class="reset" href="mailto:'+SITE.email+'?subject='+encodeURIComponent("CheckMyVisa - Pack recours")+'">'+t.pdfMail+'</a>':'')+'</div>';
     h+='<h2>'+t.rfAdvTitle+'</h2><ol class="adv">'+t.adv.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ol>';
     h+=anHtml();
     h+=aiHtml();
@@ -878,9 +878,9 @@ document.addEventListener("click",function(e){var b=e.target.closest&&e.target.c
 /* Bons plans : les offres viennent uniquement de deals.json (accords réels). Une offre expirée disparaît toute seule. */
 var DEALS=[],BPN={cat:"",open:false},bpnSig="";
 var BPT={
- fr:{t:"Bons plans et réductions partenaires",sub:"Des avantages négociés pour les utilisateurs de Visa Checker : agences de voyages locales, hôtels partenaires, transferts d'argent et cartes pour voyager.",all:"Tout",cat:{agence:"Agences de voyages",hotel:"Hôtels",transfert:"Transferts d'argent",carte:"Cartes et eSIM"},tag:{agence:"Agence",hotel:"Hôtel",transfert:"Transfert",carte:"Carte"},none:"Les premiers bons plans arrivent bientôt. Revenez nous voir !",noneCat:"Aucune offre dans cette catégorie pour le moment.",code:"Code promo",copy:"Copier",copied:"Copié ✓",go:"Profiter de l'offre",until:"Valable jusqu'au ",aff:"Lien partenaire : Visa Checker peut recevoir une commission, sans frais pour vous.",join:"Vous êtes une agence, un hôtel ou un service pour voyageurs ? Devenez partenaire.",joinBtn:"Devenir partenaire",disc:"Découvrir les bons plans",ptop:"Vous êtes une agence, un hôtel, un service ? ",jsub:"Visa Checker - Devenir partenaire",jbody:"Nom de l'établissement : \nVille / pays : \nType (agence, hôtel, transfert d'argent, carte) : \nOffre proposée aux utilisateurs : \nContact : "},
- en:{t:"Partner deals and discounts",sub:"Benefits negotiated for Visa Checker users: local travel agencies, partner hotels, money transfers and travel cards.",all:"All",cat:{agence:"Travel agencies",hotel:"Hotels",transfert:"Money transfers",carte:"Cards and eSIM"},tag:{agence:"Agency",hotel:"Hotel",transfert:"Transfer",carte:"Card"},none:"The first deals are coming soon. Check back!",noneCat:"No offers in this category for now.",code:"Promo code",copy:"Copy",copied:"Copied ✓",go:"Get the offer",until:"Valid until ",aff:"Partner link: Visa Checker may earn a commission, at no cost to you.",join:"Are you an agency, a hotel or a service for travellers? Become a partner.",joinBtn:"Become a partner",disc:"Discover the deals",ptop:"Agency, hotel or service? ",jsub:"Visa Checker - Become a partner",jbody:"Business name: \nCity / country: \nType (agency, hotel, money transfer, card): \nOffer for users: \nContact: "},
- ar:{t:"عروض وتخفيضات الشركاء",sub:"مزايا متفاوض عليها لمستخدمي Visa Checker: وكالات سفر محلية، فنادق شريكة، تحويل الأموال وبطاقات السفر.",all:"الكل",cat:{agence:"وكالات السفر",hotel:"الفنادق",transfert:"تحويل الأموال",carte:"البطاقات وeSIM"},tag:{agence:"وكالة",hotel:"فندق",transfert:"تحويل",carte:"بطاقة"},none:"أولى العروض قادمة قريبًا. عُد لزيارتنا!",noneCat:"لا توجد عروض في هذه الفئة حاليًا.",code:"رمز الخصم",copy:"نسخ",copied:"تم النسخ ✓",go:"استفد من العرض",until:"صالح حتى ",aff:"رابط شريك: قد يتلقى Visa Checker عمولة دون أي كلفة عليك.",join:"هل أنت وكالة أو فندق أو خدمة للمسافرين؟ كن شريكًا.",joinBtn:"كن شريكًا",disc:"اكتشف العروض",ptop:"وكالة أو فندق أو خدمة؟ ",jsub:"Visa Checker - كن شريكًا",jbody:"اسم المؤسسة: \nالمدينة / البلد: \nالنوع (وكالة، فندق، تحويل أموال، بطاقة): \nالعرض المقدَّم للمستخدمين: \nجهة الاتصال: "}
+ fr:{t:"Bons plans et réductions partenaires",sub:"Des avantages négociés pour les utilisateurs de CheckMyVisa : agences de voyages locales, hôtels partenaires, transferts d'argent et cartes pour voyager.",all:"Tout",cat:{agence:"Agences de voyages",hotel:"Hôtels",transfert:"Transferts d'argent",carte:"Cartes et eSIM"},tag:{agence:"Agence",hotel:"Hôtel",transfert:"Transfert",carte:"Carte"},none:"Les premiers bons plans arrivent bientôt. Revenez nous voir !",noneCat:"Aucune offre dans cette catégorie pour le moment.",code:"Code promo",copy:"Copier",copied:"Copié ✓",go:"Profiter de l'offre",until:"Valable jusqu'au ",aff:"Lien partenaire : CheckMyVisa peut recevoir une commission, sans frais pour vous.",join:"Vous êtes une agence, un hôtel ou un service pour voyageurs ? Devenez partenaire.",joinBtn:"Devenir partenaire",disc:"Découvrir les bons plans",ptop:"Vous êtes une agence, un hôtel, un service ? ",jsub:"CheckMyVisa - Devenir partenaire",jbody:"Nom de l'établissement : \nVille / pays : \nType (agence, hôtel, transfert d'argent, carte) : \nOffre proposée aux utilisateurs : \nContact : "},
+ en:{t:"Partner deals and discounts",sub:"Benefits negotiated for CheckMyVisa users: local travel agencies, partner hotels, money transfers and travel cards.",all:"All",cat:{agence:"Travel agencies",hotel:"Hotels",transfert:"Money transfers",carte:"Cards and eSIM"},tag:{agence:"Agency",hotel:"Hotel",transfert:"Transfer",carte:"Card"},none:"The first deals are coming soon. Check back!",noneCat:"No offers in this category for now.",code:"Promo code",copy:"Copy",copied:"Copied ✓",go:"Get the offer",until:"Valid until ",aff:"Partner link: CheckMyVisa may earn a commission, at no cost to you.",join:"Are you an agency, a hotel or a service for travellers? Become a partner.",joinBtn:"Become a partner",disc:"Discover the deals",ptop:"Agency, hotel or service? ",jsub:"CheckMyVisa - Become a partner",jbody:"Business name: \nCity / country: \nType (agency, hotel, money transfer, card): \nOffer for users: \nContact: "},
+ ar:{t:"عروض وتخفيضات الشركاء",sub:"مزايا متفاوض عليها لمستخدمي CheckMyVisa: وكالات سفر محلية، فنادق شريكة، تحويل الأموال وبطاقات السفر.",all:"الكل",cat:{agence:"وكالات السفر",hotel:"الفنادق",transfert:"تحويل الأموال",carte:"البطاقات وeSIM"},tag:{agence:"وكالة",hotel:"فندق",transfert:"تحويل",carte:"بطاقة"},none:"أولى العروض قادمة قريبًا. عُد لزيارتنا!",noneCat:"لا توجد عروض في هذه الفئة حاليًا.",code:"رمز الخصم",copy:"نسخ",copied:"تم النسخ ✓",go:"استفد من العرض",until:"صالح حتى ",aff:"رابط شريك: قد يتلقى CheckMyVisa عمولة دون أي كلفة عليك.",join:"هل أنت وكالة أو فندق أو خدمة للمسافرين؟ كن شريكًا.",joinBtn:"كن شريكًا",disc:"اكتشف العروض",ptop:"وكالة أو فندق أو خدمة؟ ",jsub:"CheckMyVisa - كن شريكًا",jbody:"اسم المؤسسة: \nالمدينة / البلد: \nالنوع (وكالة، فندق، تحويل أموال، بطاقة): \nالعرض المقدَّم للمستخدمين: \nجهة الاتصال: "}
 };
 function cleanDeals(j){
   if(!j||!Array.isArray(j.deals))return [];
@@ -965,7 +965,7 @@ function modeHtml(t){
   return '<div class="mode" role="group" aria-label="'+t.modeTitle+'">'+["check","appeal"].map(function(m){if(m==="appeal"&&!fr){var a=PX.appealOther[S.lang];return '<button type="button" class="mdcard" disabled><b>'+a[0]+'</b><span>'+a[1]+'</span></button>'}return '<button type="button" class="mdcard" data-m="'+m+'"><b>'+t.mode[m][0]+'</b><span>'+t.mode[m][1]+'</span></button>'}).join("")+'</div>';
 }
 var LOGO_HTML='<span class="logo" data-g="check"><svg class="logo-mk" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="32" cy="32" r="32" fill="var(--accent)"/><g class="g g-check"><path d="M37 5.5C17 7 4.5 22 6.2 38.5 7.7 50.5 17.5 58.8 29 59.4 19 54.5 11.8 44.5 12.8 33.2 13.9 20.6 23.5 10.6 37 5.5z" fill="var(--on-accent)"/><path fill="var(--on-accent)" transform="translate(43.5 19.5) rotate(45) scale(.95) translate(-12 -12)" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/><path d="M19 39.5l10.5 11.5L53 26" fill="none" stroke="var(--on-accent)" stroke-width="8.2" stroke-linecap="round" stroke-linejoin="round"/></g><g class="g g-plane"><path fill="var(--on-accent)" transform="translate(32 32) rotate(45) scale(1.55) translate(-12 -12)" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></g><g class="g g-bed"><path fill="none" stroke="var(--on-accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(32 32) scale(1.9) translate(-12 -12)" d="M4 19V7M4 15h16v4M20 15v-3a3 3 0 0 0-3-3h-6v6"/></g></svg><span class="wm"><b>Visa</b> Checker</span></span>';
-function setLogo(g){var b=$("brand");if(!b)return;if(!b.querySelector(".logo")){b.innerHTML=LOGO_HTML;b.setAttribute("aria-label","Visa Checker")}var l=b.querySelector(".logo");if(l.getAttribute("data-g")!==g)l.setAttribute("data-g",g)}
+function setLogo(g){var b=$("brand");if(!b)return;if(!b.querySelector(".logo")){b.innerHTML=LOGO_HTML;b.setAttribute("aria-label","CheckMyVisa")}var l=b.querySelector(".logo");if(l.getAttribute("data-g")!==g)l.setAttribute("data-g",g)}
 function photoHtml(){
   var tx={fr:{head:"CHOISISSEZ VOTRE ASSISTANTE",a:"Préparer et vérifier mon dossier",j:"Analyser un refus de visa",go:"Accéder à l’assistante"},en:{head:"CHOOSE YOUR ASSISTANT",a:"Prepare and check my application",j:"Analyse a visa refusal",go:"Open assistant"},ar:{head:"اختر مساعدتك",a:"تحضير ملفي والتحقق منه",j:"تحليل رفض التأشيرة",go:"فتح المساعدة"}}[S.lang]||{head:"CHOISISSEZ VOTRE ASSISTANTE",a:"Préparer et vérifier mon dossier",j:"Analyser un refus de visa",go:"Accéder à l’assistante"};
   return '<div class="vc-hero-assistants"><div class="vc-hero-assistants-head">'+tx.head+'</div><div class="vc-hero-assistants-grid">'+
@@ -988,9 +988,9 @@ var ORI_SITE={
  dz:{fr:"https://france-visas.gouv.fr/algerie",es:"https://algeria.blsspainvisa.com/",it:"https://visa.vfsglobal.com/dza/fr/ita"}
 };
 var ORI_NOTE={
- fr:"Liste vérifiée en novembre 2026 d'après les sites officiels (France-Visas, centres de dépôt, ambassades). Les règles et les frais changent : confirmez-les avant de déposer. Visa Checker ne garantit pas l'obtention du visa.",
- en:"List checked in November 2026 from official sources (France-Visas, application centres, embassies). Rules and fees change: confirm them before you apply. Visa Checker does not guarantee the visa.",
- ar:"تم التحقق من القائمة في نوفمبر 2026 اعتمادًا على المواقع الرسمية (France-Visas ومراكز الإيداع والسفارات). القواعد والرسوم تتغير: تأكد منها قبل التقديم. لا يضمن Visa Checker الحصول على التأشيرة."
+ fr:"Liste vérifiée en novembre 2026 d'après les sites officiels (France-Visas, centres de dépôt, ambassades). Les règles et les frais changent : confirmez-les avant de déposer. CheckMyVisa ne garantit pas l'obtention du visa.",
+ en:"List checked in November 2026 from official sources (France-Visas, application centres, embassies). Rules and fees change: confirm them before you apply. CheckMyVisa does not guarantee the visa.",
+ ar:"تم التحقق من القائمة في نوفمبر 2026 اعتمادًا على المواقع الرسمية (France-Visas ومراكز الإيداع والسفارات). القواعد والرسوم تتغير: تأكد منها قبل التقديم. لا يضمن CheckMyVisa الحصول على التأشيرة."
 };
 var ORI_ITEMS={
  ma:{
@@ -1236,22 +1236,22 @@ document.addEventListener("change",function(e){
 /* FAQ de l'accueil : pas de montants de frais, aucune promesse de visa. */
 var HFAQ={
 fr:{t:"Questions fréquentes",items:[
- ["Que fait Visa Checker ?","Il vous aide à vérifier que votre dossier est complet avant le dépôt : liste de pièces adaptée à votre situation, conseils et aide en cas de refus. Il ne dépose pas la demande à votre place."],
- ["Visa Checker garantit-il l'obtention du visa ?","Non. La décision appartient toujours au consulat, et même un dossier complet peut être refusé. Visa Checker vous aide à éviter les erreurs courantes."],
+ ["Que fait CheckMyVisa ?","Il vous aide à vérifier que votre dossier est complet avant le dépôt : liste de pièces adaptée à votre situation, conseils et aide en cas de refus. Il ne dépose pas la demande à votre place."],
+ ["CheckMyVisa garantit-il l'obtention du visa ?","Non. La décision appartient toujours au consulat, et même un dossier complet peut être refusé. CheckMyVisa vous aide à éviter les erreurs courantes."],
  ["Pour quels pays ça fonctionne ?","Choisissez votre destination dans la liste en haut de cette page. Les pays pas encore disponibles sont signalés « bientôt »."],
  ["Mes données sont-elles protégées ?","Ne tapez jamais votre numéro de passeport ni vos données bancaires dans un message. Si Joury ou Aicha vous demandent un document, joignez seulement la page utile après avoir masqué le numéro et les lignes de chiffres en bas (bouton « Masquer des zones ») : gardez le nom et les dates visibles. Les documents sont analysés par un service d'IA tiers ; la page Confidentialité détaille ce qui est utilisé."],
  ["Que faire après un refus ?","Choisissez l'aide en cas de refus : lettre de recours et conseils. Respectez le délai indiqué sur votre lettre de refus."],
  ["Une question ?","Envoyez-nous un message privé : il arrive directement à l'administrateur.","social"]]},
 en:{t:"Frequently asked questions",items:[
- ["What does Visa Checker do?","It helps you check that your file is complete before you apply: a document list adapted to your situation, advice and help after a refusal. It does not submit the application for you."],
- ["Does Visa Checker guarantee a visa?","No. The decision always belongs to the consulate, and even a complete file can be refused. Visa Checker helps you avoid common mistakes."],
+ ["What does CheckMyVisa do?","It helps you check that your file is complete before you apply: a document list adapted to your situation, advice and help after a refusal. It does not submit the application for you."],
+ ["Does CheckMyVisa guarantee a visa?","No. The decision always belongs to the consulate, and even a complete file can be refused. CheckMyVisa helps you avoid common mistakes."],
  ["Which countries does it cover?","Pick your destination from the list at the top of this page. Countries not yet available are marked \"soon\"."],
  ["Is my data protected?","Never type your passport number or banking details in a message. If Joury or Aicha ask for a document, attach only the useful page after covering the number and the lines of digits at the bottom (“Hide areas” button): keep the name and dates visible. Documents are analysed by a third-party AI service; the Privacy page explains what is used."],
  ["What if my visa is refused?","Choose the refusal help: appeal letter and advice. Follow the deadline written on your refusal letter."],
  ["Another question?","Send us a private message: it goes straight to the administrator.","social"]]},
 ar:{t:"الأسئلة الشائعة",items:[
- ["ماذا يفعل Visa Checker؟","يساعدك على التأكد من اكتمال ملفك قبل الإيداع: قائمة وثائق تناسب وضعك، ونصائح، ومساعدة في حالة الرفض. وهو لا يودع الطلب نيابةً عنك."],
- ["هل يضمن Visa Checker الحصول على التأشيرة؟","لا. القرار يعود دائماً إلى القنصلية، وقد يُرفض حتى الملف المكتمل. يساعدك Visa Checker على تفادي الأخطاء الشائعة."],
+ ["ماذا يفعل CheckMyVisa؟","يساعدك على التأكد من اكتمال ملفك قبل الإيداع: قائمة وثائق تناسب وضعك، ونصائح، ومساعدة في حالة الرفض. وهو لا يودع الطلب نيابةً عنك."],
+ ["هل يضمن CheckMyVisa الحصول على التأشيرة؟","لا. القرار يعود دائماً إلى القنصلية، وقد يُرفض حتى الملف المكتمل. يساعدك CheckMyVisa على تفادي الأخطاء الشائعة."],
  ["ما هي البلدان المتاحة؟","اختر وجهتك من القائمة في أعلى هذه الصفحة. البلدان غير المتاحة بعد مكتوب عليها «قريباً»."],
  ["هل بياناتي محمية؟","لا تكتب رقم جواز سفرك ولا بياناتك البنكية في أي رسالة. إذا طلبت منك جوري أو عائشة وثيقة، أرفق الصفحة اللازمة فقط بعد تغطية الرقم وسطور الأرقام في الأسفل (زر «إخفاء مناطق»)، وأبقِ الاسم والتواريخ ظاهرة. تُحلَّل الوثائق بواسطة خدمة ذكاء اصطناعي تابعة لطرف ثالث، وتشرح صفحة الخصوصية ما يُستعمل."],
  ["ماذا أفعل بعد الرفض؟","اختر مساعدة الرفض: رسالة طعن ونصائح. التزم بالأجل المكتوب في رسالة الرفض."],
@@ -1287,7 +1287,7 @@ function homeHtml(t){
   h+='<div class="side">'+(S.origin==='tn'?needsHtml(t):'')+photoHtml()+'</div>';
   h+=hfaqHtml();
   var whyIcons=["✦","◎","文","↗","✓"];
-  h+='<section class="why why-showcase" aria-labelledby="why-title"><div class="why-head"><span class="why-eyebrow">'+(L==="ar"?"لماذا نحن؟":L==="en"?"THE VISA CHECKER ADVANTAGE":"L’AVANTAGE VISA CHECKER")+'</span><h2 id="why-title">'+t.whyTitle+'</h2><p class="why-lead">'+(L==="ar"?"مرافقة أوضح لتحضير ملف تأشيرتك بثقة.":L==="en"?"A clearer way to prepare your visa file with confidence.":"Une façon plus claire de préparer votre dossier visa, en toute confiance.")+'</p></div><ul class="why-grid">'+t.why.map(function(x,i){return '<li class="why-card"><span class="why-icon" aria-hidden="true">'+whyIcons[i%whyIcons.length]+'</span><span class="why-copy">'+x+'</span><span class="why-check" aria-hidden="true">✓</span></li>'}).join("")+'</ul><p class="why-note">'+t.whyNote+'</p></section>';
+  h+='<section class="why why-showcase" aria-labelledby="why-title"><div class="why-head"><span class="why-eyebrow">'+(L==="ar"?"لماذا نحن؟":L==="en"?"THE CHECKMYVISA ADVANTAGE":"L’AVANTAGE CHECKMYVISA")+'</span><h2 id="why-title">'+t.whyTitle+'</h2><p class="why-lead">'+(L==="ar"?"مرافقة أوضح لتحضير ملف تأشيرتك بثقة.":L==="en"?"A clearer way to prepare your visa file with confidence.":"Une façon plus claire de préparer votre dossier visa, en toute confiance.")+'</p></div><ul class="why-grid">'+t.why.map(function(x,i){return '<li class="why-card"><span class="why-icon" aria-hidden="true">'+whyIcons[i%whyIcons.length]+'</span><span class="why-copy">'+x+'</span><span class="why-check" aria-hidden="true">✓</span></li>'}).join("")+'</ul><p class="why-note">'+t.whyNote+'</p></section>';
   return h;
 }
 /* Sponsors: add entries like {name:"Agence X",url:"https://...",tag:{fr:"Voyages à Tunis",en:"Travel in Tunis",ar:"سفر في تونس"}}. SPONSOR_CONTACT is shown as text under the slots. */
@@ -1316,7 +1316,7 @@ var SPT={
  sAg:{fr:"Agences de voyages",en:"Travel agencies",ar:"وكالات السفر"},sIns:{fr:"Assurance voyage",en:"Travel insurance",ar:"تأمين السفر"},sCar:{fr:"Location de voiture",en:"Car rental",ar:"تأجير السيارات"},pick:{fr:"Touchez une catégorie pour voir la liste",en:"Tap a category to see the list",ar:"اختر فئة لعرض القائمة"},soon:{fr:"Bientôt disponible",en:"Coming soon",ar:"قريبًا"},
  cIns:{fr:"Assurance voyage",en:"Travel insurance",ar:"تأمين السفر"},cAg:{fr:"Agences de voyages",en:"Travel agencies",ar:"وكالات السفر"},cCar:{fr:"Location de voiture et transferts aéroport",en:"Car rental and airport transfers",ar:"تأجير السيارات والنقل من المطار"},cFh:{fr:"Vols et hôtels",en:"Flights and hotels",ar:"طيران وفنادق"},
  world:{fr:"Partenaires internationaux",en:"International partners",ar:"شركاء دوليون"},
- note:{fr:"Liens pratiques vers des sites indépendants. Certains sont des liens partenaires : Visa Checker peut recevoir une commission, sans frais pour vous. Pour le visa, choisissez des réservations annulables.",en:"Handy links to independent sites. Some are partner links: Visa Checker may earn a commission at no cost to you. For the visa, choose cancellable bookings.",ar:"روابط مفيدة لمواقع مستقلة. بعضها روابط شركاء: قد يحصل Visa Checker على عمولة دون أي تكلفة عليك. للتأشيرة، اختر حجوزات قابلة للإلغاء."}
+ note:{fr:"Liens pratiques vers des sites indépendants. Certains sont des liens partenaires : CheckMyVisa peut recevoir une commission, sans frais pour vous. Pour le visa, choisissez des réservations annulables.",en:"Handy links to independent sites. Some are partner links: CheckMyVisa may earn a commission at no cost to you. For the visa, choose cancellable bookings.",ar:"روابط مفيدة لمواقع مستقلة. بعضها روابط شركاء: قد يحصل CheckMyVisa على عمولة دون أي تكلفة عليك. للتأشيرة، اختر حجوزات قابلة للإلغاء."}
 };
 var ICONS={
  bed:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20V6M3 16h18v4M21 16v-3a3 3 0 0 0-3-3h-7v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
@@ -1335,7 +1335,7 @@ var RQ={sending:false,tries:0,chan:"email",ln:"",fn:"",d1:"",d2:"",city:"",dest:
 var RT={
 fr:{svc:{flight:"Billet d'avion",hotel:"Réservation d'hôtel"},t8:"Choisissez votre agence",s8:"Choisissez l'une de nos agences, ou un partenaire international.",t9:"Vos informations",s9:"Saisissez-les comme sur votre passeport.",t10a:"Demande envoyée",t10b:"Dernière étape",s10a:"L'agence vous répond bientôt.",s10b:"Envoyez votre demande à l'agence.",
  tabL:"Agences locales",tabI:"Partenaires internationaux",choose:"Choisir cette agence",test:"Agence test",noLocal:"Pas encore d'agence locale pour ce service. Essayez un partenaire international.",anyWhere:"Où que vous soyez, vous recevez votre document. Choisissez l'une des agences ci-dessous.",agN:"Serveur ",
- selfT:"Vous préférez réserver vous-même ?",selfN:"Sites indépendants, sans lien avec Visa Checker. Pour le visa, prenez une réservation annulable.",you:"Agence choisie",
+ selfT:"Vous préférez réserver vous-même ?",selfN:"Sites indépendants, sans lien avec CheckMyVisa. Pour le visa, prenez une réservation annulable.",you:"Agence choisie",
  ln:"Nom (comme sur le passeport)",fn:"Prénom(s) (comme sur le passeport)",d1f:"Date d'aller",d2f:"Date de retour",d1h:"Check-in (arrivée)",d2h:"Check-out (départ)",city:"Ville de destination",phone:"Numéro WhatsApp / téléphone",tg:"Identifiant Telegram (facultatif)",mail:"E-mail (obligatoire)",chan:"Comment voulez-vous être prévenu(e) ?",chanNote:"Le lien de paiement et le document sont toujours envoyés par e-mail. Si vous choisissez WhatsApp, nous vous écrirons seulement pour vous dire de vérifier votre e-mail.",
  ch:{whatsapp:"WhatsApp",telegram:"Telegram",email:"E-mail",sms:"SMS"},
  consent:"J'accepte que ces informations soient transmises à l'agence choisie pour traiter ma demande.",send:"Envoyer ma demande",sending:"Envoi en cours…",
@@ -1346,7 +1346,7 @@ fr:{svc:{flight:"Billet d'avion",hotel:"Réservation d'hôtel"},t8:"Choisissez v
  recap:"Récapitulatif",bWA:"Envoyer par WhatsApp",bMail:"Envoyer par e-mail",bTg:"Ouvrir Telegram (texte copié)",tgHint:"Le texte est copié : collez-le dans la conversation Telegram."},
 en:{svc:{flight:"Flight ticket",hotel:"Hotel booking"},t8:"Choose your agency",s8:"Choose one of our agencies, or an international partner.",t9:"Your details",s9:"Enter them exactly as in your passport.",t10a:"Request sent",t10b:"Last step",s10a:"The agency will reply soon.",s10b:"Send your request to the agency.",
  tabL:"Local agencies",tabI:"International partners",choose:"Choose this agency",test:"Test agency",noLocal:"No local agency for this service yet. Try an international partner.",anyWhere:"Wherever you are, you receive your document. Choose one of the agencies below.",agN:"Server ",
- selfT:"Prefer to book yourself?",selfN:"Independent sites, not affiliated with Visa Checker. For the visa, choose a cancellable booking.",you:"Chosen agency",
+ selfT:"Prefer to book yourself?",selfN:"Independent sites, not affiliated with CheckMyVisa. For the visa, choose a cancellable booking.",you:"Chosen agency",
  ln:"Last name (as in passport)",fn:"First name(s) (as in passport)",d1f:"Departure date",d2f:"Return date",d1h:"Check-in (arrival)",d2h:"Check-out (departure)",city:"Destination city (optional)",phone:"WhatsApp / phone number",tg:"Telegram username (optional)",mail:"E-mail (required)",chan:"How would you like to be notified?",chanNote:"The payment link and the document are always sent by e-mail. If you choose WhatsApp, we will only message you to check your e-mail.",
  ch:{whatsapp:"WhatsApp",telegram:"Telegram",email:"E-mail",sms:"SMS"},
  consent:"I agree that this information is shared with the chosen agency to process my request.",send:"Send my request",sending:"Sending…",
@@ -1357,7 +1357,7 @@ en:{svc:{flight:"Flight ticket",hotel:"Hotel booking"},t8:"Choose your agency",s
  recap:"Summary",bWA:"Send by WhatsApp",bMail:"Send by e-mail",bTg:"Open Telegram (text copied)",tgHint:"The text is copied: paste it into the Telegram chat."},
 ar:{svc:{flight:"تذكرة طيران",hotel:"حجز فندق"},t8:"اختر وكالتك",s8:"اختر إحدى وكالاتنا، أو شريكًا دوليًا.",t9:"بياناتك",s9:"اكتبها تمامًا كما في جواز سفرك.",t10a:"تم إرسال الطلب",t10b:"الخطوة الأخيرة",s10a:"ستردّ عليك الوكالة قريبًا.",s10b:"أرسل طلبك إلى الوكالة.",
  tabL:"وكالات محلية",tabI:"شركاء دوليون",choose:"اختر هذه الوكالة",test:"وكالة تجريبية",noLocal:"لا توجد وكالة محلية لهذه الخدمة بعد. جرّب شريكًا دوليًا.",anyWhere:"أينما كنت، ستستلم وثيقتك. اختر إحدى الوكالات أدناه.",agN:"الخادم ",
- selfT:"تفضّل الحجز بنفسك؟",selfN:"مواقع مستقلة لا علاقة لها بـ Visa Checker. للتأشيرة، اختر حجزًا قابلًا للإلغاء.",you:"الوكالة المختارة",
+ selfT:"تفضّل الحجز بنفسك؟",selfN:"مواقع مستقلة لا علاقة لها بـ CheckMyVisa. للتأشيرة، اختر حجزًا قابلًا للإلغاء.",you:"الوكالة المختارة",
  ln:"اللقب (كما في جواز السفر)",fn:"الاسم (كما في جواز السفر)",d1f:"تاريخ الذهاب",d2f:"تاريخ العودة",d1h:"الوصول (Check-in)",d2h:"المغادرة (Check-out)",city:"مدينة الوجهة (اختياري)",phone:"رقم واتساب / الهاتف",tg:"معرّف تيليغرام (اختياري)",mail:"البريد الإلكتروني (إلزامي)",chan:"كيف تريد أن نُخطرك؟",chanNote:"يصلك رابط الدفع والوثيقة دائمًا عبر البريد الإلكتروني. إذا اخترت واتساب فسنراسلك فقط لنطلب منك مراجعة بريدك الإلكتروني.",
  ch:{whatsapp:"واتساب",telegram:"تيليغرام",email:"بريد إلكتروني",sms:"رسالة SMS"},
  consent:"أوافق على إرسال هذه المعلومات إلى الوكالة المختارة لمعالجة طلبي.",send:"أرسل طلبي",sending:"جارٍ الإرسال…",
@@ -1479,7 +1479,7 @@ function normTg(v){return String(v||"").trim().replace(/^https?:\/\/t\.me\//i,""
 var SVCFR={flight:"Billet d'avion",hotel:"Réservation d'hôtel"},CHFR={whatsapp:"WhatsApp",telegram:"Telegram",email:"E-mail",sms:"SMS"};
 function reqText(){
   var a=findAgent(S.agent),hot=S.need==="hotel",F=RQ;
-  var l=["Demande Visa Checker : "+SVCFR[S.need],"Agence : "+a.name,"Pays de destination : "+destName(),"Nom : "+F.ln,"Prénom(s) : "+F.fn,(hot?"Check-in : ":"Date d'aller : ")+fmtD(F.d1),(hot?"Check-out : ":"Date de retour : ")+fmtD(F.d2)];
+  var l=["Demande CheckMyVisa : "+SVCFR[S.need],"Agence : "+a.name,"Pays de destination : "+destName(),"Nom : "+F.ln,"Prénom(s) : "+F.fn,(hot?"Check-in : ":"Date d'aller : ")+fmtD(F.d1),(hot?"Check-out : ":"Date de retour : ")+fmtD(F.d2)];
   if(F.city)l.push("Ville : "+F.city);
   l.push("Téléphone / WhatsApp : "+F.phone);if(F.tg)l.push("Telegram : @"+F.tg);if(F.mail)l.push("E-mail : "+F.mail);
   l.push("Canal pour le paiement et le document : "+CHFR[F.chan]);
@@ -1503,7 +1503,7 @@ function doneHtml(t){
     h+=laterNotice(a);
   }else{
     var enc=encodeURIComponent(txt),b='';
-    if(a.email)b+='<a class="pay wide" href="mailto:'+a.email+'?subject='+encodeURIComponent("Visa Checker : "+SVCFR[S.need])+'&body='+enc+'">'+R.bMail+'</a>';
+    if(a.email)b+='<a class="pay wide" href="mailto:'+a.email+'?subject='+encodeURIComponent("CheckMyVisa : "+SVCFR[S.need])+'&body='+enc+'">'+R.bMail+'</a>';
     if(a.whatsapp)b+='<a class="pay wide alt" href="https://wa.me/'+a.whatsapp+'?text='+enc+'" target="_blank" rel="noopener noreferrer">'+R.bWA+'</a>';
     h+='<div class="book"><b>'+R.manT+'</b><p>'+(F.failed?R.failTxt:R.manTxt)+'</p></div><div class="act">'+b+'</div>';
   }
@@ -1675,7 +1675,7 @@ function panelHtml(t){
   return chips("purpose",t.s_purpose)+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay)+j;
 }
 function allAdvisors(){var a=[];for(var k in PARTNERS){if(k==="_srv")continue;PARTNERS[k].forEach(function(p){a.push(p)})}return a}
-function advMsg(){var t=UI[S.lang];return "Visa Checker : "+t.advSubject+"\n"+t.advDest+" : "+nm(curC())+"\n"+t.advCase+" : "+(S.refus||"-")}
+function advMsg(){var t=UI[S.lang];return "CheckMyVisa : "+t.advSubject+"\n"+t.advDest+" : "+nm(curC())+"\n"+t.advCase+" : "+(S.refus||"-")}
 function renderAgency(t){
   var L=S.lang,list=allAdvisors();
   var h='<h2>'+t.agTitle+'</h2><p class="ag-sub">'+t.agSub+'</p>';
@@ -1686,7 +1686,7 @@ function renderAgency(t){
       var m=encodeURIComponent(advMsg());
       h+='<div class="partner"><b>'+p.name+'</b><span class="i-note">'+(p.adv||p.what)[L]+'</span>';
       if(p.contact)h+='<span class="i-note">'+p.contact+'</span>';
-      if(p.email)h+='<a class="pay wide" href="mailto:'+p.email+'?subject='+encodeURIComponent("Visa Checker")+'&body='+m+'">'+t.advMail+'</a>';
+      if(p.email)h+='<a class="pay wide" href="mailto:'+p.email+'?subject='+encodeURIComponent("CheckMyVisa")+'&body='+m+'">'+t.advMail+'</a>';
       if(p.whatsapp)h+='<a class="pay wide" href="https://wa.me/'+String(p.whatsapp).replace(/\D/g,"")+'?text='+m+'" target="_blank" rel="noopener">'+t.advWA+'</a>';
       if(!p.contact&&!p.email&&!p.whatsapp)h+='<span class="i-note">'+t.contactSoon+'</span>';
       h+='</div>';
@@ -2007,7 +2007,7 @@ var EVT={
    ["ev_card","Carte bancaire internationale et e-mail valide","Demandez à votre banque le plafond de paiement à l'étranger de votre carte."]],
   pitTitle:"Pièges à éviter",
   pits:["Utilisez uniquement le portail officiel. Les sites qui l'imitent facturent beaucoup plus cher.","Saisissez le nom, la date de naissance et le numéro de passeport exactement comme sur le passeport : une petite erreur peut faire refuser la demande.","N'achetez pas de billet non remboursable avant l'approbation. Une e-visa approuvée ne garantit pas l'entrée : le contrôle à la frontière décide.","Déposez la demande avec une marge de temps, et gardez l'approbation en PDF et imprimée."],
-  srcNote:"Statuts d'après le Henley Passport Index 2026, des pages officielles et des sources publiques consultées les 20 et 30 octobre 2026. Visa Checker n'est pas un site officiel et ne dépose pas la demande à votre place."},
+  srcNote:"Statuts d'après le Henley Passport Index 2026, des pages officielles et des sources publiques consultées les 20 et 30 octobre 2026. CheckMyVisa n'est pas un site officiel et ne dépose pas la demande à votre place."},
  en:{cardTitle:"e-Visa",cardSub:"Electronic visa: pick a country, see the rules and the official link",
   listTitle:"e-Visa for Tunisian passports",listSub:"Pick a country, in alphabetical order, to see the rules and the official portal.",detailSub:"Rules, official link and documents to prepare.",
   listWarn:"List compiled from public sources checked on 20 and 30 October 2026. Rules change often: always confirm on the official portal before paying.",
@@ -2026,7 +2026,7 @@ var EVT={
    ["ev_card","International bank card and a valid e-mail","Ask your bank for your card's limit for payments abroad."]],
   pitTitle:"Pitfalls to avoid",
   pits:["Use only the official portal. Sites that imitate it charge far more.","Enter your name, date of birth and passport number exactly as in your passport: a small error can get the application refused.","Do not buy a non-refundable ticket before approval. An approved e-visa does not guarantee entry: the border check decides.","Apply with time to spare, and keep the approval as a PDF and printed."],
-  srcNote:"Statuses based on the Henley Passport Index 2026, official pages and public sources checked on 20 and 30 October 2026. Visa Checker is not an official website and does not file the application for you."},
+  srcNote:"Statuses based on the Henley Passport Index 2026, official pages and public sources checked on 20 and 30 October 2026. CheckMyVisa is not an official website and does not file the application for you."},
  ar:{cardTitle:"e-Visa",cardSub:"التأشيرة الإلكترونية: اختر دولة لتعرف الشروط والرابط الرسمي",
   listTitle:"التأشيرة الإلكترونية لجواز السفر التونسي",listSub:"اختر دولة، بالترتيب الأبجدي، لتعرف الشروط والبوابة الرسمية.",detailSub:"الشروط والرابط الرسمي والوثائق التي يجب تحضيرها.",
   listWarn:"القائمة مبنية على مصادر عامة اطُّلع عليها في 20 و30 أكتوبر 2026. القواعد تتغير كثيرًا: تأكد دائمًا من البوابة الرسمية قبل الدفع.",
@@ -2045,7 +2045,7 @@ var EVT={
    ["ev_card","بطاقة بنكية دولية وبريد إلكتروني صالح","اسأل بنكك عن سقف الدفع بالخارج لبطاقتك."]],
   pitTitle:"أخطاء يجب تجنبها",
   pits:["استعمل البوابة الرسمية فقط. المواقع التي تقلّدها تأخذ مبالغ أكبر بكثير.","اكتب الاسم وتاريخ الميلاد ورقم الجواز تمامًا كما في جواز السفر: خطأ صغير قد يؤدي إلى رفض الطلب.","لا تشترِ تذكرة غير قابلة للاسترداد قبل الموافقة. التأشيرة الإلكترونية الموافَق عليها لا تضمن الدخول: المراقبة على الحدود هي التي تقرّر.","قدّم الطلب بوقت كافٍ، واحتفظ بالموافقة بصيغة PDF ومطبوعة."],
-  srcNote:"الأوضاع مبنية على مؤشر هينلي لجوازات السفر 2026 وصفحات رسمية ومصادر عامة اطُّلع عليها في 20 و30 أكتوبر 2026. Visa Checker ليس موقعًا رسميًا ولا يقدّم الطلب بدلًا عنك."}
+  srcNote:"الأوضاع مبنية على مؤشر هينلي لجوازات السفر 2026 وصفحات رسمية ومصادر عامة اطُّلع عليها في 20 و30 أكتوبر 2026. CheckMyVisa ليس موقعًا رسميًا ولا يقدّم الطلب بدلًا عنك."}
 };
 var EVICON='<span class="ev3d" aria-hidden="true"><svg viewBox="0 0 48 48"><defs><linearGradient id="evg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3e6"/><stop offset="1" stop-color="#bcd5ff"/></linearGradient><radialGradient id="evg2" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#7cc6ff"/><stop offset=".6" stop-color="#2f7de1"/><stop offset="1" stop-color="#1b4fa8"/></radialGradient></defs><rect x="6" y="5" width="30" height="38" rx="5" fill="#1e40af"/><rect x="8" y="3" width="30" height="38" rx="5" fill="url(#evg1)" stroke="#fff" stroke-width="1"/><circle cx="23" cy="19" r="10" fill="url(#evg2)"/><g class="evspin" fill="none" stroke="#fff" stroke-width="1.2" opacity=".85"><ellipse cx="23" cy="19" rx="4.2" ry="10"/><path d="M13 19h20M15 13h16M15 25h16"/></g><circle cx="20" cy="15.5" r="2.6" fill="#fff" opacity=".35"/><rect x="14" y="32" width="18" height="3" rx="1.5" fill="#1d4ed8"/><circle cx="37" cy="37" r="8" fill="#1f9d55" stroke="#fff" stroke-width="2"/><path d="M33.2 37l2.7 2.7 4.8-5.4" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
 var EVARROW='<svg class="evarrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -2236,14 +2236,14 @@ function icsDl(){
   var o=planData();if(!o)return;var L=TLS[S.lang],c=COUNTRIES.filter(function(x){return x.id===o.id})[0],cn=nm(c),stamp=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
   var ev=[[o.open,L.evOpen,0],[o.late,L.evLate,1]];
   if(o.days!=null)ev.push([o.book,tFill(L.evRdv,{c:cn}),2]);
-  var out=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Visa Checker//FR","CALSCALE:GREGORIAN"];
+  var out=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//CheckMyVisa//FR","CALSCALE:GREGORIAN"];
   ev.forEach(function(e,i){
     var d=e[0].replace(/-/g,""),nx=dstr(dnum(e[0])+1).replace(/-/g,"");
-    out.push("BEGIN:VEVENT","UID:vc-"+o.id+"-"+d+"-"+i+"@visa-checker","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+d,"DTEND;VALUE=DATE:"+nx,"SUMMARY:"+icsEsc("Visa Checker - "+e[1]),
+    out.push("BEGIN:VEVENT","UID:vc-"+o.id+"-"+d+"-"+i+"@checkmyvisa.org","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+d,"DTEND;VALUE=DATE:"+nx,"SUMMARY:"+icsEsc("CheckMyVisa - "+e[1]),
       "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+icsEsc(e[1]),"TRIGGER:PT9H","END:VALARM","END:VEVENT")});
   var s=Math.max(dnum(today())+1,dnum(o.late)-13),e2=dnum(o.late);
   if(e2>=dnum(today())){var cnt=Math.min(30,Math.max(1,e2-s+1));
-    out.push("BEGIN:VEVENT","UID:vc-"+o.id+"-chk@visa-checker","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+dstr(s).replace(/-/g,""),"DTEND;VALUE=DATE:"+dstr(s+1).replace(/-/g,""),"RRULE:FREQ=DAILY;COUNT="+cnt,"SUMMARY:"+icsEsc("Visa Checker - "+tFill(L.evChk,{c:cn})),
+    out.push("BEGIN:VEVENT","UID:vc-"+o.id+"-chk@checkmyvisa.org","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+dstr(s).replace(/-/g,""),"DTEND;VALUE=DATE:"+dstr(s+1).replace(/-/g,""),"RRULE:FREQ=DAILY;COUNT="+cnt,"SUMMARY:"+icsEsc("CheckMyVisa - "+tFill(L.evChk,{c:cn})),
       "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+icsEsc(tFill(L.evChk,{c:cn})),"TRIGGER:PT9H","END:VALARM","END:VEVENT")}
   out.push("END:VCALENDAR");
   var blob=new Blob([out.join("\r\n")+"\r\n"],{type:"text/calendar;charset=utf-8"}),a=document.createElement("a");
@@ -2440,34 +2440,34 @@ var EVTO={
    listWarn:"Liste établie d'après Wikipedia (« Visa requirements for Moroccan citizens », 2026) et des sources publiques, consultées le 8 novembre 2026. Les règles changent souvent : confirmez toujours sur le portail officiel avant de payer.",
    notListed:"Cette liste ne reprend que les pays où une e-visa ou une autorisation en ligne est possible pour un passeport marocain. Ailleurs, le visa se demande au consulat ou dans un centre de dépôt.",
    confirmBox:"Statut à confirmer : nos sources ne sont pas assez claires pour les passeports marocains. Vérifiez sur le portail officiel avant de payer ou d'acheter un billet.",
-   srcNote:"Statuts d'après Wikipedia (« Visa requirements for Moroccan citizens », 2026) et des sources publiques consultées le 8 novembre 2026. Visa Checker n'est pas un site officiel et ne dépose pas la demande à votre place."},
+   srcNote:"Statuts d'après Wikipedia (« Visa requirements for Moroccan citizens », 2026) et des sources publiques consultées le 8 novembre 2026. CheckMyVisa n'est pas un site officiel et ne dépose pas la demande à votre place."},
   en:{listTitle:"e-Visa for Moroccan passports",listSub:"Pick a country, in alphabetical order, to see the rules and the official portal.",
    listWarn:"List compiled from Wikipedia (\"Visa requirements for Moroccan citizens\", 2026) and public sources, checked on 8 November 2026. Rules change often: always confirm on the official portal before paying.",
    notListed:"This list only covers countries where an e-visa or an online authorisation is possible for a Moroccan passport. Elsewhere, the visa is requested at the consulate or an application centre.",
    confirmBox:"Status to confirm: our sources are not clear enough for Moroccan passports. Verify on the official portal before paying or buying a ticket.",
-   srcNote:"Statuses based on Wikipedia (\"Visa requirements for Moroccan citizens\", 2026) and public sources checked on 8 November 2026. Visa Checker is not an official website and does not file the application for you."},
+   srcNote:"Statuses based on Wikipedia (\"Visa requirements for Moroccan citizens\", 2026) and public sources checked on 8 November 2026. CheckMyVisa is not an official website and does not file the application for you."},
   ar:{listTitle:"التأشيرة الإلكترونية لجواز السفر المغربي",listSub:"اختر دولة، بالترتيب الأبجدي، لتعرف الشروط والبوابة الرسمية.",
    listWarn:"القائمة مبنية على ويكيبيديا (Visa requirements for Moroccan citizens، 2026) ومصادر عامة اطُّلع عليها في 8 نوفمبر 2026. القواعد تتغير كثيرًا: تأكد دائمًا من البوابة الرسمية قبل الدفع.",
    notListed:"تضم هذه القائمة فقط الدول التي تتيح تأشيرة إلكترونية أو إذنًا عبر الإنترنت لحاملي جواز السفر المغربي. في غيرها تُطلب التأشيرة لدى القنصلية أو مركز الإيداع.",
    confirmBox:"الوضع يحتاج إلى تأكيد: مصادرنا غير واضحة بما يكفي بخصوص جوازات السفر المغربية. تحقق من البوابة الرسمية قبل الدفع أو شراء تذكرة.",
-   srcNote:"الأوضاع مبنية على ويكيبيديا (Visa requirements for Moroccan citizens، 2026) ومصادر عامة اطُّلع عليها في 8 نوفمبر 2026. Visa Checker ليس موقعًا رسميًا ولا يقدّم الطلب بدلًا عنك."}
+   srcNote:"الأوضاع مبنية على ويكيبيديا (Visa requirements for Moroccan citizens، 2026) ومصادر عامة اطُّلع عليها في 8 نوفمبر 2026. CheckMyVisa ليس موقعًا رسميًا ولا يقدّم الطلب بدلًا عنك."}
  },
  dz:{
   fr:{listTitle:"e-Visa pour passeport algérien",listSub:"Choisissez un pays, par ordre alphabétique, pour voir les règles et le portail officiel.",
    listWarn:"Liste établie d'après Wikipedia (« Visa requirements for Algerian citizens », 2026) et des sources publiques, consultées le 8 novembre 2026. Les règles changent souvent : confirmez toujours sur le portail officiel avant de payer.",
    notListed:"Cette liste ne reprend que les pays où une e-visa ou une autorisation en ligne est possible pour un passeport algérien. Ailleurs, le visa se demande au consulat ou dans un centre de dépôt. Quelques démarches en ligne très ciblées ne sont pas reprises (par exemple pour des résidents de certains pays) : Koweït, Philippines, Singapour.",
    confirmBox:"Statut à confirmer : nos sources ne sont pas assez claires pour les passeports algériens. Vérifiez sur le portail officiel avant de payer ou d'acheter un billet.",
-   srcNote:"Statuts d'après Wikipedia (« Visa requirements for Algerian citizens », 2026) et des sources publiques consultées le 8 novembre 2026. Visa Checker n'est pas un site officiel et ne dépose pas la demande à votre place."},
+   srcNote:"Statuts d'après Wikipedia (« Visa requirements for Algerian citizens », 2026) et des sources publiques consultées le 8 novembre 2026. CheckMyVisa n'est pas un site officiel et ne dépose pas la demande à votre place."},
   en:{listTitle:"e-Visa for Algerian passports",listSub:"Pick a country, in alphabetical order, to see the rules and the official portal.",
    listWarn:"List compiled from Wikipedia (\"Visa requirements for Algerian citizens\", 2026) and public sources, checked on 8 November 2026. Rules change often: always confirm on the official portal before paying.",
    notListed:"This list only covers countries where an e-visa or an online authorisation is possible for an Algerian passport. Elsewhere, the visa is requested at the consulate or an application centre. A few very targeted online procedures are left out (for example for residents of certain countries): Kuwait, the Philippines, Singapore.",
    confirmBox:"Status to confirm: our sources are not clear enough for Algerian passports. Verify on the official portal before paying or buying a ticket.",
-   srcNote:"Statuses based on Wikipedia (\"Visa requirements for Algerian citizens\", 2026) and public sources checked on 8 November 2026. Visa Checker is not an official website and does not file the application for you."},
+   srcNote:"Statuses based on Wikipedia (\"Visa requirements for Algerian citizens\", 2026) and public sources checked on 8 November 2026. CheckMyVisa is not an official website and does not file the application for you."},
   ar:{listTitle:"التأشيرة الإلكترونية لجواز السفر الجزائري",listSub:"اختر دولة، بالترتيب الأبجدي، لتعرف الشروط والبوابة الرسمية.",
    listWarn:"القائمة مبنية على ويكيبيديا (Visa requirements for Algerian citizens، 2026) ومصادر عامة اطُّلع عليها في 8 نوفمبر 2026. القواعد تتغير كثيرًا: تأكد دائمًا من البوابة الرسمية قبل الدفع.",
    notListed:"تضم هذه القائمة فقط الدول التي تتيح تأشيرة إلكترونية أو إذنًا عبر الإنترنت لحاملي جواز السفر الجزائري. في غيرها تُطلب التأشيرة لدى القنصلية أو مركز الإيداع. لم تُدرج بعض الإجراءات الإلكترونية المحدودة جدًا (مثل المخصصة لمقيمي دول معينة): الكويت والفلبين وسنغافورة.",
    confirmBox:"الوضع يحتاج إلى تأكيد: مصادرنا غير واضحة بما يكفي بخصوص جوازات السفر الجزائرية. تحقق من البوابة الرسمية قبل الدفع أو شراء تذكرة.",
-   srcNote:"الأوضاع مبنية على ويكيبيديا (Visa requirements for Algerian citizens، 2026) ومصادر عامة اطُّلع عليها في 8 نوفمبر 2026. Visa Checker ليس موقعًا رسميًا ولا يقدّم الطلب بدلًا عنك."}
+   srcNote:"الأوضاع مبنية على ويكيبيديا (Visa requirements for Algerian citizens، 2026) ومصادر عامة اطُّلع عليها في 8 نوفمبر 2026. CheckMyVisa ليس موقعًا رسميًا ولا يقدّم الطلب بدلًا عنك."}
  }
 };
 /* Remarques propres à un pays et à un passeport : clé "origine:pays". */
@@ -2836,12 +2836,12 @@ document.addEventListener("click",function(e){var b=e.target.closest&&e.target.c
 
 /* ===== Pages légales ===== */
 /* À COMPLÉTER avant le lancement : laissez vide ce que vous ne voulez pas afficher. */
-var SITE={name:"Visa Checker",owner:"",status:"",address:"",email:"visacheckercontact@gmail.com",phone:"",domain:"checkmyvisa.org",host:"GitHub Pages / Cloudflare"};
+var SITE={name:"CheckMyVisa",owner:"",status:"",address:"",email:"visacheckercontact@gmail.com",phone:"",domain:"checkmyvisa.org",host:"GitHub Pages / Cloudflare"};
 var LGL={
 fr:{m:"Mentions légales",c:"Confidentialité",x:"Fermer",d:"Dernière mise à jour : octobre 2026. Ce texte est un modèle de bonne foi, pas un avis juridique : faites-le relire par un professionnel avant le lancement.",
  mt:[["Éditeur du site",function(){return L(["Site : "+SITE.name+(SITE.domain?" ("+SITE.domain+")":""),SITE.owner&&"Responsable : "+SITE.owner,SITE.status&&"Statut : "+SITE.status,SITE.address&&"Adresse : "+SITE.address,SITE.email&&"E-mail : "+SITE.email,SITE.phone&&"Téléphone : "+SITE.phone,SITE.host&&"Hébergeur : "+SITE.host])}],
- ["Nature du service","Visa Checker est un outil d'aide à la préparation des dossiers de visa. Le site n'est lié à aucune ambassade, à TLScontact ni à France-Visas. Il ne dépose pas de demande de visa et ne garantit jamais l'obtention d'un visa : la décision appartient uniquement aux autorités. Vérifiez toujours les pièces exigées sur les sites officiels."],
- ["Agences et partenaires","Les billets, réservations d'hôtel et autres documents sont fournis par des agences et des partenaires indépendants. Leurs prix, délais et prestations relèvent de leur seule responsabilité. Le paiement se fait auprès de l'agence choisie, pas auprès de Visa Checker. Pour un dossier de visa, demandez uniquement des réservations réellement annulables."],
+ ["Nature du service","CheckMyVisa est un outil d'aide à la préparation des dossiers de visa. Le site n'est lié à aucune ambassade, à TLScontact ni à France-Visas. Il ne dépose pas de demande de visa et ne garantit jamais l'obtention d'un visa : la décision appartient uniquement aux autorités. Vérifiez toujours les pièces exigées sur les sites officiels."],
+ ["Agences et partenaires","Les billets, réservations d'hôtel et autres documents sont fournis par des agences et des partenaires indépendants. Leurs prix, délais et prestations relèvent de leur seule responsabilité. Le paiement se fait auprès de l'agence choisie, pas auprès de CheckMyVisa. Pour un dossier de visa, demandez uniquement des réservations réellement annulables."],
  ["Liens externes et partenaires","Le site renvoie vers des sites tiers. Certains liens peuvent être des liens partenaires : nous pouvons alors percevoir une commission, sans coût supplémentaire pour vous."],
  ["Propriété intellectuelle","Les noms, logos et marques des tiers cités appartiennent à leurs propriétaires et sont utilisés uniquement pour les identifier. Le contenu et le code du site sont protégés ; toute reprise nécessite notre accord."],
  ["Responsabilité","Les informations sont données à titre indicatif et peuvent évoluer. Nous ne pouvons être tenus responsables d'un refus de visa, d'une erreur de saisie du client ou d'un changement de règle des autorités."]],
@@ -2854,8 +2854,8 @@ fr:{m:"Mentions légales",c:"Confidentialité",x:"Fermer",d:"Dernière mise à j
  ["Vos droits","Vous pouvez demander l'accès, la rectification, la suppression de vos données ou vous opposer à leur traitement en nous écrivant"+" (voir l'e-mail dans les mentions légales). En Tunisie, ces droits sont encadrés par la loi organique n° 2004-63 du 27 juillet 2004 ; vous pouvez aussi saisir l'Instance nationale de protection des données personnelles (INPDP)."]]},
 en:{m:"Legal notice",c:"Privacy",x:"Close",d:"Last updated: October 2026. This text is a good-faith template, not legal advice: have a professional review it before launch.",
  mt:[["Site publisher",function(){return L(["Site: "+SITE.name+(SITE.domain?" ("+SITE.domain+")":""),SITE.owner&&"Responsible: "+SITE.owner,SITE.status&&"Status: "+SITE.status,SITE.address&&"Address: "+SITE.address,SITE.email&&"E-mail: "+SITE.email,SITE.phone&&"Phone: "+SITE.phone,SITE.host&&"Host: "+SITE.host])}],
- ["Nature of the service","Visa Checker is a tool that helps you prepare visa files. The site is not affiliated with any embassy, TLScontact or France-Visas. It does not submit visa applications and never guarantees a visa: the decision belongs solely to the authorities. Always check the required documents on official websites."],
- ["Agencies and partners","Tickets, hotel bookings and other documents are provided by independent agencies and partners. Their prices, delays and services are their sole responsibility. You pay the chosen agency, not Visa Checker. For a visa file, only ask for genuinely cancellable bookings."],
+ ["Nature of the service","CheckMyVisa is a tool that helps you prepare visa files. The site is not affiliated with any embassy, TLScontact or France-Visas. It does not submit visa applications and never guarantees a visa: the decision belongs solely to the authorities. Always check the required documents on official websites."],
+ ["Agencies and partners","Tickets, hotel bookings and other documents are provided by independent agencies and partners. Their prices, delays and services are their sole responsibility. You pay the chosen agency, not CheckMyVisa. For a visa file, only ask for genuinely cancellable bookings."],
  ["External and partner links","The site links to third-party sites. Some links may be partner links: we may then earn a commission at no extra cost to you."],
  ["Intellectual property","Third-party names, logos and trademarks belong to their owners and are used only to identify them. The site's content and code are protected; any reuse needs our consent."],
  ["Liability","Information is indicative and may change. We cannot be held responsible for a visa refusal, a data-entry error by the client, or a rule change by the authorities."]],
@@ -2868,8 +2868,8 @@ en:{m:"Legal notice",c:"Privacy",x:"Close",d:"Last updated: October 2026. This t
  ["Your rights","You can ask for access, correction or deletion of your data, or object to its processing, by writing to us (see the e-mail in the legal notice). In Tunisia these rights are governed by Organic Law No. 2004-63 of 27 July 2004; you may also contact the national personal data protection authority (INPDP)."]]},
 ar:{m:"الإشعار القانوني",c:"الخصوصية",x:"إغلاق",d:"آخر تحديث: أكتوبر 2026. هذا النص نموذج بحسن نية وليس استشارة قانونية: اطلب من مختص مراجعته قبل الإطلاق.",
  mt:[["ناشر الموقع",function(){return L(["الموقع: "+SITE.name+(SITE.domain?" ("+SITE.domain+")":""),SITE.owner&&"المسؤول: "+SITE.owner,SITE.status&&"الصفة: "+SITE.status,SITE.address&&"العنوان: "+SITE.address,SITE.email&&"البريد الإلكتروني: "+SITE.email,SITE.phone&&"الهاتف: "+SITE.phone,SITE.host&&"الاستضافة: "+SITE.host])}],
- ["طبيعة الخدمة","Visa Checker أداة تساعد على تحضير ملفات التأشيرة. الموقع غير تابع لأي سفارة أو TLScontact أو France-Visas. لا يقدّم طلبات التأشيرة ولا يضمن الحصول عليها أبدًا: القرار للسلطات وحدها. تحقق دائمًا من الوثائق المطلوبة في المواقع الرسمية."],
- ["الوكالات والشركاء","تُقدَّم التذاكر وحجوزات الفنادق وغيرها من الوثائق من طرف وكالات وشركاء مستقلين. الأسعار والآجال والخدمات من مسؤوليتهم وحدهم. يتم الدفع للوكالة المختارة وليس لـ Visa Checker. في ملف التأشيرة، اطلب فقط حجوزات قابلة للإلغاء فعلًا."],
+ ["طبيعة الخدمة","CheckMyVisa أداة تساعد على تحضير ملفات التأشيرة. الموقع غير تابع لأي سفارة أو TLScontact أو France-Visas. لا يقدّم طلبات التأشيرة ولا يضمن الحصول عليها أبدًا: القرار للسلطات وحدها. تحقق دائمًا من الوثائق المطلوبة في المواقع الرسمية."],
+ ["الوكالات والشركاء","تُقدَّم التذاكر وحجوزات الفنادق وغيرها من الوثائق من طرف وكالات وشركاء مستقلين. الأسعار والآجال والخدمات من مسؤوليتهم وحدهم. يتم الدفع للوكالة المختارة وليس لـ CheckMyVisa. في ملف التأشيرة، اطلب فقط حجوزات قابلة للإلغاء فعلًا."],
  ["الروابط الخارجية والشركاء","يحيل الموقع إلى مواقع أخرى. قد تكون بعض الروابط روابط شراكة، وقد نحصل على عمولة دون أي تكلفة إضافية عليك."],
  ["الملكية الفكرية","أسماء الجهات الأخرى وشعاراتها وعلاماتها ملك لأصحابها وتُستعمل للتعريف بها فقط. محتوى الموقع وشيفرته محميان، وأي استعمال يتطلب موافقتنا."],
  ["المسؤولية","المعلومات إرشادية وقد تتغير. لا نتحمل مسؤولية رفض التأشيرة أو خطأ في إدخال بيانات العميل أو تغيير القواعد من السلطات."]],

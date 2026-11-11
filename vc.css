@@ -1,4 +1,4 @@
-/* Visa Checker – socle UI partagé (CSS léger, sans dépendance)
+/* CheckMyVisa – socle UI partagé (CSS léger, sans dépendance)
    Les utilitaires utilisés par les trois vues sont compilés localement ci-dessous. */
 
 :root {
@@ -184,7 +184,7 @@ button[aria-busy="true"]{opacity:.8;cursor:progress}
 
 
 
-/* ===== Legacy Visa Checker landing page styles restored from the pre-hub homepage ===== */
+/* ===== Legacy CheckMyVisa landing page styles restored from the pre-hub homepage ===== */
 :root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg,#fff);color:var(--ink,#000)}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
 .aibox{display:flex;flex-direction:column;gap:6px;margin-block:16px;padding:16px;border:1px solid var(--line);border-radius:var(--r-3);background:var(--surface)}.aibox .pay{align-self:flex-start;margin-top:8px}.tool .sc-ok{color:var(--ok);font-weight:600}
 
@@ -751,7 +751,7 @@ textarea.sel{width:100%;resize:vertical;font:inherit;min-height:84px}
 @media print{
  body.print-pack header,body.print-pack nav,body.print-pack .nav,body.print-pack footer,body.print-pack .dock,body.print-pack .deco,body.print-pack #agency,body.print-pack #stepper,body.print-pack .cp,body.print-pack [data-print],body.print-pack .home-btn,body.print-pack .act,body.print-pack #legal{display:none!important}
  body.print-pack .rv{opacity:1!important;transform:none!important}
- body.print-pack #refus::before{content:"Visa Checker · Pack recours";display:block;font-size:20px;font-weight:700;margin-bottom:12px}
+ body.print-pack #refus::before{content:"CheckMyVisa · Pack recours";display:block;font-size:20px;font-weight:700;margin-bottom:12px}
  body.print-pack .lt{break-before:page}
  body.print-one #refus .lt:not(.pr-one){display:none}
  body.print-one .lt{break-before:auto}
@@ -896,7 +896,7 @@ html[lang="ar"] .ptop,html[lang="ar"] .ptop-b{font-family:var(--f-ar)}
 .orisel{display:flex;align-items:center;gap:10px}.orisel .flag{width:28px;height:20px;display:inline-flex;flex:none}.orisel .flag img{width:100%;height:100%;border-radius:3px}.orisel .sel{flex:1}
 .chips.orig{display:flex;flex-wrap:wrap;gap:8px}.chips.orig .chip{display:inline-flex;align-items:center;gap:8px}.chips.orig .flag{width:22px;height:16px;display:inline-flex}.chips.orig .flag img{width:100%;height:100%;border-radius:3px;object-fit:cover}
 
-/* Visa Checker — refresh visuel premium */
+/* CheckMyVisa — refresh visuel premium */
 :root{--vc-ink:#10254b;--vc-blue:#2458d3;--vc-sky:#dcecff;--vc-line:#dbe6f5;--vc-shadow:0 18px 50px -30px rgba(16,37,75,.32)}
 html{scroll-behavior:smooth}
 body{background:radial-gradient(ellipse at 85% 0%,rgba(191,219,254,.55),transparent 34rem),linear-gradient(180deg,#f7faff 0%,#fff 48%,#f5f8ff 100%);color:var(--vc-ink)}
@@ -1116,7 +1116,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
  .sitenav.in-app>.sn-profile svg{width:21px!important;height:21px!important}
 }
 
-/* FAQ de l'accueil : sous le titre et le formulaire, avant « L'avantage Visa Checker ». Carte claire, lisible aussi sur le bandeau bleu mobile. */
+/* FAQ de l'accueil : sous le titre et le formulaire, avant « L'avantage CheckMyVisa ». Carte claire, lisible aussi sur le bandeau bleu mobile. */
 .hfaq{width:100%;max-width:1080px;margin:28px auto 0;padding:clamp(18px,3vw,28px);border:1px solid #c8d9ff;border-radius:24px;background:linear-gradient(145deg,#f5f8ff 0%,#fff 58%,#eef5ff 100%);color:#142b52;box-shadow:0 16px 38px -28px rgba(29,78,216,.42);display:flex;flex-direction:column;gap:14px}
 .hfaq h2{margin:0;color:#142b52;font-family:var(--f-display);font-size:clamp(1.3rem,2.6vw,1.7rem);line-height:1.15;text-align:center}
 .hfaq-list{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
@@ -1152,7 +1152,7 @@ body[data-step="0"] .hfaq{grid-column:1/-1;grid-row:3}
 .missing-docs.is-complete{border-color:#23865a;border-inline-start-color:#23865a;background:#edf8f1;color:#14532d}
 @media(prefers-reduced-motion:no-preference){.missing-docs{transition:background-color .18s,border-color .18s}}
 
-/* ===== Visa Checker SaaS redesign (local, no CDN) ===== */
+/* ===== CheckMyVisa SaaS redesign (local, no CDN) ===== */
 :root{--vc-bg:#F9FAFB;--vc-surface:#fff;--vc-line:#E5E7EB;--vc-ink:#111827;--vc-muted:#6B7280;--vc-blue:#2563EB;--vc-blue-soft:#EFF6FF;--vc-radius:18px}
 body.vc-app{margin:0;background:var(--vc-bg);color:var(--vc-ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55;padding:0 0 48px}
 .vc-app *{box-sizing:border-box}

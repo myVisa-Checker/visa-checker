@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Tests de base de Visa Checker. Aucune dépendance : node tests/run.mjs
+// Tests de base de CheckMyVisa. Aucune dépendance : node tests/run.mjs
 // Vérifie la syntaxe des scripts, la validité des JSON, les fichiers référencés, la cohérence de version
 // et le rendu de la section e-Visa pour les trois passeports (tn, ma, dz) dans les trois langues.
 import { readFileSync, existsSync, readdirSync } from "node:fs";
@@ -97,7 +97,7 @@ if (loaded) {
 }
 
 const jouryHtml = read("joury.html"), jouryJs = read("joury.js"), worker = read("worker/visa-chat-worker.js");
-ok("ancienne bulle Assistant Visa Checker retirée", !/id="vc-btn"/.test(html) && !/id="vc-box"/.test(html));
+ok("ancienne bulle Assistant CheckMyVisa retirée", !/id="vc-btn"/.test(html) && !/id="vc-box"/.test(html));
 const appSrc = read("visa-app.js");
 ok("accès Joury et Aicha depuis l'accueil", /vc-hero-assistant/.test(appSrc) && /joury\.html/.test(appSrc) && /view-dossier\.html/.test(appSrc));
 ok("ancien bouton flottant Joury retiré (HTML et CSS)", !/joury-fab/.test(html));

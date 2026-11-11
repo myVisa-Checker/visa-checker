@@ -1,4 +1,4 @@
-/* Visa Checker : Worker « visa-proxy » (v8)
+/* CheckMyVisa : Worker « visa-proxy » (v8)
    Rôle : demandes vers les agences (via Make), codes et jetons du pack recours, lettre de motivation IA,
    analyseur de lettre de refus IA, liens « Confirmer et payer » / « Modifier » valables 48 h.
    Déploiement : Cloudflare > Workers > visa-proxy > Edit code : tout remplacer par ce fichier > Deploy.
@@ -25,7 +25,7 @@
                        Authentification : en-tête X-Admin-Key (recommandé) ou ?key=ADMIN_KEY (reste dans l'historique : à éviter).
      GET  /order?id=&k=       -> la demande du client (page « Confirmer et payer » / « Modifier »)
      POST /order/edit  {id,k,date1,date2} -> modifie les dates (48 h max, jamais le nom) et prévient Make
-     POST /order/claim | /order/paid | /order/sent {id,k} -> « J'ai payé » (client), « Paiement reçu » (Visa Checker), « Document envoyé » (agence)
+     POST /order/claim | /order/paid | /order/sent {id,k} -> « J'ai payé » (client), « Paiement reçu » (CheckMyVisa), « Document envoyé » (agence)
 */
 const MAX_BODY = 8000, RATE_MAX = 5, RATE_WINDOW = 600;
 const TOKEN_DAYS = 30, UNLOCK_TRIES = 10;
@@ -297,7 +297,7 @@ export default {
       return out({ ok: true, d1, d2 }, 200);
     }
 
-    /* ---- étapes de la commande : « J'ai payé » (client), « Paiement reçu » (Visa Checker), « Document envoyé » (agence) ---- */
+    /* ---- étapes de la commande : « J'ai payé » (client), « Paiement reçu » (CheckMyVisa), « Document envoyé » (agence) ---- */
     const ACT = { "/order/claim": ["c", "claimed"], "/order/paid": ["v", "paid"], "/order/sent": ["a", "sent"] };
     if (ACT[path]) {
       if (req.method !== "POST") return out({ ok: false }, 405);

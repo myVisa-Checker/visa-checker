@@ -1,4 +1,4 @@
-# Visa Checker
+# CheckMyVisa
 
 Application web statique (PWA) multilingue pour préparer les dossiers de voyage et consulter des informations indicatives sur les visas. Le dépôt contient également un Worker Cloudflare séparé pour les contrôles d'éligibilité et de validité du passeport.
 

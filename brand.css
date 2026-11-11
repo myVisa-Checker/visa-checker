@@ -1,4 +1,4 @@
-/* Visa Checker : identité visuelle bleue (couche de design, chargée en dernier).
+/* CheckMyVisa : identité visuelle bleue (couche de design, chargée en dernier).
    Palette : bleu marine profond, bleu royal moderne, bleu clair, blanc.
    Principe : on ne change que les variables (les « tokens » de index.html et site.css) puis quelques finitions.
    Pour revenir à l'ancien rendu, il suffit de retirer la ligne <link rel="stylesheet" href="/brand.css"> des pages.
@@ -110,7 +110,7 @@ th{background:var(--ice-50)}
 }
 
 
-/* Visa Checker — unified premium blue system */
+/* CheckMyVisa — unified premium blue system */
 :root{
   --royal-950:#081b3d;--royal-900:#0b2452;--royal-800:#123775;
   --royal-700:#1749a5;--royal-600:#245bd4;--royal-500:#3478ed;

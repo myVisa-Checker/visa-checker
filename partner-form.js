@@ -1,6 +1,6 @@
 /* Page « Partenaires » : fenêtre de demande de partenariat.
    Parcours : cartes de profil -> fenêtre (champs communs + champs propres au profil) -> envoi.
-   Envoi : POST JSON vers la route /partner du Worker « visa-chat » (qui transmet l'e-mail à Visa Checker).
+   Envoi : POST JSON vers la route /partner du Worker « visa-chat » (qui transmet l'e-mail à CheckMyVisa).
    Secours : si le Worker ne confirme pas la réception, la demande est proposée par e-mail (mailto + copie du texte).
    Aucune donnée n'est stockée dans le navigateur. Le logo est redimensionné et converti dans le navigateur (WebP, 512 px max). */
 (function () {
@@ -141,7 +141,7 @@
     h += '<fieldset class="pf-sec"><legend>Votre activité · ' + esc(C.label) + '</legend><div class="pf-row">' + C.fields.map(fieldHtml).join("") + "</div></fieldset>";
     h += '<fieldset class="pf-sec"><legend>Votre proposition</legend><div class="pf-row">' + commonAfter().map(fieldHtml).join("") + "</div></fieldset>";
     h += '<fieldset class="pf-sec"><legend>Votre contact</legend><div class="pf-row">' + contactFields().map(fieldHtml).join("") + "</div></fieldset>";
-    h += '<label class="pf-consent"><input type="checkbox" id="pf-consent" name="consent" required aria-required="true" aria-describedby="pf-e-consent"><span>J\'accepte que Visa Checker me contacte au sujet de cette demande et, après validation et accord écrit, publie le nom et le logo de mon entreprise. <em style="color:#b42318;font-style:normal">*</em></span></label><p class="pf-err" id="pf-e-consent" hidden></p>';
+    h += '<label class="pf-consent"><input type="checkbox" id="pf-consent" name="consent" required aria-required="true" aria-describedby="pf-e-consent"><span>J\'accepte que CheckMyVisa me contacte au sujet de cette demande et, après validation et accord écrit, publie le nom et le logo de mon entreprise. <em style="color:#b42318;font-style:normal">*</em></span></label><p class="pf-err" id="pf-e-consent" hidden></p>';
     h += '<div class="pf-hp" aria-hidden="true"><label>Ne pas remplir<input type="text" id="pf-hp" name="hp" tabindex="-1" autocomplete="off"></label></div>';
     bodyEl.innerHTML = h;
     built = cat; logo = null;
@@ -262,7 +262,7 @@
   /* ---------- Texte de la demande (secours e-mail) ---------- */
   function toText(p, noLogoNote) {
     var L = [], d = p.details, k;
-    L.push("Demande de partenariat Visa Checker", "Profil : " + p.categoryLabel, "");
+    L.push("Demande de partenariat CheckMyVisa", "Profil : " + p.categoryLabel, "");
     L.push("Entreprise : " + p.company, "Lieu : " + p.city + ", " + p.country);
     if (p.website) L.push("Site : " + p.website);
     for (k in p.social) if (p.social[k]) L.push("Réseau " + k + " : " + p.social[k]);

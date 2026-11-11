@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f4f7fc">
-<title>Recours &amp; Gestion des Refus – Visa Checker</title>
+<title>Recours &amp; Gestion des Refus – CheckMyVisa</title>
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="vc.css">
 <script src="vc-shared.js"></script>
@@ -154,7 +154,7 @@
 
   var DICT = {
     fr: {
-      doc_title: 'Recours & Gestion des Refus – Visa Checker', assistant: 'Assistant 2', h1: 'Recours & Gestion des Refus',
+      doc_title: 'Recours & Gestion des Refus – CheckMyVisa', assistant: 'Assistant 2', h1: 'Recours & Gestion des Refus',
       lead: 'Identifiez les motifs de votre refus, vérifiez le délai, puis générez une lettre de recours structurée à compléter avec vos preuves.',
       s1: 'Analyser', s2: 'Rédiger', an_h: 'Lettre de refus', dest: 'Pays de destination', other_c: 'Autre pays',
       r_date: 'Date de la décision', r_days: 'Délai de recours indiqué sur la lettre (jours)',
@@ -179,7 +179,7 @@
       ret_docs: 'Attaches : contrat de travail, congé accordé, titres de propriété ou de location, famille, scolarité', other_docs: 'Pièces répondant précisément au motif écrit sur la lettre'
     },
     en: {
-      doc_title: 'Appeals & Refusal Management – Visa Checker', assistant: 'Assistant 2', h1: 'Appeals & Refusal Management',
+      doc_title: 'Appeals & Refusal Management – CheckMyVisa', assistant: 'Assistant 2', h1: 'Appeals & Refusal Management',
       lead: 'Identify the grounds for your refusal, check the deadline, then generate a structured appeal letter to complete with your evidence.',
       s1: 'Analyze', s2: 'Draft', an_h: 'Refusal letter', dest: 'Destination country', other_c: 'Other country',
       r_date: 'Decision date', r_days: 'Appeal deadline stated on the letter (days)',
@@ -204,7 +204,7 @@
       ret_docs: 'Ties: employment contract, approved leave, property or lease, family, school enrolment', other_docs: 'Documents answering exactly the ground written on the letter'
     },
     ar: {
-      doc_title: 'الطعن وإدارة الرفض – Visa Checker', assistant: 'المساعد 2', h1: 'الطعن وإدارة الرفض',
+      doc_title: 'الطعن وإدارة الرفض – CheckMyVisa', assistant: 'المساعد 2', h1: 'الطعن وإدارة الرفض',
       lead: 'حدّد أسباب الرفض وتحقق من الأجل ثم أنشئ رسالة طعن منظمة تكملها بإثباتاتك.',
       s1: 'تحليل', s2: 'صياغة', an_h: 'رسالة الرفض', dest: 'بلد الوجهة', other_c: 'بلد آخر',
       r_date: 'تاريخ القرار', r_days: 'أجل الطعن المذكور في الرسالة (أيام)',
@@ -362,7 +362,7 @@
       VC.toast('Ajoutez le texte de la notification de refus pour générer une lettre personnalisée.');
       return;
     }
-    if (!window.confirm('Les informations saisies et les motifs du refus seront transmis au service IA Visa Checker pour rédiger un projet de lettre. Continuer ?')) return;
+    if (!window.confirm('Les informations saisies et les motifs du refus seront transmis au service IA CheckMyVisa pour rédiger un projet de lettre. Continuer ?')) return;
     VC.api.withBusy($('g-make'), function () {
       return VC.api.generateAppeal({
         authority: $('r-dest').value || $('g-post').value,

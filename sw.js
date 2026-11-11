@@ -1,6 +1,6 @@
-/* Visa Checker – cache limité au shell et aux assets statiques.
+/* CheckMyVisa – cache limité au shell et aux assets statiques.
    Aucune API, donnée utilisateur ou requête POST n'est mise en cache. */
-const VERSION = "2026.11.11.2125";
+const VERSION = "2026.11.11.2150";
 const SHELL = "vc-shell-" + VERSION;
 const PRECACHE = [
   "./",
@@ -67,7 +67,7 @@ function offlineResponse(json) {
     ? new Response(JSON.stringify({ error: "offline", message: "Service indisponible hors ligne." }), {
         status: 503, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
       })
-    : new Response("Visa Checker est hors ligne. Reconnectez-vous puis réessayez.", {
+    : new Response("CheckMyVisa est hors ligne. Reconnectez-vous puis réessayez.", {
         status: 503, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" }
       });
 }
