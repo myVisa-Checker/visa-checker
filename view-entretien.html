@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f7fc">
+<title>Simulateur d’Entretien Consulaire – Visa Checker</title>
+<link rel="manifest" href="manifest.json">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link rel="stylesheet" href="vc.css">
+<script src="vc-shared.js"></script>
+</head>
+<body class="pb-24 md:pb-10">
+<div id="vc-header"></div>
+
+<main class="mx-auto max-w-6xl px-4 py-5 md:py-8">
+  <div class="mb-5">
+    <span class="vc-badge vc-badge-info" data-i18n="assistant">Assistant 3</span>
+    <h1 class="mt-2 text-2xl font-extrabold tracking-tight md:text-3xl" data-i18n="h1">Simulateur d’Entretien Consulaire</h1>
+    <p class="vc-mute mt-1 max-w-2xl text-sm md:text-base" data-i18n="lead"></p>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-5">
+    <!-- CONSOLE -->
+    <section class="lg:col-span-3" aria-labelledby="con-h">
+      <div class="vc-card vc-console">
+        <div class="vc-console-bar">
+          <span id="live-dot" class="vc-dot is-off" aria-hidden="true"></span>
+          <h2 id="con-h" class="text-sm font-bold" data-i18n="console">Console d’entraînement</h2>
+          <span class="ms-auto flex items-center gap-2 text-xs font-semibold">
+            <span id="q-count" class="vc-badge vc-badge-muted">0/0</span>
+            <span id="timer" class="vc-badge vc-badge-muted" aria-label="Chronomètre">00:00</span>
+          </span>
+        </div>
+
+        <div id="log" class="vc-log" role="log" aria-live="polite"></div>
+
+        <div id="live" class="px-3 pb-2" aria-live="polite"></div>
+
+        <form id="compose" class="vc-compose" autocomplete="off">
+          <button type="button" id="mic" class="vc-btn vc-btn-icon" data-i18n-title="mic"></button>
+          <textarea id="answer" class="vc-input" rows="1" data-i18n-ph="ans_ph" disabled></textarea>
+          <button type="submit" id="send" class="vc-btn vc-btn-primary vc-btn-icon" data-i18n-title="send" disabled></button>
+        </form>
+      </div>
+
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button type="button" id="btn-start" class="vc-btn vc-btn-primary grow sm:grow-0" data-i18n="start">Démarrer l’entretien</button>
+        <button type="button" id="btn-skip" class="vc-btn" data-i18n="skip" disabled>Passer la question</button>
+        <button type="button" id="btn-end" class="vc-btn" data-i18n="end" disabled>Terminer</button>
+      </div>
+    </section>
+
+    <!-- PANNEAU LATÉRAL -->
+    <aside class="space-y-4 lg:col-span-2">
+      <div class="vc-card">
+        <h2 class="vc-card-h" data-i18n="setup">Paramètres</h2>
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+          <div>
+            <label class="vc-label" for="s-lang" data-i18n="s_lang">Langue de l’entretien</label>
+            <select id="s-lang" class="vc-input">
+              <option value="fr">Français</option><option value="en">English</option><option value="ar">العربية</option>
+            </select>
+          </div>
+          <div>
+            <label class="vc-label" for="s-purpose" data-i18n="s_purpose">Motif du voyage</label>
+            <select id="s-purpose" class="vc-input">
+              <option value="tourism" data-i18n="p_tourism">Tourisme</option>
+              <option value="visit" data-i18n="p_visit">Visite familiale / privée</option>
+              <option value="business" data-i18n="p_business">Affaires</option>
+              <option value="study" data-i18n="p_study">Études</option>
+            </select>
+          </div>
+          <div>
+            <label class="vc-label" for="s-level" data-i18n="s_level">Niveau de l’agent</label>
+            <select id="s-level" class="vc-input">
+              <option value="1" data-i18n="l_easy">Courtois</option>
+              <option value="2" selected data-i18n="l_std">Standard</option>
+              <option value="3" data-i18n="l_hard">Strict</option>
+            </select>
+          </div>
+          <label class="vc-row cursor-pointer !flex-nowrap sm:col-span-2 lg:col-span-1">
+            <input type="checkbox" id="s-tts" class="h-5 w-5 shrink-0">
+            <span class="text-sm" data-i18n="s_tts">Lire les questions à voix haute</span>
+          </label>
+        </div>
+        <p id="voice-note" class="vc-mute mt-3 hidden text-xs" data-i18n="no_voice"></p>
+      </div>
+
+      <div class="vc-card" aria-live="polite">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="vc-card-h !mb-0" data-i18n="fb_h">Feedback en direct</h2>
+          <span id="fb-badge" class="vc-badge vc-badge-muted" data-i18n="fb_wait">En attente</span>
+        </div>
+        <div id="meters" class="mt-3 space-y-3"></div>
+        <ul id="fb-list" class="mt-4 space-y-2"></ul>
+      </div>
+
+      <div class="vc-card hidden" id="summary">
+        <h2 class="vc-card-h" data-i18n="sum_h">Bilan de session</h2>
+        <div id="sum-body" class="space-y-2"></div>
+      </div>
+      <p class="vc-mute text-xs" data-i18n="disclaimer"></p>
+    </aside>
+  </div>
+</main>
+
+<div id="vc-bottomnav"></div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- Textes d'interface ---------- */
+  var DICT = {
+    fr: {
+      doc_title: 'Simulateur d’Entretien Consulaire – Visa Checker', assistant: 'Assistant 3', h1: 'Simulateur d’Entretien Consulaire',
+      lead: 'Répondez à l’oral ou à l’écrit à un agent consulaire simulé et recevez un retour immédiat sur la clarté, la précision et la cohérence.',
+      console: 'Console d’entraînement', mic: 'Dicter ma réponse', send: 'Envoyer', ans_ph: 'Votre réponse…',
+      start: 'Démarrer l’entretien', skip: 'Passer la question', end: 'Terminer', restart: 'Recommencer',
+      setup: 'Paramètres', s_lang: 'Langue de l’entretien', s_purpose: 'Motif du voyage', s_level: 'Niveau de l’agent',
+      p_tourism: 'Tourisme', p_visit: 'Visite familiale / privée', p_business: 'Affaires', p_study: 'Études',
+      l_easy: 'Courtois', l_std: 'Standard', l_hard: 'Strict', s_tts: 'Lire les questions à voix haute',
+      no_voice: 'La dictée vocale n’est pas disponible sur ce navigateur : répondez par écrit.',
+      fb_h: 'Feedback en direct', fb_wait: 'En attente', sum_h: 'Bilan de session',
+      agent: 'Agent', you: 'Vous', sys: 'Système', listening: 'J’écoute…', mic_denied: 'Micro refusé ou indisponible.',
+      m_clarity: 'Clarté', m_precision: 'Précision', m_confidence: 'Assurance', m_safety: 'Cohérence',
+      live_words: '{n} mot(s)', live_short: 'Trop court : ajoutez un fait concret.', live_long: 'Un peu long : visez l’essentiel.', live_good: 'Bonne longueur.',
+      live_fill: 'Hésitations : {n}', done_h: 'Entretien terminé.', done_p: 'Voici votre bilan.',
+      f_short: 'Réponse trop courte : donnez au moins une précision (date, lieu, montant, nom).',
+      f_long: 'Réponse très longue : l’agent attend des réponses directes de 2 à 4 phrases.',
+      f_good_len: 'Longueur adaptée.', f_precise: 'Réponse concrète : chiffres et détails présents.',
+      f_vague: 'Réponse vague : ajoutez des chiffres, dates ou noms vérifiables.',
+      f_fill: 'Évitez les hésitations (« {w} ») : respirez et commencez par l’information clé.',
+      f_conf: 'Ton assuré, pas d’hésitation marquée.', f_risk: 'Formulation à risque : « {w} ». Évitez toute idée de travail ou d’installation non prévue.',
+      f_incons: 'Incohérence possible : durée {a} puis {b}. Gardez toujours la même durée.',
+      f_hedge: 'Évitez « je pense / peut-être » sur des faits que vous connaissez.',
+      s_avg: 'Score moyen', s_n: 'Questions répondues', s_best: 'Point fort', s_work: 'À travailler', s_time: 'Durée',
+      none: '—', ready: 'Prêt', todo: 'À améliorer', risk: 'Risque',
+      intro: 'Bonjour. Je suis l’agent consulaire de simulation. Je vais vous poser quelques questions. Répondez comme lors d’un vrai entretien.'
+    },
+    en: {
+      doc_title: 'Consular Interview Simulator – Visa Checker', assistant: 'Assistant 3', h1: 'Consular Interview Simulator',
+      lead: 'Answer a simulated consular officer by voice or text and get instant feedback on clarity, precision and consistency.',
+      console: 'Training console', mic: 'Dictate my answer', send: 'Send', ans_ph: 'Your answer…',
+      start: 'Start the interview', skip: 'Skip question', end: 'Finish', restart: 'Restart',
+      setup: 'Settings', s_lang: 'Interview language', s_purpose: 'Purpose of travel', s_level: 'Officer level',
+      p_tourism: 'Tourism', p_visit: 'Family / private visit', p_business: 'Business', p_study: 'Studies',
+      l_easy: 'Courteous', l_std: 'Standard', l_hard: 'Strict', s_tts: 'Read questions aloud',
+      no_voice: 'Voice dictation is not available in this browser: answer in writing.',
+      fb_h: 'Live feedback', fb_wait: 'Waiting', sum_h: 'Session summary',
+      agent: 'Officer', you: 'You', sys: 'System', listening: 'Listening…', mic_denied: 'Microphone denied or unavailable.',
+      m_clarity: 'Clarity', m_precision: 'Precision', m_confidence: 'Confidence', m_safety: 'Consistency',
+      live_words: '{n} word(s)', live_short: 'Too short: add a concrete fact.', live_long: 'A bit long: aim for the essentials.', live_good: 'Good length.',
+      live_fill: 'Fillers: {n}', done_h: 'Interview finished.', done_p: 'Here is your summary.',
+      f_short: 'Answer too short: give at least one detail (date, place, amount, name).',
+      f_long: 'Very long answer: the officer expects direct answers of 2 to 4 sentences.',
+      f_good_len: 'Suitable length.', f_precise: 'Concrete answer: figures and details present.',
+      f_vague: 'Vague answer: add verifiable numbers, dates or names.',
+      f_fill: 'Avoid fillers (“{w}”): breathe and start with the key information.',
+      f_conf: 'Confident tone, no marked hesitation.', f_risk: 'Risky wording: “{w}”. Avoid any hint of unplanned work or settling.',
+      f_incons: 'Possible inconsistency: duration {a} then {b}. Always give the same duration.',
+      f_hedge: 'Avoid “I think / maybe” on facts you know.',
+      s_avg: 'Average score', s_n: 'Questions answered', s_best: 'Strength', s_work: 'To work on', s_time: 'Time',
+      none: '—', ready: 'Ready', todo: 'To improve', risk: 'Risk',
+      intro: 'Hello. I am the simulated consular officer. I will ask you a few questions. Answer as in a real interview.'
+    },
+    ar: {
+      doc_title: 'محاكي المقابلة القنصلية – Visa Checker', assistant: 'المساعد 3', h1: 'محاكي المقابلة القنصلية',
+      lead: 'أجب شفهياً أو كتابياً عن أسئلة موظف قنصلي افتراضي واحصل على ملاحظات فورية حول الوضوح والدقة والانسجام.',
+      console: 'وحدة التدريب', mic: 'أملِ إجابتي', send: 'إرسال', ans_ph: 'إجابتك…',
+      start: 'ابدأ المقابلة', skip: 'تخطَّ السؤال', end: 'إنهاء', restart: 'إعادة',
+      setup: 'الإعدادات', s_lang: 'لغة المقابلة', s_purpose: 'سبب السفر', s_level: 'مستوى الموظف',
+      p_tourism: 'سياحة', p_visit: 'زيارة عائلية / خاصة', p_business: 'أعمال', p_study: 'دراسة',
+      l_easy: 'لطيف', l_std: 'عادي', l_hard: 'صارم', s_tts: 'قراءة الأسئلة بصوت عالٍ',
+      no_voice: 'الإملاء الصوتي غير متاح في هذا المتصفح: أجب كتابةً.',
+      fb_h: 'ملاحظات مباشرة', fb_wait: 'في الانتظار', sum_h: 'حصيلة الجلسة',
+      agent: 'الموظف', you: 'أنت', sys: 'النظام', listening: 'أستمع…', mic_denied: 'الميكروفون مرفوض أو غير متاح.',
+      m_clarity: 'الوضوح', m_precision: 'الدقة', m_confidence: 'الثقة', m_safety: 'الانسجام',
+      live_words: '{n} كلمة', live_short: 'قصيرة جداً: أضف معلومة ملموسة.', live_long: 'طويلة قليلاً: ركّز على الأساس.', live_good: 'طول مناسب.',
+      live_fill: 'تردد: {n}', done_h: 'انتهت المقابلة.', done_p: 'هذه حصيلتك.',
+      f_short: 'إجابة قصيرة جداً: أعطِ تفصيلاً واحداً على الأقل (تاريخ، مكان، مبلغ، اسم).',
+      f_long: 'إجابة طويلة جداً: ينتظر الموظف إجابات مباشرة من 2 إلى 4 جمل.',
+      f_good_len: 'طول مناسب.', f_precise: 'إجابة ملموسة: أرقام وتفاصيل حاضرة.',
+      f_vague: 'إجابة غامضة: أضف أرقاماً أو تواريخ أو أسماء يمكن التحقق منها.',
+      f_fill: 'تجنب كلمات التردد («{w}»): تنفّس وابدأ بالمعلومة الأساسية.',
+      f_conf: 'نبرة واثقة دون تردد واضح.', f_risk: 'صياغة مخاطرة: «{w}». تجنب أي إيحاء بعمل أو استقرار غير مخطط له.',
+      f_incons: 'تناقض محتمل: المدة {a} ثم {b}. أعطِ دائماً نفس المدة.',
+      f_hedge: 'تجنب «أظن / ربما» في معلومات تعرفها.',
+      s_avg: 'المعدل', s_n: 'أسئلة تمت الإجابة عنها', s_best: 'نقطة القوة', s_work: 'للتحسين', s_time: 'المدة',
+      none: '—', ready: 'جاهز', todo: 'للتحسين', risk: 'خطر',
+      intro: 'مرحباً. أنا الموظف القنصلي الافتراضي. سأطرح عليك بعض الأسئلة. أجب كما في مقابلة حقيقية.'
+    }
+  };
+
+  /* ---------- Banque de questions (par langue d'entretien) ---------- */
+  var QB = {
+    fr: {
+      core: ['Quel est le but de votre voyage ?', 'Combien de temps comptez-vous rester ?', 'Où allez-vous loger pendant votre séjour ?',
+             'Que faites-vous dans la vie ?', 'Comment financez-vous ce voyage ?', 'Avez-vous de la famille dans le pays de destination ?',
+             'Pourquoi dois-je croire que vous reviendrez dans votre pays ?', 'Avez-vous déjà voyagé à l’étranger ? Où ?'],
+      tourism: ['Quels lieux souhaitez-vous visiter ?'], visit: ['Quel est votre lien avec la personne que vous visitez ?'],
+      business: ['Quelle est la société qui vous invite et pourquoi ce déplacement ?'], study: ['Quelle formation allez-vous suivre et pourquoi celle-ci ?']
+    },
+    en: {
+      core: ['What is the purpose of your trip?', 'How long do you plan to stay?', 'Where will you stay during your trip?',
+             'What do you do for a living?', 'How are you financing this trip?', 'Do you have family in the destination country?',
+             'Why should I believe you will return to your country?', 'Have you travelled abroad before? Where?'],
+      tourism: ['Which places do you want to visit?'], visit: ['What is your relationship with the person you are visiting?'],
+      business: ['Which company is inviting you and why this trip?'], study: ['Which programme will you follow and why this one?']
+    },
+    ar: {
+      core: ['ما هو الغرض من سفرك؟', 'كم من الوقت تنوي البقاء؟', 'أين ستقيم خلال رحلتك؟',
+             'ماذا تعمل؟', 'كيف تموّل هذه الرحلة؟', 'هل لديك عائلة في بلد الوجهة؟',
+             'لماذا يجب أن أصدّق أنك ستعود إلى بلدك؟', 'هل سافرت إلى الخارج من قبل؟ إلى أين؟'],
+      tourism: ['ما الأماكن التي تريد زيارتها؟'], visit: ['ما صلتك بالشخص الذي ستزوره؟'],
+      business: ['ما الشركة التي تدعوك ولماذا هذه الرحلة؟'], study: ['ما التكوين الذي ستتابعه ولماذا هذا بالذات؟']
+    }
+  };
+  var FOLLOW = { // relance du niveau « strict »
+    fr: 'Pouvez-vous être plus précis, avec des dates ou des chiffres ?',
+    en: 'Can you be more specific, with dates or figures?',
+    ar: 'هل يمكنك أن تكون أدق، مع تواريخ أو أرقام؟'
+  };
+
+  /* ---------- Listes d'analyse par langue ---------- */
+  var FILL = {
+    fr: ['euh', 'heu', 'hum', 'bah', 'genre', 'en fait', 'voilà', 'comment dire', 'ben'],
+    en: ['um', 'uh', 'erm', 'like', 'you know', 'i mean', 'kind of', 'sort of'],
+    ar: ['يعني', 'اه', 'إمم', 'شنوة', 'كيما نقول', 'هكا']
+  };
+  var HEDGE = {
+    fr: ['je pense que', 'peut-être', 'peut etre', 'je crois', 'normalement', 'a peu pres', 'à peu près'],
+    en: ['i think', 'maybe', 'perhaps', 'i guess', 'probably', 'around'],
+    ar: ['أظن', 'ربما', 'على ما أعتقد', 'تقريباً', 'تقريبا']
+  };
+  var RISK = {
+    fr: ['chercher du travail', 'travailler là-bas', 'travailler la-bas', 'rester là-bas', 'rester la-bas', 'm’installer', 'm\'installer', 'sans retour', 'je verrai', 'pas encore décidé', 'pas de billet de retour'],
+    en: ['look for work', 'find a job', 'work there', 'stay there', 'settle', 'no return', 'we will see', 'not decided', 'one way'],
+    ar: ['أبحث عن عمل', 'العمل هناك', 'البقاء هناك', 'الاستقرار', 'بدون عودة', 'لم أقرر', 'ذهاب فقط']
+  };
+  var DUR = /(\d{1,3})\s*(jours?|nuits?|semaines?|mois|days?|nights?|weeks?|months?|يوم|أيام|ايام|ليالي|أسابيع|اسابيع|شهر|أشهر|اشهر)/i;
+  function toDays(n, u) {
+    u = u.toLowerCase();
+    if (/sem|week|أسابيع|اسابيع/.test(u)) return n * 7;
+    if (/mois|month|شهر|أشهر|اشهر/.test(u)) return n * 30;
+    return n;
+  }
+
+  /* ---------- État ---------- */
+  var S = { on: false, queue: [], idx: 0, results: [], durations: [], startedAt: 0, tick: null, rec: null, listening: false };
+  var LANGS_SR = { fr: 'fr-FR', en: 'en-US', ar: 'ar-TN' };
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var TTS = 'speechSynthesis' in window;
+
+  /* ---------- Journal ---------- */
+  function say(who, text) {
+    var b = VC.el('div', 'vc-bubble vc-bubble-' + (who === 'user' ? 'user' : 'agent'));
+    b.appendChild(VC.el('small', null, who === 'user' ? VC.t('you') : who === 'sys' ? VC.t('sys') : VC.t('agent')));
+    b.appendChild(document.createTextNode(text));
+    $('log').appendChild(b); $('log').scrollTop = $('log').scrollHeight;
+    if (who === 'agent' && TTS && $('s-tts').checked) speak(text);
+  }
+  function speak(text) {
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text); u.lang = LANGS_SR[$('s-lang').value]; window.speechSynthesis.speak(u);
+    } catch (e) { /* ignore */ }
+  }
+
+  /* ---------- Analyse d'une réponse ---------- */
+  function countHits(text, list) {
+    var t = ' ' + text.toLowerCase().replace(/[.,;:!?؟،]/g, ' ') + ' ', n = 0, first = '';
+    list.forEach(function (w) {
+      var re = new RegExp('(^|\\s)' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?=\\s)', 'g'), m = t.match(re);
+      if (m) { n += m.length; if (!first) first = w; }
+    });
+    return { n: n, first: first };
+  }
+  function words(t) { return (t.trim().match(/\S+/g) || []).length; }
+
+  function analyse(text, lang) {
+    var n = words(text), fb = [], f = countHits(text, FILL[lang]), h = countHits(text, HEDGE[lang]), r = countHits(text, RISK[lang]);
+    var digits = (text.match(/\d+/g) || []).length;
+    var names = lang === 'ar' ? 0 : (text.match(/(?:^|[\s,(])([A-ZÀ-Ý][a-zà-ÿ]{2,})/g) || []).length - 1;
+    var concrete = digits + Math.max(0, names);
+
+    var clarity = n < 8 ? 35 : n <= 80 ? 90 : n <= 120 ? 70 : 50;
+    if (n < 8) fb.push(['warn', VC.t('f_short')]);
+    else if (n > 120) fb.push(['warn', VC.t('f_long')]);
+    else fb.push(['ok', VC.t('f_good_len')]);
+
+    var precision = Math.min(100, 30 + concrete * 22);
+    fb.push(concrete >= 2 ? ['ok', VC.t('f_precise')] : ['warn', VC.t('f_vague')]);
+
+    var confidence = Math.max(25, 95 - f.n * 18 - h.n * 12);
+    if (f.n) fb.push(['warn', VC.t('f_fill', { w: f.first })]);
+    else if (h.n) fb.push(['warn', VC.t('f_hedge')]);
+    else fb.push(['ok', VC.t('f_conf')]);
+
+    var safety = 95;
+    if (r.n) { safety -= 45; fb.push(['err', VC.t('f_risk', { w: r.first })]); }
+    var dm = text.match(DUR);
+    if (dm) {
+      var d = toDays(parseInt(dm[1], 10), dm[2]);
+      var prev = S.durations.filter(function (x) { return Math.abs(x.d - d) > Math.max(2, d * 0.15); })[0];
+      if (prev) { safety -= 35; fb.push(['err', VC.t('f_incons', { a: prev.label, b: dm[0] })]); }
+      S.durations.push({ d: d, label: dm[0] });
+    }
+    safety = Math.max(5, safety);
+    return { scores: { clarity: clarity, precision: precision, confidence: confidence, safety: safety }, fb: fb };
+  }
+
+  /* ---------- Rendu du feedback ---------- */
+  var MKEYS = ['clarity', 'precision', 'confidence', 'safety'];
+  function renderMeters(sc) {
+    var box = $('meters'); box.textContent = '';
+    MKEYS.forEach(function (k) {
+      var v = sc ? Math.round(sc[k]) : 0, row = VC.el('div');
+      var top = VC.el('div', 'mb-1 flex justify-between text-xs font-semibold');
+      top.appendChild(VC.el('span', 'vc-mute', VC.t('m_' + k))); top.appendChild(VC.el('span', null, sc ? v + ' %' : '—'));
+      var bar = VC.el('div', 'vc-bar'); bar.setAttribute('role', 'progressbar');
+      bar.setAttribute('aria-valuemin', '0'); bar.setAttribute('aria-valuemax', '100'); bar.setAttribute('aria-valuenow', v);
+      bar.setAttribute('aria-label', VC.t('m_' + k));
+      var i = document.createElement('i'); i.style.width = v + '%'; bar.appendChild(i);
+      row.appendChild(top); row.appendChild(bar); box.appendChild(row);
+    });
+  }
+  function overall(sc) { return Math.round((sc.clarity + sc.precision + sc.confidence + sc.safety) / 4); }
+
+  function renderFeedback(res) {
+    renderMeters(res.scores);
+    var ul = $('fb-list'); ul.textContent = '';
+    res.fb.forEach(function (x) {
+      var li = VC.el('li', 'vc-row !flex-nowrap items-start');
+      li.appendChild(VC.badge(x[0], VC.t(x[0] === 'ok' ? 'ready' : x[0] === 'warn' ? 'todo' : 'risk')));
+      li.appendChild(VC.el('span', 'text-sm', x[1])); ul.appendChild(li);
+    });
+    var o = overall(res.scores), k = res.fb.some(function (x) { return x[0] === 'err'; }) ? 'err' : o >= 75 ? 'ok' : 'warn';
+    var b = $('fb-badge'); b.className = 'vc-badge vc-badge-' + k; b.textContent = o + ' %';
+  }
+
+  /* Retour pendant la frappe (léger, sans score) */
+  var liveTimer = null;
+  function renderLive() {
+    var t = $('answer').value, box = $('live'); box.textContent = '';
+    if (!t.trim()) return;
+    var n = words(t), f = countHits(t, FILL[$('s-lang').value]).n, row = VC.el('div', 'flex flex-wrap gap-1.5');
+    row.appendChild(VC.badge('muted', VC.t('live_words', { n: n })));
+    row.appendChild(n < 8 ? VC.badge('warn', VC.t('live_short')) : n > 120 ? VC.badge('warn', VC.t('live_long')) : VC.badge('ok', VC.t('live_good')));
+    if (f) row.appendChild(VC.badge('warn', VC.t('live_fill', { n: f })));
+    box.appendChild(row);
+  }
+
+  /* ---------- Déroulé de l'entretien ---------- */
+  function buildQueue() {
+    var l = $('s-lang').value, p = $('s-purpose').value, lvl = parseInt($('s-level').value, 10);
+    var q = QB[l].core.slice(0, 4).concat(QB[l][p], QB[l].core.slice(4));
+    return q.slice(0, lvl === 1 ? 6 : lvl === 2 ? 8 : q.length);
+  }
+  function setQCount() { $('q-count').textContent = Math.min(S.idx + (S.on ? 1 : 0), S.queue.length) + '/' + S.queue.length; }
+  function enableIO(on) {
+    $('answer').disabled = !on; $('send').disabled = !on; $('btn-skip').disabled = !on; $('btn-end').disabled = !on;
+    if (on) $('answer').focus();
+  }
+  function ask() {
+    if (S.idx >= S.queue.length) { finish(); return; }
+    setQCount(); say('agent', S.queue[S.idx]);
+  }
+  function start() {
+    stopMic();
+    S.on = true; S.queue = buildQueue(); S.idx = 0; S.results = []; S.durations = []; S.startedAt = Date.now();
+    $('log').textContent = ''; $('summary').classList.add('hidden'); $('fb-list').textContent = '';
+    renderMeters(null); var b = $('fb-badge'); b.className = 'vc-badge vc-badge-muted'; b.textContent = VC.t('fb_wait');
+    $('live-dot').classList.remove('is-off'); $('btn-start').textContent = VC.t('restart');
+    ['s-lang', 's-purpose', 's-level'].forEach(function (id) { $(id).disabled = true; });
+    clearInterval(S.tick); S.tick = setInterval(tick, 1000); tick();
+    say('agent', VC.t('intro')); enableIO(true); ask();
+  }
+  function tick() {
+    var s = Math.floor((Date.now() - S.startedAt) / 1000);
+    $('timer').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+  }
+  function submit(skip) {
+    if (!S.on) return;
+    var text = $('answer').value.trim();
+    if (skip) { S.idx++; $('answer').value = ''; $('live').textContent = ''; ask(); return; }
+    if (!text) return;
+    stopMic(); say('user', text);
+    $('answer').value = ''; $('live').textContent = ''; $('answer').style.height = '';
+    var res = analyse(text, $('s-lang').value); res.q = S.queue[S.idx]; S.results.push(res);
+    renderFeedback(res);
+    S.idx++;
+    var strict = $('s-level').value === '3' && res.scores.precision < 55 && S.idx < S.queue.length;
+    setTimeout(function () { if (strict) say('agent', FOLLOW[$('s-lang').value]); ask(); }, 500);
+  }
+  function finish() {
+    if (!S.on) return;
+    S.on = false; stopMic(); clearInterval(S.tick); enableIO(false); $('live-dot').classList.add('is-off');
+    ['s-lang', 's-purpose', 's-level'].forEach(function (id) { $(id).disabled = false; });
+    say('sys', VC.t('done_h') + ' ' + VC.t('done_p')); renderSummary();
+    $('summary').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function renderSummary() {
+    var box = $('sum-body'); box.textContent = ''; $('summary').classList.remove('hidden');
+    var n = S.results.length;
+    function line(label, val, kind) {
+      var r = VC.el('div', 'vc-row !flex-nowrap justify-between');
+      r.appendChild(VC.el('span', 'text-sm vc-mute', label));
+      r.appendChild(kind ? VC.badge(kind, val) : VC.el('span', 'text-sm font-bold', val)); box.appendChild(r);
+    }
+    if (!n) { line(VC.t('s_n'), '0'); return; }
+    var avg = {}; MKEYS.forEach(function (k) { avg[k] = S.results.reduce(function (a, r) { return a + r.scores[k]; }, 0) / n; });
+    var tot = Math.round(MKEYS.reduce(function (a, k) { return a + avg[k]; }, 0) / 4);
+    var best = MKEYS.slice().sort(function (a, b) { return avg[b] - avg[a]; })[0], worst = MKEYS.slice().sort(function (a, b) { return avg[a] - avg[b]; })[0];
+    line(VC.t('s_avg'), tot + ' %', tot >= 75 ? 'ok' : tot >= 55 ? 'warn' : 'err');
+    line(VC.t('s_n'), n + '/' + S.queue.length);
+    line(VC.t('s_best'), VC.t('m_' + best), 'ok');
+    line(VC.t('s_work'), VC.t('m_' + worst), 'warn');
+    line(VC.t('s_time'), $('timer').textContent);
+  }
+
+  /* ---------- Dictée vocale ---------- */
+  function stopMic() {
+    if (S.rec) { try { S.rec.stop(); } catch (e) { /* ignore */ } }
+    S.listening = false; $('mic').classList.remove('is-live');
+  }
+  function toggleMic() {
+    if (!SR || !S.on) return;
+    if (S.listening) { stopMic(); return; }
+    var rec = new SR(), base = $('answer').value ? $('answer').value + ' ' : '';
+    rec.lang = LANGS_SR[$('s-lang').value]; rec.interimResults = true; rec.continuous = true;
+    rec.onresult = function (e) {
+      var t = ''; for (var i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
+      $('answer').value = base + t; renderLive();
+    };
+    rec.onerror = function () { VC.toast(VC.t('mic_denied')); stopMic(); };
+    rec.onend = function () { S.listening = false; $('mic').classList.remove('is-live'); };
+    S.rec = rec; S.listening = true; $('mic').classList.add('is-live');
+    try { rec.start(); VC.toast(VC.t('listening')); } catch (e) { stopMic(); }
+  }
+
+  /* ---------- Événements ---------- */
+  $('btn-start').addEventListener('click', start);
+  $('btn-skip').addEventListener('click', function () { submit(true); });
+  $('btn-end').addEventListener('click', finish);
+  $('compose').addEventListener('submit', function (e) { e.preventDefault(); submit(false); });
+  $('answer').addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit(false); } });
+  $('answer').addEventListener('input', function () {
+    this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 128) + 'px';
+    clearTimeout(liveTimer); liveTimer = setTimeout(renderLive, 200);
+  });
+  $('mic').addEventListener('click', toggleMic);
+  $('s-tts').addEventListener('change', function () { if (!this.checked && TTS) window.speechSynthesis.cancel(); });
+  document.addEventListener('vc:lang', function () {
+    $('btn-start').textContent = VC.t(S.results.length || S.on ? 'restart' : 'start');
+    if (!S.on && !S.results.length) renderIdle();
+    renderMeters(S.results.length ? S.results[S.results.length - 1].scores : null);
+    if (!S.on && S.results.length) renderSummary();
+  });
+
+  function renderIdle() {
+    $('log').textContent = ''; say('sys', VC.t('intro'));
+  }
+
+  /* ---------- Démarrage ---------- */
+  VC.init(DICT, 'entretien');
+  var mi = VC.icon('M12 14a3 3 0 003-3V6a3 3 0 00-6 0v5a3 3 0 003 3zM6 11a6 6 0 0012 0M12 17v4', 20);
+  $('mic').innerHTML = mi; $('send').innerHTML = VC.icon('M5 12h14M13 6l6 6-6 6', 20);
+  if (!SR) { $('mic').disabled = true; $('voice-note').classList.remove('hidden'); }
+  if (!TTS) $('s-tts').disabled = true;
+  renderMeters(null); renderIdle();
+})();
+</script>
+</body>
+</html>

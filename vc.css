@@ -1,0 +1,154 @@
+/* Visa Checker – socle UI partagé (CSS léger, sans dépendance)
+   Les utilitaires de mise en page viennent de Tailwind ; ici : thème + composants. */
+
+:root {
+  color-scheme: light;
+  --bg: #f4f7fc; --card: #ffffff; --card2: #eef2fa; --line: #dfe6f3;
+  --ink: #0e1a3a; --mute: #5a6788;
+  --royal: #2457e6; --royal-d: #1d47c4; --royal-soft: #1d47c4;
+  --ok: #047857; --warn: #b45309; --err: #be123c;
+  --okb: rgba(16,185,129,.14); --warnb: rgba(245,158,11,.16);
+  --errb: rgba(244,63,94,.13); --infob: rgba(36,87,230,.11);
+}
+.dark {
+  color-scheme: dark;
+  --bg: #060b1c; --card: #0c1736; --card2: #111f48; --line: rgba(255,255,255,.09);
+  --ink: #e8eefc; --mute: #9db0d8; --royal-soft: #8fb0ff;
+  --ok: #6ee7b7; --warn: #fcd34d; --err: #fda4af;
+  --okb: rgba(16,185,129,.18); --warnb: rgba(245,158,11,.18);
+  --errb: rgba(244,63,94,.18); --infob: rgba(91,132,240,.2);
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+  line-height: 1.5;
+}
+[dir="rtl"] body { font-family: "Segoe UI", Tahoma, system-ui, Arial, sans-serif; }
+
+.vc-mute { color: var(--mute); }
+.vc-accent { color: var(--royal-soft); }
+
+/* Cartes */
+.vc-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 1rem;
+  padding: 1rem; box-shadow: 0 1px 2px rgba(10,19,48,.05);
+}
+@media (min-width: 768px) { .vc-card { padding: 1.25rem; } }
+.vc-card-h { display: flex; align-items: center; gap: .5rem; margin: 0 0 .75rem; font-size: 1rem; font-weight: 700; }
+.vc-soft { background: var(--card2); border: 1px solid var(--line); border-radius: .75rem; }
+
+/* Boutons (cible tactile >= 44px) */
+.vc-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 2.75rem; padding: .55rem 1rem; border-radius: .75rem;
+  font: inherit; font-weight: 600; font-size: .9rem; cursor: pointer;
+  border: 1px solid var(--line); background: var(--card2); color: var(--ink);
+  transition: filter .15s, background .15s;
+}
+.vc-btn:hover { filter: brightness(1.06); }
+.vc-btn:disabled { opacity: .5; cursor: not-allowed; }
+.vc-btn-primary { background: var(--royal); border-color: var(--royal); color: #fff; }
+.vc-btn-primary:hover { background: var(--royal-d); filter: none; }
+.vc-btn-sm { min-height: 2.25rem; padding: .3rem .7rem; font-size: .8rem; border-radius: .6rem; }
+.vc-btn-icon { min-width: 2.75rem; padding: .55rem; }
+.vc-btn:focus-visible, .vc-input:focus-visible, .vc-drop:focus-visible, .vc-tab:focus-visible {
+  outline: 2px solid var(--royal); outline-offset: 2px;
+}
+
+/* Champs (16px : évite le zoom automatique d'iOS) */
+.vc-label { display: block; margin-bottom: .3rem; font-size: .78rem; font-weight: 600; color: var(--mute); }
+.vc-input {
+  width: 100%; min-height: 2.75rem; box-sizing: border-box; padding: .55rem .8rem;
+  border-radius: .75rem; border: 1px solid var(--line); background: var(--card2);
+  color: var(--ink); font: inherit; font-size: 16px;
+}
+textarea.vc-input { min-height: 6rem; resize: vertical; }
+select.vc-input { appearance: auto; }
+
+/* Badges d'état */
+.vc-badge {
+  display: inline-flex; align-items: center; gap: .3rem; padding: .15rem .6rem;
+  border-radius: 999px; font-size: .72rem; font-weight: 700; white-space: nowrap;
+}
+.vc-badge-ok { background: var(--okb); color: var(--ok); }
+.vc-badge-warn { background: var(--warnb); color: var(--warn); }
+.vc-badge-err { background: var(--errb); color: var(--err); }
+.vc-badge-info { background: var(--infob); color: var(--royal-soft); }
+.vc-badge-muted { background: var(--card2); color: var(--mute); }
+
+/* Zone de dépôt */
+.vc-drop {
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: .15rem;
+  padding: 1.5rem 1rem; border: 2px dashed var(--line); border-radius: 1rem;
+  background: var(--card2); transition: border-color .15s, background .15s;
+}
+.vc-drop.is-over { border-color: var(--royal); background: var(--infob); }
+
+/* Lignes de liste */
+.vc-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem;
+  padding: .65rem .75rem; border: 1px solid var(--line); border-radius: .75rem; background: var(--card2);
+}
+
+/* Barres de progression */
+.vc-bar { height: .5rem; border-radius: 999px; background: var(--card2); overflow: hidden; border: 1px solid var(--line); }
+.vc-bar > i { display: block; height: 100%; width: 0; border-radius: inherit;
+  background: linear-gradient(90deg, #5b84f0, #2457e6); transition: width .5s; }
+
+/* Navigation */
+.vc-tab {
+  display: inline-flex; align-items: center; gap: .4rem; padding: .45rem .8rem; border-radius: .65rem;
+  font-size: .875rem; font-weight: 600; color: var(--mute); text-decoration: none;
+}
+.vc-tab:hover { background: var(--card2); }
+.vc-tab.is-active { background: var(--infob); color: var(--royal-soft); }
+.vc-bottom {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 30; display: grid;
+  grid-template-columns: repeat(3, 1fr); background: var(--card);
+  border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom);
+}
+.vc-bottom a {
+  display: flex; flex-direction: column; align-items: center; gap: .15rem; padding: .55rem 0;
+  font-size: .7rem; font-weight: 600; color: var(--mute); text-decoration: none; min-height: 3rem;
+}
+.vc-bottom a.is-active { color: var(--royal-soft); }
+@media (min-width: 768px) { .vc-bottom { display: none; } }
+
+/* Console d'entraînement */
+.vc-console { display: flex; flex-direction: column; overflow: hidden; padding: 0; }
+.vc-console-bar { display: flex; align-items: center; gap: .6rem; padding: .6rem .9rem;
+  border-bottom: 1px solid var(--line); background: var(--card2); }
+.vc-dot { width: .55rem; height: .55rem; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 3px rgba(52,211,153,.2); }
+.vc-dot.is-off { background: #94a3b8; box-shadow: none; }
+.vc-log { flex: 1; min-height: 16rem; max-height: 52vh; overflow-y: auto; padding: .9rem; display: flex; flex-direction: column; gap: .6rem; }
+.vc-bubble { max-width: 88%; padding: .6rem .85rem; border-radius: 1rem; font-size: .93rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.vc-bubble-agent { align-self: flex-start; background: var(--card2); border: 1px solid var(--line); border-end-start-radius: .25rem; }
+.vc-bubble-user { align-self: flex-end; background: var(--royal); color: #fff; border-end-end-radius: .25rem; }
+.vc-bubble small { display: block; opacity: .7; font-size: .7rem; margin-bottom: .1rem; font-weight: 700; }
+.vc-compose { display: flex; align-items: flex-end; gap: .5rem; padding: .6rem; border-top: 1px solid var(--line); background: var(--card); }
+.vc-compose textarea { min-height: 2.75rem; max-height: 8rem; resize: none; }
+.is-live { background: #e11d48 !important; border-color: #e11d48 !important; color: #fff !important; animation: vc-pulse 1.2s infinite; }
+@keyframes vc-pulse { 0% { box-shadow: 0 0 0 0 rgba(225,29,72,.5); } 70% { box-shadow: 0 0 0 10px rgba(225,29,72,0); } 100% { box-shadow: 0 0 0 0 rgba(225,29,72,0); } }
+
+/* Toast */
+.vc-toast {
+  position: fixed; left: 50%; bottom: 5rem; transform: translateX(-50%); z-index: 50;
+  max-width: 90vw; padding: .6rem 1rem; border-radius: .75rem; background: #0a1330; color: #fff;
+  font-size: .85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,.3);
+}
+@media (min-width: 768px) { .vc-toast { bottom: 1.5rem; } }
+
+.sr-only-vc { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+
+/* Impression (lettre de recours) */
+#print-area { display: none; }
+@media print {
+  body > *:not(#print-area) { display: none !important; }
+  #print-area { display: block !important; white-space: pre-wrap; color: #000; background: #fff; font: 12pt/1.5 Georgia, serif; padding: 1.5cm; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
