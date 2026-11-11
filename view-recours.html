@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f7fc">
+<title>Recours &amp; Gestion des Refus – Visa Checker</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="vc.css">
+<script src="vc-shared.js"></script>
+</head>
+<body class="pb-24 md:pb-10">
+<div id="vc-header"></div>
+
+<main class="mx-auto max-w-6xl px-4 py-5 md:py-8">
+  <div class="mb-5">
+    <span class="vc-badge vc-badge-info" data-i18n="assistant">Assistant 2</span>
+    <h1 class="mt-2 text-2xl font-extrabold tracking-tight md:text-3xl" data-i18n="h1">Recours &amp; Gestion des Refus</h1>
+    <p class="vc-mute mt-1 max-w-2xl text-sm md:text-base" data-i18n="lead"></p>
+  </div>
+
+  <!-- Étapes -->
+  <ol class="mb-4 flex gap-2 text-xs font-bold" aria-label="Étapes" id="steps">
+    <li class="vc-badge vc-badge-info" data-step="1">1 · <span data-i18n="s1">Analyser</span></li>
+    <li class="vc-badge vc-badge-muted" data-step="2">2 · <span data-i18n="s2">Rédiger</span></li>
+  </ol>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <!-- ANALYSE DE LA LETTRE -->
+    <section class="space-y-4" aria-labelledby="an-h">
+      <div class="vc-card">
+        <h2 id="an-h" class="vc-card-h" data-i18n="an_h">Lettre de refus</h2>
+
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label class="vc-label" for="r-dest" data-i18n="dest">Pays de destination</label>
+            <select id="r-dest" class="vc-input">
+              <option value="France">France</option><option value="España">España</option><option value="Italia">Italia</option>
+              <option value="other" data-i18n="other_c">Autre pays</option>
+            </select>
+          </div>
+          <div>
+            <label class="vc-label" for="r-date" data-i18n="r_date">Date de la décision</label>
+            <input id="r-date" type="date" class="vc-input">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="vc-label" for="r-days" data-i18n="r_days">Délai de recours indiqué sur la lettre (jours)</label>
+            <input id="r-days" type="number" min="1" max="365" inputmode="numeric" class="vc-input" value="30">
+          </div>
+        </div>
+
+        <label class="vc-label mt-3" for="r-text" data-i18n="paste">Collez le texte de la lettre (ou cochez les motifs ci-dessous)</label>
+        <textarea id="r-text" class="vc-input" rows="5" data-i18n-ph="paste_ph"></textarea>
+
+        <div class="mt-2 flex flex-wrap gap-2">
+          <button type="button" id="r-detect" class="vc-btn vc-btn-primary vc-btn-sm" data-i18n="detect">Détecter les motifs</button>
+          <button type="button" id="r-clear" class="vc-btn vc-btn-sm" data-i18n="clear">Effacer</button>
+        </div>
+
+        <fieldset class="mt-4">
+          <legend class="vc-label" data-i18n="motifs_h">Motifs de refus invoqués</legend>
+          <div id="motifs" class="space-y-2"></div>
+        </fieldset>
+        <p class="vc-mute mt-3 text-xs" data-i18n="privacy"></p>
+      </div>
+
+      <div class="vc-card" id="analysis-card">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="vc-card-h !mb-0" data-i18n="diag_h">Diagnostic</h2>
+          <span id="deadline-badge" class="vc-badge vc-badge-muted" data-i18n="no_date">Date manquante</span>
+        </div>
+        <div id="diag" class="mt-3 space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- GÉNÉRATEUR -->
+    <section class="space-y-4" aria-labelledby="gen-h">
+      <div class="vc-card">
+        <h2 id="gen-h" class="vc-card-h" data-i18n="gen_h">Générateur de recours</h2>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div class="sm:col-span-2">
+            <label class="vc-label" for="g-name" data-i18n="g_name">Nom et prénom (comme sur le passeport)</label>
+            <input id="g-name" class="vc-input" autocomplete="name">
+          </div>
+          <div>
+            <label class="vc-label" for="g-ref" data-i18n="g_ref">N° de dossier / référence</label>
+            <input id="g-ref" class="vc-input" autocomplete="off">
+          </div>
+          <div>
+            <label class="vc-label" for="g-post" data-i18n="g_post">Consulat / centre destinataire</label>
+            <input id="g-post" class="vc-input" autocomplete="off">
+          </div>
+          <div>
+            <label class="vc-label" for="g-city" data-i18n="g_city">Ville</label>
+            <input id="g-city" class="vc-input" autocomplete="address-level2">
+          </div>
+          <div>
+            <label class="vc-label" for="g-lang" data-i18n="g_lang">Langue de la lettre</label>
+            <select id="g-lang" class="vc-input"><option value="fr">Français</option><option value="en">English</option></select>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="vc-label" for="g-facts" data-i18n="g_facts">Vos éléments concrets (dates, montants, employeur…)</label>
+            <textarea id="g-facts" class="vc-input" rows="3" data-i18n-ph="g_facts_ph"></textarea>
+          </div>
+        </div>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+          <button type="button" id="g-make" class="vc-btn vc-btn-primary grow" data-i18n="g_make">Générer la lettre</button>
+        </div>
+      </div>
+
+      <div class="vc-card" id="out-card">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="vc-card-h !mb-0" data-i18n="out_h">Votre lettre</h2>
+          <span id="out-badge" class="vc-badge vc-badge-muted" data-i18n="out_draft">Brouillon</span>
+        </div>
+        <textarea id="out" class="vc-input mt-3" rows="14" style="font-family:Georgia,'Times New Roman',serif" aria-label="Lettre"></textarea>
+        <div id="todo" class="mt-3"></div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button type="button" id="o-copy" class="vc-btn vc-btn-sm" data-i18n="copy">Copier</button>
+          <button type="button" id="o-txt" class="vc-btn vc-btn-sm" data-i18n="dl">Télécharger .txt</button>
+          <button type="button" id="o-print" class="vc-btn vc-btn-sm" data-i18n="print">Imprimer / PDF</button>
+        </div>
+      </div>
+      <p class="vc-mute text-xs" data-i18n="disclaimer"></p>
+    </section>
+  </div>
+</main>
+
+<div id="print-area" aria-hidden="true"></div>
+<div id="vc-bottomnav"></div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* Motifs courants des lettres de refus (formulation indicative ; la numérotation officielle varie).
+     kw : mots-clés (minuscules) pour la détection ; docs : pièces à joindre ; tips : angle d'argumentation. */
+  var MOTIFS = {
+    purpose:  { kw: ['objet et les conditions', 'purpose and conditions', 'justification', 'motif du séjour', 'objeto y las condiciones', 'scopo e le condizioni', 'غرض'],
+                docs: ['purpose_docs'] },
+    means:    { kw: ['moyens de subsistance', 'subsistence', 'sufficient means', 'medios de subsistencia', 'mezzi di sussistenza', 'الإمكانيات المالية', 'وسائل'],
+                docs: ['means_docs'] },
+    insurance:{ kw: ['assurance', 'insurance', 'seguro', 'assicurazione', 'تأمين'],
+                docs: ['ins_docs'] },
+    unreliable:{ kw: ['fiabilité', 'fiables', 'unreliable', 'reliability', 'fiabilidad', 'affidabilit', 'موثوق'],
+                docs: ['unrel_docs'] },
+    ret:      { kw: ['intention de quitter', 'quitter le territoire', 'intention to leave', 'leave the territory', 'intención de abandonar', 'intenzione di lasciare', 'مغادرة'],
+                docs: ['ret_docs'] },
+    other:    { kw: [], docs: ['other_docs'] }
+  };
+  var ORDER = ['purpose', 'means', 'insurance', 'unreliable', 'ret', 'other'];
+
+  var DICT = {
+    fr: {
+      doc_title: 'Recours & Gestion des Refus – Visa Checker', assistant: 'Assistant 2', h1: 'Recours & Gestion des Refus',
+      lead: 'Identifiez les motifs de votre refus, vérifiez le délai, puis générez une lettre de recours structurée à compléter avec vos preuves.',
+      s1: 'Analyser', s2: 'Rédiger', an_h: 'Lettre de refus', dest: 'Pays de destination', other_c: 'Autre pays',
+      r_date: 'Date de la décision', r_days: 'Délai de recours indiqué sur la lettre (jours)',
+      paste: 'Collez le texte de la lettre (ou cochez les motifs ci-dessous)', paste_ph: 'Copiez ici le texte de la lettre de refus…',
+      detect: 'Détecter les motifs', clear: 'Effacer', motifs_h: 'Motifs de refus invoqués',
+      m_purpose: 'Objet et conditions du séjour non justifiés', m_means: 'Moyens de subsistance insuffisants ou non prouvés',
+      m_insurance: 'Assurance voyage non fournie ou non valable', m_unreliable: 'Informations fournies jugées peu fiables',
+      m_ret: 'Intention de quitter le territoire non établie', m_other: 'Autre motif (à préciser)',
+      diag_h: 'Diagnostic', no_date: 'Date manquante', pick_one: 'Cochez au moins un motif ou lancez la détection pour obtenir le diagnostic.',
+      dl_left: '{n} jour(s) restant(s)', dl_today: 'Dernier jour', dl_over: 'Délai dépassé de {n} jour(s)', dl_note: 'Date limite estimée : {d}. Fiez-vous au délai et à la voie de recours écrits sur votre lettre.',
+      detected: '{n} motif(s) détecté(s) dans le texte.', none_detected: 'Aucun motif reconnu automatiquement : cochez-les à la main.',
+      fix_h: 'Pièces à joindre', gen_h: 'Générateur de recours', g_name: 'Nom et prénom (comme sur le passeport)', g_ref: 'N° de dossier / référence',
+      g_post: 'Consulat / centre destinataire', g_city: 'Ville', g_lang: 'Langue de la lettre',
+      g_facts: 'Vos éléments concrets (dates, montants, employeur…)', g_facts_ph: 'Ex. : salarié chez X depuis 2019, solde moyen 3 200 TND, congé accordé du … au …',
+      g_make: 'Générer la lettre', out_h: 'Votre lettre', out_draft: 'Brouillon', out_ready: 'Prête à relire',
+      copy: 'Copier', dl: 'Télécharger .txt', print: 'Imprimer / PDF', copied: 'Lettre copiée', copy_fail: 'Copie impossible', need_motif: 'Sélectionnez d’abord au moins un motif.',
+      todo_h: 'À compléter avant l’envoi :', todo_none: 'Aucun champ [à compléter] restant.',
+      privacy: 'Vos textes restent dans ce navigateur : rien n’est envoyé sans votre accord.',
+      st_ok: 'OK', st_warn: 'À vérifier', st_err: 'Problème',
+      purpose_docs: 'Itinéraire détaillé, réservations remboursables, invitation ou programme', means_docs: 'Relevés bancaires récents (3–6 mois), justificatifs de revenus, attestation de prise en charge',
+      ins_docs: 'Police d’assurance couvrant tout l’espace Schengen, au moins 30 000 €, dates exactes du voyage', unrel_docs: 'Pièces originales cohérentes entre elles (employeur, banque, hébergement) avec coordonnées vérifiables',
+      ret_docs: 'Attaches : contrat de travail, congé accordé, titres de propriété ou de location, famille, scolarité', other_docs: 'Pièces répondant précisément au motif écrit sur la lettre'
+    },
+    en: {
+      doc_title: 'Appeals & Refusal Management – Visa Checker', assistant: 'Assistant 2', h1: 'Appeals & Refusal Management',
+      lead: 'Identify the grounds for your refusal, check the deadline, then generate a structured appeal letter to complete with your evidence.',
+      s1: 'Analyze', s2: 'Draft', an_h: 'Refusal letter', dest: 'Destination country', other_c: 'Other country',
+      r_date: 'Decision date', r_days: 'Appeal deadline stated on the letter (days)',
+      paste: 'Paste the letter text (or tick the grounds below)', paste_ph: 'Paste the text of the refusal letter here…',
+      detect: 'Detect grounds', clear: 'Clear', motifs_h: 'Grounds for refusal',
+      m_purpose: 'Purpose and conditions of stay not justified', m_means: 'Insufficient or unproven means of subsistence',
+      m_insurance: 'Travel insurance not provided or invalid', m_unreliable: 'Information provided deemed unreliable',
+      m_ret: 'Intention to leave the territory not established', m_other: 'Other ground (specify)',
+      diag_h: 'Diagnosis', no_date: 'Missing date', pick_one: 'Tick at least one ground or run detection to get the diagnosis.',
+      dl_left: '{n} day(s) left', dl_today: 'Last day', dl_over: 'Deadline passed by {n} day(s)', dl_note: 'Estimated deadline: {d}. Rely on the deadline and appeal route written on your letter.',
+      detected: '{n} ground(s) detected in the text.', none_detected: 'No ground recognized automatically: tick them manually.',
+      fix_h: 'Documents to attach', gen_h: 'Appeal generator', g_name: 'Full name (as on passport)', g_ref: 'File / reference no.',
+      g_post: 'Consulate / centre addressed', g_city: 'City', g_lang: 'Letter language',
+      g_facts: 'Your concrete facts (dates, amounts, employer…)', g_facts_ph: 'E.g.: employed at X since 2019, average balance 3,200 TND, leave granted from … to …',
+      g_make: 'Generate the letter', out_h: 'Your letter', out_draft: 'Draft', out_ready: 'Ready to review',
+      copy: 'Copy', dl: 'Download .txt', print: 'Print / PDF', copied: 'Letter copied', copy_fail: 'Copy failed', need_motif: 'Select at least one ground first.',
+      todo_h: 'To complete before sending:', todo_none: 'No [to complete] field left.',
+      privacy: 'Your text stays in this browser: nothing is sent without your consent.',
+      st_ok: 'OK', st_warn: 'To check', st_err: 'Issue',
+      purpose_docs: 'Detailed itinerary, refundable bookings, invitation or programme', means_docs: 'Recent bank statements (3–6 months), income proof, sponsorship letter',
+      ins_docs: 'Policy covering the whole Schengen area, at least €30,000, exact travel dates', unrel_docs: 'Original, mutually consistent documents (employer, bank, lodging) with verifiable contacts',
+      ret_docs: 'Ties: employment contract, approved leave, property or lease, family, school enrolment', other_docs: 'Documents answering exactly the ground written on the letter'
+    },
+    ar: {
+      doc_title: 'الطعن وإدارة الرفض – Visa Checker', assistant: 'المساعد 2', h1: 'الطعن وإدارة الرفض',
+      lead: 'حدّد أسباب الرفض وتحقق من الأجل ثم أنشئ رسالة طعن منظمة تكملها بإثباتاتك.',
+      s1: 'تحليل', s2: 'صياغة', an_h: 'رسالة الرفض', dest: 'بلد الوجهة', other_c: 'بلد آخر',
+      r_date: 'تاريخ القرار', r_days: 'أجل الطعن المذكور في الرسالة (أيام)',
+      paste: 'الصق نص الرسالة (أو اختر الأسباب أدناه)', paste_ph: 'الصق هنا نص رسالة الرفض…',
+      detect: 'اكتشاف الأسباب', clear: 'مسح', motifs_h: 'أسباب الرفض المذكورة',
+      m_purpose: 'غرض الإقامة وظروفها غير مبرَّرين', m_means: 'وسائل العيش غير كافية أو غير مثبتة',
+      m_insurance: 'تأمين السفر غير مقدَّم أو غير صالح', m_unreliable: 'المعلومات المقدمة اعتُبرت غير موثوقة',
+      m_ret: 'نية مغادرة الإقليم غير ثابتة', m_other: 'سبب آخر (يُحدَّد)',
+      diag_h: 'التشخيص', no_date: 'التاريخ ناقص', pick_one: 'اختر سبباً واحداً على الأقل أو شغّل الاكتشاف للحصول على التشخيص.',
+      dl_left: 'بقي {n} يوم', dl_today: 'آخر يوم', dl_over: 'تجاوز الأجل بـ {n} يوم', dl_note: 'الموعد النهائي التقديري: {d}. اعتمد على الأجل وطريق الطعن المكتوبين في رسالتك.',
+      detected: 'تم اكتشاف {n} سبب في النص.', none_detected: 'لم يُتعرف على أي سبب تلقائياً: اخترها يدوياً.',
+      fix_h: 'وثائق للإرفاق', gen_h: 'مولّد الطعن', g_name: 'الاسم الكامل (كما في الجواز)', g_ref: 'رقم الملف / المرجع',
+      g_post: 'القنصلية / المركز المرسَل إليه', g_city: 'المدينة', g_lang: 'لغة الرسالة',
+      g_facts: 'معطياتك الملموسة (تواريخ، مبالغ، مشغّل…)', g_facts_ph: 'مثال: موظف لدى X منذ 2019، متوسط الرصيد 3200 دينار، عطلة من … إلى …',
+      g_make: 'أنشئ الرسالة', out_h: 'رسالتك', out_draft: 'مسودة', out_ready: 'جاهزة للمراجعة',
+      copy: 'نسخ', dl: 'تنزيل .txt', print: 'طباعة / PDF', copied: 'تم نسخ الرسالة', copy_fail: 'تعذّر النسخ', need_motif: 'اختر سبباً واحداً على الأقل أولاً.',
+      todo_h: 'للإكمال قبل الإرسال:', todo_none: 'لا يوجد حقل [للإكمال] متبقٍّ.',
+      privacy: 'نصوصك تبقى في هذا المتصفح: لا يُرسل شيء دون موافقتك.',
+      st_ok: 'سليم', st_warn: 'للتحقق', st_err: 'مشكلة',
+      purpose_docs: 'برنامج رحلة مفصّل، حجوزات قابلة للاسترداد، دعوة أو برنامج', means_docs: 'كشوف بنكية حديثة (3–6 أشهر)، إثبات الدخل، تعهد بالتكفل',
+      ins_docs: 'وثيقة تغطي كامل فضاء شنغن بحد أدنى 30000 يورو وبتواريخ السفر الدقيقة', unrel_docs: 'وثائق أصلية منسجمة فيما بينها (مشغّل، بنك، إقامة) مع بيانات اتصال يمكن التحقق منها',
+      ret_docs: 'الروابط: عقد عمل، عطلة مقبولة، ملكية أو كراء، عائلة، تمدرس', other_docs: 'وثائق تجيب بدقة على السبب المكتوب في الرسالة'
+    }
+  };
+
+  /* ---------- Modèles de lettre ---------- */
+  var T = {
+    fr: {
+      subj: 'Objet : Demande de réexamen de ma demande de visa – dossier n° {ref}',
+      hello: 'Madame, Monsieur,',
+      intro: 'J’ai l’honneur de contester la décision de refus de visa du {date}, dont j’ai reçu notification, concernant ma demande n° {ref}. Je vous prie de bien vouloir réexaminer mon dossier au regard des éléments ci-dessous.',
+      facts: 'Éléments concrets de ma situation : {facts}',
+      motifHead: 'Réponse aux motifs invoqués :',
+      close: 'Je me tiens à votre disposition pour tout document complémentaire et vous remercie de l’attention portée à ma demande. Je vous prie d’agréer, Madame, Monsieur, l’expression de mes salutations respectueuses.',
+      pj: 'Pièces jointes : copie de la décision de refus ; copie du passeport ; {pj}.',
+      todo: '[à compléter]',
+      m: {
+        purpose: 'Objet et conditions du séjour : le but de mon voyage est [à compléter]. Mon programme prévoit [à compléter : dates, lieux, hébergement]. Les justificatifs correspondants sont joints à ce courrier.',
+        means: 'Moyens de subsistance : je dispose de [à compléter : revenus / épargne / prise en charge]. Les relevés bancaires et justificatifs de revenus joints en attestent.',
+        insurance: 'Assurance : je joins la police n° [à compléter] couvrant l’espace Schengen pour la période du [à compléter] au [à compléter].',
+        unreliable: 'Fiabilité des informations : je joins les originaux et les coordonnées vérifiables de [à compléter : employeur, banque, hébergeur] afin de lever tout doute.',
+        ret: 'Intention de retour : mes attaches dans mon pays sont [à compléter : emploi, congé accordé, famille, logement, études]. Mon retour est prévu le [à compléter].',
+        other: 'Autre motif : [à compléter : reprendre mot pour mot le motif écrit sur la lettre et y répondre point par point].'
+      }
+    },
+    en: {
+      subj: 'Subject: Request for review of my visa application – file no. {ref}',
+      hello: 'Dear Sir or Madam,',
+      intro: 'I respectfully contest the visa refusal decision dated {date} concerning my application no. {ref}. I kindly ask you to review my file in light of the elements below.',
+      facts: 'Concrete elements of my situation: {facts}',
+      motifHead: 'Response to the grounds stated:',
+      close: 'I remain available for any additional document and thank you for your attention to my application. Yours faithfully,',
+      pj: 'Enclosures: copy of the refusal decision; copy of passport; {pj}.',
+      todo: '[to complete]',
+      m: {
+        purpose: 'Purpose and conditions of stay: the purpose of my trip is [to complete]. My programme includes [to complete: dates, places, accommodation]. Supporting documents are enclosed.',
+        means: 'Means of subsistence: I have [to complete: income / savings / sponsorship]. The enclosed bank statements and income proof confirm this.',
+        insurance: 'Insurance: I enclose policy no. [to complete] covering the Schengen area from [to complete] to [to complete].',
+        unreliable: 'Reliability of information: I enclose originals and verifiable contacts for [to complete: employer, bank, host] to dispel any doubt.',
+        ret: 'Intention to return: my ties to my home country are [to complete: job, approved leave, family, housing, studies]. My return is planned for [to complete].',
+        other: 'Other ground: [to complete: quote the ground written on the letter and answer it point by point].'
+      }
+    }
+  };
+
+  /* ---------- État ---------- */
+  var checked = {};
+  var lastDeadline = null;
+
+  /* ---------- Motifs (cases à cocher) ---------- */
+  function renderMotifs() {
+    var box = $('motifs'); box.textContent = '';
+    ORDER.forEach(function (k) {
+      var lab = VC.el('label', 'vc-row cursor-pointer items-start !flex-nowrap');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.checked = !!checked[k]; cb.className = 'mt-1 h-5 w-5 shrink-0';
+      cb.addEventListener('change', function () { checked[k] = cb.checked; renderDiag(); });
+      lab.appendChild(cb);
+      lab.appendChild(VC.el('span', 'text-sm', VC.t('m_' + k)));
+      box.appendChild(lab);
+    });
+  }
+
+  function detect() {
+    var txt = $('r-text').value.toLowerCase(), n = 0;
+    ORDER.forEach(function (k) {
+      if (MOTIFS[k].kw.some(function (w) { return txt.indexOf(w) !== -1; })) { checked[k] = true; n++; }
+    });
+    renderMotifs(); renderDiag();
+    VC.toast(n ? VC.t('detected', { n: n }) : VC.t('none_detected'));
+  }
+
+  /* ---------- Diagnostic + délai ---------- */
+  function renderDiag() {
+    var d = $('diag'); d.textContent = '';
+    var keys = ORDER.filter(function (k) { return checked[k]; });
+
+    var badge = $('deadline-badge'), v = $('r-date').value, days = parseInt($('r-days').value, 10);
+    if (v && days > 0) {
+      var end = new Date(v); end.setDate(end.getDate() + days);
+      var today = new Date(); today.setHours(0, 0, 0, 0);
+      var diff = Math.round((end - today) / 86400000);
+      var kind = diff < 0 ? 'err' : diff <= 7 ? 'warn' : 'ok';
+      badge.className = 'vc-badge vc-badge-' + kind;
+      badge.textContent = diff < 0 ? VC.t('dl_over', { n: -diff }) : diff === 0 ? VC.t('dl_today') : VC.t('dl_left', { n: diff });
+      lastDeadline = end.toLocaleDateString(VC.lang === 'ar' ? 'ar-TN' : VC.lang === 'en' ? 'en-GB' : 'fr-FR');
+      d.appendChild(VC.el('p', 'vc-mute text-xs', VC.t('dl_note', { d: lastDeadline })));
+    } else {
+      badge.className = 'vc-badge vc-badge-muted'; badge.textContent = VC.t('no_date'); lastDeadline = null;
+    }
+
+    if (!keys.length) { d.appendChild(VC.el('p', 'vc-mute text-sm', VC.t('pick_one'))); return; }
+    d.appendChild(VC.el('h3', 'text-sm font-bold', VC.t('fix_h')));
+    keys.forEach(function (k) {
+      var row = VC.el('div', 'vc-row !flex-nowrap items-start');
+      row.appendChild(VC.badge('warn', VC.t('st_warn')));
+      var col = VC.el('div', 'text-sm');
+      col.appendChild(VC.el('div', 'font-semibold', VC.t('m_' + k)));
+      col.appendChild(VC.el('div', 'vc-mute', VC.t(MOTIFS[k].docs[0])));
+      row.appendChild(col); d.appendChild(row);
+    });
+  }
+
+  /* ---------- Génération de la lettre ---------- */
+  function generate() {
+    var keys = ORDER.filter(function (k) { return checked[k]; });
+    if (!keys.length) { VC.toast(VC.t('need_motif')); return; }
+    var L = T[$('g-lang').value] || T.fr, td = L.todo;
+    var name = $('g-name').value.trim() || td, ref = $('g-ref').value.trim() || td;
+    var post = $('g-post').value.trim() || td, city = $('g-city').value.trim() || td;
+    var dv = $('r-date').value, date = dv ? new Date(dv).toLocaleDateString($('g-lang').value === 'en' ? 'en-GB' : 'fr-FR') : td;
+    var facts = $('g-facts').value.trim();
+    var now = new Date().toLocaleDateString($('g-lang').value === 'en' ? 'en-GB' : 'fr-FR');
+    var pj = keys.map(function (k) { return DICT[$('g-lang').value][MOTIFS[k].docs[0]] || DICT.fr[MOTIFS[k].docs[0]]; }).join(' ; ');
+
+    var parts = [
+      name, '',
+      post, '',
+      city + ', ' + now, '',
+      L.subj.replace('{ref}', ref), '',
+      L.hello, '',
+      L.intro.replace('{date}', date).replace('{ref}', ref), ''
+    ];
+    if (facts) { parts.push(L.facts.replace('{facts}', facts), ''); }
+    parts.push(L.motifHead);
+    keys.forEach(function (k, i) { parts.push((i + 1) + '. ' + L.m[k]); });
+    parts.push('', L.close, '', L.pj.replace('{pj}', pj), '', name);
+
+    $('out').value = parts.join('\n');
+    var b = $('out-badge'); b.className = 'vc-badge vc-badge-info'; b.textContent = VC.t('out_ready');
+    checkTodo(); setStep(2);
+    $('out-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    if (!$('r-text').value.trim()) {
+      VC.toast('Ajoutez le texte de la notification de refus pour générer une lettre personnalisée.');
+      return;
+    }
+    if (!window.confirm('Les informations saisies et les motifs du refus seront transmis au service IA Visa Checker pour rédiger un projet de lettre. Continuer ?')) return;
+    VC.api.withBusy($('g-make'), function () {
+      return VC.api.generateAppeal({
+        authority: $('r-dest').value || $('g-post').value,
+        refusalDate: $('r-date').value,
+        reference: $('g-ref').value,
+        refusalText: $('r-text').value,
+        facts: $('g-facts').value,
+        identity: [$('g-name').value, $('g-post').value, $('g-city').value].join(' — '),
+        language: $('g-lang').value
+      });
+    }).then(function (data) {
+      $('out').value = data.reply || '';
+      $('out-badge').className = 'vc-badge vc-badge-info';
+      $('out-badge').textContent = VC.t('out_ready');
+      checkTodo();
+    }).catch(function (e) {
+      VC.toast(VC.api.errorMessage(e));
+    });
+  }
+
+  function checkTodo() {
+    var t = $('out').value, n = (t.match(/\[(à compléter|to complete)[^\]]*\]/g) || []).length, box = $('todo');
+    box.textContent = '';
+    if (!t) return;
+    var row = VC.el('div', 'vc-row');
+    row.appendChild(VC.badge(n ? 'warn' : 'ok', n ? String(n) : '✓'));
+    row.appendChild(VC.el('span', 'text-sm', n ? VC.t('todo_h') + ' ' + n : VC.t('todo_none')));
+    box.appendChild(row);
+  }
+
+  function setStep(n) {
+    Array.prototype.forEach.call(document.querySelectorAll('#steps li'), function (li) {
+      li.className = 'vc-badge ' + (parseInt(li.dataset.step, 10) <= n ? 'vc-badge-info' : 'vc-badge-muted');
+    });
+  }
+
+  /* ---------- Sorties ---------- */
+  function download(text) {
+    var blob = new Blob([text], { type: 'text/plain;charset=utf-8' }), a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'recours-visa.txt';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+
+  /* ---------- Événements ---------- */
+  $('r-detect').addEventListener('click', detect);
+  $('r-clear').addEventListener('click', function () { $('r-text').value = ''; checked = {}; renderMotifs(); renderDiag(); });
+  ['r-date', 'r-days'].forEach(function (id) { $(id).addEventListener('input', renderDiag); });
+  $('g-make').addEventListener('click', generate);
+  $('out').addEventListener('input', checkTodo);
+  $('o-copy').addEventListener('click', function () {
+    if (!$('out').value) { VC.toast(VC.t('need_motif')); return; }
+    VC.copy($('out').value).then(function () { VC.toast(VC.t('copied')); }, function () { VC.toast(VC.t('copy_fail')); });
+  });
+  $('o-txt').addEventListener('click', function () { if ($('out').value) download($('out').value); else VC.toast(VC.t('need_motif')); });
+  $('o-print').addEventListener('click', function () {
+    if (!$('out').value) { VC.toast(VC.t('need_motif')); return; }
+    $('print-area').textContent = $('out').value; window.print();
+  });
+  document.addEventListener('vc:lang', function () { renderMotifs(); renderDiag(); checkTodo(); });
+
+  /* ---------- Démarrage ---------- */
+  VC.init(DICT, 'recours');
+  renderMotifs(); renderDiag();
+})();
+</script>
+</body>
+</html>
