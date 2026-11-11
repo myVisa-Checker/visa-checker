@@ -378,7 +378,7 @@
     $('log').textContent = ''; $('summary').classList.add('hidden'); $('fb-list').textContent = '';
     renderMeters(null); var b = $('fb-badge'); b.className = 'vc-badge vc-badge-muted'; b.textContent = VC.t('fb_wait');
     $('live-dot').classList.remove('is-off'); $('btn-start').textContent = VC.t('restart');
-    ['s-lang', 's-purpose', 's-level', 'iv-code'].forEach(function (id) { $(id).disabled = true; });
+    ['s-lang', 's-purpose', 's-level'].forEach(function (id) { $(id).disabled = true; });
     clearInterval(S.tick); S.tick = setInterval(tick, 1000); tick();
     say('agent', VC.t('intro')); enableIO(true); ask();
   }
@@ -394,11 +394,8 @@
     var code = $('iv-code').value.trim();
     if (!code) { VC.toast('Saisissez votre code d’accès avant de répondre.'); $('iv-code').focus(); return; }
     var question = S.queue[S.idx] || '';
-    stopMic(); say('user', text);
-    $('answer').value = ''; $('live').textContent = ''; $('answer').style.height = '';
-    var res = analyse(text, $('s-lang').value); res.q = question; S.results.push(res);
-    renderFeedback(res);
-    S.idx++;
+    stopMic();
+    $('answer').disabled = true;
     VC.api.withBusy($('send'), function () {
       return VC.api.interviewFeedback({
         code: code,
@@ -407,18 +404,25 @@
         context: 'Motif : ' + $('s-purpose').value + '; langue : ' + $('s-lang').value + '; niveau : ' + $('s-level').value
       });
     }).then(function (data) {
+      $('answer').disabled = false;
+      say('user', text);
+      $('answer').value = ''; $('live').textContent = ''; $('answer').style.height = '';
+      var res = analyse(text, $('s-lang').value); res.q = question; S.results.push(res);
+      renderFeedback(res);
+      S.idx++;
       if (data.reply) say('agent', data.reply);
       if (data.left != null) $('q-count').title = 'Questions restantes selon le quota : ' + data.left;
       setTimeout(ask, 450);
     }).catch(function (e) {
+      $('answer').disabled = false;
       VC.toast(VC.api.errorMessage(e));
-      setTimeout(ask, 450);
+      $('answer').focus();
     });
   }
   function finish() {
     if (!S.on) return;
     S.on = false; stopMic(); clearInterval(S.tick); enableIO(false); $('live-dot').classList.add('is-off');
-    ['s-lang', 's-purpose', 's-level', 'iv-code'].forEach(function (id) { $(id).disabled = false; });
+    ['s-lang', 's-purpose', 's-level'].forEach(function (id) { $(id).disabled = false; });
     say('sys', VC.t('done_h') + ' ' + VC.t('done_p')); renderSummary();
     $('summary').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
