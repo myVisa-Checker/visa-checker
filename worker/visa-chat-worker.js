@@ -296,6 +296,7 @@ async function handleVisaApi(request, env, out, pathname) {
       }),
       "Nombre de documents joints : " + files.length + ".",
       "Produis un rapport structuré : documents examinés, faits observés par document, incohérences possibles, pièces manquantes seulement si l'exigence est établie, corrections prioritaires et points à confirmer.",
+      "Commence par « Score indicatif de conformité : NN/100 » uniquement si les pièces fournissent assez d’éléments pour une estimation prudente. Ce score évalue la complétude et la lisibilité apparentes du dossier, jamais la probabilité d’obtenir un visa. Si les éléments sont insuffisants, écris « Score : non évaluable ».",
       "Ne répète pas les numéros de passeport ou autres données sensibles. Ne prétends pas certifier l'authenticité ni garantir l'obtention du visa."
     ].join("\n");
     const result = await apiGemini(env, SYSTEM_AICHA_REVIEW, context, files);
@@ -339,7 +340,7 @@ async function handleVisaApi(request, env, out, pathname) {
       "Question : " + pcm(body.question, 1000),
       "Réponse du candidat : " + answer,
       "Contexte déclaré : " + pcm(body.context, 1500),
-      "Retourne uniquement un feedback concis : ce qui est clair, ce qui reste flou ou incohérent et une reformulation fidèle aux seuls faits fournis. Ne pose pas la question suivante, elle est gérée par l'interface.",
+      "Retourne un feedback concis en trois rubriques explicites : Clarté, Précision, Niveau de certitude. Explique les points solides et les éléments à clarifier, puis propose une reformulation fidèle aux seuls faits fournis. Ne déduis pas la sincérité ou la véracité à partir du style. Ne pose pas la question suivante, elle est gérée par l'interface.",
       "Ne crée aucune information, ne conseille jamais de mentir ou de cacher un refus."
     ].join("\n");
     const result = await apiGemini(env, SYSTEM_INTERVIEW + "\n\nPour cet endpoint, donne uniquement le feedback et la reformulation de la réponse. Ne pose pas la question suivante : elle est gérée par l'interface.", prompt, []);
