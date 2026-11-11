@@ -45,7 +45,7 @@ Exemple de corps JSON :
 }
 ```
 
-**Limites importantes :** le jeu de règles intégré est volontairement restreint à TN/MA/DZ et à SCHENGEN/FR. Les destinations absentes retournent `unknown`, jamais une exemption inventée. Les résultats sont informatifs, non décisionnels, et ne remplacent pas les autorités consulaires. Le Worker ne demande ni ne stocke de numéro de passeport ou d'image de document. L'interface principale n'est pas encore connectée à l'URL publique du Worker : après le premier déploiement du Worker, cette URL devra être configurée dans l'application avant d'activer le parcours utilisateur.
+**Limites importantes :** le jeu de règles intégré est volontairement restreint à TN/MA/DZ et à SCHENGEN/FR. Les destinations absentes retournent `unknown`, jamais une exemption inventée. Les résultats sont informatifs, non décisionnels, et ne remplacent pas les autorités consulaires. Le Worker ne demande ni ne stocke de numéro de passeport ou d'image de document. L'interface principale est connectée à l'API de production `https://visa-proxy.rabehfly.workers.dev` : elle charge `GET /v1/rules` et envoie les contrôles à `POST /v1/check`. Le formulaire apparaît dans l'étape Profil et demande uniquement la nationalité, les dates du voyage, les dates du passeport et le nombre de pages vierges (aucun numéro ni scan de passeport). Le moteur actuellement intégré couvre les passeports TN/MA/DZ et les destinations Schengen/France ; les autres destinations restent explicitement hors périmètre.
 
 ## Tests
 
