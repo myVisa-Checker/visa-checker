@@ -165,6 +165,13 @@
         }
         return data;
       });
+    }).catch(function (error) {
+      if (error && (error.name === 'TypeError' || !navigator.onLine)) {
+        var offline = new Error('offline');
+        offline.status = 503;
+        throw offline;
+      }
+      throw error;
     });
   };
 
@@ -204,7 +211,8 @@
       'rate': 'Trop de requêtes. Réessayez dans quelques minutes.',
       'ai_unavailable': 'Le service IA est momentanément indisponible.',
       'ai_timeout': 'Le service IA met trop de temps à répondre.',
-      'no-backend': 'Le service IA n’est pas configuré.'
+      'no-backend': 'Le service IA n’est pas configuré.',
+      'offline': 'Service IA hors ligne (503). Vérifiez votre connexion puis réessayez.'
     };
     return map[error && error.message] || 'Une erreur est survenue. Vérifiez votre connexion et réessayez.';
   };
