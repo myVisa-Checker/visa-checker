@@ -176,3 +176,8 @@ button[aria-busy="true"]{opacity:.8;cursor:progress}
 @media(min-width:640px){.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:col-span-2{grid-column:span 2/span 2}.sm\:grow-0{flex-grow:0}}
 @media(min-width:768px){.md\:pb-10{padding-bottom:2.5rem}.md\:py-8{padding-block:2rem}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}.md\:text-base{font-size:1rem;line-height:1.5rem}.md\:flex{display:flex}}
 @media(min-width:1024px){.lg\:grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.lg\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.lg\:grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.lg\:col-span-1{grid-column:span 1/span 1}.lg\:col-span-2{grid-column:span 2/span 2}.lg\:col-span-3{grid-column:span 3/span 3}.lg\:sticky{position:sticky}.lg\:top-20{top:5rem}.lg\:self-start{align-self:flex-start}}
+
+/* Corrections utilitaires complémentaires */
+.\!mb-0{margin-bottom:0!important}.\!flex-nowrap{flex-wrap:nowrap!important}
+.flex-col{flex-direction:column}.flex-nowrap{flex-wrap:nowrap}.justify-center{justify-content:center}
+.overflow-hidden{overflow:hidden}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}
