@@ -190,7 +190,7 @@ async function handlePartner(request, env, out) {
 /* ----- API métier Visa Checker : endpoints dédiés aux trois assistants ----- */
 const API_FILE_MAX = 5 * 1024 * 1024;
 const API_FILE_COUNT_MAX = 10;
-const API_TOTAL_MAX = 18 * 1024 * 1024; // marge sous la limite d'entrée inline Gemini
+const API_TOTAL_MAX = 14 * 1024 * 1024; // marge sous la limite d'entrée inline Gemini
 const API_MIMES = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
 
 function apiFileSignature(bytes, mime) {
@@ -315,7 +315,8 @@ async function handleVisaApi(request, env, out, pathname) {
       "Documents joints : " + files.length + ".",
       "N'invente aucun fait, texte juridique, délai ou voie de recours. Si une donnée manque, laisse un champ [à compléter]. Distingue les faits des arguments et recommande de vérifier le délai et l'autorité sur la notification officielle. Ne promets aucun résultat."
     ].join("\n");
-    const result = await apiGemini(env, SYSTEM_JOURY_REFUSAL, prompt, files);
+    const appealSystem = "Tu es Joury, rédactrice de projets de lettres de recours en matière de visa. Rédige une lettre formelle, factuelle et prudente à partir des seuls éléments fournis. N'invente jamais de faits, de dispositions juridiques, de délais ni de voie de recours. Utilise [à compléter] pour les informations absentes. Ne promets aucun résultat et recommande de vérifier la procédure sur la notification officielle.";
+    const result = await apiGemini(env, appealSystem, prompt, files);
     return out(result.reply ? { reply: result.reply } : { error: result.error }, result.status || 200);
   }
 
