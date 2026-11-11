@@ -1,20 +1,186 @@
 <!doctype html>
-<html lang="fr" dir="ltr">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#F9FAFB"><meta name="description" content="Visa Checker — votre espace pour préparer, vérifier et comprendre votre dossier de visa."><title>Visa Checker — Espace de préparation visa</title><link rel="canonical" href="https://checkmyvisa.org/"><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="vc.css"><script src="vc-shared.js"></script></head>
-<body class="vc-app vc-hub">
-<header class="vc-hub-header"><a class="vc-hub-brand" href="index.html"><span class="vc-brand-mark">✓</span><span>visa<span>checker</span></span></a><div class="vc-hub-controls"><label class="vc-sr" for="hub-lang">Langue</label><select id="hub-lang" class="vc-input"><option value="fr">Français</option><option value="en">English</option><option value="ar">العربية</option></select><button id="hub-theme" class="vc-btn vc-btn-icon" type="button" aria-label="Changer de thème">◐</button></div></header>
-<main class="vc-hub-main">
-<section class="vc-hub-hero"><span class="vc-eyebrow">VOTRE ESPACE VISA, EN UN SEUL ENDROIT</span><h1>Un parcours plus clair.<br><span>Un dossier mieux préparé.</span></h1><p>Trois espaces spécialisés vous accompagnent à chaque étape : comprendre votre situation, examiner vos documents et vous préparer aux démarches consulaires.</p><div class="vc-hub-trust"><span>Confidentiel par conception</span><span>Assistance IA</span><span>FR · EN · AR</span></div></section>
-<section class="vc-module-grid" aria-label="Applications Visa Checker">
-<a class="vc-module-card joury" href="view-joury.html"><div class="vc-module-top"><span class="vc-module-icon">✳</span><span class="vc-module-arrow">↗</span></div><span class="vc-module-kicker">01 · ORIENTATION</span><h2>Joury</h2><p>Assistant IA conversationnel</p><div class="vc-module-desc">Clarifiez votre projet, comprenez les catégories de visa et obtenez une première orientation sur votre situation.</div><span class="vc-module-cta">Discuter avec Joury <b>→</b></span></a>
-<a class="vc-module-card aicha" href="view-dossier.html"><div class="vc-module-top"><span class="vc-module-icon">▤</span><span class="vc-module-arrow">↗</span></div><span class="vc-module-kicker">02 · ANALYSE DOCUMENTAIRE</span><h2>Aïcha</h2><p>Moteur d’analyse de dossier</p><div class="vc-module-desc">Déposez vos justificatifs, examinez les contrôles et identifiez les points à corriger avant le dépôt.</div><span class="vc-module-cta">Analyser mon dossier <b>→</b></span></a>
-<a class="vc-module-card saden" href="view-entretien.html"><div class="vc-module-top"><span class="vc-module-icon">◎</span><span class="vc-module-arrow">↗</span></div><span class="vc-module-kicker">03 · PRÉPARATION CONSULAIRE</span><h2>Consulat Saden</h2><p>Entretien &amp; recours</p><div class="vc-module-desc">Entraînez-vous à répondre aux questions consulaires ou préparez un projet de lettre après un refus.</div><span class="vc-module-cta">Accéder à l’espace <b>→</b></span></a>
-</section>
-<section class="vc-hub-foot"><div><strong>Vous ne savez pas par où commencer ?</strong><p>Commencez par Joury. Elle vous guidera vers l’espace le plus adapté à votre besoin.</p></div><a class="vc-btn vc-btn-primary" href="view-joury.html">Commencer avec Joury</a></section>
-</main>
-<footer class="vc-hub-footer"><span>© Visa Checker</span><nav><a href="a-propos.html">À propos</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a><a href="contact.html">Contact</a></nav><p>Visa Checker est un outil d’aide. La décision appartient exclusivement aux autorités compétentes.</p></footer>
-<script>
-(function(){var $=function(id){return document.getElementById(id);};VC.init({},'hub');$('hub-lang').value=VC.lang;$('hub-lang').addEventListener('change',function(){VC.setLang(this.value);});$('hub-theme').addEventListener('click',VC.toggleTheme);document.addEventListener('vc:lang',function(){$('hub-lang').value=VC.lang;});})();
-</script>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js",{scope:"./"}).catch(function(){});});}</script>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<script>(function(){try{var h=location.hostname;if(location.protocol==='http:'&&h!=='localhost'&&h!=='127.0.0.1'&&h!=='[::1]'){location.replace('https://'+location.host+location.pathname+location.search+location.hash)}}catch(e){}})();</script>
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; default-src 'self'; script-src 'self' 'sha256-/Ubt3glbwnFC41S1wneNvjX7/Beg/yqFOhr2Pvfw5Hg='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://visa-proxy.rabehfly.workers.dev https://visa-chat.rabehfly.workers.dev; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="stylesheet" href="vc.css">
+<title>Visa Checker : votre dossier visa vérifié avant le dépôt</title>
+<meta name="description" content="Checklist des documents de visa pour les voyageurs de toutes nationalités (France et e-Visa), pack recours en cas de refus, billets d'avion et réservations d'hôtel via des agences partenaires. En français, anglais et arabe.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#1d4ed8">
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Visa Checker">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' width='64' height='64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%231d4ed8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='32' fill='url(%23g)'/%3E%3Cpath d='M37 5.5C17 7 4.5 22 6.2 38.5 7.7 50.5 17.5 58.8 29 59.4 19 54.5 11.8 44.5 12.8 33.2 13.9 20.6 23.5 10.6 37 5.5z' fill='%23fff'/%3E%3Cpath fill='%23fff' transform='translate(43.5 19.5) rotate(45) scale(.95) translate(-12 -12)' d='M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z'/%3E%3Cpath d='M19 39.5l10.5 11.5L53 26' fill='none' stroke='%23fff' stroke-width='8.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+<!-- Open Graph (aperçus WhatsApp, Facebook, Telegram) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Visa Checker">
+<meta property="og:title" content="Visa Checker : votre dossier visa vérifié avant le dépôt">
+<meta property="og:description" content="Vérifiez vos documents de visa, préparez un recours et commandez billets et hôtels auprès d'agences partenaires. FR · EN · عربي">
+<meta property="og:locale" content="fr_TN">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="ar_TN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Visa Checker">
+<meta name="twitter:description" content="Votre dossier visa, vérifié avant le dépôt.">
+<link rel="canonical" href="https://checkmyvisa.org/">
+<meta property="og:url" content="https://checkmyvisa.org/">
+<meta property="og:image" content="https://checkmyvisa.org/hero-voyage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="675">
+<meta property="og:image:alt" content="Voyageurs avec leur passeport : Visa Checker">
+<meta name="twitter:image" content="https://checkmyvisa.org/hero-voyage.jpg">
+
+<!-- Polices -->
+<link rel="stylesheet" href="./nav.css">
+<link rel="stylesheet" href="./brand.css">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+<nav class="sitenav in-app" aria-label="Navigation principale">
+  <a class="sn-logo" href="./?accueil=1"><b>Visa</b> Checker</a>
+  <ul>
+    <li><a href="./?accueil=1" aria-current="page">Accueil</a></li>
+    <li><a href="./partenaires.html">Partenaires</a></li>
+    <li><a href="./a-propos.html">À propos</a></li>
+    <li><a href="./contact.html">Contact</a></li>
+  </ul>
+
+</nav>
+<div class="wrap">
+  <header>
+    <div class="top">
+      <span class="brand" id="brand"></span>
+      <button type="button" class="home-btn" id="homeBtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M10 20v-6h4v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="lang" role="group" aria-label="Langue / Language / اللغة">
+        <button type="button" id="l-fr" aria-pressed="true">FR</button>
+        <button type="button" id="l-en" aria-pressed="false">EN</button>
+        <button type="button" id="l-ar" aria-pressed="false">عربي</button>
+      </div>
+    </div>
+    <div class="ptop" id="ptop" hidden></div>
+    <div class="stepper" id="stepper" hidden></div>
+    <span class="stamp" id="stamp"></span>
+    <h1 id="h1" tabindex="-1"></h1>
+    <p class="sub" id="sub"></p>
+  </header>
+
+  <div id="needsTop"></div>
+
+  <div class="hero" id="home"></div>
+  <section class="vc-landing-modules" aria-labelledby="vc-modules-title">
+    <div class="vc-landing-modules-head">
+      <span class="vc-eyebrow">VOTRE PARCOURS VISA</span>
+      <h2 id="vc-modules-title">Trois espaces pour avancer à chaque étape</h2>
+      <p>Choisissez l'accompagnement adapté : orientation, analyse de vos justificatifs ou préparation consulaire.</p>
+    </div>
+    <div class="vc-module-grid" aria-label="Les trois espaces Visa Checker">
+      <a class="vc-module-card joury" href="view-joury.html">
+        <div class="vc-module-top"><span class="vc-module-icon" aria-hidden="true">✳</span><span class="vc-module-arrow" aria-hidden="true">↗</span></div>
+        <span class="vc-module-kicker">01 · ORIENTATION</span><h2>Joury</h2><p>Assistant IA conversationnel</p>
+        <div class="vc-module-desc">Clarifiez votre projet, comprenez les catégories de visa et obtenez une première orientation sur votre situation.</div>
+        <span class="vc-module-cta">Discuter avec Joury <b aria-hidden="true">→</b></span>
+      </a>
+      <a class="vc-module-card aicha" href="view-dossier.html">
+        <div class="vc-module-top"><span class="vc-module-icon" aria-hidden="true">▤</span><span class="vc-module-arrow" aria-hidden="true">↗</span></div>
+        <span class="vc-module-kicker">02 · ANALYSE DOCUMENTAIRE</span><h2>Aïcha</h2><p>Moteur d'analyse de dossier</p>
+        <div class="vc-module-desc">Déposez vos justificatifs, examinez les contrôles et identifiez les points à corriger avant le dépôt.</div>
+        <span class="vc-module-cta">Analyser mon dossier <b aria-hidden="true">→</b></span>
+      </a>
+      <a class="vc-module-card saden" href="view-entretien.html">
+        <div class="vc-module-top"><span class="vc-module-icon" aria-hidden="true">◎</span><span class="vc-module-arrow" aria-hidden="true">↗</span></div>
+        <span class="vc-module-kicker">03 · PRÉPARATION CONSULAIRE</span><h2>Consulat Saden</h2><p>Entretien &amp; recours</p>
+        <div class="vc-module-desc">Entraînez-vous à répondre aux questions consulaires et préparez un projet de lettre après un refus.</div>
+        <span class="vc-module-cta">Accéder à l'espace <b aria-hidden="true">→</b></span>
+      </a>
+    </div>
+  </section>
+
+
+  <div class="panel" id="mode"></div>
+
+  <div class="panel" id="dest"></div>
+
+  <div class="panel" id="panel"></div>
+
+  <div id="evisa" hidden></div>
+
+  <div id="req" hidden></div>
+
+  <div id="tools" hidden></div>
+
+  <div id="docs">
+    <div class="progress" aria-live="polite">
+      <div class="p-row"><span class="p-num" id="pnum"></span><span class="p-msg" id="pmsg"></span></div>
+      
+    </div>
+    <div id="list"></div>
+  </div>
+
+  <div id="help">
+    <div class="agency" id="agency"></div>
+    <div class="refus" id="refus"></div>
+  </div>
+
+  <div class="nav" id="nav"></div>
+
+  <section aria-label="Outils Visa Checker" style="margin:1rem auto;padding:1rem;border:1px solid #dfe6f3;border-radius:16px;background:#fff;display:flex;flex-wrap:wrap;gap:.65rem;align-items:center">
+    <strong style="color:#0e1a3a;margin-inline-end:.5rem">Outils Visa Checker / Visa tools</strong>
+    <a href="./view-dossier.html" style="display:inline-flex;padding:.55rem .85rem;border-radius:10px;background:#2457e6;color:#fff;text-decoration:none;font-weight:650">Analyse dossier</a>
+    <a href="./view-recours.html" style="display:inline-flex;padding:.55rem .85rem;border-radius:10px;background:#eef2fa;color:#0e1a3a;text-decoration:none;font-weight:650">Préparer un recours</a>
+    <a href="./view-entretien.html" style="display:inline-flex;padding:.55rem .85rem;border-radius:10px;background:#eef2fa;color:#0e1a3a;text-decoration:none;font-weight:650">Entraînement entretien</a>
+  </section>
+
+  <section class="sponsors" id="sponsors" aria-labelledby="sp-h"></section>
+
+  <div class="dock" id="dock" hidden></div>
+
+  <button type="button" class="totop" id="totop" aria-label="Haut de page" title="Haut de page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+  <section class="bpn" id="bpn" aria-label="Bons plans" hidden></section>
+  <section class="trd" id="trans" aria-label="Traducteurs assermentés" hidden></section>
+  <footer>
+    <div class="links"><a href="./partenaires.html">Partenaires</a><a href="./a-propos.html">À propos</a><a href="./contact.html">Contact</a><a href="./confidentialite.html">Confidentialité</a><a href="./conditions.html">Conditions d'utilisation</a></div>
+    <div class="links" id="links"></div>
+    <p id="disc"></p>
+    <nav class="legal" id="legal"></nav>
+    <button type="button" class="reset" id="reset"></button>
+  </footer>
+</div>
+<div class="pwa" id="pwa" role="region" aria-live="polite" aria-labelledby="pwa-t" hidden>
+  <img src="icons/icon-192.png" alt="" width="44" height="44">
+  <div class="pwa-t"><b id="pwa-t"></b><span id="pwa-d"></span><ol class="pwa-steps" id="pwa-s" hidden></ol></div>
+  <button type="button" class="pwa-go" id="pwa-go"></button>
+  <button type="button" class="pwa-x" id="pwa-x"></button>
+</div>
+<dialog id="lg" aria-labelledby="lg-t" aria-modal="true" aria-hidden="true"><div class="lg-in"><div class="lg-top"><h2 id="lg-t"></h2><button type="button" class="lg-x" id="lg-x"></button></div><div id="lg-b"></div></div></dialog>
+
+<script src="visa-app.js" defer></script>
+
+<script src="visa-pwa.js" defer></script>
+<script src="avatar3d.js" defer></script>
+
+
+
+
+
 </body></html>
