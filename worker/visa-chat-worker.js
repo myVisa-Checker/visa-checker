@@ -339,7 +339,7 @@ async function handleVisaApi(request, env, out, pathname) {
       "Question : " + pcm(body.question, 1000),
       "Réponse du candidat : " + answer,
       "Contexte déclaré : " + pcm(body.context, 1500),
-      "Retourne un feedback concis : ce qui est clair, ce qui reste flou ou incohérent, une reformulation fidèle aux seuls faits fournis, puis UNE seule question suivante.",
+      "Retourne uniquement un feedback concis : ce qui est clair, ce qui reste flou ou incohérent et une reformulation fidèle aux seuls faits fournis. Ne pose pas la question suivante, elle est gérée par l'interface.",
       "Ne crée aucune information, ne conseille jamais de mentir ou de cacher un refus."
     ].join("\n");
     const result = await apiGemini(env, SYSTEM_INTERVIEW + "\n\nPour cet endpoint, donne uniquement le feedback et la reformulation de la réponse. Ne pose pas la question suivante : elle est gérée par l'interface.", prompt, []);
