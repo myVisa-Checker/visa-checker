@@ -127,14 +127,18 @@
   var API_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
   var API_FILE_MAX = 5 * 1024 * 1024;
   var API_FILE_COUNT_MAX = 10;
+  var API_TOTAL_MAX = 14 * 1024 * 1024;
 
   VC.api.validateFiles = function (list) {
     var files = Array.prototype.slice.call(list || []);
     if (files.length > API_FILE_COUNT_MAX) throw new Error('too-many-files');
+    var total = 0;
     files.forEach(function (f) {
       if (!API_TYPES.includes(String(f.type || '').toLowerCase())) throw new Error('invalid-file-type');
       if (!f.size || f.size > API_FILE_MAX) throw new Error('file-size');
+      total += f.size;
     });
+    if (total > API_TOTAL_MAX) throw new Error('total-files-size');
     return files;
   };
 
@@ -190,9 +194,10 @@
       'too-many-files': 'Maximum 10 fichiers.',
       'file-size': 'Chaque fichier doit peser au maximum 5 Mo.',
       'invalid-file-type': 'Format refusé : utilisez PDF, JPG, PNG ou WebP.',
+      'total-files-size': 'Le total des fichiers doit rester inférieur à 14 Mo.',
       'too_many_files': 'Maximum 10 fichiers.',
       'file_too_large': 'Un fichier dépasse 5 Mo.',
-      'total_files_too_large': 'Le total des fichiers dépasse la limite technique de 18 Mo.',
+      'total_files_too_large': 'Le total des fichiers dépasse la limite technique de 14 Mo.',
       'invalid_file_type': 'Le type ou le contenu réel d’un fichier est invalide.',
       'code': 'Code d’accès invalide.',
       'limit': 'Le quota de cette session est atteint.',
