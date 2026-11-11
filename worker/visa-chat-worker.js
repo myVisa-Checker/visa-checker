@@ -186,6 +186,169 @@ async function handlePartner(request, env, out) {
   return out({ ok: true, partner: true });
 }
 
+
+/* ----- API métier Visa Checker : endpoints dédiés aux trois assistants ----- */
+const API_FILE_MAX = 5 * 1024 * 1024;
+const API_FILE_COUNT_MAX = 10;
+const API_TOTAL_MAX = 18 * 1024 * 1024; // marge sous la limite d'entrée inline Gemini
+const API_MIMES = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
+
+function apiFileSignature(bytes, mime) {
+  if (mime === "application/pdf") return bytes.length >= 5 && String.fromCharCode(...bytes.slice(0, 5)) === "%PDF-";
+  if (mime === "image/jpeg") return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  if (mime === "image/png") return bytes.length >= 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47 && bytes[4] === 0x0d && bytes[5] === 0x0a && bytes[6] === 0x1a && bytes[7] === 0x0a;
+  if (mime === "image/webp") return bytes.length >= 12 && String.fromCharCode(...bytes.slice(0, 4)) === "RIFF" && String.fromCharCode(...bytes.slice(8, 12)) === "WEBP";
+  return false;
+}
+function apiBase64(bytes) {
+  let binary = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(binary);
+}
+async function apiReadPayload(request) {
+  const len = Number(request.headers.get("Content-Length") || 0);
+  if (len > API_TOTAL_MAX + 1024 * 1024) return { error: "payload_too_large", status: 413 };
+  const type = request.headers.get("Content-Type") || "";
+  let body, rawFiles = [];
+  if (/^multipart\/form-data\b/i.test(type)) {
+    const form = await request.formData();
+    const raw = form.get("payload");
+    try { body = raw ? JSON.parse(String(raw)) : {}; } catch { return { error: "invalid_payload", status: 400 }; }
+    rawFiles = form.getAll("files").concat(form.getAll("file")).filter((f) => f && typeof f.arrayBuffer === "function");
+  } else if (/^application\/json\b/i.test(type)) {
+    try { body = await request.json(); } catch { return { error: "invalid_payload", status: 400 }; }
+    rawFiles = Array.isArray(body && body.attachments) ? body.attachments : [];
+  } else {
+    return { error: "unsupported_content_type", status: 415 };
+  }
+  if (!body || typeof body !== "object" || Array.isArray(body)) return { error: "invalid_payload", status: 400 };
+  if (rawFiles.length > API_FILE_COUNT_MAX) return { error: "too_many_files", status: 400 };
+  const files = [];
+  let total = 0;
+  for (const f of rawFiles) {
+    let mime, filename, bytes;
+    if (f && typeof f.arrayBuffer === "function") {
+      mime = String(f.type || "").toLowerCase();
+      filename = pc(f.name || "document", 120);
+      if (f.size > API_FILE_MAX) return { error: "file_too_large", status: 413 };
+      bytes = new Uint8Array(await f.arrayBuffer());
+    } else {
+      mime = String(f && f.mimeType || "").toLowerCase();
+      filename = pc(f && f.filename || "document", 120);
+      const data = String(f && f.data || "");
+      if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(data)) return { error: "invalid_file", status: 400 };
+      let binary;
+      try { binary = atob(data); } catch { return { error: "invalid_file", status: 400 }; }
+      bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+      if (bytes.length > API_FILE_MAX) return { error: "file_too_large", status: 413 };
+    }
+    if (!API_MIMES.includes(mime) || !apiFileSignature(bytes, mime)) return { error: "invalid_file_type", status: 400 };
+    total += bytes.length;
+    if (total > API_TOTAL_MAX) return { error: "total_files_too_large", status: 413 };
+    files.push({ mimeType: mime, data: apiBase64(bytes), filename });
+  }
+  return { body, files };
+}
+async function apiGemini(env, system, userText, files, history) {
+  if (!env.GEMINI_API_KEY) return { error: "ai_unavailable", status: 503 };
+  const parts = [{ text: String(userText || "").slice(0, 18000) }];
+  for (const f of files || []) parts.push({ inlineData: { mimeType: f.mimeType, data: f.data } });
+  const contents = Array.isArray(history) && history.length
+    ? history.slice(-12).map((m) => ({ role: m && m.role === "assistant" ? "model" : "user", parts: [{ text: String(m && m.text || "").slice(0, 1200) }] })).concat([{ role: "user", parts }])
+    : [{ role: "user", parts }];
+  const model = String(env.MODEL || env.GEMINI_MODEL || "gemini-3.5-flash-lite").trim();
+  const ctl = new AbortController();
+  const tm = setTimeout(() => ctl.abort(), 30000);
+  try {
+    const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent", {
+      method: "POST", signal: ctl.signal,
+      headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
+      body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents, generationConfig: { maxOutputTokens: 2500 } })
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || data.error) return { error: "ai_request_failed", status: 502 };
+    const reply = data?.candidates?.[0]?.content?.parts?.map((p) => p.text || "").join("").trim();
+    return reply ? { reply } : { error: "empty_ai_reply", status: 502 };
+  } catch (e) {
+    return { error: e && e.name === "AbortError" ? "ai_timeout" : "ai_unavailable", status: 503 };
+  } finally {
+    clearTimeout(tm);
+  }
+}
+async function handleVisaApi(request, env, out, pathname) {
+  const parsed = await apiReadPayload(request);
+  if (parsed.error) return out({ error: parsed.error }, parsed.status);
+  const body = parsed.body, files = parsed.files;
+  const ip = request.headers.get("CF-Connecting-IP") || "?";
+  if (limited(ip)) return out({ error: "rate", reply: RATE_MSG }, 429);
+
+  if (pathname === "/api/analyze-dossier") {
+    const context = [
+      "Analyse un dossier de demande de visa à partir des seules pièces jointes et informations ci-dessous.",
+      "Contexte : " + JSON.stringify({
+        passportCountry: pc(body.passportCountry || body.passport, 80),
+        destination: pc(body.destination || body.dest, 80),
+        purpose: pc(body.purpose, 80),
+        occupation: pc(body.occupation || body.status, 80),
+        departure: pc(body.departure || body.dep, 30),
+        returnDate: pc(body.returnDate || body.ret, 30),
+        passportExpiry: pc(body.passportExpiry || body.expiry, 30)
+      }),
+      "Nombre de documents joints : " + files.length + ".",
+      "Produis un rapport structuré : documents examinés, faits observés par document, incohérences possibles, pièces manquantes seulement si l'exigence est établie, corrections prioritaires et points à confirmer.",
+      "Ne répète pas les numéros de passeport ou autres données sensibles. Ne prétends pas certifier l'authenticité ni garantir l'obtention du visa."
+    ].join("\n");
+    const result = await apiGemini(env, SYSTEM_AICHA_REVIEW, context, files);
+    return out(result.reply ? { reply: result.reply } : { error: result.error }, result.status || 200);
+  }
+
+  if (pathname === "/api/generate-appeal") {
+    const prompt = [
+      "Prépare un projet de lettre de recours ou de demande de réexamen à partir des informations fournies.",
+      "Pays/autorité : " + pc(body.authority || body.destination || "non précisé", 120),
+      "Date de décision : " + pc(body.refusalDate || body.date, 40),
+      "Référence : " + pc(body.reference, 100),
+      "Motifs exacts de refus : " + pcm(body.refusalText || body.motifs, 7000),
+      "Faits complémentaires communiqués : " + pcm(body.facts || body.additionalFacts, 5000),
+      "Identité/adresse fournies : " + pcm(body.identity || body.address, 1000),
+      "Langue demandée : " + pc(body.language || "français", 30),
+      "Documents joints : " + files.length + ".",
+      "N'invente aucun fait, texte juridique, délai ou voie de recours. Si une donnée manque, laisse un champ [à compléter]. Distingue les faits des arguments et recommande de vérifier le délai et l'autorité sur la notification officielle. Ne promets aucun résultat."
+    ].join("\n");
+    const result = await apiGemini(env, SYSTEM_JOURY_REFUSAL, prompt, files);
+    return out(result.reply ? { reply: result.reply } : { error: result.error }, result.status || 200);
+  }
+
+  if (pathname === "/api/interview-feedback") {
+    const codes = String(env.INTERVIEW_CODES || "").split(",").map((s) => s.trim()).filter(Boolean);
+    const code = String(body.code || "").trim();
+    const listed = codes.includes(code);
+    const minted = !listed && code && env.USAGE ? await env.USAGE.get("mint:" + code) : null;
+    if (!code || (!listed && !minted)) return out({ error: "code" }, 403);
+    let usageKey = "", used = 0;
+    if (env.USAGE) {
+      usageKey = "iv:" + code;
+      used = parseInt((await env.USAGE.get(usageKey)) || "0", 10) || 0;
+      if (used >= IV_MAX) return out({ error: "limit" }, 429);
+    }
+    const answer = pcm(body.answer, 3000);
+    if (!answer) return out({ error: "empty_answer" }, 400);
+    const prompt = [
+      "Évalue la réponse du candidat à la question d'entretien ci-dessous.",
+      "Question : " + pcm(body.question, 1000),
+      "Réponse du candidat : " + answer,
+      "Contexte déclaré : " + pcm(body.context, 1500),
+      "Retourne un feedback concis : ce qui est clair, ce qui reste flou ou incohérent, une reformulation fidèle aux seuls faits fournis, puis UNE seule question suivante.",
+      "Ne crée aucune information, ne conseille jamais de mentir ou de cacher un refus."
+    ].join("\n");
+    const result = await apiGemini(env, SYSTEM_INTERVIEW, prompt, []);
+    if (!result.reply) return out({ error: result.error }, result.status || 502);
+    if (env.USAGE) await env.USAGE.put(usageKey, String(used + 1));
+    return out({ reply: result.reply, left: env.USAGE ? Math.max(0, IV_MAX - used - 1) : null });
+  }
+  return out({ error: "not_found" }, 404);
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -202,6 +365,12 @@ export default {
       });
 
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
+    const pathname = new URL(request.url).pathname;
+    if (pathname === "/api/analyze-dossier" || pathname === "/api/generate-appeal" || pathname === "/api/interview-feedback") {
+      if (request.method !== "POST") return out({ error: "POST only" }, 405);
+      try { return await handleVisaApi(request, env, out, pathname); }
+      catch (e) { console.log("Visa API route failed", pathname, e && e.message); return out({ error: "api_unavailable" }, 500); }
+    }
     if (request.method !== "POST") return out({ error: "POST only" }, 405);
 
     // Demandes de partenariat : route dédiée, séparée de l'assistant
