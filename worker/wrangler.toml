@@ -1,4 +1,4 @@
-name = "visa-checker-eligibility"
+name = "visa-proxy"
 main = "visa-rules-worker.js"
 compatibility_date = "2026-11-11"
 
