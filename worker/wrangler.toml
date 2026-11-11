@@ -1,5 +1,5 @@
 name = "visa-proxy"
-main = "visa-rules-worker.js"
+main = "visa-proxy-worker.js"
 compatibility_date = "2026-11-11"
 
 [vars]
