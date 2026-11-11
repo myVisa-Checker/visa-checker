@@ -2647,6 +2647,65 @@ function patchHTML(el,html){var t=document.createElement("template");t.innerHTML
     Object.defineProperty(el,"innerHTML",{configurable:true,get:function(){return d.get.call(el)},set:function(h){patchHTML(el,String(h))}});
   });
 })();
+
+/* ===== API publique d'éligibilité passeport ===== */
+var VISA_API_BASE="https://visa-proxy.rabehfly.workers.dev";
+var VISA_RULES_URL=VISA_API_BASE+"/v1/rules";
+var VISA_CHECK_URL=VISA_API_BASE+"/v1/check";
+var VISA_RULES=null,VISA_RULES_STATE="loading";
+var VISA_SCHENGEN=["fr","de","it","es","be","nl","ch","at","dk","fi","pt","gr","pl","cz","hu","se","mt","lu","hr","si","sk","lt","lv","ee","is","li","bg","ro"];
+var VCEL={nationality:S.origin||"tn",departureDate:"",returnDate:"",passportIssueDate:"",passportExpiry:"",blankPages:"2",busy:false,result:null,error:""};
+var VCE_TX={
+ fr:{title:"Contrôle indicatif du passeport",sub:"Vérifiez le besoin de visa et quelques conditions de validité du passeport. Aucun numéro ni scan de passeport n'est demandé.",nat:"Nationalité du passeport",dep:"Date de départ",ret:"Date de retour",issue:"Date de délivrance du passeport",expiry:"Date d'expiration du passeport",pages:"Pages vierges disponibles",run:"Vérifier mon passeport",loading:"Connexion au moteur de règles…",rulesOk:"Moteur de règles connecté",rulesErr:"Règles momentanément indisponibles. Vous pouvez quand même lancer la vérification.",unsupported:"Cette destination n'est pas encore couverte par le moteur. Consultez les sources officielles avant le départ.",required:"Complétez les quatre dates et le nombre de pages vierges.",checking:"Vérification en cours…",visa:"Besoin de visa",passport:"Contrôle du passeport",ok:"Contrôles de base satisfaits",review:"Vérification nécessaire",unknown:"À confirmer",source:"Source officielle",disclaimer:"Résultat indicatif uniquement. Les règles peuvent changer et seule l'autorité compétente décide de l'entrée ou de la délivrance du visa.",failed:"Impossible de joindre le moteur. Réessayez plus tard."},
+ en:{title:"Indicative passport check",sub:"Check visa requirements and basic passport validity. No passport number or scan is requested.",nat:"Passport nationality",dep:"Departure date",ret:"Return date",issue:"Passport issue date",expiry:"Passport expiry date",pages:"Available blank pages",run:"Check my passport",loading:"Connecting to rules engine…",rulesOk:"Rules engine connected",rulesErr:"Rules temporarily unavailable. You can still try the check.",unsupported:"This destination is not yet covered by the engine. Check official sources before travelling.",required:"Complete all four dates and the number of blank pages.",checking:"Checking…",visa:"Visa requirement",passport:"Passport assessment",ok:"Basic checks passed",review:"Review required",unknown:"To confirm",source:"Official source",disclaimer:"Indicative result only. Rules can change; only the competent authority decides entry or visa issuance.",failed:"Could not reach the engine. Try again later."},
+ ar:{title:"فحص إرشادي لجواز السفر",sub:"تحقق من شرط التأشيرة وبعض شروط صلاحية الجواز. لا نطلب رقم الجواز أو صورة منه.",nat:"جنسية جواز السفر",dep:"تاريخ المغادرة",ret:"تاريخ العودة",issue:"تاريخ إصدار الجواز",expiry:"تاريخ انتهاء الجواز",pages:"عدد الصفحات الفارغة",run:"افحص جواز سفري",loading:"جارٍ الاتصال بمحرك القواعد…",rulesOk:"محرك القواعد متصل",rulesErr:"القواعد غير متاحة مؤقتًا. يمكنك مع ذلك تجربة الفحص.",unsupported:"هذه الوجهة غير مدعومة حاليًا. تحقق من المصادر الرسمية قبل السفر.",required:"أكمل التواريخ الأربعة وعدد الصفحات الفارغة.",checking:"جارٍ الفحص…",visa:"شرط التأشيرة",passport:"تقييم الجواز",ok:"اجتازت الفحوصات الأساسية",review:"يتطلب المراجعة",unknown:"يحتاج إلى تأكيد",source:"المصدر الرسمي",disclaimer:"النتيجة إرشادية فقط. قد تتغير القواعد، والسلطة المختصة وحدها تقرر الدخول أو منح التأشيرة.",failed:"تعذر الاتصال بالمحرك. حاول لاحقًا."}
+};
+function visaEligibilityHtml(){
+ var L=VCE_TX[S.lang]||VCE_TX.fr,cur=curC(),nat=String(VCEL.nationality||S.origin||"tn").toLowerCase();
+ var rulesMsg=VISA_RULES_STATE==="ready"?L.rulesOk:(VISA_RULES_STATE==="loading"?L.loading:L.rulesErr);
+ var h='<section class="group vc-eligibility" aria-labelledby="vc-eligibility-title"><div class="g-head"><h2 id="vc-eligibility-title">'+L.title+'</h2><span class="evtag">'+(VISA_RULES_STATE==="ready"?"API":"")+'</span></div><p class="ag-sub">'+L.sub+'</p><p class="i-note" role="status">'+rulesMsg+'</p>';
+ h+='<div class="f-row"><div class="field"><label class="q-label" for="vc-el-nat">'+L.nat+'</label><select class="sel" id="vc-el-nat" data-vc-field="nationality"><option value="tn"'+(nat==="tn"?" selected":"")+'>Tunisie</option><option value="ma"'+(nat==="ma"?" selected":"")+'>Maroc</option><option value="dz"'+(nat==="dz"?" selected":"")+'>Algérie</option></select></div><div class="field"><span class="q-label">'+(UI[S.lang].s_dest||"Destination")+'</span><div class="sel" aria-readonly="true">'+esc(nm(cur))+'</div></div></div>';
+ var fields=[["departureDate",L.dep],["returnDate",L.ret],["passportIssueDate",L.issue],["passportExpiry",L.expiry]];
+ h+='<div class="f-row">'+fields.map(function(x){return '<div class="field"><label class="q-label" for="vc-el-'+x[0]+'">'+x[1]+'</label><input class="sel" type="date" id="vc-el-'+x[0]+'" data-vc-field="'+x[0]+'" value="'+esc(VCEL[x[0]])+'" required></div>'}).join("")+'</div>';
+ h+='<div class="field"><label class="q-label" for="vc-el-pages">'+L.pages+'</label><input class="sel" id="vc-el-pages" type="number" min="0" max="100" step="1" data-vc-field="blankPages" value="'+esc(VCEL.blankPages)+'" required></div>';
+ h+='<p class="ag-err" id="vc-el-error" role="alert">'+esc(VCEL.error||"")+'</p><button type="button" class="pay wide" data-vc-check'+(VCEL.busy?" disabled":"")+'>'+(VCEL.busy?L.checking:L.run)+'</button>';
+ h+='<div id="vc-el-result" aria-live="polite">'+visaEligibilityResultHtml()+'</div><p class="ag-note">'+L.disclaimer+'</p></section>';
+ return h;
+}
+function visaEligibilityResultHtml(){
+ var r=VCEL.result;if(!r)return "";
+ var L=VCE_TX[S.lang]||VCE_TX.fr,pa=r.passportAssessment==="basic_checks_passed"?L.ok:L.review;
+ var visaLabel=r.visaRequirement==="visa_required"?({fr:"Visa requis",en:"Visa required",ar:"التأشيرة مطلوبة"}[S.lang]||"Visa requis"):L.unknown;
+ var h='<div class="book"><b>'+L.visa+' : '+visaLabel+'</b><p>'+esc(r.destination&&r.destination.name||"")+' · '+esc(r.nationality&&r.nationality.name||"")+'</p><b>'+L.passport+' : '+esc(pa)+'</b>';
+ if(Array.isArray(r.issues)&&r.issues.length)h+='<ul class="adv">'+r.issues.map(function(x){return '<li>'+esc(String(x).replace(/_/g," "))+'</li>'}).join("")+'</ul>';
+ if(r.note)h+='<p>'+esc(r.note)+'</p>';
+ if(r.officialSource&&/^https:\/\//i.test(r.officialSource))h+='<p><a href="'+esc(r.officialSource)+'" target="_blank" rel="noopener noreferrer">'+L.source+' ↗</a></p>';
+ h+='<p class="ag-note">'+esc(r.disclaimer||L.disclaimer)+'</p></div>';return h;
+}
+function loadVisaEligibilityRules(){
+ fetchJson(VISA_RULES_URL,{method:"GET",headers:{"Accept":"application/json"}},10000).then(function(r){
+  if(r.ok&&r.data&&r.data.destinations&&r.data.nationalities){VISA_RULES=r.data;VISA_RULES_STATE="ready"}
+  else VISA_RULES_STATE="error";
+  if(S.step===3)render();
+ });
+}
+function runVisaEligibilityCheck(){
+ var L=VCE_TX[S.lang]||VCE_TX.fr;
+ VCEL.error="";VCEL.result=null;
+ var pages=Number(VCEL.blankPages),keys=["departureDate","returnDate","passportIssueDate","passportExpiry"];
+ if(keys.some(function(k){return !isoOk(VCEL[k])})||!Number.isInteger(pages)||pages<0||pages>100){VCEL.error=L.required;render();return}
+ var nat=String(VCEL.nationality||S.origin||"tn").toUpperCase(),dest=String(S.country||"fr").toLowerCase();
+ if(VISA_SCHENGEN.indexOf(dest)<0){VCEL.error=L.unsupported;render();return}
+ var destination=dest==="fr"?"FR":"SCHENGEN";
+ VCEL.busy=true;render();
+ fetchJson(VISA_CHECK_URL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({nationality:nat,destination:destination,departureDate:VCEL.departureDate,returnDate:VCEL.returnDate,passportIssueDate:VCEL.passportIssueDate,passportExpiry:VCEL.passportExpiry,blankPages:pages})},12000).then(function(r){
+  VCEL.busy=false;
+  if(r.ok&&r.data&&r.data.apiVersion===1){VCEL.result=r.data;VCEL.error=""}
+  else VCEL.error=L.failed;
+  render();
+ });
+}
+
 var prevStep;
 function focusStepHeading(){
   var d=$("lg");if(d&&d.open)return;
@@ -2675,7 +2734,7 @@ function render(){
   $("home").hidden=st!==0;if(st===0){$("home").innerHTML=homeHtml(t)}
   $("mode").hidden=st!==1;if(st===1)$("mode").innerHTML=modeHtml(t);
   $("dest").hidden=st!==2;if(st===2)$("dest").innerHTML=destHtml(t);
-  $("panel").hidden=st!==3;if(st===3)$("panel").innerHTML=panelHtml(t);
+  $("panel").hidden=st!==3;if(st===3){$("panel").innerHTML=panelHtml(t);$("panel").insertAdjacentHTML("beforeend",visaEligibilityHtml());}
   $("req").hidden=st<8||st>10;$("tools").hidden=st<11;if(st>=11)$("tools").innerHTML=toolsHtml(t);if(st===8)$("req").innerHTML=pickHtml(t);if(st===9)$("req").innerHTML=formHtml(t);if(st===10)$("req").innerHTML=doneHtml(t);$("evisa").hidden=st<6||st>7;if(st===6)$("evisa").innerHTML=evListHtml();if(st===7)$("evisa").innerHTML=evDetailHtml(t);
   $("docs").hidden=st!==4;$("help").hidden=st!==5;$("agency").hidden=true;$("refus").hidden=false;
   if(st===4){
@@ -2767,6 +2826,12 @@ document.addEventListener("input",function(e){var f=e.target.dataset&&e.target.d
     if(!Object.keys(RQ.er).length){var fm=$("fe-form");if(fm)fm.textContent=""}}}});
 document.addEventListener("submit",function(e){if(e.target.id==="rqform"){e.preventDefault();submitReq()}});
 
+
+
+/* Événements du contrôle d'éligibilité : seules des dates et le nombre de pages restent en mémoire locale. */
+document.addEventListener("input",function(e){var k=e.target&&e.target.dataset&&e.target.dataset.vcField;if(k&&Object.prototype.hasOwnProperty.call(VCEL,k))VCEL[k]=e.target.value});
+document.addEventListener("change",function(e){var k=e.target&&e.target.dataset&&e.target.dataset.vcField;if(k&&Object.prototype.hasOwnProperty.call(VCEL,k))VCEL[k]=e.target.value});
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-vc-check]");if(b&&!VCEL.busy){VCEL.nationality=($("vc-el-nat")&&$("vc-el-nat").value)||VCEL.nationality;runVisaEligibilityCheck()}});
 
 /* ===== Pages légales ===== */
 /* À COMPLÉTER avant le lancement : laissez vide ce que vous ne voulez pas afficher. */
@@ -2924,6 +2989,7 @@ document.addEventListener("keydown",function(e){
 ["fr","en","ar"].forEach(function(l){$("l-"+l).onclick=function(){S.lang=l;save();render()}});
 $("reset").onclick=function(){S.done={};save();render()};
 loadPartners();loadDeals();
+loadVisaEligibilityRules();
 (function(){var b=document.getElementById("totop");if(!b)return;
   function chk(){b.classList.toggle("on",(window.pageYOffset||document.documentElement.scrollTop)>400)}
   window.addEventListener("scroll",chk,{passive:true});chk();
