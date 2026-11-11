@@ -267,7 +267,7 @@
   function addFiles(list) {
     var incoming = Array.prototype.slice.call(list || []);
     if (files.length + incoming.length > 10) { VC.toast('Maximum 10 fichiers.'); return; }
-    try { VC.api.validateFiles(incoming); } catch (e) { VC.toast(VC.api.errorMessage(e)); return; }
+    try { VC.api.validateFiles(files.map(function (r) { return r.file; }).concat(incoming)); } catch (e) { VC.toast(VC.api.errorMessage(e)); return; }
     incoming.forEach(function (f) {
       var rec = { id: nextId++, file: f, type: '', w: 0, h: 0 };
       files.push(rec);
