@@ -1,0 +1,8 @@
+name = "visa-rules"
+main = "visa-rules-worker.js"
+compatibility_date = "2026-11-11"
+
+[vars]
+ALLOWED_ORIGIN = "https://checkmyvisa.org,https://www.checkmyvisa.org,https://myvisa-checker.github.io"
+
+# Advisory eligibility API only. No KV, passport-number storage, or secrets required.
