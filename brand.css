@@ -216,3 +216,6 @@ h1,h2,h3{letter-spacing:-.025em}
 .vc-hero-assistant:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 @media(max-width:380px){.vc-hero-assistants{padding:12px}.vc-hero-assistant{padding:10px 6px}.vc-hero-assistant img,.vc-hero-assistant canvas.a3d{width:88px;height:88px}.vc-hero-assistant-copy>small{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.vc-hero-assistant,.vc-hero-assistant img,.vc-hero-assistant canvas.a3d{transition:none}.vc-hero-assistant:hover,.vc-hero-assistant:hover img,.vc-hero-assistant:hover canvas.a3d{transform:none}}
+
+/* Consulat Saden : troisième assistant, sous Joury et Aïcha, sur toute la largeur */
+.vc-hero-saden{grid-column:1/-1}

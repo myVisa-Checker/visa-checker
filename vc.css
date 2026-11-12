@@ -1260,3 +1260,6 @@ body.vc-app{margin:0;background:var(--vc-bg);color:var(--vc-ink);font-family:Int
 .jy-avatar,.jy-persona canvas.a3d{width:88px;height:88px;flex:none;border-radius:24px;object-fit:cover;display:block;background:linear-gradient(145deg,#e9f0ff,#f6f8ff);box-shadow:0 10px 22px -12px rgba(23,48,102,.45)}
 .jy-persona-card{overflow:hidden}
 @media(max-width:600px){.jy-avatar,.jy-persona canvas.a3d{width:72px;height:72px;border-radius:20px}}
+
+/* Consulat Saden : portrait et choix voix / texte */
+.vc-saden-persona{margin-bottom:1rem}.vc-answer-mode{margin:.9rem 0 .4rem}.vc-mode-choice{margin:.4rem 0}.vc-interview-compose #iv-mic[hidden]{display:none}
