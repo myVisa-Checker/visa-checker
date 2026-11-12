@@ -32,7 +32,7 @@
     en: {
       "Partenaires | CheckMyVisa": "Partners | CheckMyVisa",
       "Devenez partenaire de CheckMyVisa : agences de voyages, hôtels, transport, assurance et services utiles aux voyageurs. Remplissez votre demande en quelques minutes.": "Become a CheckMyVisa partner: travel agencies, hotels, transport, insurance and services useful to travellers. Fill in your request in a few minutes.",
-      "Navigation principale": "Main navigation", "Accueil": "Home", "Partenaires": "Partners", "Contact": "Contact", "Confidentialité": "Privacy",
+      "Navigation principale": "Main navigation", "Accueil": "Home", "Partenaires": "Partners", "Contact": "Contact", "Confidentialité": "Privacy", "À propos": "About", "Conditions d'utilisation": "Terms of use",
       "Réseau professionnel": "Professional network",
       "Construisons un meilleur parcours voyageur.": "Let's build a better traveller journey.",
       "Nous développons un réseau de professionnels fiables pour aider les voyageurs à préparer leur séjour : agences de voyages, hôtels, transporteurs, assurances et services numériques.": "We are building a network of reliable professionals to help travellers prepare their trip: travel agencies, hotels, carriers, insurers and digital services.",
@@ -94,7 +94,7 @@
     ar: {
       "Partenaires | CheckMyVisa": "الشركاء | CheckMyVisa",
       "Devenez partenaire de CheckMyVisa : agences de voyages, hôtels, transport, assurance et services utiles aux voyageurs. Remplissez votre demande en quelques minutes.": "كن شريكًا لـ CheckMyVisa: وكالات السفر والفنادق والنقل والتأمين والخدمات المفيدة للمسافرين. املأ طلبك في دقائق قليلة.",
-      "Navigation principale": "التنقل الرئيسي", "Accueil": "الرئيسية", "Partenaires": "الشركاء", "Contact": "اتصل بنا", "Confidentialité": "الخصوصية",
+      "Navigation principale": "التنقل الرئيسي", "Accueil": "الرئيسية", "Partenaires": "الشركاء", "Contact": "اتصل بنا", "Confidentialité": "الخصوصية", "À propos": "من نحن", "Conditions d'utilisation": "شروط الاستخدام",
       "Réseau professionnel": "شبكة مهنية",
       "Construisons un meilleur parcours voyageur.": "لنبنِ معًا رحلة أفضل للمسافر.",
       "Nous développons un réseau de professionnels fiables pour aider les voyageurs à préparer leur séjour : agences de voyages, hôtels, transporteurs, assurances et services numériques.": "نعمل على بناء شبكة من المهنيين الموثوقين لمساعدة المسافرين على التحضير لرحلتهم: وكالات السفر والفنادق وشركات النقل وشركات التأمين والخدمات الرقمية.",
