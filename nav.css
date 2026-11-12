@@ -18,7 +18,7 @@
 }
 .sitenav a:hover{color:#1e3a8a;border-bottom-color:#1d4ed8}
 .sitenav a[aria-current="page"]{color:#1e3a8a;border-bottom-color:#1d4ed8}
-.sitenav .sn-logo{font-weight:800;font-size:19px;letter-spacing:-.2px;border:0;padding:0}
+.sitenav .sn-logo{font-weight:800;font-size:19px;letter-spacing:-.2px;border:0;padding:0;direction:ltr;unicode-bidi:isolate}
 .sitenav .sn-logo b{color:#1d4ed8;font-weight:800}
 .sitenav .sn-logo:hover{border:0}
 .sitenav a:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px;border-radius:4px}
