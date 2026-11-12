@@ -238,7 +238,7 @@
         it = NAV[i];
         tabs += '<a class="vc-tab' + (VC.active === it[0] ? ' is-active' : '') + '" href="' + it[1] + '"' +
           (VC.active === it[0] ? ' aria-current="page"' : '') + '>' + icon(it[2], 18) +
-          '<span>' + VC.t('nav_' + it[0]) + '</span></a>';
+          '<span>' + (it[0] === 'recours' ? '' : '<i class="vc-ia">IA</i> ') + VC.t('nav_' + it[0]) + '</span></a>';
       }
       for (var k in LANGS) opts += '<option value="' + k + '"' + (k === VC.lang ? ' selected' : '') + '>' + LANGS[k].label + '</option>';
       var moon = 'M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z';
@@ -263,7 +263,7 @@
       var b = '';
       for (var j = 0; j < NAV.length; j++) {
         b += '<a href="' + NAV[j][1] + '"' + (VC.active === NAV[j][0] ? ' class="is-active" aria-current="page"' : '') + '>' +
-          icon(NAV[j][2], 22) + '<span>' + VC.t('nav_' + NAV[j][0]) + '</span></a>';
+          icon(NAV[j][2], 22) + '<span><i class="vc-ia">IA</i> ' + VC.t('nav_' + NAV[j][0]) + '</span></a>';
       }
       bot.innerHTML = '<nav class="vc-bottom" aria-label="Navigation">' + b + '</nav>';
     }
