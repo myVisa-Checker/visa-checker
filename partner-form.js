@@ -5,6 +5,8 @@
    Aucune donnée n'est stockée dans le navigateur. Le logo est redimensionné et converti dans le navigateur (WebP, 512 px max). */
 (function () {
   "use strict";
+  /* Traduction (partner-i18n.js) : sans lui, le formulaire reste en français. */
+  var PF = window.PF || { lang: "fr", t: function (x) { return x; }, f: function (x, a) { for (var i = 0; i < (a || []).length; i++) x = x.split("{" + i + "}").join(a[i]); return x; }, apply: function () {} };
   var ENDPOINT = "https://visa-chat.rabehfly.workers.dev/partner";
   var TO = "visacheckercontact@gmail.com";
   var TIMEOUT_MS = 20000;
@@ -144,6 +146,7 @@
     h += '<label class="pf-consent"><input type="checkbox" id="pf-consent" name="consent" required aria-required="true" aria-describedby="pf-e-consent"><span>J\'accepte que CheckMyVisa me contacte au sujet de cette demande et, après validation et accord écrit, publie le nom et le logo de mon entreprise. <em style="color:#b42318;font-style:normal">*</em></span></label><p class="pf-err" id="pf-e-consent" hidden></p>';
     h += '<div class="pf-hp" aria-hidden="true"><label>Ne pas remplir<input type="text" id="pf-hp" name="hp" tabindex="-1" autocomplete="off"></label></div>';
     bodyEl.innerHTML = h;
+    PF.apply(bodyEl);
     built = cat; logo = null;
     $("pf-logo").addEventListener("change", onLogo);
     $("pf-logo-rm").addEventListener("click", function () { setLogo(null); $("pf-logo").value = ""; });
@@ -152,7 +155,7 @@
   /* ---------- Logo : lecture, réduction, conversion ---------- */
   function fieldErr(n, msg) {
     var e = $("pf-e-" + n);
-    if (e) { e.textContent = msg || ""; e.hidden = !msg; }
+    if (e) { e.textContent = PF.t(msg || ""); e.hidden = !msg; }
     var c = $("pf-" + n);
     if (c && c.setAttribute) { if (msg) c.setAttribute("aria-invalid", "true"); else c.removeAttribute("aria-invalid"); }
   }
@@ -253,7 +256,7 @@
     if (!$("pf-consent").checked) { bad("consent", "Votre accord est nécessaire pour envoyer la demande."); }
     if (logo === null && $("pf-logo").files && $("pf-logo").files.length && $("pf-e-logo").hidden) fieldErr("logo", "Le logo n'est pas prêt, choisissez-le à nouveau.");
 
-    p.kind = "partner"; p.category = cur; p.categoryLabel = C.label; p.lang = "fr"; p.source = "partenaires.html";
+    p.kind = "partner"; p.category = cur; p.categoryLabel = C.label; p.lang = PF.lang; p.source = "partenaires.html";
     p.logo = logo ? { name: logo.name, mime: logo.mime, dataUrl: logo.dataUrl } : null;
     p.consent = true; p.hp = clean(val("hp"), 50);
     return { errs: errs, payload: p };
@@ -313,19 +316,19 @@
     form.hidden = true; doneEl.hidden = false;
     var h = "";
     if (kind === "sent") {
-      h = '<span class="pf-ok" aria-hidden="true">✓</span><h2>Demande envoyée</h2><p>Merci ' + esc(p.contact.name.split(" ")[0] || "") + ' ! Nous examinons chaque demande et vous répondons à <b>' + esc(p.contact.email) + '</b>. Aucun partenariat n\'est présumé tant que vous n\'avez pas reçu notre confirmation écrite.</p><div class="pf-actions"><button type="button" class="pf-btn" id="pf-done-close">Fermer</button></div>';
+      h = '<span class="pf-ok" aria-hidden="true">✓</span><h2>' + PF.t("Demande envoyée") + '</h2><p>' + PF.f("Merci {0} ! Nous examinons chaque demande et vous répondons à {1}. Aucun partenariat n'est présumé tant que vous n'avez pas reçu notre confirmation écrite.", [esc(p.contact.name.split(" ")[0] || ""), '<b>' + esc(p.contact.email) + '</b>']) + '</p><div class="pf-actions"><button type="button" class="pf-btn" id="pf-done-close">' + PF.t("Fermer") + '</button></div>';
     } else if (kind === "rate") {
-      h = '<span class="pf-ok pf-warn" aria-hidden="true">!</span><h2>Trop de demandes</h2><p>Veuillez réessayer dans une heure, ou écrivez-nous à <b>' + TO + '</b>.</p><div class="pf-actions"><button type="button" class="pf-btn" id="pf-done-close">Fermer</button></div>';
+      h = '<span class="pf-ok pf-warn" aria-hidden="true">!</span><h2>' + PF.t("Trop de demandes") + '</h2><p>' + PF.f("Veuillez réessayer dans une heure, ou écrivez-nous à {0}.", ['<b>' + TO + '</b>']) + '</p><div class="pf-actions"><button type="button" class="pf-btn" id="pf-done-close">' + PF.t("Fermer") + '</button></div>';
     } else {
       var txt = toText(p, true);
-      h = '<span class="pf-ok pf-warn" aria-hidden="true">!</span><h2>Dernière étape : envoyez par e-mail</h2><p>L\'envoi automatique n\'est pas disponible pour le moment. Votre demande est prête : ouvrez votre messagerie' + (p.logo ? ', <b>joignez votre logo</b>' : '') + ' puis envoyez-la à <b>' + TO + '</b>.</p>' +
-        '<div class="pf-actions"><a class="pf-btn" id="pf-mailto" href="' + esc(mailto(p)) + '">Ouvrir ma messagerie</a><button type="button" class="pf-btn pf-ghost" id="pf-copy">Copier la demande</button></div>' +
-        '<p class="pf-hint" id="pf-copied" role="status"></p><textarea class="pf-copy" readonly aria-label="Texte de la demande">' + esc(txt) + '</textarea>' +
-        '<div class="pf-actions"><button type="button" class="pf-btn pf-ghost" id="pf-back">Modifier ma demande</button></div>';
+      h = '<span class="pf-ok pf-warn" aria-hidden="true">!</span><h2>' + PF.t("Dernière étape : envoyez par e-mail") + '</h2><p>' + PF.f(p.logo ? "L'envoi automatique n'est pas disponible pour le moment. Votre demande est prête : ouvrez votre messagerie, <b>joignez votre logo</b> puis envoyez-la à {0}." : "L'envoi automatique n'est pas disponible pour le moment. Votre demande est prête : ouvrez votre messagerie puis envoyez-la à {0}.", ['<b>' + TO + '</b>']) + '</p>' +
+        '<div class="pf-actions"><a class="pf-btn" id="pf-mailto" href="' + esc(mailto(p)) + '">' + PF.t("Ouvrir ma messagerie") + '</a><button type="button" class="pf-btn pf-ghost" id="pf-copy">' + PF.t("Copier la demande") + '</button></div>' +
+        '<p class="pf-hint" id="pf-copied" role="status"></p><textarea class="pf-copy" readonly aria-label="' + PF.t("Texte de la demande") + '">' + esc(txt) + '</textarea>' +
+        '<div class="pf-actions"><button type="button" class="pf-btn pf-ghost" id="pf-back">' + PF.t("Modifier ma demande") + '</button></div>';
     }
     doneEl.innerHTML = h;
     var c = $("pf-done-close"); if (c) c.addEventListener("click", closeDlg);
-    var cp = $("pf-copy"); if (cp) cp.addEventListener("click", function () { copyText(txt, function (ok) { $("pf-copied").textContent = ok ? "Demande copiée. Collez-la dans votre e-mail." : "Copie impossible : sélectionnez le texte ci-dessous."; }); });
+    var cp = $("pf-copy"); if (cp) cp.addEventListener("click", function () { copyText(txt, function (ok) { $("pf-copied").textContent = PF.t(ok ? "Demande copiée. Collez-la dans votre e-mail." : "Copie impossible : sélectionnez le texte ci-dessous."); }); });
     var bk = $("pf-back"); if (bk) bk.addEventListener("click", function () { doneEl.hidden = true; form.hidden = false; });
     if (kind === "sent") { built = ""; }
     doneEl.focus();
@@ -336,7 +339,7 @@
     if (sending) return;
     var r = collect(), sum = $("pf-sum");
     if (r.errs.length) {
-      sum.hidden = false; sum.textContent = r.errs.length === 1 ? "Un champ est à corriger." : r.errs.length + " champs sont à corriger.";
+      sum.hidden = false; sum.textContent = r.errs.length === 1 ? PF.t("Un champ est à corriger.") : PF.f("{0} champs sont à corriger.", [r.errs.length]);
       var first = form.querySelector('[aria-invalid="true"]') || $("pf-e-" + r.errs[0]);
       if (first && first.focus) { first.focus(); if (first.scrollIntoView) first.scrollIntoView({ block: "center" }); }
       return;
@@ -344,9 +347,9 @@
     sum.hidden = true;
     var p = r.payload;
     if (p.hp) { showDone("sent", p); return; } /* anti-robot : on ne transmet rien */
-    sending = true; var btn = $("pf-send"); btn.disabled = true; btn.textContent = "Envoi en cours…";
+    sending = true; var btn = $("pf-send"); btn.disabled = true; btn.textContent = PF.t("Envoi en cours…");
     send(p).then(function (res) {
-      sending = false; btn.disabled = false; btn.textContent = "Envoyer ma demande";
+      sending = false; btn.disabled = false; btn.textContent = PF.t("Envoyer ma demande");
       showDone(res.sent ? "sent" : res.rate ? "rate" : "fallback", p);
     });
   });
@@ -365,7 +368,7 @@
     if (!CATS[cat]) return;
     lastTrigger = trigger || null; cur = cat;
     if (built !== cat) build(cat);
-    $("pf-tag").textContent = CATS[cat].label;
+    $("pf-tag").textContent = PF.t(CATS[cat].label);
     $("pf-sum").hidden = true; doneEl.hidden = true; form.hidden = false;
     if (typeof dlg.showModal === "function") { if (!dlg.open) dlg.showModal(); }
     else { dlg.setAttribute("open", ""); dlg.classList.add("pf-fallback"); }

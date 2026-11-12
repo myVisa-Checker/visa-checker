@@ -77,3 +77,9 @@
   .pf-actions .pf-btn{flex:1 1 140px}
 }
 @media(prefers-reduced-motion:reduce){.pf-card{transition:none}.pf-card:hover{transform:none}}
+
+/* Arabe : lecture de droite à gauche */
+[dir="rtl"] .pf-err,[dir="rtl"] .pf-hint,[dir="rtl"] .pf-note{text-align:right}
+[dir="rtl"] .pf-head,[dir="rtl"] .pf-foot{direction:rtl}
+[dir="rtl"] input[type="email"],[dir="rtl"] input[type="url"],[dir="rtl"] input[type="tel"]{direction:ltr;text-align:right}
+[dir="rtl"] .sn-logo{direction:ltr;unicode-bidi:isolate}
