@@ -1620,15 +1620,20 @@ function advisorCards(){
  '</div></section>';
 }
 function needsHtml(t){return '<div class="needs"><h2 class="hot">'+t.needTitle+'</h2><p class="ag-sub">'+t.needSub+'</p><div class="sp-chips">'+needCard('flight',t.needFlight)+needCard('hotel',t.needHotel)+'</div></div>'}
-/* Raccourci vers Aïcha (analyse IA du dossier) : affiché en haut de l'étape « Analyse IA » quand le voyageur vérifie son dossier. */
+/* Raccourcis vers les assistants IA, en haut de l'étape « Analyse IA » : Aïcha (vérification du dossier) ou Joury (recours après refus). */
 var AICHAGO={
  fr:{t:"Analysez votre dossier avec Aïcha",d:"Importez vos documents : Aïcha les compare, repère ce qui manque et vous dit quoi corriger avant le dépôt.",go:"Ouvrir Aïcha"},
  en:{t:"Analyse your file with Aïcha",d:"Upload your documents: Aïcha cross-checks them, spots what is missing and tells you what to fix before you apply.",go:"Open Aïcha"},
  ar:{t:"حلّل ملفك مع عائشة",d:"ارفع وثائقك: تقارنها عائشة وتكشف ما ينقص وتخبرك بما يجب تصحيحه قبل الإيداع.",go:"افتح عائشة"}};
-function aichaGoHtml(){
- var X=AICHAGO[S.lang]||AICHAGO.fr;
- return '<a class="vc-aicha-go" href="./view-dossier.html"><img src="./images/aicha-avatar.webp" data-a3d="aicha" width="72" height="72" alt="" decoding="async"><span class="vc-aicha-go-copy"><strong><i class="vc-ia">IA</i> '+X.t+'</strong><small>'+X.d+'</small></span><span class="vc-aicha-go-cta">'+X.go+' ↗</span></a>';
+var JOURYGO={
+ fr:{t:"Analysez votre refus avec Joury",d:"Importez la décision de refus : Joury relève les motifs, explique quelles preuves ajouter et prépare votre lettre de recours.",go:"Ouvrir Joury"},
+ en:{t:"Analyse your refusal with Joury",d:"Upload the refusal decision: Joury identifies the grounds, explains which evidence to add and prepares your appeal letter.",go:"Open Joury"},
+ ar:{t:"حلّل قرار الرفض مع جوري",d:"ارفع قرار الرفض: تستخرج جوري الأسباب وتشرح الأدلة التي يجب إضافتها وتجهّز رسالة الطعن.",go:"افتح جوري"}};
+function assistGoHtml(who){
+ var j=who==="joury",X=(j?JOURYGO:AICHAGO)[S.lang]||(j?JOURYGO:AICHAGO).fr;
+ return '<a class="vc-aicha-go" href="./'+(j?'view-joury.html':'view-dossier.html')+'"><img src="./images/'+(j?'joury':'aicha')+'-avatar.webp" data-a3d="'+(j?'joury':'aicha')+'" width="72" height="72" alt="" decoding="async"><span class="vc-aicha-go-copy"><strong><i class="vc-ia">IA</i> '+X.t+'</strong><small>'+X.d+'</small></span><span class="vc-aicha-go-cta">'+X.go+' ↗</span></a>';
 }
+function aichaGoHtml(){return assistGoHtml("aicha")}
 var SPSEL={local:"",world:""};
 function spGroups(){return [
  {id:"local",title:SPT.local,cats:[["ag",SPT.sAg,SPT.cAg],["ins",SPT.sIns,SPT.cIns],["car",SPT.sCar,SPT.cCar]],list:LOCAL},
@@ -1666,7 +1671,7 @@ function usHtml(){
    +'<p class="ag-note">'+esc(X.n)+'</p></section>';
 }
 function renderSponsors(t){
-  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step===5&&S.mode!=="appeal"?aichaGoHtml():'')+(S.step>0&&S.step<8&&S.step!==7?needsHtml(t):'');
+  var nt=$("needsTop");if(nt)nt.innerHTML=(S.step===5?assistGoHtml(S.mode==="appeal"?"joury":"aicha"):'')+(S.step>0&&S.step<8&&S.step!==7?needsHtml(t):'');
   var h='<h2 id="sp-h" class="c">'+t.spTitle+'</h2>'+groupsHtml();
   h+='<p class="sp-join c">'+SPT.note[S.lang]+'</p>';
   $("sponsors").innerHTML=h;
