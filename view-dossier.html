@@ -23,6 +23,7 @@
   <button type="button" class="pwa-go" id="pwa-go"></button>
   <button type="button" class="pwa-x" id="pwa-x"></button>
 </div>
+<script src="pay.js" defer></script>
 <script src="visa-pwa.js" defer></script>
 <script src="avatar3d.js" defer></script>
 <script>
@@ -52,7 +53,7 @@ setStep(4);}
 function download(){if(!reportText)return;var blob=new Blob([reportText],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='checkmyvisa-rapport-aicha.txt';a.click();URL.revokeObjectURL(url);}
 $('ai-files').addEventListener('change',function(e){addFiles(e.target.files);e.target.value='';});
 var drop=$('ai-drop');['dragenter','dragover'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.add('is-over');});});['dragleave','drop'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.remove('is-over');});});drop.addEventListener('drop',function(e){if(e.dataTransfer)addFiles(e.dataTransfer.files);});
-$('ai-analyze').addEventListener('click',function(){if(!files.length){VC.toast('Ajoutez au moins un document.');return;}if(!confirm('Vos documents et les informations saisies seront transmis au service IA pour analyse. Continuer ?'))return;setStep(2);state('Analyse en cours','info');$('ai-progress').hidden=false;VC.api.withBusy($('ai-analyze'),function(){return VC.api.analyzeDossier({passportCountry:$('passport').value,destination:$('destination').value,purpose:$('purpose').value,occupation:$('occupation').value},files);}).then(function(data){$('ai-progress').hidden=true;renderReport(data.reply||'Aucun rapport reçu.');}).catch(function(e){$('ai-progress').hidden=true;state('Échec','err');VC.toast(VC.api.errorMessage(e));setStep(1);});});
+$('ai-analyze').addEventListener('click',function(){if(!files.length){VC.toast('Ajoutez au moins un document.');return;}if(files.length>1&&window.VisaPay&&VisaPay.needsPay('aicha')){VisaPay.open('aicha');return;}if(!confirm('Vos documents et les informations saisies seront transmis au service IA pour analyse. Continuer ?'))return;setStep(2);state('Analyse en cours','info');$('ai-progress').hidden=false;VC.api.withBusy($('ai-analyze'),function(){return VC.api.analyzeDossier({passportCountry:$('passport').value,destination:$('destination').value,purpose:$('purpose').value,occupation:$('occupation').value},files);}).then(function(data){$('ai-progress').hidden=true;renderReport(data.reply||'Aucun rapport reçu.');}).catch(function(e){$('ai-progress').hidden=true;state('Échec','err');VC.toast(VC.api.errorMessage(e));setStep(1);});});
 $('ai-export').addEventListener('click',download);$('ai-download').addEventListener('click',download);
 VC.init({},'dossier');renderFiles();
 })();
