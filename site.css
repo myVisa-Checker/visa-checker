@@ -39,7 +39,7 @@ li{margin-bottom:6px}
 .toc a:hover{text-decoration:underline}
 .table-wrap{overflow-x:auto;margin:14px 0 20px;border:1px solid var(--line);border-radius:10px}
 table{border-collapse:collapse;width:100%;min-width:520px;font-size:15.5px}
-th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th,td{padding:10px 12px;text-align:start;vertical-align:top;border-bottom:1px solid var(--line)}
 th{background:var(--orange-soft);font-weight:700}
 tr:last-child td{border-bottom:none}
 .check{list-style:none;padding-left:0}

@@ -88,6 +88,10 @@
       var v = VC.t(n[i].getAttribute('data-i18n-title'));
       n[i].setAttribute('title', v); n[i].setAttribute('aria-label', v);
     }
+    /* Contenu pas encore traduit : il reste du français, donc lu et aligné de gauche à droite
+       (sinon un paragraphe français serait collé à droite dans une page arabe). Retirer data-fr-only une fois la page traduite. */
+    n = root.querySelectorAll('[data-fr-only]');
+    for (i = 0; i < n.length; i++) { n[i].setAttribute('lang', 'fr'); n[i].setAttribute('dir', 'ltr'); }
     var pageTitle = VC.t('doc_title');
     if (pageTitle !== 'doc_title') d.title = pageTitle;
   };
