@@ -161,6 +161,29 @@ function partnerText(p) {
   L.push("", p.logo ? "Logo : voir la pièce jointe (" + p.logo.filename + ")." : "Logo : non fourni.");
   return L.join("\n");
 }
+// ----- Formulaire de contact (route POST /contact) -----
+// Réutilise le webhook PARTNER_WEBHOOK (même e-mail de réception). Sans lui : 503 et la page ouvre la messagerie (secours).
+const CONTACT_SUBJECTS = ["Question sur le fonctionnement de l'assistant IA", "Suggestion d'un nouveau pays / d'une nouvelle destination", "Signaler une erreur ou une mise à jour consulaire", "Problème technique / Bug sur le site", "Partenariat / Autre demande"];
+async function handleContact(request, env, out) {
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  if (partnerLimited("c:" + ip)) return out({ error: "rate" }, 429);
+  const raw = await request.text();
+  if (raw.length > 20000) return out({ error: "invalid" }, 413);
+  let b; try { b = JSON.parse(raw); } catch { return out({ error: "invalid" }, 400); }
+  if (b && typeof b.hp === "string" && b.hp.trim()) return out({ ok: true }); // robot
+  const name = pc(b && b.name, 100), email = pc(b && b.email, 254), message = pcm(b && b.message, 3000);
+  const subject = CONTACT_SUBJECTS.includes(b && b.subject) ? b.subject : CONTACT_SUBJECTS[4];
+  if (!name || !/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(email) || message.length < 5 || !b || b.consent !== true) return out({ error: "invalid" }, 400);
+  if (!env.PARTNER_WEBHOOK) return out({ error: "contact_unavailable" }, 503);
+  const text = ["Nouveau message via le formulaire de contact CheckMyVisa", "", "Nom : " + name, "E-mail : " + email, "Sujet : " + subject, "", "Message :", message].join("\n");
+  const r = await fetch(env.PARTNER_WEBHOOK, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ to: PARTNER_TO, replyTo: email, subject: "[Contact] " + subject + " - " + name, text, logo: null, data: { kind: "contact", name, email, subject, message } }),
+  });
+  if (!r.ok) return out({ error: "contact_unavailable" }, 502);
+  return out({ ok: true });
+}
 async function handlePartner(request, env, out) {
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
   if (partnerLimited(ip)) return out({ error: "rate" }, 429);
@@ -399,6 +422,10 @@ export default {
     // Demandes de partenariat : route dédiée, séparée de l'assistant
     if (new URL(request.url).pathname === "/partner") {
       try { return await handlePartner(request, env, out); } catch (e) { return out({ error: "partner_unavailable" }, 500); }
+    }
+
+    if (new URL(request.url).pathname === "/contact") {
+      try { return await handleContact(request, env, out); } catch (e) { return out({ error: "contact_unavailable" }, 500); }
     }
 
     try {
