@@ -28,6 +28,7 @@ const PRECACHE = [
   "contact.js",
   "manifest.json",
   "partenaires.html",
+  "guide-visa.html",
   "a-propos.html",
   "faq.html",
   "contact.html",

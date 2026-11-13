@@ -141,7 +141,7 @@ for (const u of pre) ok("précache : " + u, u === "./" ? existsSync("index.html"
 for (const f of ["visa-app.js", "visa-pwa.js", "avatar3d.js", "redact.js"]) ok("précache contient " + f, pre.includes(f));
 
 console.log("Pages : CSP, 404, fichiers hérités");
-for (const f of ["index.html", "joury.html", "aicha.html", "partenaires.html", "a-propos.html", "faq.html", "contact.html", "conditions.html", "confidentialite.html"]) {
+for (const f of ["index.html", "joury.html", "aicha.html", "partenaires.html", "a-propos.html", "guide-visa.html", "faq.html", "contact.html", "conditions.html", "confidentialite.html"]) {
   const h = read(f);
   ok("CSP dans " + f, /Content-Security-Policy/.test(h) && /object-src 'none'/.test(h) && /script-src 'self'/.test(h));
 }
