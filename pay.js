@@ -11,6 +11,12 @@
 (function () {
   // ---- Réglages ----
   var ENABLED = false; // false = aucun verrou, le site reste 100 % gratuit. Passer à true pour activer les paiements.
+  // Aperçu privé : ouvrir une page avec ?paytest=1 active les verrous (paiement simulé) sur CET appareil seulement ; ?paytest=0 les retire.
+  try {
+    var q = /[?&]paytest=([01])/.exec(location.search);
+    if (q) { if (q[1] === "1") localStorage.setItem("vp_preview", "1"); else localStorage.removeItem("vp_preview"); }
+    if (localStorage.getItem("vp_preview") === "1") { ENABLED = true; }
+  } catch (e) {}
   var TEST_MODE = true; // true = paiement simulé. Mettre false quand Flouci/Konnect sont branchés.
   var API = "https://visa-proxy.rabehfly.workers.dev"; // Worker : /pay/create et /pay/verify
 
