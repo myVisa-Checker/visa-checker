@@ -1313,3 +1313,24 @@ header .lang{right:0!important}
 body{--wrap:1160px;--padx:32px}
 @media(max-width:899px){body{--padx:24px}}
 @media(max-width:599px){body{--padx:16px}}
+
+/* ===== Alignement : blocs centrés et encadrés (étapes liste et analyse IA) ===== */
+@media(min-width:900px){
+ /* La carte « Analyse IA » seule : centrée, largeur lisible, texte bien aligné */
+ #help{display:block}
+ #help .agency[hidden]{display:none}
+ #help .refus{max-width:760px;margin-inline:auto;padding:28px 32px;text-align:start}
+ #help .refus h2,#help .refus>.rf-sub{text-align:center}
+ #help .refus .inc{max-width:620px;margin-inline:auto}
+ #help .refus .ag-note{text-align:center}
+ /* Liste des pièces : tout ce qui n'est pas un groupe occupe toute la largeur, centré */
+ #list{display:flex;flex-direction:column;gap:16px;max-width:760px;margin-inline:auto}
+ #list>.legend{justify-content:center;margin:6px 0 4px}
+ #list .group{border:1px solid var(--line);border-radius:20px;background:var(--surface);padding:18px}
+ #docs .progress{max-width:760px;margin-inline:auto}
+}
+@media(max-width:899px){
+ #refus.refus{padding:20px}
+ #refus .inc{margin-inline:auto}
+ .legend{justify-content:center}
+}
