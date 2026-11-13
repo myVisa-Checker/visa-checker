@@ -81,3 +81,17 @@ footer.site .fl a:hover{color:var(--orange-dark);text-decoration:underline}
 footer.site p{margin:0 0 6px;font-size:13.5px;line-height:1.55}
 
 @media (min-width:700px){.toc ol{columns:2;column-gap:28px}}
+
+/* Formulaire de contact */
+.cform{display:grid;gap:14px;margin:14px 0 28px;padding:20px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.cf-row{display:grid;gap:6px}
+.cf-row label{font-weight:700;font-size:15px}
+.cf-row input,.cf-row select,.cf-row textarea{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #b9c4d3;border-radius:10px;font:inherit;background:#fff;color:inherit}
+.cf-row input:focus-visible,.cf-row select:focus-visible,.cf-row textarea:focus-visible,.cf-btn:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
+.cf-row small{color:var(--muted);font-size:13px}
+.cf-check{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.5}
+.cf-check input{margin-top:4px;flex:none;width:18px;height:18px}
+.cf-btn{justify-self:start;min-height:46px;padding:11px 22px;border:0;border-radius:12px;background:#1d4ed8;color:#fff;font:700 16px inherit;font-family:inherit;cursor:pointer}
+.cf-btn:hover{background:#163eaf}
+.cf-err{margin:0;color:#b42318;font-weight:600}
+.cf-ok{margin:0;color:#14532d;background:#edf8f1;border-radius:10px;padding:10px 12px}

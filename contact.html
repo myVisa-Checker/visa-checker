@@ -36,31 +36,62 @@
     <a href="./?accueil=1">Accueil</a> › Contact
   </nav>
 
-  <h1>Nous contacter</h1>
-  <p class="lead">Une question sur le site, une erreur à signaler, une idée d'amélioration ou une proposition de partenariat ? Contactez-nous sur nos réseaux, nous lisons tous les messages.</p>
+  <h1>Contactez l'équipe CheckMyVisa</h1>
+  <p class="lead">Une question, une suggestion ou un retour technique ?</p>
+  <p>Chez CheckMyVisa, nous accompagnons les voyageurs du monde entier dans la préparation et la vérification de leurs dossiers de visa. Que vous rencontriez un souci technique avec notre assistant IA, que vous souhaitiez proposer l'ajout d'une nouvelle destination ou signaler une mise à jour réglementaire, notre équipe est à votre écoute.</p>
 
-  <div class="cards">
-    <a class="card" href="https://www.instagram.com/visacheckerrr/" rel="noopener" target="_blank">
-      <span class="ico ico-ig" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="#fff" stroke="none"/></svg></span>
-      <h3>Instagram</h3>
-      <p>@visacheckerrr : conseils visa en vidéo et actualités du site. Vous pouvez nous envoyer un message privé.</p>
-      <span class="more">Ouvrir Instagram →</span>
-    </a>
-  </div>
-
-  <h2>Avant de nous contacter</h2>
+  <h2>Avant de nous écrire : rappel important</h2>
   <ul>
-    <li><strong>Décision de visa :</strong> nous ne sommes pas un consulat et nous n'avons aucun pouvoir sur les décisions. Pour le suivi ou la contestation d'une demande, adressez-vous au consulat ou au centre de dépôt concerné.</li>
-    <li><strong>Documents officiels :</strong> la liste à jour se trouve sur <a href="https://france-visas.gouv.fr" rel="noopener" target="_blank">France-Visas</a>.</li>
-    <li><strong>Données personnelles :</strong> pour demander l'accès, la correction ou la suppression de vos données, contactez-nous en précisant l'objet de votre demande (voir notre <a href="./confidentialite.html">politique de confidentialité</a>).</li>
-    <li><strong>Sécurité :</strong> ne nous envoyez jamais votre numéro de passeport complet, de carte bancaire ou vos mots de passe par message.</li>
+    <li><strong>Assistance technique et éditoriale uniquement :</strong> CheckMyVisa est un outil indépendant d'aide à la préparation administrative. Nous ne traitons aucune demande de visa, n'avons accès à aucun dossier consulaire en cours et ne pouvons pas intervenir auprès des ambassades, consulats ou centres de dépôt (TLScontact, VFS Global, BLS International, etc.).</li>
+    <li><strong>Ne nous envoyez jamais de documents confidentiels :</strong> pour votre sécurité et la protection de votre vie privée, ne joignez aucun passeport, carte d'identité, relevé bancaire ou document personnel à vos messages. Notre support ne vous demandera jamais ces pièces.</li>
   </ul>
 
-  <h2>Signaler une erreur</h2>
-  <p>Les règles de visa changent. Si une information du site vous paraît dépassée ou inexacte, indiquez-nous la page concernée et la source officielle : nous vérifions et corrigeons dès que possible.</p>
+  <h2>Nos canaux de contact</h2>
+  <ul>
+    <li><strong>Support général, questions techniques &amp; partenariats :</strong> <a href="mailto:visacheckercontact@gmail.com">visacheckercontact@gmail.com</a></li>
+    <li><strong>Site officiel :</strong> <a href="https://checkmyvisa.org">https://checkmyvisa.org</a></li>
+    <li><strong>Délai de réponse moyen :</strong> sous 24 à 48 heures ouvrées.</li>
+    <li><strong>Langues acceptées :</strong> français, anglais, arabe.</li>
+  </ul>
 
-  <h2>Partenariats</h2>
-  <p>Vous êtes une agence de voyages, un hôtelier ou un prestataire de services pour voyageurs ? Remplissez la <a href="./partenaires.html#choisir">demande de partenariat</a> : elle nous parvient par e-mail et nous vous répondons après examen.</p>
+  <h2 id="formulaire">Formulaire de contact</h2>
+  <form class="cform" id="cform" novalidate>
+    <div class="cf-row">
+      <label for="cf-name">Nom complet <span aria-hidden="true">*</span></label>
+      <input id="cf-name" name="name" type="text" autocomplete="name" required>
+    </div>
+    <div class="cf-row">
+      <label for="cf-mail">Adresse e-mail <span aria-hidden="true">*</span></label>
+      <input id="cf-mail" name="email" type="email" autocomplete="email" required>
+    </div>
+    <div class="cf-row">
+      <label for="cf-subj">Sujet de votre demande</label>
+      <select id="cf-subj" name="subject">
+        <option>Question sur le fonctionnement de l'assistant IA</option>
+        <option>Suggestion d'un nouveau pays / d'une nouvelle destination</option>
+        <option>Signaler une erreur ou une mise à jour consulaire</option>
+        <option>Problème technique / Bug sur le site</option>
+        <option>Partenariat / Autre demande</option>
+      </select>
+    </div>
+    <div class="cf-row">
+      <label for="cf-msg">Votre message <span aria-hidden="true">*</span></label>
+      <textarea id="cf-msg" name="message" rows="6" required aria-describedby="cf-help"></textarea>
+      <small id="cf-help">Merci de ne saisir aucune donnée personnelle sensible telle que votre numéro de passeport.</small>
+    </div>
+    <label class="cf-check"><input id="cf-rgpd" type="checkbox" required> <span>J'accepte que mes informations soient utilisées uniquement pour répondre à ma demande, conformément à la <a href="./confidentialite.html">Politique de confidentialité</a>.</span></label>
+    <p class="cf-err" id="cf-err" role="alert" hidden></p>
+    <button type="submit" class="cf-btn">Envoyer le message</button>
+    <p class="cf-ok" id="cf-ok" role="status" hidden>Votre messagerie s'ouvre avec le message prêt à envoyer. Si rien ne s'ouvre, écrivez-nous directement à <a href="mailto:visacheckercontact@gmail.com">visacheckercontact@gmail.com</a>.</p>
+  </form>
+
+  <h2>Questions fréquentes avant de contacter le support</h2>
+  <h3>CheckMyVisa couvre-t-il toutes les destinations internationales ?</h3>
+  <p>Oui. CheckMyVisa est conçu pour accompagner les voyageurs du monde entier quelle que soit leur nationalité ou leur pays de destination. De nouveaux pays et critères consulaires sont ajoutés régulièrement.</p>
+  <h3>Pouvez-vous vérifier mon dossier par e-mail à ma place ?</h3>
+  <p>Non. Toutes les pré-vérifications s'effectuent directement et automatiquement via notre outil en ligne afin de garantir la confidentialité et le traitement immédiat de vos informations.</p>
+  <h3>L'utilisation de CheckMyVisa est-elle gratuite ?</h3>
+  <p>Oui, l'accès à nos guides et à l'assistant de base est gratuit, financé par l'affichage de publicités non intrusives.</p>
 </main>
 
 <footer class="site">
@@ -72,9 +103,11 @@
       <a href="./confidentialite.html">Confidentialité</a>
       <a href="./conditions.html">Conditions d'utilisation</a>
     </div>
-    <p>© 2026 CheckMyVisa. Site d'information indépendant : nous ne sommes ni un consulat, ni une agence de visas, ni un représentant d'une administration.</p>
+    <p>Avertissement : CheckMyVisa est une plateforme privée et indépendante d'aide à la préparation administrative. Nous ne sommes affiliés à aucun gouvernement, ambassade, consulat, ni à aucun prestataire externe officiel (TLScontact, VFS Global, BLS International, etc.).</p>
+    <p>© 2026 CheckMyVisa.</p>
   </div>
 </footer>
 
+<script src="./contact.js" defer></script>
 </body>
 </html>
