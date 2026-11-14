@@ -1,0 +1,4 @@
+Contact: mailto:visacheckercontact@gmail.com
+Expires: 2027-11-14T00:00:00.000Z
+Preferred-Languages: fr, en, ar
+Canonical: https://checkmyvisa.org/.well-known/security.txt

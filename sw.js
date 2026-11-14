@@ -1,6 +1,6 @@
 /* CheckMyVisa – cache limité au shell et aux assets statiques.
    Aucune API, donnée utilisateur ou requête POST n'est mise en cache. */
-const VERSION = "2026.11.13.1915"; /*@version*/
+const VERSION = "2026.11.14.1950"; /*@version*/
 const SHELL = "vc-shell-" + VERSION;
 const PRECACHE = [
   "./",
@@ -38,19 +38,25 @@ const PRECACHE = [
   "partner-form.js",
   "partner-i18n.js",
   "brand.css",
-  "hero-voyage.jpg",
+  "404.html",
   "icons/icon-192.png",
   "icons/icon-512.png",
   "icons/maskable-512.png",
   "icons/apple-touch-icon.png"
 ];
 
+/* Fichiers sans lesquels l'application ne démarre pas : si l'un manque, l'installation échoue
+   et l'ancienne version reste en place (au lieu d'installer un cache incomplet). */
+const CRITICAL = ["index.html", "vc.css", "visa-app.js", "visa-pwa.js", "vc-shared.js", "manifest.json"];
+
 self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(SHELL);
-    await Promise.all(PRECACHE.map((asset) =>
-      cache.add(new Request(asset, { cache: "reload" })).catch(() => null)
+    const ok = await Promise.all(PRECACHE.map((asset) =>
+      cache.add(new Request(asset, { cache: "reload" })).then(() => true, () => false)
     ));
+    const missing = PRECACHE.filter((asset, i) => !ok[i] && CRITICAL.includes(asset));
+    if (missing.length) throw new Error("Précache critique manquant : " + missing.join(", "));
   })());
 });
 
@@ -78,23 +84,41 @@ function offlineResponse(json) {
       });
 }
 
-async function cacheFirst(request, isNavigation) {
+/* Pages : réseau d'abord (le visiteur voit toujours la dernière version),
+   copie en cache seulement si le réseau échoue (hors ligne). */
+async function networkFirst(request) {
   const cache = await caches.open(SHELL);
-  const cached = await cache.match(request, { ignoreSearch: isNavigation });
-  if (cached) return cached;
   try {
-    const response = await fetch(request, { cache: "no-store" });
+    const response = await fetch(request, { cache: "no-cache" });
     if (response && response.ok && response.type !== "opaque") {
       await cache.put(request, response.clone());
     }
     return response;
   } catch {
-    if (isNavigation) {
-      const home = await cache.match("./") || await cache.match("index.html");
-      if (home) return home;
-    }
+    const cached = await cache.match(request, { ignoreSearch: true });
+    if (cached) return cached;
+    const home = await cache.match("./") || await cache.match("index.html");
+    if (home) return home;
     return offlineResponse(false);
   }
+}
+
+/* Fichiers statiques : réponse immédiate depuis le cache, mise à jour en arrière-plan.
+   Un oubli d'incrément de VERSION ne bloque donc plus les visiteurs sur d'anciens fichiers. */
+async function staleWhileRevalidate(request, event) {
+  const cache = await caches.open(SHELL);
+  const cached = await cache.match(request);
+  const update = fetch(request, { cache: "no-cache" }).then(async (response) => {
+    if (response && response.ok && response.type !== "opaque") {
+      await cache.put(request, response.clone());
+    }
+    return response;
+  }).catch(() => null);
+  if (cached) {
+    event.waitUntil(update);
+    return cached;
+  }
+  return (await update) || offlineResponse(false);
 }
 
 self.addEventListener("fetch", (event) => {
@@ -117,5 +141,5 @@ self.addEventListener("fetch", (event) => {
   const path = url.pathname;
   const isShellPage = isNavigation || /\.(?:html|css|js|mjs|png|jpe?g|webp|svg|ico|woff2?|ttf|otf|manifest)$/i.test(path);
   if (!isShellPage) return;
-  event.respondWith(cacheFirst(request, isNavigation));
+  event.respondWith(isNavigation ? networkFirst(request) : staleWhileRevalidate(request, event));
 });

@@ -1,4 +1,9 @@
 .env
+.dev.vars
+.wrangler/
 *.jks
 *.keystore
+*.pem
+*.key
+*.sqlite
 node_modules/
