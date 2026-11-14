@@ -98,7 +98,7 @@ function newCode() {
   return s.slice(0, 4) + "-" + s.slice(4, 8) + "-" + s.slice(8, 12);
 }
 
-export default {
+const handler = {
   async fetch(req, env) {
     const url = new URL(req.url), path = url.pathname.replace(/\/+$/, "") || "/";
     const origin = req.headers.get("Origin") || "";
@@ -391,5 +391,28 @@ export default {
     if (duplicateKey) await env.KV.put(duplicateKey, "1", { expirationTtl: 86400 });
     if (rateKey) await env.KV.put(rateKey, String(rateCount + 1), { expirationTtl: RATE_WINDOW });
     return out({ ok: true }, 200);
+  }
+};
+
+/* Filet de sécurité : toute erreur imprévue (corps JSON « null », KV indisponible, secret manquant…)
+   renvoie une réponse JSON 500 avec les en-têtes CORS, au lieu d'une erreur Cloudflare 1101 sans CORS. */
+export default {
+  async fetch(req, env) {
+    try {
+      return await handler.fetch(req, env);
+    } catch (e) {
+      const list = String(env.ALLOWED_ORIGIN || DEFAULT_ORIGINS).split(",").map((x) => x.trim()).filter(Boolean);
+      const o = req.headers.get("Origin") || "";
+      return new Response(JSON.stringify({ ok: false, error: "server" }), {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store",
+          "X-Content-Type-Options": "nosniff",
+          "Access-Control-Allow-Origin": list.includes(o) ? o : list[0],
+          "Vary": "Origin"
+        }
+      });
+    }
   }
 };

@@ -69,6 +69,12 @@ const FALLBACK = "Désolé, je n'ai pas pu répondre. Réessaie dans un instant.
 const RL_MAX = 20, RL_WINDOW = 10 * 60 * 1000;
 const RATE_MSG = "Trop de messages d'affilée. Réessaie dans quelques minutes. / Too many messages, please try again in a few minutes. / رسائل كثيرة، أعد المحاولة بعد دقائق.";
 const hits = new Map();
+// Valeur de contexte (nationalité, pays) injectée dans le prompt système : une seule ligne, lettres, chiffres
+// et ponctuation simple, 60 caractères. Empêche d'insérer des consignes sur de nouvelles lignes.
+function ctxField(v) {
+  const s = String(v == null ? "" : v).replace(/[\r\n\u2028\u2029]+/g, " ").replace(/[^\p{L}\p{N} '\u2019\-.,()\/]/gu, "").replace(/\s+/g, " ").trim().slice(0, 60);
+  return s || "non indiqué";
+}
 function limited(ip) {
   const now = Date.now();
   if (hits.size > 5000) {
@@ -302,11 +308,12 @@ async function apiGemini(env, system, userText, files, history) {
   }
 }
 async function handleVisaApi(request, env, out, pathname) {
+  // La limite de débit passe avant l'analyse du corps : un envoi massif ne coûte plus de CPU ni de mémoire.
+  const ip = request.headers.get("CF-Connecting-IP") || "?";
+  if (limited(ip)) return out({ error: "rate", reply: RATE_MSG }, 429);
   const parsed = await apiReadPayload(request);
   if (parsed.error) return out({ error: parsed.error }, parsed.status);
   const body = parsed.body, files = parsed.files;
-  const ip = request.headers.get("CF-Connecting-IP") || "?";
-  if (limited(ip)) return out({ error: "rate", reply: RATE_MSG }, 429);
 
   if (pathname === "/api/analyze-refusal") {
     const context = [
@@ -321,7 +328,7 @@ async function handleVisaApi(request, env, out, pathname) {
       "Donne un plan de correction priorisé et un exemple de paragraphe argumentatif personnalisé, uniquement à partir des faits fournis. N'invente ni loi, ni délai, ni voie de recours, ni jurisprudence.",
       "Si pays, autorité, date ou type de décision sont inconnus, demande les précisions nécessaires avant toute conclusion sur la recevabilité.",
       "Classe la situation comme à examiner, à consolider ou risque élevé avec justification. Ne garantis jamais le succès et termine par les vérifications officielles à faire."
-    ].join("\\n");
+    ].join("\n");
     const result = await apiGemini(env, SYSTEM_JOURY_REFUSAL, context, files);
     return out(result.reply ? { reply: result.reply } : { error: result.error }, result.status || 200);
   }
@@ -410,6 +417,9 @@ export default {
         headers: { ...cors, "Content-Type": "application/json" },
       });
 
+    // Origine étrangère (navigateur) : refusée. Les appels sans en-tête Origin ne sont pas concernés ici,
+    // ils restent limités par le débit ; CORS n'est pas une authentification.
+    if (origin && !ORIGINS.includes(origin)) return out({ error: "forbidden" }, 403);
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
     const pathname = new URL(request.url).pathname;
     if (pathname === "/api/analyze-refusal" || pathname === "/api/analyze-dossier" || pathname === "/api/generate-appeal" || pathname === "/api/interview-feedback") {
@@ -429,6 +439,7 @@ export default {
     }
 
     try {
+      if (Number(request.headers.get("Content-Length") || 0) > 16 * 1024 * 1024) return out({ error: "too_large" }, 413);
       const body = await request.json();
       const mode = String(body.mode || "");
       const interview = mode === "interview";
@@ -500,7 +511,7 @@ export default {
               "x-goog-api-key": env.GEMINI_API_KEY || "",
             },
             body: JSON.stringify({
-              systemInstruction: { parts: [{ text: assistantSystem + "\n\nContexte déclaré par le demandeur (ne rien déduire si absent) : nationalité/passeport = " + String(body.nationality || body.passportCountry || "non indiqué").slice(0, 80) + "; pays de résidence = " + String(body.residenceCountry || body.country || "non indiqué").slice(0, 80) + ". Adapte les explications à ces informations uniquement." }] },
+              systemInstruction: { parts: [{ text: assistantSystem + "\n\nContexte déclaré par le demandeur (ne rien déduire si absent) : nationalité/passeport = " + ctxField(body.nationality || body.passportCountry) + "; pays de résidence = " + ctxField(body.residenceCountry || body.country) + ". Adapte les explications à ces informations uniquement." }] },
               contents: msgs,
               generationConfig: { maxOutputTokens: 2500 },
             }),
