@@ -4,6 +4,7 @@
 // et le rendu de la section e-Visa pour les trois passeports (tn, ma, dz) dans les trois langues.
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import vm from "node:vm";
 
 let pass = 0, fail = 0;
@@ -144,6 +145,17 @@ console.log("Pages : CSP, 404, fichiers hérités");
 for (const f of ["index.html", "joury.html", "aicha.html", "partenaires.html", "a-propos.html", "guide-visa.html", "faq.html", "contact.html", "conditions.html", "confidentialite.html"]) {
   const h = read(f);
   ok("CSP dans " + f, /Content-Security-Policy/.test(h) && /object-src 'none'/.test(h) && /script-src 'self'/.test(h));
+}
+// Pages view-* : CSP avec empreinte (sha256) de chaque script inline. Si un script inline change,
+// ce test échoue et indique qu'il faut recalculer l'empreinte (sinon le navigateur bloquerait le script).
+for (const f of ["view-dossier.html", "view-joury.html", "view-entretien.html", "view-recours.html"]) {
+  const h = read(f);
+  const csp = (h.match(/http-equiv="Content-Security-Policy" content="([^"]*)"/) || [])[1] || "";
+  ok("CSP dans " + f, /object-src 'none'/.test(csp) && /script-src 'self'/.test(csp) && !/script-src[^;]*'unsafe-inline'/.test(csp) && !/connect-src[^;]*\*/.test(csp));
+  const inline = [...h.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1].replace(/\r\n/g, "\n"));
+  const missing = inline.filter((code) => !csp.includes("'sha256-" + createHash("sha256").update(code, "utf8").digest("base64") + "'"));
+  ok("empreintes des scripts inline à jour dans " + f, missing.length === 0, missing.length + " script(s) sans empreinte");
+  ok("noindex dans " + f, /name="robots" content="noindex"/.test(h));
 }
 ok("404.html présente", existsSync("404.html"));
 for (const f of ["app.js", "data.js", "style.css", "visa-chat.js", "chat-loader.js", "LISEZMOI.txt", "icon-192.png", "icon-512.png", "maskable-512.png", "apple-touch-icon.png", "icons/radar-rdv.webp"]) ok("fichier hérité absent : " + f, !existsSync(f));
