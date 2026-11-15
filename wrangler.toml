@@ -3,4 +3,4 @@ pages_build_output_dir = "."
 compatibility_date = "2026-11-11"
 
 # Cloudflare Pages: deploy the existing static website from the repository root.
-# The eligibility API has its own Worker config at worker/wrangler.toml.
+# The eligibility API has its own Worker config at worker/wrangler.rules.toml.

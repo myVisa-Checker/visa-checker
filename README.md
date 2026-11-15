@@ -23,10 +23,10 @@ URL de production configurée dans le frontend : `https://visa-proxy.rabehfly.wo
 Depuis la racine du dépôt :
 
 ```bash
-npx wrangler deploy --config worker/wrangler.toml
+npx wrangler deploy --config worker/wrangler.rules.toml
 ```
 
-Le Worker utilise `worker/visa-rules-worker.js`. Sa configuration est isolée dans `worker/wrangler.toml` afin de ne pas confondre le déploiement Pages et le déploiement Worker.
+Le Worker utilise `worker/visa-rules-worker.js`. Sa configuration est isolée dans `worker/wrangler.rules.toml` afin de ne pas confondre le déploiement Pages, le Worker d'éligibilité et le Worker `visa-proxy` (dont `worker/wrangler.toml` ne doit pas être déployé avec Wrangler : voir le commentaire de ce fichier).
 
 Routes :
 - `GET /health` — état du service.

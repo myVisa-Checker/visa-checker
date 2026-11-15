@@ -27,7 +27,8 @@ ok("ancienne méthode D17 retirée", !/\bD17\b/.test(payJs));
 ok("aucun montant fixe dans le parcours de paiement", !/SVC_PRICE|Payer 10 DT|Pay 10 TND/.test(payJs));
 ok("Konnect et Flouci affichés comme moyens à venir", /paymentMethodsHtml/.test(payJs) && /Konnect/.test(payJs) && /flouci/.test(payJs));
 ok("adresse de facturation annoncée sans collecte prématurée", /Adresse de facturation/.test(payJs) && /Aucune adresse ni donnée bancaire n’est collectée/.test(payJs));
-ok("styles des deux moyens de paiement présents", /pay-konnect/.test(payHtml) && /pay-flouci/.test(payHtml));
+const payCss = read("vc.css");
+ok("styles des deux moyens de paiement présents", /pay-konnect/.test(payCss) && /pay-flouci/.test(payCss));
 
 console.log("Fichiers référencés par index.html");
 const html = read("index.html");
@@ -113,7 +114,7 @@ const checklistHtml = read("index.html");
 ok("détection dynamique des documents obligatoires manquants", /var missing=req\.filter\(function\(i\)\{return !S\.done\[i\.id\]\}\)/.test(checklistJs) && /missing\.map\(function\(i\)\{return '<li>'\+i\[S\.lang\]\[0\]/.test(checklistJs));
 ok("état vide explicite quand toutes les pièces sont cochées", /allDone:"Tous les documents obligatoires sont cochés"/.test(checklistJs));
 ok("aucun score de préparation ni pourcentage dans le rendu checklist", !/aria-valuenow|pct\+" %|Avancement du dossier|File progress/.test(checklistJs.slice(checklistJs.indexOf("function render(){"), checklistJs.indexOf("function go("))) && !/id="barfill"/.test(checklistHtml));
-ok("liste des pièces manquantes annoncée aux technologies d'assistance", /role="status" aria-live="polite"/.test(checklistJs) && /\.missing-docs/.test(checklistHtml));
+ok("liste des pièces manquantes annoncée aux technologies d'assistance", /role="status" aria-live="polite"/.test(checklistJs) && /\.missing-docs/.test(read("vc.css")));
 
 
 console.log("Assistants : suppression des anciens accès séparés");
@@ -168,6 +169,14 @@ try {
   ok("visa-rules-worker : API, règles, validation et CORS", true);
 } catch (e) {
   ok("visa-rules-worker : API, règles, validation et CORS", false, String(e.stderr || e.message).split("\n")[0]);
+}
+
+console.log("Workers visa-proxy et visa-chat : durcissements (exécution)");
+try {
+  execFileSync(process.execPath, ["tests/workers-hardening.test.mjs"], { stdio: "inherit" });
+  ok("workers-hardening : codes, limites, validation, verrous", true);
+} catch (e) {
+  ok("workers-hardening : codes, limites, validation, verrous", false, String(e.stderr || e.message).split("\n")[0]);
 }
 
 console.log("\n" + pass + " réussis, " + fail + " échoués");
