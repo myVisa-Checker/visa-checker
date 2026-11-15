@@ -52,7 +52,7 @@ function ordPayload(id, o, kind, message, urls) {
 async function toMake(env, d) {
   const body = new URLSearchParams();
   for (const k in d) body.append(k, d[k] == null ? "" : String(d[k]));
-  try { const r = await fetch(env.MAKE_URL, { method: "POST", body, headers: { "Content-Type": "application/x-www-form-urlencoded" } }); return r.ok; } catch { return false; }
+  try { const r = await fetch(env.MAKE_URL, { method: "POST", body, signal: AbortSignal.timeout(10000), headers: { "Content-Type": "application/x-www-form-urlencoded" } }); return r.ok; } catch { return false; }
 }
 /* Appel Gemini : renvoie une réponse au format { content: [{ type: "text", text }] } */
 async function aiFetch(env, init) {
@@ -85,6 +85,8 @@ async function hmac(secret, msg) {
   return hex(await crypto.subtle.sign("HMAC", k, enc.encode(msg)));
 }
 function same(a, b) { if (a.length !== b.length) return false; let r = 0; for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i); return r === 0; }
+/* comparaison de secrets : on compare les empreintes, la longueur du secret ne fuit pas */
+async function sameSecret(a, b) { return same(await sha256(String(a)), await sha256(String(b))); }
 async function makeToken(env, kind, exp) { const m = kind + "." + exp; return m + "." + (await hmac(env.SECRET, m)); }
 async function checkToken(env, tok, kind) {
   const p = String(tok || "").split(".");
@@ -114,14 +116,17 @@ const handler = {
       "Vary": "Origin"
     };
     const out = (obj, status, extra) =>
-      new Response(JSON.stringify(obj), { status, headers: { ...cors, "Content-Type": "application/json", "Cache-Control": "no-store", ...(extra || {}) } });
+      new Response(JSON.stringify(obj), { status, headers: { ...cors, "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", ...(extra || {}) } });
 
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
 
     /* ---- fabrication de codes (ouvert dans le navigateur, protégé par ADMIN_KEY) ---- */
     if (path === "/admin/code") {
       const key = req.headers.get("X-Admin-Key") || url.searchParams.get("key") || "";   /* l'en-tête X-Admin-Key est préférable : une clé dans l'adresse reste dans les journaux */
-      if (!env.ADMIN_KEY || !env.KV || !env.SECRET || !same(key, env.ADMIN_KEY)) return new Response("Forbidden", { status: 403 });
+      if (!env.ADMIN_KEY || !env.KV || !env.SECRET) return new Response("Forbidden", { status: 403 });
+      const ak = "adm:" + (req.headers.get("CF-Connecting-IP") || "?"), af = parseInt((await env.KV.get(ak)) || "0", 10);
+      if (af >= 5) return new Response("Too many attempts", { status: 429 });     /* verrou 15 min après 5 clés fausses */
+      if (!(await sameSecret(key, env.ADMIN_KEY))) { await env.KV.put(ak, String(af + 1), { expirationTtl: 900 }); return new Response("Forbidden", { status: 403 }); }
       const kind = url.searchParams.get("kind") === "advisors" ? "advisors" : "pack";
       const n = Math.min(20, Math.max(1, parseInt(url.searchParams.get("n") || "1", 10) || 1));
       const max = Math.min(20, Math.max(1, parseInt(url.searchParams.get("max") || "3", 10) || 3));
@@ -164,7 +169,8 @@ const handler = {
       if (!env.SECRET) return out({ ok: false, error: "config" }, 500);
       const tok = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
       if (!(await checkToken(env, tok, "pack"))) return out({ ok: false, error: "auth" }, 401);
-      return out({ ok: true, pack: PACK }, 200);
+      let pack = null; try { pack = env.KV ? await env.KV.get("pack", "json") : null; } catch {}
+      return out({ ok: true, pack: Array.isArray(pack) && pack.length ? pack : PACK }, 200);
     }
 
     /* ---- lettre de motivation sur mesure (IA) ---- */
@@ -177,6 +183,7 @@ const handler = {
       const raw = await req.text();
       if (raw.length > 4000) return out({ ok: false, error: "too_large" }, 413);
       let b; try { b = JSON.parse(raw); } catch { return out({ ok: false, error: "json" }, 400); }
+      if (!b || typeof b !== "object" || Array.isArray(b)) return out({ ok: false, error: "json" }, 400);
       const day = new Date().toISOString().slice(0, 10);
       const uk = "ai:" + (await sha256(tok)).slice(0, 24) + ":" + day, gk = "aig:" + day;
       const un = parseInt((await env.KV.get(uk)) || "0", 10), gn = parseInt((await env.KV.get(gk)) || "0", 10);
@@ -185,7 +192,7 @@ const handler = {
       const f = {
         language: b.language === "en" ? "English" : "français",
         purpose: t(b.purpose, 40), profile: t(b.profile, 20), country: t(b.country, 60),
-        dateFrom: /^\d{4}-\d{2}-\d{2}$/.test(b.dateFrom) ? b.dateFrom : "", dateTo: /^\d{4}-\d{2}-\d{2}$/.test(b.dateTo) ? b.dateTo : "",
+        dateFrom: typeof b.dateFrom === "string" && isoOk(b.dateFrom) ? b.dateFrom : "", dateTo: typeof b.dateTo === "string" && isoOk(b.dateTo) ? b.dateTo : "",
         job: t(b.job, 120), income: t(b.income, 40), budget: t(b.budget, 40), lodging: t(b.lodging, 160), ties: t(b.ties, 300), notes: t(b.notes, 500)
       };
       if (!f.profile || !f.country || !f.dateFrom || !f.dateTo) return out({ ok: false, error: "missing" }, 400);
@@ -203,7 +210,7 @@ const handler = {
         });
       } catch { clearTimeout(tm); return out({ ok: false, error: "upstream" }, 502); }
       clearTimeout(tm);
-      if (!r.ok) return out({ ok: false, error: "upstream", status: r.status }, 502);
+      if (!r.ok) return out({ ok: false, error: "upstream" }, 502);
       let j; try { j = await r.json(); } catch { return out({ ok: false, error: "upstream" }, 502); }
       const text = (j.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n").trim();
       if (!text) return out({ ok: false, error: "empty" }, 502);
@@ -222,6 +229,7 @@ const handler = {
       const raw = await req.text();
       if (raw.length > 4000) return out({ ok: false, error: "too_large" }, 413);
       let b; try { b = JSON.parse(raw); } catch { return out({ ok: false, error: "json" }, 400); }
+      if (!b || typeof b !== "object" || Array.isArray(b)) return out({ ok: false, error: "json" }, 400);
       const t = (v, m) => (typeof v === "string" ? v.replace(/[\u0000-\u001f\u007f]+/g, " ").trim().slice(0, m) : "");
       const reason = t(b.reason, 600), situation = t(b.situation, 1500);
       const lang = b.lang === "en" ? "English" : b.lang === "ar" ? "العربية" : "français";
@@ -245,7 +253,7 @@ const handler = {
         });
       } catch { clearTimeout(tm); return out({ ok: false, error: "upstream" }, 502); }
       clearTimeout(tm);
-      if (!r.ok) return out({ ok: false, error: "upstream", status: r.status }, 502);
+      if (!r.ok) return out({ ok: false, error: "upstream" }, 502);
       let j; try { j = await r.json(); } catch { return out({ ok: false, error: "upstream" }, 502); }
       const text = (j.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n").trim();
       if (!text) return out({ ok: false, error: "empty" }, 502);
@@ -266,7 +274,7 @@ const handler = {
       const o = await env.KV.get("ord:" + id, "json");
       if (!o) return out({ ok: false, error: "gone" }, 404);
       const left = o.created + ORDER_HOURS * 3600e3 - Date.now();
-      return out({ ok: true, role, order: { ref: ordRef(id), svc: o.svc, dest: o.dest, city: o.city, ln: o.ln, fn: o.fn, d1: o.d1, d2: o.d2, ag: o.ag, lang: o.lang, status: o.status || "new", canEdit: role === "c" && left > 0 && (o.edits || 0) < EDIT_MAX, hoursLeft: Math.max(0, Math.ceil(left / 3600e3)) } }, 200);
+      return out({ ok: true, role, order: { ref: ordRef(id), svc: o.svc, dest: o.dest, city: o.city, ln: o.ln, fn: o.fn, d1: o.d1, d2: o.d2, ag: o.ag, lang: o.lang, status: o.status || "new", canEdit: role === "c" && left > 0 && (o.edits || 0) < EDIT_MAX && !["claimed", "paid", "sent"].includes(o.status || "new"), hoursLeft: Math.max(0, Math.ceil(left / 3600e3)) } }, 200);
     }
 
     /* ---- page client : modifier les dates (48 h maximum, jamais le nom) ---- */
@@ -277,11 +285,13 @@ const handler = {
       const raw = await req.text();
       if (raw.length > 1000) return out({ ok: false, error: "too_large" }, 413);
       let b; try { b = JSON.parse(raw); } catch { return out({ ok: false, error: "json" }, 400); }
+      if (!b || typeof b !== "object" || Array.isArray(b)) return out({ ok: false, error: "json" }, 400);
       const id = String(b.id || ""), k = String(b.k || "");
       if (!/^[A-Za-z0-9_-]{8,64}$/.test(id) || (await ordRole(env, id, k)) !== "c") return out({ ok: false, error: "auth" }, 401);
       const o = await env.KV.get("ord:" + id, "json");
       if (!o) return out({ ok: false, error: "gone" }, 404);
       if (Date.now() > o.created + ORDER_HOURS * 3600e3) return out({ ok: false, error: "expired" }, 410);
+      if (["claimed", "paid", "sent"].includes(o.status || "new")) return out({ ok: false, error: "locked" }, 409);   /* dates figées après « J'ai payé » */
       if ((o.edits || 0) >= EDIT_MAX) return out({ ok: false, error: "limit" }, 429);
       const d1 = String(b.date1 || ""), d2 = String(b.date2 || ""), td = new Date().toISOString().slice(0, 10);
       const lim = new Date(Date.now() + 548 * 864e5).toISOString().slice(0, 10);
@@ -332,6 +342,7 @@ const handler = {
     if (raw.length > MAX_BODY) return out({ ok: false, error: "too_large" }, 413);
     let p;
     try { p = JSON.parse(raw); } catch { return out({ ok: false, error: "json" }, 400); }
+    if (!p || typeof p !== "object" || Array.isArray(p)) return out({ ok: false, error: "json" }, 400);
     const s = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
     const a = p && typeof p.agency === "object" && p.agency ? p.agency : {};
     const d = {
@@ -351,6 +362,12 @@ const handler = {
       d.agencyName = String(g.name || "").slice(0, 80); d.agencyEmail = String(g.email || "").slice(0, 120);
       d.agencyTelegram = String(g.telegram || "").slice(0, 60); d.agencyWhatsapp = String(g.whatsapp || "").slice(0, 30);
     }
+    /* champs transmis à Make (e-mails, messages) : une ligne, pas de caractères de contrôle ; le message garde ses retours à la ligne */
+    const one = (v) => String(v).replace(/[\u0000-\u001f\u007f\u2028\u2029]+/g, " ").trim();
+    for (const f of ["destination", "city", "telegram", "agencyName", "agencyTelegram", "agencyWhatsapp"]) d[f] = one(d[f]);
+    d.message = d.message.replace(/[\u0000-\u0008\u000b-\u001f\u007f\u2028\u2029]+/g, " ");
+    if (!/^[a-z_]{1,20}$/.test(d.service) || !/^[a-z]{0,20}$/.test(d.channel) || !/^([a-z]{2}(-[A-Za-z]{2})?)?$/.test(d.lang)) return out({ ok: false, error: "field" }, 400);
+    if ((d.date1 && !isoOk(d.date1)) || (d.date2 && !isoOk(d.date2))) return out({ ok: false, error: "date" }, 400);
     if (!/^[A-Za-z0-9_-]{8,64}$/.test(d.requestId)) return out({ ok: false, error: "missing" }, 400);
     if (!d.requestId || !d.lastName || !d.firstName || !d.message) return out({ ok: false, error: "missing" }, 400);
     if (!/^[\p{L}\p{M} '.-]{1,60}$/u.test(d.lastName) || !/^[\p{L}\p{M} '.-]{1,60}$/u.test(d.firstName)) return out({ ok: false, error: "name" }, 400);
@@ -380,16 +397,18 @@ const handler = {
       };
       Object.assign(d, await ordUrls(env, d.requestId)); d.deadline = new Date(created + ORDER_HOURS * 3600e3).toISOString();
     }
+    if (rateKey) await env.KV.put(rateKey, String(rateCount + 1), { expirationTtl: RATE_WINDOW });   /* compté avant l'envoi : les rafales et les échecs comptent aussi */
     const body = new URLSearchParams();
     for (const k in d) body.append(k, d[k]);
     let r;
     try {
-      r = await fetch(env.MAKE_URL, { method: "POST", body, headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+      r = await fetch(env.MAKE_URL, { method: "POST", body, signal: AbortSignal.timeout(10000), headers: { "Content-Type": "application/x-www-form-urlencoded" } });
     } catch { return out({ ok: false, error: "upstream" }, 502); }
-    if (!r.ok) return out({ ok: false, error: "upstream", status: r.status }, 502);
-    if (orderRecord) await env.KV.put("ord:" + d.requestId, JSON.stringify(orderRecord), { expirationTtl: ORDER_TTL });
-    if (duplicateKey) await env.KV.put(duplicateKey, "1", { expirationTtl: 86400 });
-    if (rateKey) await env.KV.put(rateKey, String(rateCount + 1), { expirationTtl: RATE_WINDOW });
+    if (!r.ok) return out({ ok: false, error: "upstream" }, 502);
+    try {
+      if (orderRecord) await env.KV.put("ord:" + d.requestId, JSON.stringify(orderRecord), { expirationTtl: ORDER_TTL });
+      if (duplicateKey) await env.KV.put(duplicateKey, "1", { expirationTtl: 86400 });
+    } catch (e) { console.error("proxy: write after send failed", e && e.message); }   /* le mail est déjà parti : on ne fait pas réessayer le client */
     return out({ ok: true }, 200);
   }
 };
@@ -401,6 +420,7 @@ export default {
     try {
       return await handler.fetch(req, env);
     } catch (e) {
+      console.error("proxy: unexpected error", e && e.message);
       const list = String(env.ALLOWED_ORIGIN || DEFAULT_ORIGINS).split(",").map((x) => x.trim()).filter(Boolean);
       const o = req.headers.get("Origin") || "";
       return new Response(JSON.stringify({ ok: false, error: "server" }), {

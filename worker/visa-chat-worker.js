@@ -75,6 +75,8 @@ function ctxField(v) {
   const s = String(v == null ? "" : v).replace(/[\r\n\u2028\u2029]+/g, " ").replace(/[^\p{L}\p{N} '\u2019\-.,()\/]/gu, "").replace(/\s+/g, " ").trim().slice(0, 60);
   return s || "non indiqué";
 }
+// Un code d'entraînement : lettres, chiffres et tirets, 4 à 64 caractères (évite les clés KV hors normes).
+const CODE_RE = /^[A-Za-z0-9-]{4,64}$/;
 function limited(ip) {
   const now = Date.now();
   if (hits.size > 5000) {
@@ -375,9 +377,10 @@ async function handleVisaApi(request, env, out, pathname) {
   if (pathname === "/api/interview-feedback") {
     const codes = String(env.INTERVIEW_CODES || "").split(",").map((s) => s.trim()).filter(Boolean);
     const code = String(body.code || "").trim();
+    if (!CODE_RE.test(code)) return out({ error: "code" }, 403);
     const listed = codes.includes(code);
-    const minted = !listed && code && env.USAGE ? await env.USAGE.get("mint:" + code) : null;
-    if (!code || (!listed && !minted)) return out({ error: "code" }, 403);
+    const minted = !listed && env.USAGE ? await env.USAGE.get("mint:" + code) : null;
+    if (!listed && !minted) return out({ error: "code" }, 403);
     let usageKey = "", used = 0;
     if (env.USAGE) {
       usageKey = "iv:" + code;
@@ -414,7 +417,7 @@ export default {
     const out = (obj, status = 200) =>
       new Response(JSON.stringify(obj), {
         status,
-        headers: { ...cors, "Content-Type": "application/json" },
+        headers: { ...cors, "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
       });
 
     // Origine étrangère (navigateur) : refusée. Les appels sans en-tête Origin ne sont pas concernés ici,
@@ -428,6 +431,7 @@ export default {
       catch (e) { console.log("Visa API route failed", pathname, e && e.message); return out({ error: "api_unavailable" }, 500); }
     }
     if (request.method !== "POST") return out({ error: "POST only" }, 405);
+    if (!["/", "/partner", "/contact"].includes(pathname)) return out({ error: "not_found" }, 404);
 
     // Demandes de partenariat : route dédiée, séparée de l'assistant
     if (new URL(request.url).pathname === "/partner") {
@@ -440,7 +444,9 @@ export default {
 
     try {
       if (Number(request.headers.get("Content-Length") || 0) > 16 * 1024 * 1024) return out({ error: "too_large" }, 413);
-      const body = await request.json();
+      let body;
+      try { body = await request.json(); } catch { return out({ error: "invalid" }, 400); }
+      if (!body || typeof body !== "object" || Array.isArray(body)) return out({ error: "invalid" }, 400);
       const mode = String(body.mode || "");
       const interview = mode === "interview";
       const assistantSystem = mode === "joury-refusal" ? SYSTEM_JOURY_REFUSAL : mode === "aicha-review" ? SYSTEM_AICHA_REVIEW : interview ? SYSTEM_INTERVIEW : SYSTEM;
@@ -452,18 +458,20 @@ export default {
       // ----- Entraînement : accès par code -----
       let usageKey = "", used = 0;
       if (interview) {
+        // Le débit passe avant la vérification du code : les essais de codes sont comptés, bons ou mauvais.
+        if (limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
         const codes = String(env.INTERVIEW_CODES || "").split(",").map((s) => s.trim()).filter(Boolean);
         const code = String(body.code || "").trim();
+        if (!CODE_RE.test(code)) return out({ error: "code" }, 403);
         const listed = codes.includes(code);
-        const minted = !listed && code && env.USAGE ? await env.USAGE.get("mint:" + code) : null;
-        if (!code || (!listed && !minted)) return out({ error: "code" }, 403);
+        const minted = !listed && env.USAGE ? await env.USAGE.get("mint:" + code) : null;
+        if (!listed && !minted) return out({ error: "code" }, 403);
         if (env.USAGE) {
           usageKey = "iv:" + code;
           used = parseInt((await env.USAGE.get(usageKey)) || "0", 10) || 0;
           if (used >= IV_MAX) return out({ error: "limit" }, 429);
         }
         if (body.check) return out({ ok: true, left: env.USAGE ? IV_MAX - used : null });
-        if (limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
       }
 
       const attachments = Array.isArray(body.attachments) ? body.attachments : [];
@@ -479,7 +487,7 @@ export default {
       }
       if (attachmentBytes > 15 * 1024 * 1024) return out({ error: "attachments" }, 413);
 
-      const msgs = (body.messages || []).slice(interview ? -16 : -8).map((m) => ({
+      const msgs = (Array.isArray(body.messages) ? body.messages : []).filter((m) => m && typeof m === "object").slice(interview ? -16 : -8).map((m) => ({
         role: m.role === "assistant" ? "model" : "user",
         parts: [{ text: String(m.text || "").slice(0, interview ? 700 : 500) }],
       }));
@@ -524,7 +532,7 @@ export default {
       }
       const data = await r.json().catch(() => ({}));
       clearTimeout(tm);
-      if (!r.ok || data.error) console.log("Gemini error", r.status, JSON.stringify(data.error || data).slice(0, 300));
+      if (!r.ok || data.error) console.log("Gemini error", r.status, data.error && data.error.status);
       const cand = data?.candidates?.[0];
       const text = cand?.content?.parts?.map((p) => p.text || "").join("");
       if (!text) console.log("Gemini empty reply", r.status, cand && cand.finishReason, data && data.promptFeedback && data.promptFeedback.blockReason);
