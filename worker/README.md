@@ -29,7 +29,7 @@ Variables/secrets utilisés par ces Workers historiques :
 - `visa-proxy` : `MAKE_URL`, `SECRET`, `ADMIN_KEY`, `GEMINI_API_KEY` (secrets) ; `GEMINI_MODEL`, `AGENCIES`, `ALLOWED_ORIGIN`, `SITE` (optionnels).
 - `visa-chat` : `GEMINI_API_KEY`, `INTERVIEW_CODES`, `PARTNER_WEBHOOK` (secrets) ; liaison KV `USAGE` ; `MODEL` ou `GEMINI_MODEL` (optionnels).
 
-Recommandé : définir le secret `AGENCIES` sur `visa-proxy` (JSON `{"id":{"name","email","telegram","whatsapp"}}`). Sans lui, les coordonnées de l'agence viennent du navigateur ; avec lui, seules les agences listées existent. Les codes d'accès payants peuvent aussi vivre dans le KV (clé `pack`, tableau JSON) plutôt que dans le code public.
+Recommandé : définir le secret `AGENCIES` sur `visa-proxy` (JSON `{"id":{"name","email","telegram","whatsapp"}}`). Sans lui, les coordonnées de l'agence viennent du navigateur ; avec lui, seules les agences listées existent. Les lettres payantes du pack ne sont pas dans le dépôt : elles sont dans le KV (clé `pack`), enregistrées par le formulaire `/admin/pack` de `visa-proxy` (clé `ADMIN_KEY`).
 
 Ne jamais enregistrer de secrets dans GitHub.
 

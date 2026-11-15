@@ -81,19 +81,36 @@ for (const raw of ["null", "[]", "42"]) {
   assert.equal((await get.json()).order.canEdit, false);
   assert.ok(rec.status === "new");
 }
-// /pack : contenu lu dans le KV s'il existe, sinon copie intégrée
+// /pack et /admin/pack : les lettres vivent dans le KV, enregistrées par le formulaire protégé par ADMIN_KEY
 {
   const env = penv();
   const unlock = async () => {
-    const m = new Map(); const code = (await (await call(proxy, env, "/admin/code?key=admin-key-123&n=1", { method: "GET" })).json()).codes[0];
+    const code = (await (await call(proxy, env, "/admin/code?key=admin-key-123&n=1", { method: "GET" })).json()).codes[0];
     const t = await (await call(proxy, env, "/unlock", { body: { code } })).json(); assert.equal(t.ok, true); return t.token;
   };
-  const tok = await unlock();
-  const a = await (await call(proxy, env, "/pack", { method: "GET", headers: { Authorization: "Bearer " + tok } })).json();
-  assert.ok(a.pack.length >= 1);
-  env.KV.m.set("pack", JSON.stringify([{ id: "x", t: { fr: "X" }, body: "kv" }]));
-  const b = await (await call(proxy, env, "/pack", { method: "GET", headers: { Authorization: "Bearer " + tok } })).json();
-  assert.equal(b.pack[0].body, "kv");
+  const tok = await unlock(), auth = { Authorization: "Bearer " + tok };
+  assert.equal((await call(proxy, env, "/pack", { method: "GET", headers: auth })).status, 503, "pas de lettres enregistrées = 503, plus de copie publique");
+  // formulaire : page HTML sans script, CSP stricte
+  const page = await call(proxy, env, "/admin/pack", { method: "GET" });
+  assert.equal(page.status, 200);
+  const html = await page.text();
+  assert.ok(html.includes('name="pack"') && html.includes('type="password"') && !/<script/i.test(html), "formulaire sans script");
+  assert.match(page.headers.get("Content-Security-Policy"), /default-src 'none'/);
+  const send = (key, pack, ip) => call(proxy, env, "/admin/pack", { raw: new URLSearchParams({ key, pack }).toString(), headers: { "Content-Type": "application/x-www-form-urlencoded", ...(ip ? { "CF-Connecting-IP": ip } : {}) } });
+  const good = [{ id: "recours", t: { fr: "Recours", en: "Appeal", ar: "طعن" }, body: "Texte [à compléter]" }];
+  assert.equal((await send("mauvaise", JSON.stringify(good))).status, 403, "mauvaise clé refusée");
+  assert.equal((await send("admin-key-123", "pas du json")).status, 400);
+  assert.equal((await send("admin-key-123", JSON.stringify([{ id: "X Y", t: {}, body: "" }]))).status, 400, "forme invalide refusée");
+  assert.equal(env.KV.m.has("pack"), false, "rien n'est enregistré quand le texte est invalide");
+  const saved = await send("admin-key-123", JSON.stringify([{ ...good[0], extra: "ignoré" }]));
+  assert.equal(saved.status, 200);
+  assert.match(await saved.text(), /1 lettres : recours/);
+  assert.deepEqual(JSON.parse(env.KV.m.get("pack")), good, "seuls id, t et body sont gardés");
+  const b = await (await call(proxy, env, "/pack", { method: "GET", headers: auth })).json();
+  assert.equal(b.pack[0].id, "recours");
+  // verrou : 5 clés fausses puis refus même avec la bonne clé
+  for (let i = 0; i < 5; i++) assert.equal((await send("faux", JSON.stringify(good), "5.5.5.5")).status, 403);
+  assert.equal((await send("admin-key-123", JSON.stringify(good), "5.5.5.5")).status, 429, "verrou du formulaire");
 }
 
 /* ---------------- API d'éligibilité intégrée au proxy = visa-rules ---------------- */

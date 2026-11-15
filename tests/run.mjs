@@ -128,7 +128,8 @@ ok("espace Joury/Aicha conserve ses deux cartes", (jouryHtml.match(/class="actio
 console.log("Worker visa-proxy (versionné dans le dépôt)");
 const proxy = read("worker/visa-proxy-worker.js");
 const proxyCode = proxy.split("\n").filter((l) => !/^\s*(\/\/|\/?\*)/.test(l)).join("\n");
-ok("PACK du recours et des 4 motivations présent", /const PACK = \[/.test(proxy) && ["recours", "m_employee", "m_self", "m_student", "m_retired"].every((id) => proxy.includes('"id":"' + id + '"')));
+ok("les lettres payantes ne sont plus dans le code public", !/const PACK = \[/.test(proxy) && !proxy.includes('"id":"m_employee"') && !proxy.includes("Commission de recours contre les décisions de refus"));
+ok("formulaire /admin/pack présent, sans script", /path === "\/admin\/pack"/.test(proxy) && /form-action 'self'/.test(proxy));
 ok("aucun reste du fournisseur IA abandonné (ANTHROPIC, x-api-key)", !/ANTHROPIC|x-api-key|AI_MODEL/.test(proxyCode));
 ok("aucune route du Radar RDV supprimé", !/\/radar|RADAR_/.test(proxyCode));
 ok("origines par défaut : domaine officiel seulement", /DEFAULT_ORIGINS = "https:\/\/checkmyvisa\.org,https:\/\/www\.checkmyvisa\.org"/.test(proxy));

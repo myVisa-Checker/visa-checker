@@ -19,7 +19,8 @@
    Routes :
      POST /            envoi d'une demande à l'agence
      POST /unlock      {kind,code}  -> {ok,token}
-     GET  /pack        Authorization: Bearer <jeton>  -> lettres du pack
+     GET  /pack        Authorization: Bearer <jeton>  -> lettres du pack (lues dans le KV, clé « pack »)
+     GET/POST /admin/pack   formulaire (clé ADMIN_KEY + texte JSON des lettres) : enregistre les lettres dans le KV
      POST /letter      (jeton du pack) génère une lettre sur mesure avec l'IA
      POST /analyze     (jeton du pack) analyse une lettre de refus avec l'IA
      GET  /admin/code?kind=pack&n=3&max=3&days=90   -> fabrique n codes (affichés une seule fois).
@@ -76,7 +77,7 @@ async function aiFetch(env, init) {
   return new Response(JSON.stringify({ content: [{ type: "text", text }] }), { status: 200 });
 }
 
-const PACK = [{"id":"recours","t":{"fr":"Lettre de recours","en":"Appeal letter","ar":"رسالة الطعن"},"body":"[Prénom NOM]\n[Adresse]\n[Téléphone] · [E-mail]\nPasseport n° : [numéro]\n\n[Ville], le [date]\n\nÀ l'attention de la Commission de recours contre les décisions de refus de visa d'entrée en France\n[adresse indiquée sur votre notification de refus]\n\nObjet : recours contre la décision de refus de visa du [date de la décision]\nRéférence de la demande : [numéro France-Visas]\n\nMadame, Monsieur,\n\nLe [date de dépôt], j'ai déposé auprès de TLScontact [Tunis / Sfax] une demande de visa de court séjour pour [tourisme / visite familiale / affaires], du [date] au [date]. Elle a été refusée le [date de la décision] pour le motif suivant : [recopier le motif coché sur le formulaire de refus].\n\nJe conteste cette décision pour les raisons suivantes.\n\n1. [Répondre directement au motif. Exemple, moyens de subsistance : mes revenus mensuels sont de [montant] dinars, justifiés par mes trois derniers bulletins de paie et mes relevés bancaires (pièces n° 2 et 3). Le coût de mon séjour est estimé à [montant] euros.]\n\n2. [Attaches dans mon pays de résidence : emploi depuis [année], famille, logement, scolarité des enfants (pièces n° 4 à 6).]\n\n3. [Voyages passés : visas obtenus et retours dans les délais (pièce n° 7).]\n\nJe m'engage à quitter l'espace Schengen avant la fin de la validité du visa et à rentrer dans mon pays de résidence, où se trouvent ma vie professionnelle et ma famille.\n\nJe vous demande de bien vouloir réexaminer ma demande et de m'accorder le visa sollicité.\n\nJe vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.\n\n[Signature]\n\nPièces jointes :\n1. Copie de la décision de refus\n2. [Bulletins de paie]\n3. [Relevés bancaires]\n4. [Attestation de travail]\n5. [Livret de famille]\n6. [Justificatif de domicile]\n7. [Anciens visas et preuves de voyages]"},{"id":"m_employee","t":{"fr":"Motivation : salarié","en":"Motivation: employee","ar":"رسالة تحفيز: موظف"},"body":"[Prénom NOM]\n[Adresse]\n[Téléphone] · [E-mail]\nPasseport n° : [numéro]\n\n[Ville], le [date]\n\nÀ l'attention du Consulat général de France à Tunis\n\nObjet : demande de visa de court séjour, lettre de motivation\n\nMadame, Monsieur,\n\nJe souhaite me rendre en France du [date] au [date] pour [tourisme / visite à ma sœur / ...]. Je vous remercie de l'attention portée à mon dossier.\n\nJe travaille comme [poste] chez [employeur], à [ville], depuis [année], avec un salaire mensuel de [montant] dinars. Mon employeur m'a accordé un congé du [date] au [date] (attestation jointe).\n\nMon séjour est organisé ainsi : [villes visitées et programme en quelques lignes]. J'ai réservé [hôtel du ... au ... / un hébergement chez ...]. Je finance moi-même ce voyage, dont j'estime le budget à [montant] euros. Mes relevés bancaires des trois derniers mois sont joints.\n\nMes attaches dans mon pays de résidence sont solides : mon emploi, [conjoint, enfants, parents] et mon logement à [ville]. Je reprendrai mon poste le [date] et je quitterai l'espace Schengen avant la fin du visa. [Si vous avez déjà voyagé : j'ai séjourné en [pays] en [année] et je suis rentré dans les délais.]\n\nJe reste à votre disposition pour tout document complémentaire.\n\nJe vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.\n\n[Signature]"},{"id":"m_self","t":{"fr":"Motivation : indépendant","en":"Motivation: self-employed","ar":"رسالة تحفيز: عمل حر"},"body":"[Prénom NOM]\n[Adresse]\n[Téléphone] · [E-mail]\nPasseport n° : [numéro]\n\n[Ville], le [date]\n\nÀ l'attention du Consulat général de France à Tunis\n\nObjet : demande de visa de court séjour, lettre de motivation\n\nMadame, Monsieur,\n\nJe souhaite me rendre en France du [date] au [date] pour [tourisme / visite familiale / salon professionnel]. Je vous remercie de l'attention portée à ma demande.\n\nJe suis [profession] et je dirige mon activité à [ville] depuis [année] (registre de commerce / patente / matricule fiscal n° [numéro], joint). Mon activité me procure un revenu mensuel moyen de [montant] dinars, comme le montrent mes déclarations fiscales et mes relevés bancaires professionnels joints.\n\nPendant mon absence, [collaborateur / associé / famille] assurera la continuité de l'activité. Mon séjour : [programme en quelques lignes], avec [hébergement réservé du ... au ...]. Le budget prévu est de [montant] euros, financé par mes propres moyens.\n\nMon entreprise, ma famille ([conjoint, enfants]) et mon logement sont dans mon pays de résidence. Je rentrerai le [date] et je quitterai l'espace Schengen avant l'expiration du visa.\n\nJe reste à votre disposition pour tout complément.\n\nJe vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.\n\n[Signature]"},{"id":"m_student","t":{"fr":"Motivation : étudiant","en":"Motivation: student","ar":"رسالة تحفيز: طالب"},"body":"[Prénom NOM]\n[Adresse]\n[Téléphone] · [E-mail]\nPasseport n° : [numéro]\n\n[Ville], le [date]\n\nÀ l'attention du Consulat général de France à Tunis\n\nObjet : demande de visa de court séjour, lettre de motivation\n\nMadame, Monsieur,\n\nJe suis étudiant(e) en [filière] à [établissement], à [ville], en [niveau / année]. Je souhaite me rendre en France du [date] au [date] pour [tourisme / visite à un proche / voyage d'étude], pendant [vacances universitaires / période autorisée par mon établissement].\n\nMon établissement m'a délivré une attestation d'inscription et une autorisation d'absence pour ces dates (jointes). Mon voyage est financé par [mes parents / mon garant], dont la lettre de prise en charge, les relevés bancaires et les justificatifs de revenus sont joints. Budget estimé : [montant] euros.\n\nProgramme du séjour : [programme en quelques lignes]. Hébergement : [réservation / attestation d'accueil de ...].\n\nMes études, ma famille et mon logement sont dans mon pays de résidence. Je reprendrai les cours le [date] et je quitterai l'espace Schengen avant la fin du visa.\n\nJe reste à votre disposition pour tout complément.\n\nJe vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.\n\n[Signature]"},{"id":"m_retired","t":{"fr":"Motivation : retraité","en":"Motivation: retired","ar":"رسالة تحفيز: متقاعد"},"body":"[Prénom NOM]\n[Adresse]\n[Téléphone] · [E-mail]\nPasseport n° : [numéro]\n\n[Ville], le [date]\n\nÀ l'attention du Consulat général de France à Tunis\n\nObjet : demande de visa de court séjour, lettre de motivation\n\nMadame, Monsieur,\n\nRetraité(e) depuis [année], ancien(ne) [profession], je souhaite me rendre en France du [date] au [date] pour [tourisme / visite à mon fils, ma fille, un ami]. Je vous remercie de l'attention portée à ma demande.\n\nJe perçois une pension mensuelle de [montant] dinars (attestation de pension et relevés bancaires joints). Le budget de mon séjour est estimé à [montant] euros, que je finance moi-même. [Si vous êtes hébergé : mon hôte, [nom], m'accueille avec une attestation d'accueil validée, jointe.]\n\nProgramme du séjour : [programme en quelques lignes]. J'ai souscrit une assurance voyage couvrant 30 000 euros, valable dans tout l'espace Schengen.\n\nMon épouse / mon époux, mes enfants dans mon pays de résidence et mon logement à [ville] m'attendent à mon retour. Je rentrerai le [date] et je quitterai l'espace Schengen avant la fin du visa.\n\nJe reste à votre disposition pour tout complément.\n\nJe vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.\n\n[Signature]"}];
+/* Les lettres du pack ne sont plus dans le code (dépôt public) : elles sont dans le KV, clé « pack », enregistrées par le formulaire /admin/pack. */
 
 const enc = new TextEncoder();
 const hex = (buf) => [...new Uint8Array(buf)].map((x) => x.toString(16).padStart(2, "0")).join("");
@@ -88,6 +89,19 @@ async function hmac(secret, msg) {
 function same(a, b) { if (a.length !== b.length) return false; let r = 0; for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i); return r === 0; }
 /* comparaison de secrets : on compare les empreintes, la longueur du secret ne fuit pas */
 async function sameSecret(a, b) { return same(await sha256(String(a)), await sha256(String(b))); }
+/* mot de passe administrateur : verrou de 15 min après 5 essais ratés, comparaison par empreintes ; renvoie null si la clé est bonne */
+async function adminGate(env, req, key) {
+  if (!env.ADMIN_KEY || !env.KV || !env.SECRET) return new Response("Forbidden", { status: 403 });
+  const ak = "adm:" + (req.headers.get("CF-Connecting-IP") || "?"), af = parseInt((await env.KV.get(ak)) || "0", 10);
+  if (af >= 5) return new Response("Too many attempts", { status: 429 });
+  if (!(await sameSecret(key, env.ADMIN_KEY))) { await env.KV.put(ak, String(af + 1), { expirationTtl: 900 }); return new Response("Forbidden", { status: 403 }); }
+  return null;
+}
+/* petite page d'administration : HTML simple, sans script, jamais indexée ni mise en cache */
+const adminPage = (body, status) => new Response('<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Administration</title><style>body{font:16px system-ui,sans-serif;max-width:640px;margin:24px auto;padding:0 16px}textarea,input{width:100%;box-sizing:border-box;font:inherit;padding:8px;margin:6px 0 14px}textarea{height:260px;font-family:monospace;font-size:13px}button{font:inherit;padding:10px 20px}</style></head><body>' + body + '</body></html>', {
+  status, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer", "X-Frame-Options": "DENY",
+    "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'" }
+});
 async function makeToken(env, kind, exp) { const m = kind + "." + exp; return m + "." + (await hmac(env.SECRET, m)); }
 async function checkToken(env, tok, kind) {
   const p = String(tok || "").split(".");
@@ -189,10 +203,8 @@ const handler = {
     /* ---- fabrication de codes (ouvert dans le navigateur, protégé par ADMIN_KEY) ---- */
     if (path === "/admin/code") {
       const key = req.headers.get("X-Admin-Key") || url.searchParams.get("key") || "";   /* l'en-tête X-Admin-Key est préférable : une clé dans l'adresse reste dans les journaux */
-      if (!env.ADMIN_KEY || !env.KV || !env.SECRET) return new Response("Forbidden", { status: 403 });
-      const ak = "adm:" + (req.headers.get("CF-Connecting-IP") || "?"), af = parseInt((await env.KV.get(ak)) || "0", 10);
-      if (af >= 5) return new Response("Too many attempts", { status: 429 });     /* verrou 15 min après 5 clés fausses */
-      if (!(await sameSecret(key, env.ADMIN_KEY))) { await env.KV.put(ak, String(af + 1), { expirationTtl: 900 }); return new Response("Forbidden", { status: 403 }); }
+      const denied = await adminGate(env, req, key);
+      if (denied) return denied;
       const kind = url.searchParams.get("kind") === "advisors" ? "advisors" : "pack";
       const n = Math.min(20, Math.max(1, parseInt(url.searchParams.get("n") || "1", 10) || 1));
       const max = Math.min(20, Math.max(1, parseInt(url.searchParams.get("max") || "3", 10) || 3));
@@ -204,6 +216,30 @@ const handler = {
         codes.push(c);
       }
       return new Response(JSON.stringify({ kind, max_uses: max, valid_days: days, codes }, null, 1), { status: 200, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
+    }
+
+    /* ---- enregistrement des lettres du pack dans le KV (formulaire, protégé par ADMIN_KEY) ---- */
+    if (path === "/admin/pack") {
+      if (req.method === "GET") {
+        return adminPage('<h1>Lettres du pack</h1><p>Collez le texte des lettres (JSON) et votre clé administrateur.</p><form method="post" action="/admin/pack"><label>Clé administrateur<input type="password" name="key" autocomplete="off" required></label><label>Texte des lettres<textarea name="pack" required></textarea></label><button type="submit">Enregistrer</button></form>', 200);
+      }
+      if (req.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
+      let rawForm; try { rawForm = await req.text(); } catch { return adminPage("<p>Lecture impossible.</p>", 400); }
+      if (rawForm.length > 100000) return adminPage("<p>Texte trop long.</p>", 413);
+      const form = new URLSearchParams(rawForm);
+      const denied = await adminGate(env, req, form.get("key") || "");
+      if (denied) return adminPage("<p>Clé refusée, ou trop d'essais (attendez 15 minutes).</p>", denied.status);
+      const bad = (why) => adminPage("<p>" + why + "</p><p>Rien n'a été enregistré. Recopiez le texte en entier, du premier « [ » au dernier « ] ».</p>", 400);
+      let data; try { data = JSON.parse(form.get("pack") || ""); } catch { return bad("Ce texte n'est pas un JSON valide."); }
+      if (!Array.isArray(data) || !data.length || data.length > 20) return bad("Le texte doit être une liste de 1 à 20 lettres.");
+      const okStr = (v, m) => typeof v === "string" && v.length > 0 && v.length <= m, clean = [];
+      for (const q of data) {
+        if (!q || typeof q !== "object" || typeof q.id !== "string" || !/^[a-z0-9_]{1,30}$/.test(q.id) || !q.t || typeof q.t !== "object" || !okStr(q.body, 8000)) return bad("Une lettre n'a pas la bonne forme (id, t, body).");
+        const t = {}; for (const l of ["fr", "en", "ar"]) { if (!okStr(q.t[l], 200)) return bad("Le titre « " + l + " » d'une lettre manque."); t[l] = q.t[l]; }
+        clean.push({ id: q.id, t, body: q.body });
+      }
+      await env.KV.put("pack", JSON.stringify(clean));
+      return adminPage("<h1>Enregistré</h1><p>" + clean.length + " lettres : " + clean.map((c) => c.id).join(", ") + ".</p>", 200);
     }
 
     /* ---- déblocage ---- */
@@ -236,7 +272,8 @@ const handler = {
       const tok = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
       if (!(await checkToken(env, tok, "pack"))) return out({ ok: false, error: "auth" }, 401);
       let pack = null; try { pack = env.KV ? await env.KV.get("pack", "json") : null; } catch {}
-      return out({ ok: true, pack: Array.isArray(pack) && pack.length ? pack : PACK }, 200);
+      if (!Array.isArray(pack) || !pack.length) return out({ ok: false, error: "pack_unavailable" }, 503);   /* lettres à enregistrer par /admin/pack */
+      return out({ ok: true, pack }, 200);
     }
 
     /* ---- lettre de motivation sur mesure (IA) ---- */
