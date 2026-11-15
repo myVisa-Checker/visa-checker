@@ -22,7 +22,7 @@ Les deux Workers historiques sont versionnés ici. Ils ne sont pas déployés pa
 
 | Fichier | Worker | Rôle | KV |
 |---|---|---|---|
-| `visa-proxy-worker.js` | `visa-proxy` | Demandes agences, codes et jetons du pack recours, lettre IA, analyseur de refus, liens de confirmation | `KV` |
+| `visa-proxy-worker.js` | `visa-proxy` | Demandes agences, codes et jetons du pack recours, lettre IA, analyseur de refus, liens de confirmation, API d'éligibilité `/v1/rules` et `/v1/check` (copie de `visa-rules-worker.js`) | `KV` |
 | `visa-chat-worker.js` | `visa-chat` | Assistants Joury et Aicha, entraînement à l'entretien, formulaire partenaires | `USAGE` |
 
 Variables/secrets utilisés par ces Workers historiques :

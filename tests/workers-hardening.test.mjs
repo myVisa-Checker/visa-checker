@@ -96,6 +96,26 @@ for (const raw of ["null", "[]", "42"]) {
   assert.equal(b.pack[0].body, "kv");
 }
 
+/* ---------------- API d'éligibilité intégrée au proxy = visa-rules ---------------- */
+{
+  const rules = await load("visa-rules-worker.js"), env = penv();
+  const A = await (await call(proxy, env, "/v1/rules", { method: "GET" })).json();
+  const B = await (await rules.fetch(new Request("https://r.test/v1/rules", { headers: { Origin: ORIGIN } }), { ALLOWED_ORIGIN: ORIGIN })).json();
+  assert.deepEqual(A, B, "mêmes règles que visa-rules");
+  const payload = { nationality: "TN", destination: "FR", departureDate: "2027-05-01", returnDate: "2027-05-15", passportIssueDate: "2023-01-10", passportExpiry: "2030-01-10", blankPages: "4" };
+  const pa = await call(proxy, env, "/v1/check", { body: payload });
+  assert.equal(pa.status, 200);
+  const rb = await rules.fetch(new Request("https://r.test/v1/check", { method: "POST", headers: { Origin: ORIGIN, "Content-Type": "application/json" }, body: JSON.stringify(payload) }), { ALLOWED_ORIGIN: ORIGIN });
+  assert.deepEqual(await pa.json(), await rb.json(), "même verdict que visa-rules");
+  // validations : chaîne vide ou texte non numérique = pages vides invalides ; origine étrangère refusée ; mauvaise méthode
+  const bad = await (await call(proxy, env, "/v1/check", { body: { ...payload, blankPages: "" } })).json();
+  assert.ok(bad.issues.includes("blank_pages_missing_or_invalid"));
+  assert.equal((await call(proxy, env, "/v1/check", { body: payload, headers: { Origin: "https://evil.example" } })).status, 403);
+  assert.equal((await call(proxy, env, "/v1/rules", { body: {} })).status, 405);
+  assert.equal((await call(proxy, env, "/v1/check", { raw: "null" })).status, 400);
+  assert.equal((await call(proxy, env, "/v1/check", { raw: "x".repeat(13000) })).status, 413);
+}
+
 /* ---------------- visa-chat ---------------- */
 const chat = await load("visa-chat-worker.js");
 const cenv = (over = {}) => ({ GEMINI_API_KEY: "x", INTERVIEW_CODES: "GOODCODE1", USAGE: kv(), ...over });

@@ -1,6 +1,7 @@
 /* CheckMyVisa : Worker « visa-proxy » (v8)
    Rôle : demandes vers les agences (via Make), codes et jetons du pack recours, lettre de motivation IA,
-   analyseur de lettre de refus IA, liens « Confirmer et payer » / « Modifier » valables 48 h.
+   analyseur de lettre de refus IA, liens « Confirmer et payer » / « Modifier » valables 48 h,
+   et API d'éligibilité (GET /v1/rules, POST /v1/check) utilisée par le contrôle de passeport du site.
    Déploiement : Cloudflare > Workers > visa-proxy > Edit code : tout remplacer par ce fichier > Deploy.
    Les liaisons KV et les secrets existants ne changent pas.
 
@@ -98,6 +99,71 @@ function newCode() {
   const A = "ABCDEFGHJKMNPQRSTUVWXYZ23456789", b = crypto.getRandomValues(new Uint8Array(12));
   const s = [...b].map((x) => A[x % A.length]).join("");
   return s.slice(0, 4) + "-" + s.slice(4, 8) + "-" + s.slice(8, 12);
+}
+
+/* ---- API d'éligibilité : copie de visa-rules-worker.js (contrôle indicatif, aucune donnée de passeport n'est conservée) ---- */
+const RL_VERSION = "2026-11-11";
+const RL_COUNTRIES = {
+  TN: { name: "Tunisie", passportName: "Tunisian" },
+  MA: { name: "Maroc", passportName: "Moroccan" },
+  DZ: { name: "Algérie", passportName: "Algerian" }
+};
+const RL_DESTINATIONS = {
+  SCHENGEN: {
+    name: "Espace Schengen",
+    rules: { TN: "visa_required", MA: "visa_required", DZ: "visa_required" },
+    official: "https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/visa-policy_en",
+    passport: { minValidityAfterExitDays: 90, maxIssueAgeYears: 10, blankPages: 2 },
+    note: "Visa de court séjour généralement requis pour ces nationalités. Vérifier les règles du pays principal de destination."
+  },
+  FR: {
+    name: "France",
+    rules: { TN: "visa_required", MA: "visa_required", DZ: "visa_required" },
+    official: "https://france-visas.gouv.fr/",
+    passport: { minValidityAfterExitDays: 90, maxIssueAgeYears: 10, blankPages: 2 },
+    note: "Règles Schengen pour un court séjour. Le type de visa et la procédure dépendent du motif."
+  }
+};
+function rlDate(value) {
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const d = new Date(value + "T00:00:00.000Z");
+  return Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== value ? null : d;
+}
+function rlAddDays(date, days) { const d = new Date(date); d.setUTCDate(d.getUTCDate() + days); return d; }
+function rlAddYears(date, years) { const d = new Date(date); d.setUTCFullYear(d.getUTCFullYear() + years); return d; }
+function rlCheck(payload) {
+  const nationality = String(payload?.nationality || "").toUpperCase();
+  const destination = String(payload?.destination || "").toUpperCase();
+  if (!RL_COUNTRIES[nationality]) return { error: "unsupported_nationality", supported: Object.keys(RL_COUNTRIES) };
+  if (!RL_DESTINATIONS[destination]) return { error: "destination_not_in_curated_dataset", status: "unknown", officialSources: ["https://www.iatatravelcentre.com/", "https://www.mfa.gov.tn/"] };
+  const rule = RL_DESTINATIONS[destination], requirement = rule.rules[nationality] || "unknown";
+  const departure = rlDate(payload.departureDate);
+  const returnDate = rlDate(payload.returnDate);
+  const passportExpiry = rlDate(payload.passportExpiry);
+  const passportIssue = rlDate(payload.passportIssueDate);
+  const issues = [];
+  if (!departure || !returnDate || returnDate < departure) issues.push("dates_invalid");
+  if (!passportExpiry) issues.push("passport_expiry_missing_or_invalid");
+  if (!passportIssue) issues.push("passport_issue_date_missing_or_invalid");
+  if (departure && returnDate && passportExpiry) {
+    if (passportExpiry < rlAddDays(returnDate, rule.passport.minValidityAfterExitDays)) issues.push("passport_validity_below_destination_rule");
+  }
+  if (departure && passportIssue && passportIssue < rlAddYears(departure, -rule.passport.maxIssueAgeYears)) issues.push("passport_issued_more_than_10_years_before_travel");
+  const bp = payload.blankPages;   /* nombre ou chaîne de chiffres seulement */
+  const blanks = typeof bp === "number" ? bp : (typeof bp === "string" && /^\d{1,3}$/.test(bp.trim()) ? Number(bp) : NaN);
+  if (!Number.isInteger(blanks) || blanks < 0) issues.push("blank_pages_missing_or_invalid");
+  else if (blanks < rule.passport.blankPages) issues.push("insufficient_blank_pages");
+  return {
+    apiVersion: 1, rulesVersion: RL_VERSION,
+    nationality: { code: nationality, name: RL_COUNTRIES[nationality].name },
+    destination: { code: destination, name: rule.name },
+    visaRequirement: requirement,
+    result: requirement === "visa_required" ? "visa_required" : "unknown",
+    passportAssessment: issues.length ? "review_required" : "basic_checks_passed",
+    passportChecks: { minValidityAfterExitDays: rule.passport.minValidityAfterExitDays, maxIssueAgeYears: rule.passport.maxIssueAgeYears, blankPagesRequired: rule.passport.blankPages },
+    issues, officialSource: rule.official, note: rule.note,
+    disclaimer: "Information indicative et non décisionnelle. Les règles peuvent changer. Vérifiez auprès de l'autorité officielle avant tout achat ou départ."
+  };
 }
 
 const handler = {
@@ -330,6 +396,21 @@ const handler = {
       if (!(await toMake(env, ordPayload(id, updated, to, MSG[to], await ordUrls(env, id))))) return out({ ok: false, error: "upstream" }, 502);
       await env.KV.put("ord:" + id, JSON.stringify(updated), { expirationTtl: ORDER_TTL });
       return out({ ok: true, status: to }, 200);
+    }
+
+    /* ---- API d'éligibilité : GET /v1/rules, POST /v1/check (appelées par le contrôle de passeport du site) ---- */
+    if (path === "/v1/rules" || path === "/v1/check") {
+      if (origin && origin !== ALLOWED) return out({ error: "origin_not_allowed" }, 403);
+      if (path === "/v1/rules") {
+        if (req.method !== "GET") return out({ error: "method" }, 405);
+        return out({ version: RL_VERSION, nationalities: RL_COUNTRIES, destinations: Object.fromEntries(Object.entries(RL_DESTINATIONS).map(([k, v]) => [k, { name: v.name, officialSource: v.official, passport: v.passport, rules: v.rules }])) }, 200);
+      }
+      if (req.method !== "POST") return out({ error: "method" }, 405);
+      let rawCheck; try { rawCheck = await req.text(); } catch { return out({ error: "invalid_json" }, 400); }
+      if (rawCheck.length > 12000) return out({ error: "payload_too_large" }, 413);
+      let bodyCheck; try { bodyCheck = JSON.parse(rawCheck); } catch { return out({ error: "invalid_json" }, 400); }
+      if (!bodyCheck || typeof bodyCheck !== "object" || Array.isArray(bodyCheck)) return out({ error: "invalid_payload" }, 400);
+      return out(rlCheck(bodyCheck), 200);
     }
 
     /* ---- demande vers l'agence ---- */
