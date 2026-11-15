@@ -32,12 +32,20 @@ const order = (over = {}) => ({
 // /admin/code : verrou après 5 clés fausses, même avec la bonne clé ensuite
 {
   const env = penv();
-  for (let i = 0; i < 5; i++) assert.equal((await call(proxy, env, "/admin/code?key=wrong", { method: "GET" })).status, 403);
-  assert.equal((await call(proxy, env, "/admin/code?key=admin-key-123", { method: "GET" })).status, 429, "verrou admin");
+  const H = (k) => ({ "X-Admin-Key": k });
+  for (let i = 0; i < 5; i++) assert.equal((await call(proxy, env, "/admin/code", { method: "GET", headers: H("wrong") })).status, 403);
+  assert.equal((await call(proxy, env, "/admin/code", { method: "GET", headers: H("admin-key-123") })).status, 429, "verrou admin");
   const env2 = penv();
-  const ok = await call(proxy, env2, "/admin/code?key=admin-key-123&n=1", { method: "GET" });
+  const ok = await call(proxy, env2, "/admin/code?n=1", { method: "GET", headers: H("admin-key-123") });
   assert.equal(ok.status, 200);
   assert.equal((await ok.json()).codes.length, 1);
+  // la clé dans l'adresse n'est plus acceptée ; GET sans clé = formulaire, POST du formulaire = codes
+  assert.equal((await call(proxy, env2, "/admin/code?key=admin-key-123&n=1", { method: "GET" })).status, 200, "GET sans en-tête = formulaire");
+  const page = await (await call(proxy, env2, "/admin/code?key=admin-key-123&n=1", { method: "GET" })).text();
+  assert.ok(page.includes("<form") && !page.includes("Codes fabriqués") && !page.includes("\"codes\""), "la clé de l'adresse est ignorée");
+  const form = await call(proxy, env2, "/admin/code", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, raw: "key=admin-key-123&kind=pack&n=2&max=3&days=30" });
+  assert.equal(form.status, 200);
+  assert.ok((await form.text()).includes("Codes fabriqués"));
 }
 // corps « null » ou tableau → 400, jamais 500
 for (const raw of ["null", "[]", "42"]) {
@@ -85,7 +93,7 @@ for (const raw of ["null", "[]", "42"]) {
 {
   const env = penv();
   const unlock = async () => {
-    const code = (await (await call(proxy, env, "/admin/code?key=admin-key-123&n=1", { method: "GET" })).json()).codes[0];
+    const code = (await (await call(proxy, env, "/admin/code?n=1", { method: "GET", headers: { "X-Admin-Key": "admin-key-123" } })).json()).codes[0];
     const t = await (await call(proxy, env, "/unlock", { body: { code } })).json(); assert.equal(t.ok, true); return t.token;
   };
   const tok = await unlock(), auth = { Authorization: "Bearer " + tok };

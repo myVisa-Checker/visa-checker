@@ -23,8 +23,8 @@
      GET/POST /admin/pack   formulaire (clé ADMIN_KEY + texte JSON des lettres) : enregistre les lettres dans le KV
      POST /letter      (jeton du pack) génère une lettre sur mesure avec l'IA
      POST /analyze     (jeton du pack) analyse une lettre de refus avec l'IA
-     GET  /admin/code?kind=pack&n=3&max=3&days=90   -> fabrique n codes (affichés une seule fois).
-                       Authentification : en-tête X-Admin-Key (recommandé) ou ?key=ADMIN_KEY (reste dans l'historique : à éviter).
+     /admin/code   -> formulaire (clé ADMIN_KEY) qui fabrique n codes ; GET avec en-tête X-Admin-Key et ?kind=&n=&max=&days= pour un script (affichés une seule fois).
+                       Authentification : formulaire /admin/code (navigateur) ou en-tête X-Admin-Key (script) ; la clé dans l'adresse n'est plus acceptée.
      GET  /order?id=&k=       -> la demande du client (page « Confirmer et payer » / « Modifier »)
      POST /order/edit  {id,k,date1,date2} -> modifie les dates (48 h max, jamais le nom) et prévient Make
      POST /order/claim | /order/paid | /order/sent {id,k} -> « J'ai payé » (client), « Paiement reçu » (CheckMyVisa), « Document envoyé » (agence)
@@ -202,20 +202,32 @@ const handler = {
 
     /* ---- fabrication de codes (ouvert dans le navigateur, protégé par ADMIN_KEY) ---- */
     if (path === "/admin/code") {
-      const key = req.headers.get("X-Admin-Key") || url.searchParams.get("key") || "";   /* l'en-tête X-Admin-Key est préférable : une clé dans l'adresse reste dans les journaux */
+      /* La clé n'est plus acceptée dans l'adresse (elle resterait dans l'historique et les journaux) :
+         formulaire (POST) pour le navigateur, en-tête X-Admin-Key pour un script. */
+      let key = req.headers.get("X-Admin-Key") || "", p = url.searchParams;
+      if (req.method === "GET" && !key) {
+        return adminPage('<h1>Fabriquer des codes</h1><form method="post" action="/admin/code"><label>Clé administrateur<input type="password" name="key" autocomplete="off" required></label><label>Type (pack ou advisors)<input name="kind" value="pack"></label><label>Nombre de codes (1 à 20)<input name="n" value="1" inputmode="numeric"></label><label>Utilisations par code (1 à 20)<input name="max" value="3" inputmode="numeric"></label><label>Validité en jours (1 à 365)<input name="days" value="90" inputmode="numeric"></label><button type="submit">Fabriquer</button></form>', 200);
+      }
+      if (req.method === "POST") {
+        let rawForm; try { rawForm = await req.text(); } catch { return adminPage("<p>Lecture impossible.</p>", 400); }
+        if (rawForm.length > 2000) return adminPage("<p>Demande trop longue.</p>", 413);
+        p = new URLSearchParams(rawForm); key = key || p.get("key") || "";
+      } else if (req.method !== "GET") return new Response("Method Not Allowed", { status: 405 });
       const denied = await adminGate(env, req, key);
-      if (denied) return denied;
-      const kind = url.searchParams.get("kind") === "advisors" ? "advisors" : "pack";
-      const n = Math.min(20, Math.max(1, parseInt(url.searchParams.get("n") || "1", 10) || 1));
-      const max = Math.min(20, Math.max(1, parseInt(url.searchParams.get("max") || "3", 10) || 3));
-      const days = Math.min(365, Math.max(1, parseInt(url.searchParams.get("days") || "90", 10) || 90));
+      if (denied) return req.method === "POST" ? adminPage("<p>Clé refusée, ou trop d'essais (attendez 15 minutes).</p>", denied.status) : denied;
+      const kind = p.get("kind") === "advisors" ? "advisors" : "pack";
+      const n = Math.min(20, Math.max(1, parseInt(p.get("n") || "1", 10) || 1));
+      const max = Math.min(20, Math.max(1, parseInt(p.get("max") || "3", 10) || 3));
+      const days = Math.min(365, Math.max(1, parseInt(p.get("days") || "90", 10) || 90));
       const codes = [], exp = Date.now() + days * 864e5;
       for (let i = 0; i < n; i++) {
         const c = newCode();
         await env.KV.put("code:" + (await sha256(env.SECRET + c)), JSON.stringify({ kind, max, uses: 0, exp }), { expirationTtl: days * 86400 + 86400 });
         codes.push(c);
       }
-      return new Response(JSON.stringify({ kind, max_uses: max, valid_days: days, codes }, null, 1), { status: 200, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
+      const result = { kind, max_uses: max, valid_days: days, codes };
+      if (req.method === "POST") return adminPage("<h1>Codes fabriqués</h1><p>Affichés une seule fois : copiez-les maintenant.</p><pre>" + codes.join("\n") + "</pre><p>Type : " + kind + " · " + max + " utilisations · " + days + " jours.</p>", 200);
+      return new Response(JSON.stringify(result, null, 1), { status: 200, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
     }
 
     /* ---- enregistrement des lettres du pack dans le KV (formulaire, protégé par ADMIN_KEY) ---- */
