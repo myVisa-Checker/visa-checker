@@ -469,8 +469,8 @@ function ordEditView(msg){
   var L=OV.L,X=OVX[L],R=RT[L]||RT.fr,od=OV.od,hot=od.svc==="hotel",sh=function(x){return String(x).replace(/\s*\(.*?\)/g,"")};
   if(!od.canEdit)return ordShell(L,'<h1>'+X.editT+'</h1><p class="n48" role="alert">'+X.expired+'</p>'+ordRecap(L,od)+'<button type="button" class="pay wide" data-ovnew>'+X.newReq+'</button>');
   var h='<h1>'+X.editT+'</h1><p class="rf-sub">'+X.left(od.hoursLeft)+'</p>'+ordRecap(L,od)+'<p class="ag-note">'+X.locked+'</p>'+n48(L)
-   +'<div class="f-row"><div class="field"><label class="q-label" for="ov-d1">'+sh(hot?R.d1h:R.d1f)+'</label><input class="sel" id="ov-d1" type="date" min="'+today()+'" value="'+esc(od.d1)+'"></div>'
-   +(od.d2?'<div class="field"><label class="q-label" for="ov-d2">'+sh(hot?R.d2h:R.d2f)+'</label><input class="sel" id="ov-d2" type="date" min="'+today()+'" value="'+esc(od.d2)+'"></div>':'')+'</div>'
+   +'<div class="f-row"><div class="field"><label class="q-label" for="ov-d1">'+sh(hot?R.d1h:R.d1f)+'</label><input class="sel" id="ov-d1" type="date" min="'+today()+'" value="'+escA(od.d1)+'"></div>'
+   +(od.d2?'<div class="field"><label class="q-label" for="ov-d2">'+sh(hot?R.d2h:R.d2f)+'</label><input class="sel" id="ov-d2" type="date" min="'+today()+'" value="'+escA(od.d2)+'"></div>':'')+'</div>'
    +'<span class="fe" id="ov-err" role="alert">'+(msg||"")+'</span><button type="button" class="pay wide" data-ovsave>'+X.save+'</button>'
    +'<button type="button" class="reset wide" data-ovpay>'+X.goPay+'</button>';
   ordShell(L,h);
@@ -1692,7 +1692,7 @@ function advMsg(){var t=UI[S.lang];return "CheckMyVisa : "+t.advSubject+"\n"+t.a
 function renderAgency(t){
   var L=S.lang,list=allAdvisors();
   var h='<h2>'+t.agTitle+'</h2><p class="ag-sub">'+t.agSub+'</p>';
-  h+='<div class="q"><label class="q-label" for="refcase">'+t.caseLabel+'</label><textarea class="sel" id="refcase" rows="3" maxlength="300" placeholder="'+esc(t.casePh)+'">'+esc(S.refus||"")+'</textarea><span class="i-note">'+t.caseHint+'</span></div>';
+  h+='<div class="q"><label class="q-label" for="refcase">'+t.caseLabel+'</label><textarea class="sel" id="refcase" rows="3" maxlength="300" placeholder="'+escA(t.casePh)+'">'+esc(S.refus||"")+'</textarea><span class="i-note">'+t.caseHint+'</span></div>';
   if(!list.length){h+='<p class="ag-none">'+t.agNone+'</p>'}
   else if(S.paid){
     list.forEach(function(p){
@@ -2678,8 +2678,8 @@ function visaEligibilityHtml(){
  var h='<section class="group vc-eligibility" aria-labelledby="vc-eligibility-title"><div class="g-head"><h2 id="vc-eligibility-title">'+L.title+'</h2><span class="evtag">'+(VISA_RULES_STATE==="ready"?"API":"")+'</span></div><p class="ag-sub">'+L.sub+'</p><p class="i-note" role="status">'+rulesMsg+'</p>';
  h+='<div class="f-row"><div class="field"><label class="q-label" for="vc-el-nat">'+L.nat+'</label><select class="sel" id="vc-el-nat" data-vc-field="nationality"><option value="tn"'+(nat==="tn"?" selected":"")+'>Tunisie</option><option value="ma"'+(nat==="ma"?" selected":"")+'>Maroc</option><option value="dz"'+(nat==="dz"?" selected":"")+'>Algérie</option></select></div><div class="field"><span class="q-label">'+(UI[S.lang].s_dest||"Destination")+'</span><div class="sel" aria-readonly="true">'+esc(nm(cur))+'</div></div></div>';
  var fields=[["departureDate",L.dep],["returnDate",L.ret],["passportIssueDate",L.issue],["passportExpiry",L.expiry]];
- h+='<div class="f-row">'+fields.map(function(x){return '<div class="field"><label class="q-label" for="vc-el-'+x[0]+'">'+x[1]+'</label><input class="sel" type="date" id="vc-el-'+x[0]+'" data-vc-field="'+x[0]+'" value="'+esc(VCEL[x[0]])+'" required></div>'}).join("")+'</div>';
- h+='<div class="field"><label class="q-label" for="vc-el-pages">'+L.pages+'</label><input class="sel" id="vc-el-pages" type="number" min="0" max="100" step="1" data-vc-field="blankPages" value="'+esc(VCEL.blankPages)+'" required></div>';
+ h+='<div class="f-row">'+fields.map(function(x){return '<div class="field"><label class="q-label" for="vc-el-'+x[0]+'">'+x[1]+'</label><input class="sel" type="date" id="vc-el-'+x[0]+'" data-vc-field="'+x[0]+'" value="'+escA(VCEL[x[0]])+'" required></div>'}).join("")+'</div>';
+ h+='<div class="field"><label class="q-label" for="vc-el-pages">'+L.pages+'</label><input class="sel" id="vc-el-pages" type="number" min="0" max="100" step="1" data-vc-field="blankPages" value="'+escA(VCEL.blankPages)+'" required></div>';
  h+='<p class="ag-err" id="vc-el-error" role="alert">'+esc(VCEL.error||"")+'</p><button type="button" class="pay wide" data-vc-check'+(VCEL.busy?" disabled":"")+'>'+(VCEL.busy?L.checking:L.run)+'</button>';
  h+='<div id="vc-el-result" aria-live="polite">'+visaEligibilityResultHtml()+'</div><p class="ag-note">'+L.disclaimer+'</p></section>';
  return h;
@@ -2691,7 +2691,7 @@ function visaEligibilityResultHtml(){
  var h='<div class="book"><b>'+L.visa+' : '+visaLabel+'</b><p>'+esc(r.destination&&r.destination.name||"")+' · '+esc(r.nationality&&r.nationality.name||"")+'</p><b>'+L.passport+' : '+esc(pa)+'</b>';
  if(Array.isArray(r.issues)&&r.issues.length)h+='<ul class="adv">'+r.issues.map(function(x){return '<li>'+esc(String(x).replace(/_/g," "))+'</li>'}).join("")+'</ul>';
  if(r.note)h+='<p>'+esc(r.note)+'</p>';
- if(r.officialSource&&/^https:\/\//i.test(r.officialSource))h+='<p><a href="'+esc(r.officialSource)+'" target="_blank" rel="noopener noreferrer">'+L.source+' ↗</a></p>';
+ if(r.officialSource&&/^https:\/\//i.test(r.officialSource))h+='<p><a href="'+escA(r.officialSource)+'" target="_blank" rel="noopener noreferrer">'+L.source+' ↗</a></p>';
  h+='<p class="ag-note">'+esc(r.disclaimer||L.disclaimer)+'</p></div>';return h;
 }
 function loadVisaEligibilityRules(){
