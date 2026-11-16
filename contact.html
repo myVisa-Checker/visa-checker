@@ -19,6 +19,9 @@
 <link rel="stylesheet" href="./nav.css">
 <link rel="stylesheet" href="./site.css">
 <link rel="stylesheet" href="./brand.css">
+<script src="./site-i18n.js"></script>
+<script src="./i18n/common.js"></script>
+<script src="./i18n/contact.js"></script>
 </head>
 <body>
 
@@ -81,7 +84,7 @@
       <small id="cf-help">Merci de ne saisir aucune donnée personnelle sensible telle que votre numéro de passeport.</small>
     </div>
     <label class="cf-check"><input id="cf-rgpd" type="checkbox" required> <span>J'accepte que mes informations soient utilisées uniquement pour répondre à ma demande, conformément à la <a href="./confidentialite.html">Politique de confidentialité</a>.</span></label>
-    <input type="text" id="cf-hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+    <input type="text" id="cf-hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0,0,0,0);pointer-events:none">
     <p class="cf-err" id="cf-err" role="alert" hidden></p>
     <button type="submit" class="cf-btn">Envoyer le message</button>
     <p class="cf-ok" id="cf-ok" role="status" hidden></p>

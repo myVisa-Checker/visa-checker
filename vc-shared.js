@@ -46,6 +46,10 @@
   function detectLang() {
     var s = LS.get('vc_lang');
     if (s && LANGS[s]) return s;
+    try {
+      var raw = LS.get('dossier-schengen-v2'), o = raw ? JSON.parse(raw) : null;
+      if (o && o.d && LANGS[o.d.lang]) return o.d.lang;
+    } catch (e) { /* ignore */ }
     var n = String(navigator.language || 'fr').slice(0, 2).toLowerCase();
     return LANGS[n] ? n : 'fr';
   }
@@ -276,6 +280,10 @@
   VC.setLang = function (l) {
     if (!LANGS[l]) return;
     VC.lang = l; LS.set('vc_lang', l);
+    try {
+      var raw = LS.get('dossier-schengen-v2'), o = raw ? JSON.parse(raw) : null;
+      if (o && o.d) { o.d.lang = l; LS.set('dossier-schengen-v2', JSON.stringify(o)); }
+    } catch (e) { /* ignore */ }
     applyLangAttrs(); renderShell(); VC.apply(d);
     d.dispatchEvent(new CustomEvent('vc:lang'));
   };

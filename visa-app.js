@@ -379,7 +379,7 @@ function loadState(){
 (function(){var o=loadState();if(o){for(var k in o)S[k]=o[k]}})();
 if(!UI[S.lang])S.lang="fr";
 (function(){try{var q=new URLSearchParams(location.search);if(q.has("accueil")){S.step=0;S.back=0;save();q.delete("accueil");var qs=q.toString();history.replaceState(null,"",location.pathname+(qs?"?"+qs:"")+location.hash)}}catch(e){}})();
-function save(){try{localStorage.setItem(KEY,JSON.stringify({v:SCHEMA_V,t:Date.now(),d:S}))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({v:SCHEMA_V,t:Date.now(),d:S}));localStorage.setItem("vc_lang",S.lang)}catch(e){}}
 save(); /* écrit tout de suite l'état migré (l'ancienne clé a été supprimée) */
 /* Effacement complet des données locales (bouton « tout effacer » à brancher si besoin). */
 function wipeLocalData(){try{localStorage.removeItem(KEY);localStorage.removeItem(CORRUPT_KEY);LEGACY_KEYS.forEach(function(k){localStorage.removeItem(k)})}catch(e){}S=sanitizeState(null)}
@@ -2734,7 +2734,7 @@ function render(){
   if(S.step===7&&!evFind(S.evc))S.step=6;if(S.step>13||S.step<0)S.step=0;if(S.step>=8&&S.step<=10&&!S.need)S.step=0;if(S.step>=9&&S.step<=10&&!findAgent(S.agent))S.step=8;if(S.step===10&&!RQ.done)S.step=9;
   var st=S.step,e=eff();
   document.documentElement.lang=S.lang;
-  document.documentElement.dir=S.lang==="ar"?"rtl":"ltr";
+  document.documentElement.dir=S.lang==="ar"?"rtl":"ltr";renderChrome();
   setLogo(st>=8&&st<=10?(S.need==="flight"?"plane":S.need==="hotel"?"bed":"check"):"check");$("stamp").hidden=true;
   if(st===0){$("h1").innerHTML=t.sloganA+'<span class="acc">'+t.sloganB+'</span>'}else{$("h1").textContent=[0,t.modeTitle,t.destTitle,t.pTitle,t.dTitle,S.mode==="appeal"?t.apTitle:t.hTitle,EVT[S.lang].listTitle,evTitle(),rq(8),rq(9),rq(10),TLS[S.lang].t11,TLS[S.lang].t12,TLS[S.lang].t13][st]}
   $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10),TLS[S.lang].s11,TLS[S.lang].s12,TLS[S.lang].s13][st];document.body.dataset.step=st;
@@ -2893,6 +2893,19 @@ ar:{m:"الإشعار القانوني",c:"الخصوصية",x:"إغلاق",d:"�
  ["حقوقك","يمكنك طلب الاطلاع على بياناتك أو تصحيحها أو حذفها أو الاعتراض على معالجتها بمراسلتنا (انظر البريد في الإشعار القانوني). في تونس تنظّم هذه الحقوق القانون الأساسي عدد 63 لسنة 2004 المؤرخ في 27 جويلية 2004، ويمكنك أيضًا اللجوء إلى الهيئة الوطنية لحماية المعطيات الشخصية (INPDP)."]]}
 };
 var HOMEL={fr:"Accueil",en:"Home",ar:"الرئيسية"};
+/* Barre du haut, pied de page et libellés fixes de index.html : suivent la langue choisie. */
+var CHROME={
+ fr:{nav:"Navigation principale",top:"Haut de page",bpn:"Bons plans",trans:"Traducteurs assermentés",l:{"./?accueil=1":"Accueil","./partenaires.html":"Partenaires","./guide-visa.html":"Guide","./a-propos.html":"À propos","./faq.html":"FAQ","./contact.html":"Contact","./confidentialite.html":"Confidentialité","./conditions.html":"Conditions d'utilisation"}},
+ en:{nav:"Main navigation",top:"Back to top",bpn:"Deals",trans:"Sworn translators",l:{"./?accueil=1":"Home","./partenaires.html":"Partners","./guide-visa.html":"Guide","./a-propos.html":"About","./faq.html":"FAQ","./contact.html":"Contact","./confidentialite.html":"Privacy","./conditions.html":"Terms of use"}},
+ ar:{nav:"التنقل الرئيسي",top:"أعلى الصفحة",bpn:"عروض وتخفيضات",trans:"المترجمون المحلّفون",l:{"./?accueil=1":"الرئيسية","./partenaires.html":"الشركاء","./guide-visa.html":"الدليل","./a-propos.html":"من نحن","./faq.html":"الأسئلة الشائعة","./contact.html":"اتصل بنا","./confidentialite.html":"الخصوصية","./conditions.html":"شروط الاستخدام"}}
+};
+function renderChrome(){
+  var c=CHROME[S.lang]||CHROME.fr;
+  var sn=document.querySelector(".sitenav");if(sn)sn.setAttribute("aria-label",c.nav);
+  Array.prototype.forEach.call(document.querySelectorAll(".sitenav li a, footer .links a[href]"),function(a){var t=c.l[a.getAttribute("href")];if(t)a.textContent=t});
+  var tt=$("totop");if(tt){tt.setAttribute("aria-label",c.top);tt.title=c.top}
+  if($("bpn"))$("bpn").setAttribute("aria-label",c.bpn);if($("trans"))$("trans").setAttribute("aria-label",c.trans);
+}
 document.addEventListener("click",function(e){var h=e.target.closest&&e.target.closest("#homeBtn, .sitenav a.sn-logo, .sitenav a[href=\"./\"], .sitenav a[href=\"./?accueil=1\"]");if(h){if(h.tagName==="A")e.preventDefault();var ov=$("ordv");if(ov&&ov.parentNode)ordClose();S.step=0;S.back=0;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}}});
 function L(a){return a.filter(Boolean).join("<br>")}
 var lgOpener=null,lgIsOpen=false;
