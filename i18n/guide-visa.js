@@ -20,10 +20,6 @@ SI.add({
   "Whether you are preparing a trip to Europe, North America, Asia, the Middle East or Oceania, consular authorities around the world assess every visa application according to the same basic logic: consistency, solvency and the guarantee of return.",
   "سواء كنت تُعدّ لرحلة إلى أوروبا أو أمريكا الشمالية أو آسيا أو الشرق الأوسط أو أوقيانوسيا، فإن السلطات القنصلية في أنحاء العالم تقيّم كل طلب تأشيرة وفق منطق أساسي واحد: الاتساق، والملاءة المالية، وضمان العودة."
  ],
- "Pourtant, des milliers de demandes sont rejetées chaque semaine à cause d'erreurs évitables, de justificatifs mal alignés ou d'une mauvaise compréhension des attentes administratives. Voici la méthode universelle en 7 étapes pour bâtir un dossier solide, quelle que soit votre nationalité ou votre destination.": [
-  "Yet thousands of applications are rejected every week because of avoidable mistakes, misaligned supporting documents or a poor understanding of administrative expectations. Here is the universal 7-step method for building a strong application, whatever your nationality or destination.",
-  "ومع ذلك، يُرفض آلاف الطلبات كل أسبوع بسبب أخطاء يمكن تفاديها، أو مستندات داعمة غير متوافقة، أو سوء فهم للمتطلبات الإدارية. إليك الطريقة الشاملة في 7 خطوات لبناء ملف متين، أياً كانت جنسيتك أو وجهتك."
- ],
  "Sommaire": [
   "Contents",
   "المحتويات"
@@ -67,18 +63,6 @@ SI.add({
  "Avant même de rassembler vos justificatifs financiers ou professionnels, vérifiez l'état matériel et administratif de votre document de voyage :": [
   "Before even gathering your financial or professional supporting documents, check the physical and administrative condition of your travel document:",
   "قبل أن تجمع مستنداتك المالية أو المهنية، تحقق من الحالة المادية والإدارية لوثيقة سفرك:"
- ],
- "Validité résiduelle : la quasi-totalité des pays exigent que votre passeport reste valable entre 3 et 6 mois après la date prévue de retour.": [
-  "Remaining validity: almost all countries require your passport to remain valid for 3 to 6 months after your planned return date.",
-  "مدة الصلاحية المتبقية: تشترط جميع الدول تقريباً أن يظل جواز سفرك صالحاً لمدة تتراوح بين 3 و6 أشهر بعد تاريخ العودة المقرر."
- ],
- "Pages vierges : assurez-vous de disposer d'au moins 2 pages vierges consécutives pour l'apposition de la vignette visa et des tampons d'entrée/sortie.": [
-  "Blank pages: make sure you have at least 2 consecutive blank pages for the visa sticker and the entry/exit stamps.",
-  "الصفحات الفارغة: تأكد من وجود صفحتين فارغتين متتاليتين على الأقل لوضع ملصق التأشيرة وأختام الدخول والخروج."
- ],
- "Délai d'anticipation : déposez votre dossier ni trop tôt ni trop tard. La fenêtre idéale se situe généralement entre 4 semaines et 3 mois avant le départ (la plupart des consulats acceptent les demandes jusqu'à 6 mois à l'avance).": [
-  "Lead time: submit your application neither too early nor too late. The ideal window is generally between 4 weeks and 3 months before departure (most consulates accept applications up to 6 months in advance).",
-  "مدة التقديم المسبق: لا تقدّم ملفك مبكراً جداً ولا متأخراً جداً. تتراوح الفترة المثلى عادةً بين 4 أسابيع و3 أشهر قبل المغادرة (تقبل معظم القنصليات الطلبات قبل ما يصل إلى 6 أشهر)."
  ],
  "2. L'alignement parfait entre le motif du voyage et les preuves": [
   "2. Perfectly aligning the purpose of travel with the evidence",
@@ -155,10 +139,6 @@ SI.add({
  "Elle doit couvrir l'ensemble de la zone géographique visitée (et non un seul pays si vous faites un circuit multi-destinations).": [
   "It must cover the entire geographical area visited (and not just one country if you are doing a multi-destination trip).",
   "يجب أن يغطي كامل المنطقة الجغرافية التي ستزورها (وليس بلداً واحداً فقط إذا كانت رحلتك متعددة الوجهات)."
- ],
- "Le plafond de couverture doit respecter le minimum exigé par le consulat (souvent fixé à l'équivalent de 30 000 € ou 50 000 USD minimum).": [
-  "The coverage limit must meet the minimum required by the consulate (often set at the equivalent of €30,000 or USD 50,000 minimum).",
-  "يجب أن يستوفي سقف التغطية الحد الأدنى الذي تشترطه القنصلية (وغالباً ما يُحدَّد بما يعادل 30 000 يورو أو 50 000 دولار أمريكي كحد أدنى)."
  ],
  "Les dates de début et de fin de police doivent englober l'intégralité de votre présence à l'étranger, décalage horaire inclus.": [
   "The policy start and end dates must cover your entire time abroad, time difference included.",
@@ -275,5 +255,29 @@ SI.add({
  "Avertissement : ce guide est fourni à titre informatif et pédagogique par CheckMyVisa. Les exigences consulaires variant selon chaque pays et évoluant régulièrement, veillez toujours à vérifier la liste officielle publiée par l'ambassade, le consulat ou le portail gouvernemental de votre destination avant de déposer votre demande.": [
   "Disclaimer: this guide is provided for informational and educational purposes by CheckMyVisa. Because consular requirements vary by country and change regularly, always check the official list published by the embassy, consulate or government portal of your destination before submitting your application.",
   "تنبيه: يُقدَّم هذا الدليل لأغراض إعلامية وتعليمية من CheckMyVisa. ولأن المتطلبات القنصلية تختلف من بلد إلى آخر وتتغير باستمرار، احرص دائماً على التحقق من القائمة الرسمية التي تنشرها السفارة أو القنصلية أو البوابة الحكومية لوجهتك قبل إيداع طلبك."
+ ],
+ "Pourtant, de nombreuses demandes sont refusées pour des raisons évitables : justificatifs incomplets, informations incohérentes ou mauvaise compréhension des attentes de l'administration. Voici la méthode universelle en 7 étapes pour bâtir un dossier solide, quelle que soit votre nationalité ou votre destination.": [
+  "Yet many applications are refused for avoidable reasons: incomplete supporting documents, inconsistent information or a poor understanding of what the administration expects. Here is the universal 7-step method for building a strong application, whatever your nationality or destination.",
+  "ومع ذلك، تُرفض طلبات كثيرة لأسباب يمكن تفاديها: مستندات داعمة ناقصة، أو معلومات غير متسقة، أو سوء فهم لما تتوقعه الإدارة. إليك الطريقة الشاملة في 7 خطوات لبناء ملف متين، أياً كانت جنسيتك أو وجهتك."
+ ],
+ "Validité résiduelle : la règle dépend de la destination. Pour l'espace Schengen, le passeport doit rester valable au moins 3 mois après la date prévue de sortie et avoir été délivré dans les 10 dernières années ; d'autres pays exigent 6 mois. Vérifiez la règle de votre destination.": [
+  "Remaining validity: the rule depends on the destination. For the Schengen area, the passport must remain valid for at least 3 months after the planned departure date and have been issued within the last 10 years; other countries require 6 months. Check the rule for your destination.",
+  "مدة الصلاحية المتبقية: تختلف القاعدة حسب الوجهة. ففي فضاء شنغن، يجب أن يبقى الجواز صالحاً 3 أشهر على الأقل بعد تاريخ المغادرة المقرر وأن يكون قد صدر خلال السنوات العشر الأخيرة؛ وتشترط دول أخرى 6 أشهر. تحقّق من قاعدة وجهتك."
+ ],
+ "Pages vierges : la plupart des consulats demandent au moins 2 pages vierges pour la vignette visa et les tampons d'entrée et de sortie. Vérifiez l'exigence de votre destination.": [
+  "Blank pages: most consulates ask for at least 2 blank pages for the visa sticker and the entry and exit stamps. Check the requirement for your destination.",
+  "الصفحات الفارغة: تطلب معظم القنصليات صفحتين فارغتين على الأقل لملصق التأشيرة وأختام الدخول والخروج. تحقّق من متطلبات وجهتك."
+ ],
+ "Délai d'anticipation : déposez votre dossier ni trop tôt ni trop tard. Pour l'espace Schengen, le dépôt est possible au plus tôt 6 mois avant le voyage et, en principe, au plus tard 15 jours calendaires avant ; comme les délais de rendez-vous peuvent être longs, prévoyez large. Les autres destinations ont leurs propres règles.": [
+  "Lead time: submit your application neither too early nor too late. For the Schengen area, you can apply at the earliest 6 months before travel and, in principle, at the latest 15 calendar days before; as appointment waiting times can be long, allow plenty of time. Other destinations have their own rules.",
+  "مدة التقديم المسبق: لا تقدّم ملفك مبكراً جداً ولا متأخراً جداً. بالنسبة إلى فضاء شنغن، يمكن التقديم قبل السفر بـ6 أشهر على أبعد تقدير، وكقاعدة قبل 15 يوماً تقويمياً على الأقل؛ ولأن مواعيد التقديم قد تطول، احسبوا وقتاً كافياً. وللوجهات الأخرى قواعدها الخاصة."
+ ],
+ "Le plafond de couverture doit respecter le minimum exigé par la destination : pour l'espace Schengen, 30 000 € ; les autres destinations fixent leur propre minimum, à vérifier auprès du consulat.": [
+  "The coverage limit must meet the minimum required by the destination: €30,000 for the Schengen area; other destinations set their own minimum, to be checked with the consulate.",
+  "يجب أن يستوفي سقف التغطية الحد الأدنى الذي تشترطه الوجهة: 30 000 يورو لفضاء شنغن؛ وتحدد الوجهات الأخرى حدها الأدنى الخاص، ويجب التحقق منه لدى القنصلية."
+ ],
+ "Sources officielles à consulter avant tout dépôt : France-Visas pour les demandes à destination de la France, et la politique de visa Schengen de la Commission européenne. Pour toute autre destination, consultez le site du consulat ou du ministère des Affaires étrangères concerné. Les règles de ce guide ont été rédigées en novembre 2026 et peuvent évoluer.": [
+  "Official sources to check before any application: France-Visas for applications to France, and the European Commission's Schengen visa policy. For any other destination, consult the website of the relevant consulate or ministry of foreign affairs. The rules in this guide were written in November 2026 and may change.",
+  "مصادر رسمية يجب الرجوع إليها قبل أي تقديم: France-Visas للطلبات الموجهة إلى فرنسا، وسياسة التأشيرات لفضاء شنغن الصادرة عن المفوضية الأوروبية. وبالنسبة إلى أي وجهة أخرى، راجعوا موقع القنصلية أو وزارة الخارجية المعنية. كُتبت قواعد هذا الدليل في نوفمبر 2026 وقد تتغير."
  ]
 });

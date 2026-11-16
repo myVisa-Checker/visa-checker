@@ -128,10 +128,6 @@ SI.add({
   "6. Advertising and links to third-party sites",
   "6. الإعلانات والروابط إلى مواقع الأطراف الثالثة"
  ],
- "Monétisation publicitaire : CheckMyVisa est un service accessible gratuitement dont le fonctionnement est financé par l'affichage d'annonces publicitaires (notamment via Google AdSense). L'utilisateur s'engage à ne pas utiliser de mécanismes frauduleux générant des clics ou impressions artificiels sur les annonces affichées.": [
-  "Advertising monetization: CheckMyVisa is a freely accessible service whose operation is financed by the display of advertisements (notably via Google AdSense). The user undertakes not to use fraudulent mechanisms generating artificial clicks or impressions on the ads displayed.",
-  "التحقيق الإعلاني للإيرادات: CheckMyVisa خدمة متاحة مجانًا يُموَّل تشغيلها من خلال عرض الإعلانات (ولا سيما عبر Google AdSense). ويتعهد المستخدم بعدم استخدام آليات احتيالية تولّد نقرات أو مرات ظهور مصطنعة على الإعلانات المعروضة."
- ],
  "Liens externes : le site propose des liens directs vers des plateformes consulaires et gouvernementales officielles. CheckMyVisa n'exerce aucun contrôle sur la disponibilité, le contenu ou le fonctionnement de ces sites tiers et décline toute responsabilité à leur égard.": [
   "External links: the site offers direct links to official consular and government platforms. CheckMyVisa exercises no control over the availability, content or operation of these third-party sites and disclaims all liability with regard to them.",
   "الروابط الخارجية: يوفّر الموقع روابط مباشرة إلى المنصات القنصلية والحكومية الرسمية. ولا تمارس CheckMyVisa أي رقابة على توفر هذه المواقع التابعة لأطراف ثالثة أو محتواها أو عملها، وتخلي مسؤوليتها كليًا عنها."
@@ -163,5 +159,9 @@ SI.add({
  "Site web : https://checkmyvisa.org": [
   "Website: https://checkmyvisa.org",
   "الموقع الإلكتروني: https://checkmyvisa.org"
+ ],
+ "Monétisation publicitaire : l'accès à CheckMyVisa est gratuit et le site n'affiche actuellement aucune publicité. Nous prévoyons de financer le service par des annonces (notamment via Google AdSense). Si la publicité est activée, l'utilisateur s'engage à ne pas utiliser de mécanismes frauduleux générant des clics ou impressions artificiels sur les annonces affichées.": [
+  "Advertising monetisation: access to CheckMyVisa is free and the site does not currently display any advertising. We plan to fund the service through ads (notably via Google AdSense). If advertising is enabled, the user agrees not to use fraudulent mechanisms generating artificial clicks or impressions on the ads displayed.",
+  "التمويل الإعلاني: الوصول إلى CheckMyVisa مجاني ولا يعرض الموقع حالياً أي إعلانات. ونخطط لتمويل الخدمة عبر الإعلانات (ولا سيما عبر Google AdSense). إذا تم تفعيل الإعلانات، يلتزم المستخدم بعدم استخدام آليات احتيالية تولّد نقرات أو مشاهدات اصطناعية على الإعلانات المعروضة."
  ]
 });

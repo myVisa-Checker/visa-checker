@@ -36,10 +36,6 @@ SI.add({
   "3. Which countries and nationalities does the tool work for?",
   "3. لأي الدول والجنسيات تعمل الأداة؟"
  ],
- "CheckMyVisa s'adresse à tous les voyageurs internationaux, quelle que soit leur nationalité ou leur destination (espace Schengen, Amérique du Nord, Royaume-Uni, Asie, Moyen-Orient, etc.). Nos référentiels documentaires s'adaptent au motif de votre déplacement (tourisme, affaires, visite familiale, études, soins médicaux) et à votre statut professionnel.": [
-  "CheckMyVisa is intended for all international travellers, whatever their nationality or destination (Schengen area, North America, United Kingdom, Asia, Middle East, etc.). Our document requirements adapt to the purpose of your trip (tourism, business, family visit, studies, medical care) and to your professional status.",
-  "يستهدف CheckMyVisa جميع المسافرين الدوليين، أيًّا كانت جنسيتهم أو وجهتهم (فضاء شنغن وأمريكا الشمالية والمملكة المتحدة وآسيا والشرق الأوسط وغيرها). وتتكيّف مراجعنا الخاصة بالمستندات مع غرض سفرك (سياحة، أعمال، زيارة عائلية، دراسة، علاج) ومع وضعك المهني."
- ],
  "4. Comment fonctionne la vérification documentaire par IA ?": [
   "4. How does the AI document check work?",
   "4. كيف يعمل فحص المستندات بالذكاء الاصطناعي؟"
@@ -91,5 +87,9 @@ SI.add({
  "Une autre question ? Contactez-nous.": [
   "Another question? Contact us.",
   "هل لديك سؤال آخر؟ اتصل بنا."
+ ],
+ "CheckMyVisa a vocation à s'adresser aux voyageurs de toutes nationalités. À ce jour, les listes de documents et le contrôle de passeport couvrent les passeports tunisien, marocain et algérien, pour une sélection de destinations d'Europe et d'Amérique du Nord ; d'autres nationalités et destinations sont ajoutées progressivement. Nos référentiels documentaires s'adaptent au motif de votre déplacement (tourisme, affaires, visite familiale, études, soins médicaux) et à votre statut professionnel.": [
+  "CheckMyVisa aims to serve travellers of all nationalities. To date, the document lists and the passport check cover Tunisian, Moroccan and Algerian passports, for a selection of destinations in Europe and North America; other nationalities and destinations are being added gradually. Our document references adapt to the purpose of your trip (tourism, business, family visit, studies, medical care) and to your professional status.",
+  "تهدف CheckMyVisa إلى خدمة المسافرين من جميع الجنسيات. حتى الآن، تغطي قوائم المستندات وفحص جواز السفر جوازات السفر التونسية والمغربية والجزائرية، لمجموعة مختارة من الوجهات في أوروبا وأمريكا الشمالية؛ وتُضاف جنسيات ووجهات أخرى تدريجياً. وتتكيّف مراجعنا الوثائقية مع غرض سفركم (سياحة، أعمال، زيارة عائلية، دراسة، علاج) ومع وضعكم المهني."
  ]
 });

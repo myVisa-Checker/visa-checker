@@ -52,10 +52,6 @@ SI.add({
   "Uploaded documents (OCR / AI Vision analysis): if you submit supporting documents for compliance verification, these files are automatically analyzed by secure artificial intelligence models, solely to assess their administrative consistency.",
   "المستندات المرفوعة (تحليل OCR / رؤية الذكاء الاصطناعي): إذا أرسلتم مستندات داعمة للتحقق من المطابقة، فإن هذه الملفات تُحلَّل تلقائيًا بواسطة نماذج ذكاء اصطناعي آمنة، وذلك حصرًا لتقييم اتساقها الإداري."
  ],
- "Traitement éphémère et non-conservation : les documents et réponses fournis lors d'une session de vérification sont traités de manière temporaire afin de produire votre audit ou votre liste de contrôle. Nous ne stockons pas de manière permanente vos pièces d'identité ou justificatifs financiers sur nos serveurs et nous ne vendons, ne louons ni ne cédons jamais vos données à des tiers.": [
-  "Ephemeral processing and non-retention: the documents and answers provided during a verification session are processed temporarily in order to produce your audit or checklist. We do not permanently store your identity documents or financial supporting documents on our servers, and we never sell, rent or transfer your data to third parties.",
-  "المعالجة المؤقتة وعدم الاحتفاظ: تُعالَج المستندات والإجابات المقدمة أثناء جلسة التحقق بشكل مؤقت من أجل إنتاج التدقيق أو قائمة المراجعة الخاصة بكم. ولا نخزّن بشكل دائم وثائق هويتكم أو مستنداتكم المالية الداعمة على خوادمنا، ولا نبيع بياناتكم ولا نؤجرها ولا نحيلها إلى أطراف ثالثة أبدًا."
- ],
  "Données de contact : votre adresse e-mail et le contenu de votre message, uniquement si vous nous contactez volontairement via notre formulaire de contact ou par courriel (visacheckercontact@gmail.com).": [
   "Contact data: your e-mail address and the content of your message, only if you contact us voluntarily via our contact form or by e-mail (visacheckercontact@gmail.com).",
   "بيانات الاتصال: عنوان بريدكم الإلكتروني ومحتوى رسالتكم، فقط إذا تواصلتم معنا طوعًا عبر نموذج الاتصال أو عبر البريد الإلكتروني (visacheckercontact@gmail.com)."
@@ -63,30 +59,6 @@ SI.add({
  "3. Utilisation des cookies et technologies similaires": [
   "3. Use of cookies and similar technologies",
   "3. استخدام ملفات تعريف الارتباط والتقنيات المشابهة"
- ],
- "CheckMyVisa utilise des cookies (petits fichiers texte enregistrés dans votre navigateur) et le stockage local afin de :": [
-  "CheckMyVisa uses cookies (small text files stored in your browser) and local storage in order to:",
-  "تستخدم CheckMyVisa ملفات تعريف الارتباط (ملفات نصية صغيرة تُحفظ في متصفحكم) والتخزين المحلي من أجل:"
- ],
- "assurer le bon fonctionnement technique du site et de l'application web progressive (PWA), notamment la sauvegarde locale temporaire de votre checklist sur votre propre appareil ;": [
-  "ensure the proper technical operation of the site and of the progressive web app (PWA), notably the temporary local saving of your checklist on your own device;",
-  "ضمان التشغيل التقني السليم للموقع وتطبيق الويب التقدمي (PWA)، ولا سيما الحفظ المحلي المؤقت لقائمة المراجعة الخاصة بكم على جهازكم؛"
- ],
- "mesurer l'audience globale et améliorer l'expérience utilisateur ;": [
-  "measure overall audience and improve the user experience;",
-  "قياس الجمهور الإجمالي وتحسين تجربة المستخدم؛"
- ],
- "diffuser des annonces publicitaires pertinentes via nos partenaires.": [
-  "deliver relevant advertisements via our partners.",
-  "عرض إعلانات ملائمة عبر شركائنا."
- ],
- "4. Publicité et règles Google AdSense": [
-  "4. Advertising and Google AdSense rules",
-  "4. الإعلانات وقواعد Google AdSense"
- ],
- "Ce site utilise Google AdSense, un service de diffusion d'annonces fourni par Google LLC :": [
-  "This site uses Google AdSense, an ad-serving service provided by Google LLC:",
-  "يستخدم هذا الموقع Google AdSense، وهي خدمة لعرض الإعلانات تقدمها Google LLC:"
  ],
  "Cookies tiers et balises web : des fournisseurs tiers, y compris Google, utilisent des cookies pour diffuser des annonces en fonction des visites antérieures des utilisateurs sur CheckMyVisa ou sur d'autres sites web.": [
   "Third-party cookies and web beacons: third-party vendors, including Google, use cookies to serve ads based on users' prior visits to CheckMyVisa or other websites.",
@@ -111,10 +83,6 @@ SI.add({
  "Hébergement et diffusion (CDN) : infrastructure cloud sécurisée pouvant enregistrer des journaux techniques standards (adresse IP anonymisée, type de navigateur, horodatage) strictement nécessaires à la sécurité et à la prévention des abus.": [
   "Hosting and delivery (CDN): secure cloud infrastructure that may record standard technical logs (anonymized IP address, browser type, timestamp) strictly necessary for security and abuse prevention.",
   "الاستضافة والتوزيع (CDN): بنية سحابية آمنة قد تسجّل سجلات تقنية قياسية (عنوان IP مجهول الهوية، ونوع المتصفح، والطابع الزمني) ضرورية بشكل صارم للأمان ومنع إساءة الاستخدام."
- ],
- "Fournisseurs d'API d'intelligence artificielle : les requêtes d'analyse transitent via des protocoles chiffrés (HTTPS/TLS) vers nos partenaires technologiques, soumis à des engagements stricts interdisant l'utilisation des données transmises par API pour l'entraînement de leurs modèles publics.": [
-  "Artificial intelligence API providers: analysis requests pass through encrypted protocols (HTTPS/TLS) to our technology partners, who are subject to strict commitments prohibiting the use of data transmitted via API for training their public models.",
-  "مزودو واجهات برمجة التطبيقات (API) للذكاء الاصطناعي: تمر طلبات التحليل عبر بروتوكولات مشفّرة (HTTPS/TLS) إلى شركائنا التقنيين، الخاضعين لالتزامات صارمة تحظر استخدام البيانات المرسلة عبر API في تدريب نماذجهم العامة."
  ],
  "6. Sécurité et précautions recommandées aux utilisateurs": [
   "6. Security and precautions recommended to users",
@@ -152,10 +120,6 @@ SI.add({
   "Right to rectification and erasure: require the deletion of any exchange or e-mail address kept in our support mailbox.",
   "الحق في التصحيح والمحو: المطالبة بحذف أي مراسلة أو عنوان بريد إلكتروني محفوظ في صندوق بريد الدعم لدينا."
  ],
- "Droit d'opposition et gestion du consentement : refuser ou modifier vos choix concernant les cookies publicitaires et analytiques à tout moment via le bandeau de gestion du consentement du site ou les paramètres de votre navigateur.": [
-  "Right to object and consent management: refuse or change your choices regarding advertising and analytics cookies at any time via the site's consent management banner or your browser settings.",
-  "الحق في الاعتراض وإدارة الموافقة: رفض خياراتكم المتعلقة بملفات تعريف الارتباط الإعلانية والتحليلية أو تغييرها في أي وقت عبر شريط إدارة الموافقة في الموقع أو عبر إعدادات متصفحكم."
- ],
  "9. Liens vers des sites externes": [
   "9. Links to external sites",
   "9. الروابط إلى مواقع خارجية"
@@ -179,5 +143,37 @@ SI.add({
  "Site web : https://checkmyvisa.org": [
   "Website: https://checkmyvisa.org",
   "الموقع الإلكتروني: https://checkmyvisa.org"
+ ],
+ "Traitement éphémère : les documents et réponses fournis lors d'une session de vérification sont transmis, par connexion chiffrée, à notre fournisseur d'intelligence artificielle (Google Gemini) afin de produire votre audit ou votre liste de contrôle. Notre serveur ne les enregistre pas : il ne conserve ni vos pièces d'identité ni vos justificatifs financiers. Le fournisseur d'IA les traite selon ses propres conditions d'utilisation. Nous ne vendons ni ne louons vos données.": [
+  "Ephemeral processing: the documents and answers you provide during a verification session are sent, over an encrypted connection, to our artificial intelligence provider (Google Gemini) to produce your audit or checklist. Our server does not record them: it keeps neither your identity documents nor your financial supporting documents. The AI provider processes them under its own terms of use. We do not sell or rent your data.",
+  "المعالجة المؤقتة: تُرسَل المستندات والإجابات التي تقدمونها خلال جلسة التحقق، عبر اتصال مشفّر، إلى مزوّد الذكاء الاصطناعي لدينا (Google Gemini) لإعداد التدقيق أو قائمة المراجعة الخاصة بكم. لا يسجّلها خادمنا: فهو لا يحتفظ بوثائق الهوية ولا بالمستندات المالية. ويعالجها مزوّد الذكاء الاصطناعي وفق شروط استخدامه الخاصة. نحن لا نبيع بياناتكم ولا نؤجرها."
+ ],
+ "Demandes de documents de voyage : si vous commandez un billet d'avion ou une réservation d'hôtel, nous traitons votre nom, prénom, dates, destination, ville, téléphone, adresse e-mail ou identifiant Telegram et l'agence choisie. Ces informations sont transmises à l'agence concernée par un service d'automatisation (Make) et conservées au plus 30 jours pour suivre votre commande.": [
+  "Travel document requests: if you order a flight ticket or a hotel reservation, we process your last name, first name, dates, destination, city, phone number, email address or Telegram username, and the agency you chose. This information is passed to that agency through an automation service (Make) and kept for at most 30 days to follow your order.",
+  "طلبات وثائق السفر: إذا طلبتم تذكرة طيران أو حجز فندق، فإننا نعالج اللقب والاسم والتواريخ والوجهة والمدينة ورقم الهاتف وعنوان البريد الإلكتروني أو اسم مستخدم تيليغرام والوكالة التي اخترتموها. تُنقل هذه المعلومات إلى الوكالة المعنية عبر خدمة أتمتة (Make) وتُحفظ 30 يوماً كحد أقصى لمتابعة طلبكم."
+ ],
+ "CheckMyVisa utilise le stockage local de votre navigateur pour assurer le fonctionnement technique du site et de l'application web progressive (PWA), notamment la sauvegarde locale temporaire de votre checklist sur votre propre appareil. À ce jour, aucun cookie publicitaire et aucun outil de mesure d'audience ne sont activés. Cette politique sera mise à jour avant toute activation.": [
+  "CheckMyVisa uses your browser's local storage to ensure the technical operation of the site and of the progressive web app (PWA), in particular the temporary local saving of your checklist on your own device. To date, no advertising cookies and no audience measurement tools are enabled. This policy will be updated before any activation.",
+  "تستخدم CheckMyVisa التخزين المحلي في متصفحكم لضمان التشغيل التقني للموقع وللتطبيق الويب التقدمي (PWA)، ولا سيما الحفظ المحلي المؤقت لقائمتكم على جهازكم. حتى الآن، لا تُفعَّل أي ملفات تعريف ارتباط إعلانية ولا أي أداة لقياس الجمهور. ستُحدَّث هذه السياسة قبل أي تفعيل."
+ ],
+ "4. Publicité (prévue) et règles Google AdSense": [
+  "4. Advertising (planned) and Google AdSense rules",
+  "4. الإعلانات (مخطَّط لها) وقواعد Google AdSense"
+ ],
+ "Ce site n'affiche actuellement aucune publicité. Nous prévoyons de demander l'utilisation de Google AdSense, un service de diffusion d'annonces fourni par Google LLC. Si la publicité est activée, et après recueil de votre consentement lorsque la loi l'exige, les règles suivantes s'appliqueront :": [
+  "This site does not currently display any advertising. We plan to apply to use Google AdSense, an ad-serving service provided by Google LLC. If advertising is enabled, and after collecting your consent where the law requires it, the following rules will apply:",
+  "لا يعرض هذا الموقع حالياً أي إعلانات. ونخطط لطلب استخدام Google AdSense، وهي خدمة لعرض الإعلانات تقدمها Google LLC. إذا تم تفعيل الإعلانات، وبعد الحصول على موافقتكم عندما يشترط القانون ذلك، ستُطبَّق القواعد التالية:"
+ ],
+ "Fournisseur d'intelligence artificielle : les requêtes d'analyse transitent par des protocoles chiffrés (HTTPS/TLS) vers Google (Gemini). Le traitement est soumis aux conditions d'utilisation de ce fournisseur, que nous vous invitons à consulter.": [
+  "Artificial intelligence provider: analysis requests travel over encrypted protocols (HTTPS/TLS) to Google (Gemini). Processing is subject to that provider's terms of use, which we invite you to read.",
+  "مزوّد الذكاء الاصطناعي: تنتقل طلبات التحليل عبر بروتوكولات مشفّرة (HTTPS/TLS) إلى Google (Gemini). وتخضع المعالجة لشروط استخدام هذا المزوّد، وندعوكم إلى الاطلاع عليها."
+ ],
+ "Cloudflare et Make : Cloudflare héberge nos fonctions serveur et conserve temporairement les informations de commande ; Make, service d'automatisation, transmet les demandes aux agences que vous choisissez.": [
+  "Cloudflare and Make: Cloudflare hosts our server functions and temporarily keeps order information; Make, an automation service, passes requests on to the agencies you choose.",
+  "Cloudflare وMake: تستضيف Cloudflare وظائف الخادم لدينا وتحتفظ مؤقتاً بمعلومات الطلبات؛ أما Make، وهي خدمة أتمتة، فتنقل الطلبات إلى الوكالات التي تختارونها."
+ ],
+ "Droit d'opposition et gestion du consentement : refuser ou modifier vos choix à tout moment. Avant toute activation de la publicité, un bandeau de gestion du consentement sera mis en place ; vous pouvez aussi régler votre navigateur.": [
+  "Right to object and consent management: refuse or change your choices at any time. Before advertising is enabled, a consent management banner will be put in place; you can also adjust your browser settings.",
+  "حق الاعتراض وإدارة الموافقة: رفض خياراتكم أو تعديلها في أي وقت. قبل تفعيل الإعلانات سيُعتمد شريط لإدارة الموافقة؛ ويمكنكم أيضاً ضبط إعدادات المتصفح."
  ]
 });

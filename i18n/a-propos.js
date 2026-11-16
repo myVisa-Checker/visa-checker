@@ -76,10 +76,6 @@ SI.add({
   "Who is behind CheckMyVisa?",
   "من يقف وراء CheckMyVisa؟"
  ],
- "CheckMyVisa est conçu, développé et maintenu par une équipe indépendante réunissant des spécialistes du tourisme international et des développeurs d'applications web. Forts d'une solide expérience de terrain dans l'accompagnement de voyageurs internationaux et la gestion de déplacements à l'étranger, nous avons créé cette plateforme pour simplifier l'accès à l'information administrative pour tous les candidats au voyage à travers le monde.": [
-  "CheckMyVisa is designed, developed and maintained by an independent team of international tourism specialists and web application developers. With solid field experience in supporting international travellers and managing travel abroad, we created this platform to simplify access to administrative information for all prospective travellers around the world.",
-  "صُمم CheckMyVisa وطُوّر ويُصان على يد فريق مستقل يضم متخصصين في السياحة الدولية ومطوّري تطبيقات الويب. وبخبرة ميدانية راسخة في مرافقة المسافرين الدوليين وإدارة السفر إلى الخارج، أنشأنا هذه المنصة لتبسيط الوصول إلى المعلومات الإدارية لجميع الراغبين في السفر حول العالم."
- ],
  "Nous contacter": [
   "Contact us",
   "اتصل بنا"
@@ -91,5 +87,9 @@ SI.add({
  "Site officiel : https://checkmyvisa.org": [
   "Official website: https://checkmyvisa.org",
   "الموقع الرسمي: https://checkmyvisa.org"
+ ],
+ "CheckMyVisa est un projet indépendant, développé et maintenu avec l'aide d'outils numériques et d'intelligence artificielle. Notre objectif est de simplifier l'accès à l'information administrative pour les voyageurs qui préparent une demande de visa. Nous ne prétendons pas remplacer les sources officielles : vérifiez toujours les exigences auprès du consulat ou du portail officiel concerné.": [
+  "CheckMyVisa is an independent project, developed and maintained with the help of digital tools and artificial intelligence. Our goal is to make administrative information easier to access for travellers preparing a visa application. We do not claim to replace official sources: always check the requirements with the relevant consulate or official portal.",
+  "CheckMyVisa مشروع مستقل، يُطوَّر ويُصان بمساعدة أدوات رقمية وذكاء اصطناعي. هدفنا تسهيل الوصول إلى المعلومات الإدارية للمسافرين الذين يعدّون طلب تأشيرة. لا ندّعي أننا نحلّ محل المصادر الرسمية: تحقّقوا دائماً من المتطلبات لدى القنصلية أو البوابة الرسمية المعنية."
  ]
 });
