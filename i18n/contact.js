@@ -40,9 +40,17 @@ SI.add({
   "Our contact channels",
   "قنوات التواصل"
  ],
- "Support général, questions techniques & partenariats : visacheckercontact@gmail.com": [
-  "General support, technical questions and partnerships: visacheckercontact@gmail.com",
-  "الدعم العام والأسئلة التقنية والشراكات: visacheckercontact@gmail.com"
+ "Support général et questions techniques : support@checkmyvisa.org": [
+  "General support and technical questions: support@checkmyvisa.org",
+  "الدعم العام والأسئلة التقنية: support@checkmyvisa.org"
+ ],
+ "Partenariats : partnership@checkmyvisa.org": [
+  "Partnerships: partnership@checkmyvisa.org",
+  "الشراكات: partnership@checkmyvisa.org"
+ ],
+ "Autres demandes : contact@checkmyvisa.org": [
+  "Other requests: contact@checkmyvisa.org",
+  "طلبات أخرى: contact@checkmyvisa.org"
  ],
  "Site officiel : https://checkmyvisa.org": [
   "Official website: https://checkmyvisa.org",
@@ -138,9 +146,17 @@ SI.add({
  ]
 });
 SI.add({
- "Support général, questions techniques & partenariats : visacheckercontact@gmail.com": [
-  "<strong>General support, technical questions and partnerships:</strong> <a href=\"mailto:visacheckercontact@gmail.com\">visacheckercontact@gmail.com</a>",
-  "<strong>الدعم العام والأسئلة التقنية والشراكات:</strong> <a href=\"mailto:visacheckercontact@gmail.com\">visacheckercontact@gmail.com</a>"
+ "Support général et questions techniques : support@checkmyvisa.org": [
+  "<strong>General support and technical questions:</strong> <a href=\"mailto:support@checkmyvisa.org\">support@checkmyvisa.org</a>",
+  "<strong>الدعم العام والأسئلة التقنية:</strong> <a href=\"mailto:support@checkmyvisa.org\">support@checkmyvisa.org</a>"
+ ],
+ "Partenariats : partnership@checkmyvisa.org": [
+  "<strong>Partnerships:</strong> <a href=\"mailto:partnership@checkmyvisa.org\">partnership@checkmyvisa.org</a>",
+  "<strong>الشراكات:</strong> <a href=\"mailto:partnership@checkmyvisa.org\">partnership@checkmyvisa.org</a>"
+ ],
+ "Autres demandes : contact@checkmyvisa.org": [
+  "<strong>Other requests:</strong> <a href=\"mailto:contact@checkmyvisa.org\">contact@checkmyvisa.org</a>",
+  "<strong>طلبات أخرى:</strong> <a href=\"mailto:contact@checkmyvisa.org\">contact@checkmyvisa.org</a>"
  ],
  "Éditeur du site : Rabeh Tlili, Tunis, Tunisie (voir les Mentions légales).": [
   "<strong>Site publisher:</strong> Rabeh Tlili, Tunis, Tunisia (see the <a href=\"./mentions-legales.html\">Legal notice</a>).",

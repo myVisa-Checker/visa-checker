@@ -40,9 +40,9 @@ SI.add({
   "<strong>Location:</strong> Tunis, Tunisia",
   "<strong>المقر:</strong> تونس العاصمة، تونس"
  ],
- "Contact : visacheckercontact@gmail.com": [
-  "<strong>Contact:</strong> <a href=\"mailto:visacheckercontact@gmail.com\">visacheckercontact@gmail.com</a>",
-  "<strong>التواصل:</strong> <a href=\"mailto:visacheckercontact@gmail.com\">visacheckercontact@gmail.com</a>"
+ "Contact : contact@checkmyvisa.org": [
+  "<strong>Contact:</strong> <a href=\"mailto:contact@checkmyvisa.org\">contact@checkmyvisa.org</a>",
+  "<strong>التواصل:</strong> <a href=\"mailto:contact@checkmyvisa.org\">contact@checkmyvisa.org</a>"
  ],
  "Site : https://checkmyvisa.org": [
   "<strong>Website:</strong> <a href=\"https://checkmyvisa.org\">https://checkmyvisa.org</a>",

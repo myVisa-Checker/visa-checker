@@ -52,9 +52,9 @@ SI.add({
   "Uploaded documents (OCR / AI Vision analysis): if you submit supporting documents for compliance verification, these files are automatically analyzed by secure artificial intelligence models, solely to assess their administrative consistency.",
   "المستندات المرفوعة (تحليل OCR / رؤية الذكاء الاصطناعي): إذا أرسلتم مستندات داعمة للتحقق من المطابقة، فإن هذه الملفات تُحلَّل تلقائيًا بواسطة نماذج ذكاء اصطناعي آمنة، وذلك حصرًا لتقييم اتساقها الإداري."
  ],
- "Données de contact : votre adresse e-mail et le contenu de votre message, uniquement si vous nous contactez volontairement via notre formulaire de contact ou par courriel (visacheckercontact@gmail.com).": [
-  "Contact data: your e-mail address and the content of your message, only if you contact us voluntarily via our contact form or by e-mail (visacheckercontact@gmail.com).",
-  "بيانات الاتصال: عنوان بريدكم الإلكتروني ومحتوى رسالتكم، فقط إذا تواصلتم معنا طوعًا عبر نموذج الاتصال أو عبر البريد الإلكتروني (visacheckercontact@gmail.com)."
+ "Données de contact : votre adresse e-mail et le contenu de votre message, uniquement si vous nous contactez volontairement via notre formulaire de contact ou par courriel (contact@checkmyvisa.org).": [
+  "Contact data: your e-mail address and the content of your message, only if you contact us voluntarily via our contact form or by e-mail (contact@checkmyvisa.org).",
+  "بيانات الاتصال: عنوان بريدكم الإلكتروني ومحتوى رسالتكم، فقط إذا تواصلتم معنا طوعًا عبر نموذج الاتصال أو عبر البريد الإلكتروني (contact@checkmyvisa.org)."
  ],
  "3. Utilisation des cookies et technologies similaires": [
   "3. Use of cookies and similar technologies",

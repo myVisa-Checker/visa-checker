@@ -2,7 +2,7 @@
 
 ## Signaler une vulnérabilité
 
-Écrivez à **visacheckercontact@gmail.com** avec l'objet « Sécurité » et :
+Écrivez à **contact@checkmyvisa.org** avec l'objet « Sécurité » et :
 
 - la page ou le composant concerné (site, Worker, assistant IA) ;
 - les étapes pour reproduire le problème ;

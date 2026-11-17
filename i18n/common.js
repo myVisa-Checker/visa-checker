@@ -16,9 +16,9 @@ SI.add({
   "Contact",
   "اتصل بنا"
  ],
- "E-mail : visacheckercontact@gmail.com": [
-  "<strong>Email:</strong> <a href=\"mailto:visacheckercontact@gmail.com\">visacheckercontact@gmail.com</a>",
-  "<strong>البريد الإلكتروني:</strong> <a href=\"mailto:visacheckercontact@gmail.com\">visacheckercontact@gmail.com</a>"
+ "E-mail : contact@checkmyvisa.org": [
+  "<strong>Email:</strong> <a href=\"mailto:contact@checkmyvisa.org\">contact@checkmyvisa.org</a>",
+  "<strong>البريد الإلكتروني:</strong> <a href=\"mailto:contact@checkmyvisa.org\">contact@checkmyvisa.org</a>"
  ],
  "FAQ": [
   "FAQ",

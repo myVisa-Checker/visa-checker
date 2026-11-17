@@ -2,7 +2,7 @@
 (function () {
   var f = document.getElementById("cform");
   if (!f) return;
-  var TO = "visacheckercontact@gmail.com";
+  var TO = "contact@checkmyvisa.org";
   var ENDPOINT = "https://visa-chat.rabehfly.workers.dev/contact";
   function $(id) { return document.getElementById(id); }
   f.addEventListener("submit", function (e) {

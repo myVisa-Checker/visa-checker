@@ -8,7 +8,7 @@
   /* Traduction (partner-i18n.js) : sans lui, le formulaire reste en français. */
   var PF = window.PF || { lang: "fr", t: function (x) { return x; }, f: function (x, a) { for (var i = 0; i < (a || []).length; i++) x = x.split("{" + i + "}").join(a[i]); return x; }, apply: function () {} };
   var ENDPOINT = "https://visa-chat.rabehfly.workers.dev/partner";
-  var TO = "visacheckercontact@gmail.com";
+  var TO = "partnership@checkmyvisa.org";
   var TIMEOUT_MS = 20000;
   var LOGO_MAX_BYTES = 5 * 1024 * 1024;   // fichier choisi
   var LOGO_MAX_CHARS = 190000;            // data URL finale (~140 Ko)
