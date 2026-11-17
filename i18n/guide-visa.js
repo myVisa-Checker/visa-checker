@@ -281,3 +281,41 @@ SI.add({
   "مصادر رسمية يجب الرجوع إليها قبل أي تقديم: France-Visas للطلبات الموجهة إلى فرنسا، وسياسة التأشيرات لفضاء شنغن الصادرة عن المفوضية الأوروبية. وبالنسبة إلى أي وجهة أخرى، راجعوا موقع القنصلية أو وزارة الخارجية المعنية. كُتبت قواعد هذا الدليل في نوفمبر 2026 وقد تتغير."
  ]
 });
+SI.add({
+ "Pour aller plus loin : nos articles": [
+  "Going further: our articles",
+  "للمزيد: مقالاتنا"
+ ],
+ "Ai-je besoin d'un visa ? Vérifier les conditions d'entrée": [
+  "Do I need a visa? Checking entry requirements",
+  "هل أحتاج إلى تأشيرة؟ التحقق من شروط الدخول"
+ ],
+ "La méthode pas à pas pour savoir quelle démarche s'applique à votre nationalité, votre destination et votre motif de voyage.": [
+  "A step-by-step method to find out which procedure applies to your nationality, destination and purpose of travel.",
+  "طريقة خطوة بخطوة لمعرفة الإجراء المناسب لجنسيتك ووجهتك وغرض سفرك."
+ ],
+ "Article": [
+  "Article",
+  "مقال"
+ ],
+ "Lire l'article →": [
+  "Read the article →",
+  "اقرأ المقال ←"
+ ],
+ "Refus de visa : les 8 motifs les plus fréquents": [
+  "Visa refusal: the 8 most common reasons",
+  "رفض التأشيرة: أكثر 8 أسباب شيوعًا"
+ ],
+ "Les raisons pour lesquelles un dossier est refusé, comment les prévenir et que faire après un refus.": [
+  "Why applications get refused, how to prevent it and what to do after a refusal.",
+  "لماذا تُرفض الملفات، وكيف تتجنب ذلك، وماذا تفعل بعد الرفض."
+ ],
+ "Arnaques au visa : 10 signaux d'alerte": [
+  "Visa scams: 10 warning signs",
+  "الاحتيال في التأشيرات: 10 علامات تحذير"
+ ],
+ "Faux sites, visa garanti, rendez-vous vendus : les signaux qui doivent vous alerter et les bons réflexes.": [
+  "Fake websites, guaranteed visas, resold appointments: the warning signs and the right reflexes.",
+  "مواقع مزيفة، تأشيرة مضمونة، مواعيد تُباع: العلامات التي يجب أن تنبهك والتصرفات الصحيحة."
+ ]
+});
