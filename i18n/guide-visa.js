@@ -317,5 +317,29 @@ SI.add({
  "Faux sites, visa garanti, rendez-vous vendus : les signaux qui doivent vous alerter et les bons réflexes.": [
   "Fake websites, guaranteed visas, resold appointments: the warning signs and the right reflexes.",
   "مواقع مزيفة، تأشيرة مضمونة، مواعيد تُباع: العلامات التي يجب أن تنبهك والتصرفات الصحيحة."
+ ],
+ "Prouver ses moyens financiers : relevés, revenus, prise en charge": [
+  "Proving your funds: statements, income, sponsorship",
+  "إثبات الإمكانات المالية: الكشوفات والدخل والتكفل"
+ ],
+ "Comment présenter une situation financière claire et crédible, sans éveiller de soupçons.": [
+  "How to present a clear and credible financial situation without raising suspicion.",
+  "كيف تعرض وضعًا ماليًا واضحًا وموثوقًا دون إثارة الشكوك."
+ ],
+ "Assurance voyage pour un visa : choisir et vérifier son contrat": [
+  "Travel insurance for a visa: choosing and checking your policy",
+  "تأمين السفر للحصول على تأشيرة: اختيار العقد والتحقق منه"
+ ],
+ "Couverture, plafond, zone, dates : ce qu'il faut contrôler avant de déposer.": [
+  "Cover, limit, zone, dates: what to check before you apply.",
+  "التغطية والسقف والنطاق والتواريخ: ما يجب فحصه قبل الإيداع."
+ ],
+ "Entretien consulaire : se préparer et éviter les erreurs": [
+  "Consular interview: how to prepare and avoid mistakes",
+  "المقابلة القنصلية: كيف تستعد وتتجنب الأخطاء"
+ ],
+ "Les questions fréquentes, la bonne façon d'y répondre et les erreurs à éviter.": [
+  "Common questions, how to answer them well and the mistakes to avoid.",
+  "الأسئلة الشائعة وطريقة الإجابة عنها جيدًا والأخطاء الواجب تفاديها."
  ]
 });
