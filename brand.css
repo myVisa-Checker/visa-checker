@@ -231,3 +231,35 @@ h1,h2,h3{letter-spacing:-.025em}
 .vc-aicha-go:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 @media(max-width:520px){.vc-aicha-go{flex-wrap:wrap;gap:10px 12px}.vc-aicha-go-copy{flex:1 1 calc(100% - 90px)}.vc-aicha-go-cta{width:100%;text-align:center}}
 @media(prefers-reduced-motion:reduce){.vc-aicha-go{transition:none}.vc-aicha-go:hover{transform:none}}
+
+/* Mobile : le logo occupe sa propre ligne, les liens de navigation passent en dessous, tous visibles
+   (plus de défilement caché vers la droite). Placé en fin de fichier pour l'emporter sur nav.css et vc.css. */
+@media(max-width:700px){
+  .sitenav{
+    display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:center!important;
+    height:auto!important;min-height:0!important;overflow:visible!important;white-space:normal!important;
+    gap:0!important;padding:8px 10px 4px!important;
+  }
+  .sitenav .sn-logo{flex:0 0 100%;text-align:center;font-size:21px!important;line-height:1.25;margin:0 0 2px;padding:2px 0}
+  .sitenav ul,.sitenav.in-app ul{
+    flex:0 0 100%;width:100%;margin:0!important;padding:0;
+    display:flex;flex-wrap:wrap!important;white-space:normal!important;
+    justify-content:space-around!important;align-items:center;gap:0 4px!important;
+  }
+  .sitenav a{font-size:13.5px!important;padding:6px 4px!important;min-height:38px}
+}
+@media(max-width:340px){
+  .sitenav a{font-size:12.5px!important;padding:6px 2px!important}
+}
+
+/* Page d'accueil (barre « in-app ») : mêmes règles, avec la spécificité des règles de vc.css */
+@media(max-width:700px){
+  .sitenav.in-app{flex-wrap:wrap!important;justify-content:center!important;gap:0!important;height:auto!important;min-height:0!important;padding:8px 10px 4px!important;margin-inline:-16px!important;overflow:visible!important}
+  .sitenav.in-app>.sn-logo{flex:0 0 100%!important;text-align:center;font-size:21px!important;letter-spacing:-.6px!important;margin:0 0 2px}
+  .sitenav.in-app>ul{flex:0 0 100%!important;width:100%!important;min-width:0!important;margin:0!important;flex-wrap:wrap!important;overflow:visible!important;justify-content:space-around!important;gap:0 4px!important;white-space:normal!important}
+  .sitenav.in-app>ul>li{flex:0 0 auto!important}
+  .sitenav.in-app>ul a{font-size:13.5px!important;padding:6px 4px!important}
+}
+@media(max-width:340px){
+  .sitenav.in-app>ul a{font-size:12.5px!important;padding:6px 2px!important}
+}
