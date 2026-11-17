@@ -137,3 +137,17 @@ SI.add({
   "نعم، الوصول إلى أدلتنا وإلى المساعد الأساسي مجاني، ويُموَّل من خلال عرض إعلانات غير مزعجة."
  ]
 });
+SI.add({
+ "Support général, questions techniques & partenariats : visacheckercontact@gmail.com": [
+  "<strong>General support, technical questions and partnerships:</strong> <a href=\"mailto:visacheckercontact@gmail.com\">visacheckercontact@gmail.com</a>",
+  "<strong>الدعم العام والأسئلة التقنية والشراكات:</strong> <a href=\"mailto:visacheckercontact@gmail.com\">visacheckercontact@gmail.com</a>"
+ ],
+ "Éditeur du site : Rabeh Tlili, Tunis, Tunisie (voir les Mentions légales).": [
+  "<strong>Site publisher:</strong> Rabeh Tlili, Tunis, Tunisia (see the <a href=\"./mentions-legales.html\">Legal notice</a>).",
+  "<strong>ناشر الموقع:</strong> Rabeh Tlili، تونس العاصمة، تونس (انظر <a href=\"./mentions-legales.html\">الإشعار القانوني</a>)."
+ ],
+ "Site officiel : https://checkmyvisa.org": [
+  "<strong>Official website:</strong> <a href=\"https://checkmyvisa.org\">https://checkmyvisa.org</a>",
+  "<strong>الموقع الرسمي:</strong> <a href=\"https://checkmyvisa.org\">https://checkmyvisa.org</a>"
+ ]
+});

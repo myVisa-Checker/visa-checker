@@ -17,8 +17,8 @@ SI.add({
   "اتصل بنا"
  ],
  "E-mail : visacheckercontact@gmail.com": [
-  "Email: visacheckercontact@gmail.com",
-  "البريد الإلكتروني: visacheckercontact@gmail.com"
+  "<strong>Email:</strong> <a href=\"mailto:visacheckercontact@gmail.com\">visacheckercontact@gmail.com</a>",
+  "<strong>البريد الإلكتروني:</strong> <a href=\"mailto:visacheckercontact@gmail.com\">visacheckercontact@gmail.com</a>"
  ],
  "FAQ": [
   "FAQ",
@@ -27,6 +27,10 @@ SI.add({
  "Confidentialité": [
   "Privacy",
   "الخصوصية"
+ ],
+ "Mentions légales": [
+  "Legal notice",
+  "إشعار قانوني"
  ],
  "Conditions d'utilisation": [
   "Terms of use",

@@ -93,3 +93,13 @@ SI.add({
   "CheckMyVisa مشروع مستقل، يُطوَّر ويُصان بمساعدة أدوات رقمية وذكاء اصطناعي. هدفنا تسهيل الوصول إلى المعلومات الإدارية للمسافرين الذين يعدّون طلب تأشيرة. لا ندّعي أننا نحلّ محل المصادر الرسمية: تحقّقوا دائماً من المتطلبات لدى القنصلية أو البوابة الرسمية المعنية."
  ]
 });
+SI.add({
+ "Le site est édité par Rabeh Tlili, basé à Tunis, Tunisie. Les coordonnées complètes figurent dans les Mentions légales.": [
+  "The site is published by Rabeh Tlili, based in Tunis, Tunisia. Full details are in the <a href=\"./mentions-legales.html\">Legal notice</a>.",
+  "ينشر الموقع Rabeh Tlili، ومقره تونس العاصمة، تونس. تجدون التفاصيل الكاملة في <a href=\"./mentions-legales.html\">الإشعار القانوني</a>."
+ ],
+ "Site officiel : https://checkmyvisa.org": [
+  "<strong>Official website:</strong> <a href=\"https://checkmyvisa.org\">https://checkmyvisa.org</a>",
+  "<strong>الموقع الرسمي:</strong> <a href=\"https://checkmyvisa.org\">https://checkmyvisa.org</a>"
+ ]
+});
