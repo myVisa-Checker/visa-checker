@@ -28,6 +28,10 @@ SI.add({
   "Privacy",
   "الخصوصية"
  ],
+ "Cookies": [
+  "Cookies",
+  "ملفات تعريف الارتباط"
+ ],
  "Mentions légales": [
   "Legal notice",
   "إشعار قانوني"
