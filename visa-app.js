@@ -794,7 +794,7 @@ var TR_SETS={
   {c:"Agadir",al:["أكادير"],k:"gen",d:"",u:"https://ma.diplomatie.gouv.fr/files/ma/files/Consulat%20Agadir/liste_traducteurs_assermentes_agadir.pdf"}]},
  dz:{tel:"213",cc:"Algérie",data:[],city:{},t:{fr:"Traducteurs assermentés en Algérie",en:"Sworn translators in Algeria",ar:"المترجمون المحلَّفون في الجزائر"},src:{u:"https://dz.diplomatie.gouv.fr/fr/liste-de-notoriete",d:"",l:{fr:"Consulats de France en Algérie",en:"French consulates in Algeria",ar:"قنصليات فرنسا في الجزائر"}},lists:[
   {c:"Alger",al:["algiers","الجزائر"],k:"not",d:"15/10/2026",u:"https://dz.diplomatie.gouv.fr/files/dz/files/Consulat%20Alger/Etat%20Civil/maj-liste-traducteurs-interpretes-le-15-oct-2026.pdf"},
-  {c:"Annaba et Constantine",al:["annaba","عنابة","constantine","قسنطينة"],k:"not",d:"12/04/2026",u:"https://dz.diplomatie.gouv.fr/files/dz/files/Consulat%20Annaba/liste-des-traducteurs-de-la-circonscription-consulaire-annaba-12-04-2026.pdf"}]}
+  {c:"Annaba / Constantine",al:["annaba","عنابة","constantine","قسنطينة"],k:"not",d:"12/04/2026",u:"https://dz.diplomatie.gouv.fr/files/dz/files/Consulat%20Annaba/liste-des-traducteurs-de-la-circonscription-consulaire-annaba-12-04-2026.pdf"}]}
 };
 function trSet(){return TR_SETS[S.origin]||TR_SETS.tn}
 function trListCard(l,L,D){
