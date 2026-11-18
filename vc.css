@@ -1347,3 +1347,10 @@ body{--wrap:1160px;--padx:32px}
 html[lang="fr"] .vc-intro>div[lang="fr"],html[lang="en"] .vc-intro>div[lang="en"],html[lang="ar"] .vc-intro>div[lang="ar"]{display:block}
 body[data-step]:not([data-step="0"]) .vc-intro{display:none}
 body[data-step="0"] .vc-intro{grid-column:1/-1}
+
+/* Bandeau de mise à jour : sur petit écran (ou texte agrandi), les boutons passent sous le texte */
+@media (max-width:520px){
+ .pwa.on{flex-wrap:wrap;row-gap:8px}
+ .pwa .pwa-t{flex:1 1 calc(100% - 64px)}
+ .pwa .pwa-go{flex:1 1 auto}
+}
