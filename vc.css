@@ -1334,3 +1334,16 @@ body{--wrap:1160px;--padx:32px}
  #refus .inc{margin-inline:auto}
  .legend{justify-content:center}
 }
+
+/* Texte d'introduction explorable (accueil uniquement, dans la langue choisie) */
+.vc-intro{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);color:var(--text,inherit);line-height:1.6}
+.vc-intro h2{font-size:1.25rem;margin:0 0 10px}
+.vc-intro h3{font-size:1.05rem;margin:18px 0 8px}
+.vc-intro ul{margin:0;padding-inline-start:20px}
+.vc-intro li{margin:6px 0}
+.vc-intro a{color:var(--accent);text-decoration:underline}
+.vc-intro-note{font-size:.9rem;opacity:.8;margin-top:14px}
+.vc-intro>div[lang]{display:none}
+html[lang="fr"] .vc-intro>div[lang="fr"],html[lang="en"] .vc-intro>div[lang="en"],html[lang="ar"] .vc-intro>div[lang="ar"]{display:block}
+body[data-step]:not([data-step="0"]) .vc-intro{display:none}
+body[data-step="0"] .vc-intro{grid-column:1/-1}
