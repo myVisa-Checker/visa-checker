@@ -110,6 +110,16 @@ function partnerLimited(ip) {
 }
 const pc = (v, max) => String(v == null ? "" : v).replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
 const pcm = (v, max) => String(v == null ? "" : v).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]+/g, " ").replace(/\r\n?/g, "\n").replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim().slice(0, max);
+// Langue demandée par l'interface (fr, en ou ar) : consigne ajoutée aux analyses pour que la réponse soit rédigée dans cette langue.
+const LANG_NAME = { fr: "français", en: "English", ar: "العربية (arabe standard, écriture de droite à gauche)" };
+const langOf = (body) => { const l = String((body && body.lang) || "").toLowerCase(); return LANG_NAME[l] ? l : ""; };
+const langRule = (l) => (l ? "Langue de la réponse : " + LANG_NAME[l] + ". Rédige toute la réponse dans cette langue (titres et explications compris), même si ces consignes sont en français." : "");
+const SCORE_LINES = {
+  fr: ["Score indicatif de conformité : NN/100", "Score : non évaluable"],
+  en: ["Indicative compliance score: NN/100", "Score: not assessable"],
+  ar: ["درجة الامتثال التقديرية: NN/100", "الدرجة: غير قابلة للتقييم"]
+};
+const IV_LABELS = { fr: "Clarté, Précision, Niveau de certitude", en: "Clarity, Accuracy, Confidence level", ar: "الوضوح، الدقة، مستوى الثقة" };
 function pUrl(v) {
   v = pc(v, 300); if (!v) return "";
   try { const u = new URL(v); return /^https?:$/.test(u.protocol) && u.hostname.includes(".") ? u.href.slice(0, 300) : null; } catch { return null; }
@@ -325,6 +335,8 @@ async function handleVisaApi(request, env, out, pathname) {
       "Nombre de documents fournis : " + files.length + ".",
       "La notification de refus est le document de référence : relève chaque motif, code et article exactement comme il apparaît, sans en ajouter.",
       "Formate chaque motif en cinq lignes distinctes : une ligne MOTIF: [texte exact ou résumé fidèle], une ligne EXPLICATION: [sens simple et lien aux preuves], une ligne SEVERITE: [High, Medium ou Low], une ligne PIECES A JOINDRE: [pièces précises et justification], une ligne ARGUMENT A ECRIRE: [argument factuel personnalisé]. Sépare les blocs par une ligne vide. N’invente aucun motif.",
+      "Ces libellés servent à l’interface : écris-les toujours tels quels, en majuscules et en français, quelle que soit la langue de la réponse ; seul le texte qui suit les deux-points est rédigé dans la langue demandée. La valeur de SEVERITE reste High, Medium ou Low. La valeur de ÉVALUATION DU RECOURS reste exactement « À examiner », « À consolider », « Risque élevé » ou « Non évaluable ».",
+      langRule(langOf(body)),
       "Ajoute une ligne initiale « ÉVALUATION DU RECOURS: À examiner / À consolider / Risque élevé » uniquement si les informations permettent une appréciation prudente, puis justifie-la en quelques phrases. Sinon écris « ÉVALUATION DU RECOURS: Non évaluable ».",
       "Propose des preuves pertinentes uniquement selon les faits : relevés bancaires couvrant une période cohérente, preuve de revenus réguliers, attestation employeur et congés, titre de propriété ou bail, preuves d'attaches familiales, invitation ou hébergement documenté. Ce sont des exemples à adapter, jamais des exigences automatiques.",
       "Distingue faits lus, interprétation, contradiction possible et information manquante. Cite le nom du fichier si possible sans reproduire de données sensibles.",
@@ -350,7 +362,8 @@ async function handleVisaApi(request, env, out, pathname) {
       }),
       "Nombre de documents joints : " + files.length + ".",
       "Produis un rapport structuré : documents examinés, faits observés par document, incohérences possibles, pièces manquantes seulement si l'exigence est établie, corrections prioritaires et points à confirmer.",
-      "Commence par « Score indicatif de conformité : NN/100 » uniquement si les pièces fournissent assez d’éléments pour une estimation prudente. Ce score évalue la complétude et la lisibilité apparentes du dossier, jamais la probabilité d’obtenir un visa. Si les éléments sont insuffisants, écris « Score : non évaluable ».",
+      "Commence par « " + SCORE_LINES[langOf(body) || "fr"][0] + " » uniquement si les pièces fournissent assez d’éléments pour une estimation prudente. Ce score évalue la complétude et la lisibilité apparentes du dossier, jamais la probabilité d’obtenir un visa. Si les éléments sont insuffisants, écris « " + SCORE_LINES[langOf(body) || "fr"][1] + " ».",
+      langRule(langOf(body)),
       "Ne répète pas les numéros de passeport ou autres données sensibles. Ne prétends pas certifier l'authenticité ni garantir l'obtention du visa."
     ].join("\n");
     const result = await apiGemini(env, SYSTEM_AICHA_REVIEW, context, files);
@@ -367,6 +380,7 @@ async function handleVisaApi(request, env, out, pathname) {
       "Faits complémentaires communiqués : " + pcm(body.facts || body.additionalFacts, 5000),
       "Identité/adresse fournies : " + pcm(body.identity || body.address, 1000),
       "Langue demandée : " + pc(body.language || "français", 30),
+      langRule(langOf(body)),
       "Documents joints : " + files.length + ".",
       "N'invente aucun fait, texte juridique, délai ou voie de recours. Si une donnée manque, laisse un champ [à compléter]. Distingue les faits des arguments et recommande de vérifier le délai et l'autorité sur la notification officielle. Ne promets aucun résultat."
     ].join("\n");
@@ -395,9 +409,10 @@ async function handleVisaApi(request, env, out, pathname) {
       "Question : " + pcm(body.question, 1000),
       "Réponse du candidat : " + answer,
       "Contexte déclaré : " + pcm(body.context, 1500),
-      "Retourne un feedback concis en trois rubriques explicites : Clarté, Précision, Niveau de certitude. Explique les points solides et les éléments à clarifier, puis propose une reformulation fidèle aux seuls faits fournis. Ne déduis pas la sincérité ou la véracité à partir du style. Ne pose pas la question suivante, elle est gérée par l'interface.",
-      "Ne crée aucune information, ne conseille jamais de mentir ou de cacher un refus."
-    ].join("\n");
+      "Retourne un feedback concis en trois rubriques explicites, avec exactement ces intitulés : " + IV_LABELS[langOf(body) || "fr"] + ". Explique les points solides et les éléments à clarifier, puis propose une reformulation fidèle aux seuls faits fournis. Ne déduis pas la sincérité ou la véracité à partir du style. Ne pose pas la question suivante, elle est gérée par l'interface.",
+      "Ne crée aucune information, ne conseille jamais de mentir ou de cacher un refus.",
+      langRule(langOf(body))
+    ].filter(Boolean).join("\n");
     const result = await apiGemini(env, SYSTEM_INTERVIEW + "\n\nPour cet endpoint, donne uniquement le feedback et la reformulation de la réponse. Ne pose pas la question suivante : elle est gérée par l'interface.", prompt, []);
     if (!result.reply) return out({ error: result.error }, result.status || 502);
     if (env.USAGE) await env.USAGE.put(usageKey, String(used + 1));

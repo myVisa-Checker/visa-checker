@@ -96,8 +96,115 @@
        (sinon un paragraphe français serait collé à droite dans une page arabe). Retirer data-fr-only une fois la page traduite. */
     n = root.querySelectorAll('[data-fr-only]');
     for (i = 0; i < n.length; i++) { n[i].setAttribute('lang', 'fr'); n[i].setAttribute('dir', 'ltr'); }
+    VC.txApply(d.body);
     var pageTitle = VC.t('doc_title');
     if (pageTitle !== 'doc_title') d.title = pageTitle;
+  };
+
+  /* ---------- Dictionnaire FR → EN/AR pour le contenu statique et les messages des scripts ----------
+     Le français est la langue source : le texte français d'un bloc sert de clé.
+     VC.add({ "texte français": ["English", "العربية"] }) enregistre les traductions (fichiers i18n/view-*.js).
+     VC.tx("texte français", {var: valeur}) renvoie le texte dans la langue courante ({var} est remplacé).
+     Un texte sans traduction reste en français. */
+  var DICT = {}, SKIPTX = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, SVG: 1, TEMPLATE: 1, TEXTAREA: 1 }, TXATTRS = ['placeholder', 'aria-label', 'title', 'alt'];
+  function norm(s) { return String(s == null ? '' : s).replace(/[\u2018\u2019]/g, "'").replace(/\s+/g, ' ').trim(); }
+  function lookup(key) {
+    if (VC.lang === 'fr') return null;
+    var e = DICT[norm(key)];
+    return e && e[VC.lang === 'en' ? 0 : 1] ? e[VC.lang === 'en' ? 0 : 1] : null;
+  }
+  VC.add = function (o) { for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) DICT[norm(k)] = o[k]; };
+  VC.tx = function (fr, vars) {
+    var s = lookup(fr); if (s == null) s = fr;
+    if (vars) s = s.replace(/\{(\w+)\}/g, function (m, k) { return vars[k] != null ? vars[k] : m; });
+    return s;
+  };
+  function stripTags(s) { return String(s).replace(/<[^>]*>/g, ''); }
+  function txAttrs(el) {
+    var i, a, st, cur, v;
+    for (i = 0; i < TXATTRS.length; i++) {
+      a = TXATTRS[i];
+      if (!el.hasAttribute(a)) continue;
+      st = el.__vcA && el.__vcA[a]; cur = el.getAttribute(a);
+      if (st && cur !== st.shown) { el.__vcA[a] = st = null; }
+      v = lookup(st ? st.fr : cur);
+      if (v != null) {
+        v = stripTags(v);
+        if (!st) { el.__vcA = el.__vcA || {}; el.__vcA[a] = { fr: cur, shown: v }; }
+        else st.shown = v;
+        el.setAttribute(a, v);
+      } else if (st) { el.setAttribute(a, st.fr); el.__vcA[a] = null; }
+    }
+  }
+  function txText(node) {
+    var st = node.__vcTx, cur = node.nodeValue, m, key, v;
+    if (st && cur !== st.shown) { node.__vcTx = st = null; }
+    if (st) { key = st.key; m = [null, st.lead, '', st.trail]; }
+    else { m = /^(\s*)([\s\S]*?)(\s*)$/.exec(cur); key = norm(m[2]); }
+    if (!key) return;
+    v = lookup(key);
+    if (v != null) {
+      v = m[1] + stripTags(v) + m[3];
+      if (!st) node.__vcTx = { key: key, fr: cur, lead: m[1], trail: m[3], shown: v }; else st.shown = v;
+      node.nodeValue = v;
+    } else if (st) { node.nodeValue = st.fr; node.__vcTx = null; }
+  }
+  /* Un enfant sans texte (point de statut, icône, spinner) serait perdu si on remplaçait tout le bloc : on traduit alors morceau par morceau. */
+  function hasDecor(el) {
+    var i, c;
+    /* Jamais de remplacement en bloc d'un élément qui contient un élément identifié ou interactif (bouton, champ, id) :
+       il serait recréé sans son id ni ses écouteurs. On descend alors jusqu'au texte. */
+    if (el.querySelector('[id],button,input,select,textarea')) return true;
+    for (i = 0; i < el.children.length; i++) {
+      c = el.children[i];
+      if (c.nodeName !== 'BR' && c.nodeName !== 'WBR' && !norm(c.textContent)) return true;
+    }
+    return false;
+  }
+  /* Descend depuis la racine : la traduction du bloc le plus haut qui correspond à une clé l'emporte ; sinon on descend
+     jusqu'aux morceaux de texte. Le français d'origine est conservé pour pouvoir revenir en arrière. */
+  function txWalk(el) {
+    if (el.nodeName === 'TEXTAREA' && !el.hasAttribute('data-no-i18n')) { txAttrs(el); return; } /* le contenu saisi ne se traduit pas, mais le placeholder oui */
+    if (SKIPTX[el.nodeName.toUpperCase()] || el.hasAttribute('data-no-i18n') || el.id === 'vc-header' || el.id === 'vc-bottomnav' || el.id === 'pwa') return;
+    var st = el.__vcTx, key, v, i, c;
+    if (st && el.innerHTML !== st.shown) { el.__vcTx = st = null; }
+    if (st) {
+      v = lookup(st.key);
+      if (v == null) { el.innerHTML = st.fr; el.__vcTx = null; }
+      else if (v !== st.cur) { el.innerHTML = v; st.shown = el.innerHTML; st.cur = v; }
+      return;
+    }
+    txAttrs(el);
+    key = norm(el.textContent);
+    if (key && !hasDecor(el) && (v = lookup(key)) != null) {
+      var fr = el.innerHTML;
+      el.innerHTML = v;
+      el.__vcTx = { key: key, fr: fr, shown: el.innerHTML, cur: v };
+      return;
+    }
+    var kids = Array.prototype.slice.call(el.childNodes);
+    for (i = 0; i < kids.length; i++) {
+      c = kids[i];
+      if (c.nodeType === 1) txWalk(c); else if (c.nodeType === 3) txText(c);
+    }
+  }
+  VC.txApply = function (root) {
+    root = root || d.body;
+    if (!root) return;
+    txWalk(root);
+    var h = d.head;
+    if (h) {
+      var t = d.querySelector('title');
+      if (t) {
+        if (!t.__vcFr) t.__vcFr = t.textContent;
+        var tv = lookup(t.__vcFr); t.textContent = tv != null ? stripTags(tv) : t.__vcFr;
+      }
+      var m = d.querySelector('meta[name="description"]');
+      if (m) {
+        if (!m.__vcFr) m.__vcFr = m.getAttribute('content');
+        var mv = lookup(m.__vcFr); m.setAttribute('content', mv != null ? stripTags(mv) : m.__vcFr);
+      }
+    }
   };
 
   /* ---------- Utilitaires DOM ---------- */
@@ -109,9 +216,10 @@
   };
   VC.badge = function (kind, text) { return VC.el('span', 'vc-badge vc-badge-' + kind, text); };
   VC.fmtSize = function (b) {
-    if (b < 1024) return b + ' o';
-    if (b < 1048576) return Math.round(b / 1024) + ' Ko';
-    return (b / 1048576).toFixed(1).replace('.', ',') + ' Mo';
+    var u = VC.lang === 'en' ? ['B', 'KB', 'MB'] : VC.lang === 'ar' ? ['بايت', 'ك.ب', 'م.ب'] : ['o', 'Ko', 'Mo'];
+    if (b < 1024) return b + ' ' + u[0];
+    if (b < 1048576) return Math.round(b / 1024) + ' ' + u[1];
+    return (b / 1048576).toFixed(1).replace('.', VC.lang === 'fr' ? ',' : '.') + ' ' + u[2];
   };
   VC.toast = function (msg) {
     var t = VC.el('div', 'vc-toast', msg);
@@ -223,7 +331,7 @@
       'no-backend': 'Le service IA n’est pas configuré.',
       'offline': 'Service IA hors ligne (503). Vérifiez votre connexion puis réessayez.'
     };
-    return map[error && error.message] || 'Une erreur est survenue. Vérifiez votre connexion et réessayez.';
+    return VC.tx(map[error && error.message] || 'Une erreur est survenue. Vérifiez votre connexion et réessayez.');
   };
 
   /* ---------- Coquille commune : en-tête + barre mobile ---------- */

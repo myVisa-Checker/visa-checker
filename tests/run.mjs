@@ -12,7 +12,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["visa-app.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "bump-version.mjs"]) {
+for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "bump-version.mjs"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -158,6 +158,17 @@ for (const f of ["view-dossier.html", "view-joury.html", "view-entretien.html", 
   const missing = inline.filter((code) => !csp.includes("'sha256-" + createHash("sha256").update(code, "utf8").digest("base64") + "'"));
   ok("empreintes des scripts inline à jour dans " + f, missing.length === 0, missing.length + " script(s) sans empreinte");
   ok("noindex dans " + f, /name="robots" content="noindex"/.test(h));
+}
+// Pages Aïcha, Joury, Saden : traduites en EN/AR (plus de data-fr-only), scripts externes, dictionnaires complets.
+console.log("Traductions des pages Aïcha, Joury et Saden");
+for (const [f, dic] of [["view-dossier.html", "view-dossier"], ["view-joury.html", "view-joury"], ["view-entretien.html", "view-entretien"]]) {
+  const h = read(f);
+  ok("plus de data-fr-only dans " + f, !/data-fr-only/.test(h));
+  ok("dictionnaires chargés par " + f, h.includes('i18n/view-common.js') && h.includes("i18n/" + dic + ".js"));
+  ok("aucun script inline dans " + f, ![...h.matchAll(/<script>([\s\S]*?)<\/script>/g)].length);
+  const entries = {}; vm.runInNewContext(read("i18n/view-common.js") + "\n" + read("i18n/" + dic + ".js"), { VC: { add: (o) => Object.assign(entries, o) } });
+  const bad = Object.entries(entries).filter(([k, v]) => !Array.isArray(v) || v.length !== 2 || !v[0] || !v[1] || (/[\u0600-\u06FF]/.test(v[0]) && v[0] !== v[1]) || !/[\u0600-\u06FF]/.test(v[1]) && !/^[\w <>"=/\u2190-\u2193.:-]+$/.test(v[1]));
+  ok("dictionnaire " + dic + " : " + Object.keys(entries).length + " entrées EN et AR complètes", bad.length === 0, bad.slice(0, 2).map((e) => e[0]).join(" | "));
 }
 ok("404.html présente", existsSync("404.html"));
 for (const f of ["app.js", "data.js", "style.css", "visa-chat.js", "chat-loader.js", "LISEZMOI.txt", "icon-192.png", "icon-512.png", "maskable-512.png", "apple-touch-icon.png", "icons/radar-rdv.webp"]) ok("fichier hérité absent : " + f, !existsSync(f));
