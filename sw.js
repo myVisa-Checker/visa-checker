@@ -1,6 +1,6 @@
 /* CheckMyVisa – cache limité au shell et aux assets statiques.
    Aucune API, donnée utilisateur ou requête POST n'est mise en cache. */
-const VERSION = "2026.11.18.0506"; /*@version*/
+const VERSION = "2026.11.18.0833"; /*@version*/
 const SHELL = "vc-shell-" + VERSION;
 const PRECACHE = [
   "./",
@@ -38,6 +38,16 @@ const PRECACHE = [
   "guide-reservation-vol-hotel.html",
   "guide-photo-biometrique.html",
   "guide-quand-deposer.html",
+  "guide-lettre-motivation.html",
+  "guide-lettre-invitation.html",
+  "guide-justificatifs-professionnels.html",
+  "guide-visa-etudiant.html",
+  "guide-visite-familiale.html",
+  "guide-visa-affaires.html",
+  "guide-traduction-legalisation.html",
+  "guide-passeport.html",
+  "guide-visa-transit.html",
+  "guide-voyage-enfants.html",
   "a-propos.html",
   "faq.html",
   "contact.html",
@@ -62,6 +72,16 @@ const PRECACHE = [
   "i18n/guide-reservation-vol-hotel.js",
   "i18n/guide-photo-biometrique.js",
   "i18n/guide-quand-deposer.js",
+  "i18n/guide-lettre-motivation.js",
+  "i18n/guide-lettre-invitation.js",
+  "i18n/guide-justificatifs-professionnels.js",
+  "i18n/guide-visa-etudiant.js",
+  "i18n/guide-visite-familiale.js",
+  "i18n/guide-visa-affaires.js",
+  "i18n/guide-traduction-legalisation.js",
+  "i18n/guide-passeport.js",
+  "i18n/guide-visa-transit.js",
+  "i18n/guide-voyage-enfants.js",
   "i18n/contact.js",
   "i18n/mentions-legales.js",
   "i18n/cookies.js",

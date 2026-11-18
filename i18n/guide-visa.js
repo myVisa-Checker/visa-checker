@@ -365,5 +365,85 @@ SI.add({
  "Délai d'ouverture, rendez-vous, traitement, validité du passeport : comment construire un calendrier à rebours pour déposer à temps sans acheter trop tôt.": [
   "Opening window, appointment, processing, passport validity: how to build a backwards timeline so you apply on time without booking too early.",
   "نافذة التقديم والموعد والمعالجة وصلاحية الجواز: كيف تبني جدولًا زمنيًا عكسيًا لتقدّم في الوقت المناسب دون حجز مبكر."
+ ],
+ "Lettre de motivation et lettre explicative du voyage : comment la rédiger": [
+  "Cover letter and travel explanation letter: how to write it",
+  "رسالة الدوافع ورسالة شرح السفر: كيف تكتبها"
+ ],
+ "Quand elle est utile, ce qu'elle doit contenir et les erreurs qui la rendent contre-productive : un guide pour expliquer votre voyage de façon claire et crédible.": [
+  "When it is useful, what it must contain and the mistakes that make it counter-productive: a guide to explaining your trip clearly and credibly.",
+  "متى تكون مفيدة وما الذي ينبغي أن تتضمنه والأخطاء التي تجعلها عكسية: دليل لشرح رحلتك بوضوح ومصداقية."
+ ],
+ "Lettre d'invitation et attestation d'hébergement : ce qu'il faut fournir": [
+  "Invitation letter and accommodation certificate: what to provide",
+  "رسالة الدعوة وشهادة الإقامة: ما الذي ينبغي تقديمه"
+ ],
+ "À quoi sert une invitation, ce que doit fournir la personne qui vous accueille et les erreurs qui font douter de la réalité de l'hébergement.": [
+  "What an invitation is for, what the person hosting you must provide and the mistakes that raise doubts about the accommodation.",
+  "ما فائدة الدعوة وما الذي يجب أن يقدمه من يستضيفك والأخطاء التي تثير الشك حول حقيقة الإقامة."
+ ],
+ "Justificatifs professionnels : attestation de travail, congé et situation d'emploi": [
+  "Employment documents: work certificate, leave and job situation",
+  "المستندات المهنية: شهادة العمل والإجازة والوضع الوظيفي"
+ ],
+ "Salarié, indépendant, étudiant, retraité ou sans emploi : les justificatifs à fournir selon votre situation et les erreurs qui fragilisent un dossier.": [
+  "Employee, self-employed, student, retired or unemployed: the documents to provide depending on your situation and the mistakes that weaken a file.",
+  "موظف أو مستقل أو طالب أو متقاعد أو بلا عمل: المستندات المطلوبة بحسب وضعيتك والأخطاء التي تضعف الملف."
+ ],
+ "Visa étudiant : préparer son dossier pour étudier à l'étranger": [
+  "Student visa: preparing your application to study abroad",
+  "تأشيرة الطالب: كيف تحضّر ملفك للدراسة في الخارج"
+ ],
+ "Admission, ressources, hébergement, assurance : les pièces généralement demandées pour un visa d'études, le bon ordre des démarches et les erreurs à éviter.": [
+  "Admission, funds, accommodation, insurance: the documents usually requested for a study visa, the right order of steps and the mistakes to avoid.",
+  "القبول والموارد والإقامة والتأمين: المستندات المطلوبة عادة لتأشيرة الدراسة والترتيب الصحيح للخطوات والأخطاء الواجب تفاديها."
+ ],
+ "Visa de visite familiale : prouver le lien et le retour": [
+  "Family visit visa: proving the relationship and your return",
+  "تأشيرة الزيارة العائلية: إثبات الصلة والعودة"
+ ],
+ "Lien de parenté, hébergement, prise en charge et attaches dans le pays de résidence : ce que le consulat évalue pour une visite à un proche et les pièces utiles.": [
+  "Family relationship, accommodation, sponsorship and ties to your country of residence: what the consulate assesses for a visit to a relative and the useful documents.",
+  "صلة القرابة والإقامة والتكفل والارتباطات ببلد الإقامة: ما تقيّمه القنصلية في زيارة قريب والمستندات المفيدة."
+ ],
+ "Visa d'affaires : documents et bonnes pratiques": [
+  "Business visa: documents and good practice",
+  "تأشيرة الأعمال: المستندات وأفضل الممارسات"
+ ],
+ "Invitation professionnelle, objet de la mission, prise en charge des frais et preuves de votre activité : ce qu'il faut réunir pour un visa d'affaires et ce qu'il faut éviter.": [
+  "Business invitation, purpose of the mission, who covers costs and proof of your activity: what to gather for a business visa and what to avoid.",
+  "دعوة مهنية وغرض المهمة وتحمل التكاليف وإثباتات نشاطك: ما ينبغي جمعه لتأشيرة أعمال وما ينبغي تجنبه."
+ ],
+ "Traduction et légalisation des documents : ce qui est exigé": [
+  "Translation and legalisation of documents: what is required",
+  "ترجمة الوثائق وتصديقها: ما هو مطلوب"
+ ],
+ "Traduction simple ou assermentée, légalisation, apostille : comment savoir ce que demande votre destination et éviter de payer pour des formalités inutiles.": [
+  "Plain or sworn translation, legalisation, apostille: how to find out what your destination requires and avoid paying for unnecessary formalities.",
+  "ترجمة عادية أو محلفة وتصديق وأبوستيل: كيف تعرف ما تشترطه وجهتك وتتفادى دفع مقابل إجراءات غير لازمة."
+ ],
+ "Passeport et visa : validité, pages libres et renouvellement": [
+  "Passport and visa: validity, blank pages and renewal",
+  "الجواز والتأشيرة: الصلاحية والصفحات الفارغة والتجديد"
+ ],
+ "Durée de validité, pages vierges, état du document, ancien passeport : ce que le consulat contrôle sur votre passeport et quand le renouveler avant de déposer.": [
+  "Validity period, blank pages, condition of the document, old passport: what the consulate checks on your passport and when to renew it before you apply.",
+  "مدة الصلاحية والصفحات الفارغة وحالة الوثيقة والجواز القديم: ما تتحقق منه القنصلية في جوازك ومتى تجدده قبل التقديم."
+ ],
+ "Escales et visa de transit : comment éviter une mauvaise surprise": [
+  "Stopovers and transit visas: how to avoid an unpleasant surprise",
+  "الترانزيت وتأشيرة العبور: كيف تتفادى مفاجأة غير سارة"
+ ],
+ "Transit aéroportuaire, changement d'aéroport, escale longue : savoir si votre nationalité et votre itinéraire exigent un visa de transit avant d'acheter votre billet.": [
+  "Airside transit, changing airports, long stopovers: find out whether your nationality and route require a transit visa before buying your ticket.",
+  "عبور مطاري وتغيير المطار وتوقف طويل: اعرف هل تتطلب جنسيتك ومسارك تأشيرة عبور قبل شراء تذكرتك."
+ ],
+ "Voyager avec des enfants : visa, autorisation parentale et documents": [
+  "Travelling with children: visa, parental consent and documents",
+  "السفر مع الأطفال: التأشيرة والإذن الأبوي والوثائق"
+ ],
+ "Passeport de l'enfant, acte de naissance, autorisation des parents, voyage avec un seul parent ou un tiers : les documents à prévoir pour déposer et voyager sereinement.": [
+  "Child's passport, birth certificate, parental consent, travelling with one parent or a third party: the documents to prepare to apply and travel with peace of mind.",
+  "جواز الطفل وعقد الازدياد وإذن الوالدين والسفر مع أحد الوالدين أو شخص آخر: المستندات التي ينبغي تحضيرها للتقديم والسفر بطمأنينة."
  ]
 });
