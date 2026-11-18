@@ -23,7 +23,7 @@
   var OFFERS = {
     joury: { price: 20, fr: "Joury : plan d'action et lettre de recours", en: "Joury: action plan and appeal letter", ar: "جوري: خطة العمل ورسالة الطعن" },
     aicha: { price: 15, fr: "Aïcha : analyse complète de vos documents", en: "Aïcha: full analysis of your documents", ar: "عائشة: تحليل كامل لوثائقك" },
-    saden: { price: 15, fr: "Consulat Saden : séance d'entretien complète", en: "Consulate Saden: full interview session", ar: "قنصلية سعدن: جلسة مقابلة كاملة" }
+    saden: { price: 15, fr: "Consulat Saden : séance d'entretien complète", en: "Consulate Saden: full interview session", ar: "قنصلية سادن: جلسة مقابلة كاملة" }
   };
   var TXT = {
     fr: { title: "Débloquer", choose: "Choisissez votre moyen de paiement", cancel: "Annuler", pay: "Payer", wait: "Redirection vers le paiement…", ok: "Paiement confirmé", fail: "Paiement non confirmé. Réessayez.", test: "MODE TEST : aucun vrai paiement", note: "Paiement sécurisé par Flouci ou Konnect. Aucune garantie de visa." },
