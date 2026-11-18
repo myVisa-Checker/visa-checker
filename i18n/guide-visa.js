@@ -341,5 +341,29 @@ SI.add({
  "Les questions fréquentes, la bonne façon d'y répondre et les erreurs à éviter.": [
   "Common questions, how to answer them well and the mistakes to avoid.",
   "الأسئلة الشائعة وطريقة الإجابة عنها جيدًا والأخطاء الواجب تفاديها."
+ ],
+ "Réservation de vol et d'hôtel pour un visa : ce que les consulats attendent": [
+  "Flight and hotel bookings for a visa: what consulates expect",
+  "حجز الطيران والفندق للحصول على تأشيرة: ما الذي تتوقعه القنصليات"
+ ],
+ "Réservation, billet payé ou billet flexible : comment justifier votre voyage et votre hébergement sans prendre de risque financier ni présenter de faux documents.": [
+  "Reservation, paid ticket or flexible ticket: how to document your trip and accommodation without financial risk and without submitting false documents.",
+  "حجز أو تذكرة مدفوعة أو تذكرة مرنة: كيف تثبت رحلتك وإقامتك دون مخاطرة مالية ودون تقديم وثائق مزيفة."
+ ],
+ "Photo d'identité pour un visa : les critères qui évitent un rejet": [
+  "Passport photo for a visa: the criteria that prevent a rejection",
+  "صورة الهوية للتأشيرة: المعايير التي تجنّبك الرفض"
+ ],
+ "Dimensions, fond, expression, lunettes, qualité : les critères habituels d'une photo de visa et les erreurs qui font renvoyer un dossier pour un motif purement technique.": [
+  "Size, background, expression, glasses, quality: the usual criteria for a visa photo and the mistakes that get an application sent back on a purely technical ground.",
+  "الأبعاد والخلفية والتعبير والنظارات والجودة: المعايير المعتادة لصورة التأشيرة والأخطاء التي تعيد الملف لسبب تقني بحت."
+ ],
+ "Quand déposer sa demande de visa : délais, calendrier et anticipation": [
+  "When to apply for a visa: deadlines, timeline and planning ahead",
+  "متى تقدّم طلب التأشيرة: الآجال والجدول الزمني والتخطيط المسبق"
+ ],
+ "Délai d'ouverture, rendez-vous, traitement, validité du passeport : comment construire un calendrier à rebours pour déposer à temps sans acheter trop tôt.": [
+  "Opening window, appointment, processing, passport validity: how to build a backwards timeline so you apply on time without booking too early.",
+  "نافذة التقديم والموعد والمعالجة وصلاحية الجواز: كيف تبني جدولًا زمنيًا عكسيًا لتقدّم في الوقت المناسب دون حجز مبكر."
  ]
 });

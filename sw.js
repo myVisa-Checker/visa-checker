@@ -1,6 +1,6 @@
 /* CheckMyVisa – cache limité au shell et aux assets statiques.
    Aucune API, donnée utilisateur ou requête POST n'est mise en cache. */
-const VERSION = "2026.11.18.0422"; /*@version*/
+const VERSION = "2026.11.18.0439"; /*@version*/
 const SHELL = "vc-shell-" + VERSION;
 const PRECACHE = [
   "./",
@@ -35,6 +35,9 @@ const PRECACHE = [
   "guide-moyens-financiers.html",
   "guide-assurance-voyage.html",
   "guide-entretien-consulaire.html",
+  "guide-reservation-vol-hotel.html",
+  "guide-photo-biometrique.html",
+  "guide-quand-deposer.html",
   "a-propos.html",
   "faq.html",
   "contact.html",
@@ -56,6 +59,9 @@ const PRECACHE = [
   "i18n/guide-moyens-financiers.js",
   "i18n/guide-assurance-voyage.js",
   "i18n/guide-entretien-consulaire.js",
+  "i18n/guide-reservation-vol-hotel.js",
+  "i18n/guide-photo-biometrique.js",
+  "i18n/guide-quand-deposer.js",
   "i18n/contact.js",
   "i18n/mentions-legales.js",
   "i18n/cookies.js",
