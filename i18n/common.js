@@ -28,6 +28,10 @@ SI.add({
   "Privacy",
   "الخصوصية"
  ],
+ "Garantie": [
+  "Guarantee",
+  "الضمان"
+ ],
  "Cookies": [
   "Cookies",
   "ملفات تعريف الارتباط"
