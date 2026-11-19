@@ -120,9 +120,9 @@ SI.add({
   "The score used is the one in Aïcha's report on the date you sign up. It measures how complete and consistent the application appears, never the probability of getting a visa.",
   "الدرجة المعتمدة هي درجة تقرير عائشة بتاريخ الاشتراك. وهي تقيس اكتمال الملف وتماسكه الظاهر، وليس احتمال الحصول على التأشيرة."
  ],
- "Pour le détail des règles générales, consultez les Conditions d'utilisation.": [
-  "For the general rules, see the <a href=\"./conditions.html\">Terms of use</a>.",
-  "للاطلاع على القواعد العامة، راجع <a href=\"./conditions.html\">شروط الاستخدام</a>."
+ "Pour le détail juridique, consultez les Conditions de la garantie et les Conditions d'utilisation.": [
+  "For the legal detail, see the <a href=\"./cgv-garantie.html\">Guarantee terms</a> and the <a href=\"./conditions.html\">Terms of use</a>.",
+  "للاطلاع على التفاصيل القانونية، راجع <a href=\"./cgv-garantie.html\">شروط الضمان</a> و<a href=\"./conditions.html\">شروط الاستخدام</a>."
  ],
  "Dernière mise à jour : 19 novembre 2026.": [
   "Last updated: 19 November 2026.",

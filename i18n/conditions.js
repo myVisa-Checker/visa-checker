@@ -88,6 +88,10 @@ SI.add({
   "Changes to consular rules: visa requirements (documents requested, processing times, consular fees and service fees) may be changed at any time without notice by the authorities of each country. It is your responsibility to systematically verify the final information on the official portals before your appointment or any payment.",
   "تغيّر القواعد القنصلية: قد تقوم سلطات كل بلد بتعديل متطلبات التأشيرة (المستندات المطلوبة، ومدد المعالجة، والرسوم القنصلية، ورسوم الخدمة) في أي وقت ودون إشعار مسبق. وتقع على عاتقكم مسؤولية التحقق دائمًا من المعلومات النهائية في البوابات الرسمية قبل موعدكم أو قبل أي دفع."
  ],
+ "Exception : la « Garantie remboursement partiel », lorsqu'elle sera ouverte à la souscription, prévoit un remboursement partiel des frais consulaires en cas de refus, aux conditions de la page Conditions de la garantie.": [
+  "Exception: the “Partial refund guarantee”, once open for sign-up, provides a partial refund of consular fees in the event of a refusal, on the terms set out on the <a href=\"./cgv-garantie.html\">Guarantee terms</a> page.",
+  "استثناء: يتيح «ضمان الاسترداد الجزئي»، عند فتح الاشتراك فيه، استرداد جزء من الرسوم القنصلية في حال الرفض، وفق الشروط الواردة في صفحة <a href=\"./cgv-garantie.html\">شروط الضمان</a>."
+ ],
  "Aucune garantie de délivrance : la décision d'accorder ou de refuser un visa relève exclusivement du pouvoir souverain des autorités consulaires du pays de destination. CheckMyVisa ne saurait être tenu responsable en cas de refus de visa, de retard de traitement, d'annulation de voyage ou de perte financière liée à votre demande.": [
   "No guarantee of issuance: the decision to grant or refuse a visa rests exclusively with the sovereign authority of the consular authorities of the destination country. CheckMyVisa cannot be held liable in the event of a visa refusal, processing delay, trip cancellation or financial loss related to your application.",
   "لا ضمان للمنح: إن قرار منح التأشيرة أو رفضها يعود حصرًا إلى السلطة السيادية للسلطات القنصلية في بلد الوجهة. ولا يمكن تحميل CheckMyVisa المسؤولية في حال رفض التأشيرة أو تأخر المعالجة أو إلغاء السفر أو أي خسارة مالية مرتبطة بطلبكم."
