@@ -79,9 +79,10 @@
     if (m < 60) return t(T.ago) + m + t(T.min);
     return t(T.ago) + Math.round(m / 60) + t(T.hour);
   }
-  function card(title, pill, body) {
-    var d = document.createElement("div"); d.className = "rd-card";
+  function card(title, pill, body, big) {
+    var d = document.createElement("div"); d.className = "rd-card" + (pill ? " " + pill[0] : "");
     var b = document.createElement("b"); b.textContent = title; d.appendChild(b);
+    if (big) { var g = document.createElement("span"); g.className = "rd-big"; g.textContent = big; d.appendChild(g); }
     if (pill) { var p = document.createElement("span"); p.className = "rd-pill " + pill[0]; p.textContent = pill[1]; d.appendChild(p); }
     var s = document.createElement("small"); s.textContent = body; d.appendChild(s); return d;
   }
@@ -95,7 +96,7 @@
     });
     var dl = $("rd-delays"); dl.textContent = ""; var ds = j.delays || [];
     $("rd-delays-empty").hidden = ds.length > 0;
-    ds.forEach(function (d) { dl.appendChild(card(name(COUNTRIES, d.country) + " · " + name(CITIES, d.city), null, d.median + " " + t(T.days) + " · " + d.n + " " + t(T.decl))); });
+    ds.forEach(function (d) { dl.appendChild(card(name(COUNTRIES, d.country) + " · " + name(CITIES, d.city), null, t(T.days) + " · " + d.n + " " + t(T.decl), d.median)); });
   }
   function load() {
     fetch(API + "live").then(function (r) { return r.json(); }).then(function (j) { if (j && j.ok) render(j); }).catch(function () {});
