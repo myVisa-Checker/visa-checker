@@ -17,7 +17,7 @@ for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "vi
 }
 
 console.log("JSON");
-for (const f of ["manifest.json", "partners.json", "rdv.json", "deals.json", "version.json"]) {
+for (const f of ["manifest.json", "partners.json", "rdv.json", "deals.json", "version.json", "rates.json"]) {
   try { JSON.parse(read(f)); ok(f, true); } catch (e) { ok(f, false, e.message); }
 }
 

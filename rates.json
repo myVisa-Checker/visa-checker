@@ -1,0 +1,6 @@
+{
+  "updated": "2026-11-19",
+  "note": "Taux indicatifs pour 1 EUR, à mettre à jour à la main. Les prix de la garantie en monnaie locale sont des prix ronds, à changer rarement.",
+  "rates": { "EUR": 1, "TND": 3.37, "MAD": 10.8, "DZD": 152 },
+  "price": { "EUR": 20, "TND": 70, "MAD": 220, "DZD": 3100 }
+}

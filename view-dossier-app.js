@@ -63,6 +63,7 @@
     else { st.textContent = T('Prêt à vérifier'); k = 'Relisez le rapport avant le dépôt'; }
     cap.textContent = T(k);
     state('Analyse reçue', 'ok');
+    gr.score = score; gr.high = counts.high; renderGuarantee();
     var body = $('ai-issues'); body.textContent = ''; var acts = $('ai-actions'); acts.textContent = '';
     if (!rows.length) {
       var tr = document.createElement('tr'), td = document.createElement('td'); td.colSpan = 2; td.className = 'jy-empty';
@@ -79,6 +80,53 @@
     }
     setStep(4);
   }
+
+  /* ---------- Garantie remboursement partiel : carte sous le rapport ----------
+     Prix de base en euros ; affichage dans la monnaie choisie (taux indicatifs de rates.json, copie de secours ci-dessous).
+     Le remboursement réel est 50 % des frais indiqués sur le reçu, dans la monnaie du reçu : aucun calcul de change. */
+  var GR_MIN = 85, GR_REFUND_EUR = 45;
+  var GR_FALLBACK = { updated: '2026-11-19', rates: { EUR: 1, TND: 3.37, MAD: 10.8, DZD: 152 }, price: { EUR: 20, TND: 70, MAD: 220, DZD: 3100 } };
+  var GR_BY_PASSPORT = { 'Tunisie': 'TND', 'Maroc': 'MAD', 'Algérie': 'DZD' };
+  var gr = { data: GR_FALLBACK, score: null, high: 0, picked: false, cur: null };
+  function grValid(d) {
+    if (!d || !d.rates || !d.price) return false;
+    return ['EUR', 'TND', 'MAD', 'DZD'].every(function (c) { return typeof d.rates[c] === 'number' && d.rates[c] > 0 && typeof d.price[c] === 'number' && d.price[c] > 0; }) && d.rates.EUR === 1;
+  }
+  function grStore(v) { try { if (v === undefined) return window.localStorage.getItem('vc_cur'); window.localStorage.setItem('vc_cur', v); } catch (e) { /* ignore */ } return null; }
+  function grMoney(n, cur) {
+    var loc = VC.lang === 'ar' ? 'ar-u-nu-latn' : VC.lang === 'en' ? 'en' : 'fr', s;
+    try { s = new Intl.NumberFormat(loc, { maximumFractionDigits: 0 }).format(n); } catch (e) { s = String(Math.round(n)); }
+    return cur === 'EUR' ? s + ' €' : s + ' ' + cur;
+  }
+  function grDefaultCur() {
+    var s = grStore(); if (s && gr.data.rates[s]) { gr.picked = true; return s; }
+    return GR_BY_PASSPORT[$('passport').value] || 'EUR';
+  }
+  function grBadge(fr, kind) { var b = $('gr-badge'); b.textContent = T(fr); b.className = 'vc-badge vc-badge-' + kind; }
+  function renderGuarantee() {
+    var card = $('ai-guarantee'), score = gr.score;
+    if (!reportText) { card.hidden = true; return; }
+    card.hidden = false;
+    var offer = $('gr-offer'), msg = $('gr-msg'), eligible = score !== null && score >= GR_MIN && gr.high === 0;
+    offer.hidden = !eligible;
+    if (score === null) { grBadge('Score non évaluable', 'muted'); msg.textContent = T('Le score n’a pas pu être lu dans ce rapport : la garantie n’est pas proposée. Relancez l’analyse avec des pièces lisibles.'); return; }
+    if (score < GR_MIN) { grBadge('Score insuffisant', 'warn'); msg.textContent = T('Votre score est de {score} %. La garantie demande 85 % ou plus : appliquez le plan de correction puis relancez l’analyse.', { score: score }); return; }
+    if (gr.high > 0) { grBadge('Pièces à compléter', 'warn'); msg.textContent = T('Votre score est de {score} %, mais des pièces essentielles sont à compléter. Corrigez-les puis relancez l’analyse.', { score: score }); return; }
+    grBadge('Score éligible', 'ok');
+    msg.textContent = T('Votre score de {score} % atteint le seuil de 85 %. D’autres conditions s’appliquent : ancienneté professionnelle, relevés bancaires des 3 derniers mois, aucun refus non résolu.', { score: score });
+    var sel = $('gr-cur'), cur = gr.cur && gr.data.rates[gr.cur] ? gr.cur : grDefaultCur();
+    sel.value = cur;
+    var d = gr.data;
+    $('gr-price').textContent = grMoney(d.price[cur], cur);
+    $('gr-refund').textContent = (cur === 'EUR' ? '' : '≈ ') + grMoney(GR_REFUND_EUR * d.rates[cur], cur);
+    $('gr-refund-note').textContent = T('Pour un adulte (frais consulaires de 90 €). Le montant exact est 50 % des frais indiqués sur votre reçu, dans la monnaie du reçu.');
+    $('gr-rate-note').textContent = cur === 'EUR' ? '' : T('Montants indicatifs dans votre monnaie, arrondis. Taux du {date}.', { date: d.updated });
+  }
+  fetch('rates.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) { if (grValid(d)) { gr.data = d; renderGuarantee(); } }).catch(function () { /* copie de secours */ });
+  $('gr-cur').addEventListener('change', function () { gr.picked = true; gr.cur = this.value; grStore(this.value); renderGuarantee(); });
+  $('passport').addEventListener('change', function () { if (!gr.picked) { gr.cur = null; renderGuarantee(); } });
+
   function download() {
     if (!reportText) return;
     var blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' }), url = URL.createObjectURL(blob), a = document.createElement('a');
