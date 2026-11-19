@@ -180,6 +180,77 @@ function rlCheck(payload) {
   };
 }
 
+/* ---- Rendez-vous en direct : signalements des voyageurs (aucune donnée personnelle) ----
+   Rien n'est lu sur les sites des centres : ce sont uniquement des signalements saisis par les voyageurs.
+   Tout est dans le nom des clés KV (une seule lecture « list », pas de lecture par clé) :
+     rdv:r:<pays>:<ville>:<horodatage>:<empreinte>   « je viens de trouver un RDV » (garde 24 h)
+     rdv:n:<pays>:<ville>:<horodatage>:<empreinte>   « aucun créneau disponible » (garde 24 h)
+     rdv:l:<pays>:<ville>:<horodatage>:<jours>:<empreinte>   un délai de traitement observé (garde 90 jours)
+   L'empreinte est un hachage tronqué de l'adresse IP : elle sert seulement à compter des appareils distincts. */
+const RDV_COUNTRIES = ["fr", "it", "es"], RDV_CITIES = ["tunis", "sfax", "sousse"];
+const RDV_WINDOW = 3600e3, RDV_CONFIRM = 3, RDV_KEEP = 86400, RDV_DELAY_KEEP = 90 * 86400, RDV_DELAY_MIN = 5, RDV_HOURLY = 12;
+function rdvMedian(a) { const s = a.slice().sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : Math.round((s[m - 1] + s[m]) / 2); }
+async function rdvRoute(env, req, path, origin, allowed, out) {
+  if (!env.KV || !env.SECRET) return out({ ok: false, error: "config" }, 500);
+  if (path === "/rdv/live") {
+    if (req.method !== "GET") return out({ ok: false }, 405);
+    const now = Date.now(), cells = {}, groups = {};
+    const reps = await env.KV.list({ prefix: "rdv:r:", limit: 1000 });
+    for (const k of reps.keys) {
+      const m = /^rdv:r:([a-z]{2}):([a-z]+):(\d{10,14}):([0-9a-f]{8})$/.exec(k.name);
+      if (!m || !RDV_COUNTRIES.includes(m[1]) || !RDV_CITIES.includes(m[2])) continue;
+      const ts = +m[3]; if (now - ts > RDV_KEEP * 1000) continue;
+      const c = cells[m[1] + ":" + m[2]] || (cells[m[1] + ":" + m[2]] = { country: m[1], city: m[2], last: 0, day: 0, recent: new Set(), none: new Set() });
+      c.day++; if (ts > c.last) c.last = ts; if (now - ts <= RDV_WINDOW) c.recent.add(m[4]);
+    }
+    const nons = await env.KV.list({ prefix: "rdv:n:", limit: 1000 });
+    for (const k of nons.keys) {
+      const m = /^rdv:n:([a-z]{2}):([a-z]+):(\d{10,14}):([0-9a-f]{8})$/.exec(k.name);
+      if (!m || !RDV_COUNTRIES.includes(m[1]) || !RDV_CITIES.includes(m[2])) continue;
+      const ts = +m[3]; if (now - ts > RDV_WINDOW) continue;
+      const c = cells[m[1] + ":" + m[2]] || (cells[m[1] + ":" + m[2]] = { country: m[1], city: m[2], last: 0, day: 0, recent: new Set(), none: new Set() });
+      c.none.add(m[4]);
+    }
+    const lds = await env.KV.list({ prefix: "rdv:l:", limit: 1000 });
+    for (const k of lds.keys) {
+      const m = /^rdv:l:([a-z]{2}):([a-z]+):(\d{10,14}):(\d{1,3}):([0-9a-f]{8})$/.exec(k.name);
+      if (!m || !RDV_COUNTRIES.includes(m[1]) || !RDV_CITIES.includes(m[2])) continue;
+      if (now - (+m[3]) > 60 * 86400e3) continue;
+      (groups[m[1] + ":" + m[2]] || (groups[m[1] + ":" + m[2]] = { country: m[1], city: m[2], days: [] })).days.push(+m[4]);
+    }
+    const centers = Object.values(cells).map((c) => ({ country: c.country, city: c.city, last: c.last, reports24h: c.day, recent: c.recent.size, none: c.none.size, status: c.recent.size >= RDV_CONFIRM ? "wave" : c.none.size >= RDV_CONFIRM ? "blocked" : "calm", confirmed: c.recent.size >= RDV_CONFIRM })).sort((a, b) => b.last - a.last);
+    const delays = Object.values(groups).filter((g) => g.days.length >= RDV_DELAY_MIN).map((g) => ({ country: g.country, city: g.city, median: rdvMedian(g.days), n: g.days.length }));
+    return out({ ok: true, now, confirmNeeded: RDV_CONFIRM, windowMinutes: RDV_WINDOW / 60000, centers, delays, total: centers.reduce((s, c) => s + c.reports24h, 0) }, 200, { "Cache-Control": "public, max-age=30" });
+  }
+  if (req.method !== "POST") return out({ ok: false }, 405);
+  if (origin !== allowed) return out({ ok: false, error: "origin" }, 403);
+  let raw; try { raw = await req.text(); } catch { return out({ ok: false }, 400); }
+  if (raw.length > 300) return out({ ok: false }, 413);
+  let b; try { b = JSON.parse(raw); } catch { return out({ ok: false }, 400); }
+  if (!b || typeof b !== "object") return out({ ok: false }, 400);
+  const country = String(b.country || ""), city = String(b.city || "");
+  if (!RDV_COUNTRIES.includes(country) || !RDV_CITIES.includes(city)) return out({ ok: false, error: "center" }, 400);
+  const h = (await sha256(env.SECRET + ".rdv." + (req.headers.get("CF-Connecting-IP") || "?"))).slice(0, 16);
+  const rk = "rdv:rl:" + h, n = parseInt((await env.KV.get(rk)) || "0", 10);
+  if (n >= RDV_HOURLY) return out({ ok: false, error: "rate" }, 429);
+  await env.KV.put(rk, String(n + 1), { expirationTtl: 3600 });
+  if (path === "/rdv/report") {
+    const kd = b.kind === "none" ? "n" : "r";
+    const xk = "rdv:x:" + kd + ":" + country + ":" + city + ":" + h;
+    if (await env.KV.get(xk)) return out({ ok: true, duplicate: true }, 200);
+    await env.KV.put(xk, "1", { expirationTtl: 3600 });
+    await env.KV.put("rdv:" + kd + ":" + country + ":" + city + ":" + Date.now() + ":" + h.slice(0, 8), "1", { expirationTtl: RDV_KEEP });
+    return out({ ok: true }, 200);
+  }
+  const days = Number(b.days);
+  if (!Number.isInteger(days) || days < 1 || days > 120) return out({ ok: false, error: "days" }, 400);
+  const xk = "rdv:x:l:" + country + ":" + city + ":" + h;
+  if (await env.KV.get(xk)) return out({ ok: true, duplicate: true }, 200);
+  await env.KV.put(xk, "1", { expirationTtl: 86400 });
+  await env.KV.put("rdv:l:" + country + ":" + city + ":" + Date.now() + ":" + days + ":" + h.slice(0, 8), "1", { expirationTtl: RDV_DELAY_KEEP });
+  return out({ ok: true }, 200);
+}
+
 const handler = {
   async fetch(req, env) {
     const url = new URL(req.url), path = url.pathname.replace(/\/+$/, "") || "/";
@@ -253,6 +324,9 @@ const handler = {
       await env.KV.put("pack", JSON.stringify(clean));
       return adminPage("<h1>Enregistré</h1><p>" + clean.length + " lettres : " + clean.map((c) => c.id).join(", ") + ".</p>", 200);
     }
+
+    /* ---- rendez-vous en direct (signalements des voyageurs) ---- */
+    if (path === "/rdv/live" || path === "/rdv/report" || path === "/rdv/delay") return rdvRoute(env, req, path, origin, ALLOWED, out);
 
     /* ---- déblocage ---- */
     if (path === "/unlock") {

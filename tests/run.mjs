@@ -191,6 +191,15 @@ try {
   ok("workers-hardening : codes, limites, validation, verrous", false, String(e.stderr || e.message).split("\n")[0]);
 }
 
+console.log("Worker visa-proxy : rendez-vous en direct (exécution)");
+try {
+  execFileSync(process.execPath, ["tests/rdv-worker.test.mjs"], { stdio: "inherit" });
+  ok("rdv-worker : signalements, confirmation à 3 appareils, délais, limites", true);
+} catch (e) {
+  ok("rdv-worker : signalements, confirmation à 3 appareils, délais, limites", false, String(e.stderr || e.message).split("\n")[0]);
+}
+ok("rdv-direct.html : CSP, script externe et lien sitemap", /script-src 'self'/.test(readFileSync("rdv-direct.html", "utf8")) && !/<script>[^<]/.test(readFileSync("rdv-direct.html", "utf8")) && /rdv-direct\.html/.test(readFileSync("sitemap.xml", "utf8")) && /rdv-direct\.html/.test(readFileSync("sw.js", "utf8")));
+
 console.log("\n" + pass + " réussis, " + fail + " échoués");
 
 process.exit(fail ? 1 : 0);

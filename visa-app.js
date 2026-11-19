@@ -969,7 +969,13 @@ function photoHtml(){
     '<a class="vc-hero-assistant vc-hero-aicha" href="./view-dossier.html"><img src="./images/aicha-avatar.webp" data-a3d="aicha" width="112" height="112" alt="Aicha" loading="lazy" decoding="async"><span class="vc-hero-assistant-copy"><b><i class="vc-ia">IA</i> Aïcha</b><small>'+tx.a+'</small><em>'+tx.go+' ↗</em></span></a>'+
     '<a class="vc-hero-assistant vc-hero-joury" href="./view-joury.html"><img src="./images/joury-avatar.webp" data-a3d="joury" width="112" height="112" alt="Joury" loading="lazy" decoding="async"><span class="vc-hero-assistant-copy"><b><i class="vc-ia">IA</i> Joury</b><small>'+tx.j+'</small><em>'+tx.go+' ↗</em></span></a>'+
     '<a class="vc-hero-assistant vc-hero-saden" href="./view-entretien.html"><img src="./images/saden-avatar.webp" data-a3d="saden" width="112" height="112" alt="Consulat Saden" loading="lazy" decoding="async"><span class="vc-hero-assistant-copy"><b><i class="vc-ia">IA</i> Consulat Saden</b><small>'+tx.s+'</small><em>'+tx.go+' ↗</em></span></a>'+
-    '</div></div>';
+    '</div>'+rdvCard()+'</div>';
+}
+/* Carte « Rendez-vous en direct » sous les assistants IA : signalements des voyageurs, page rdv-direct.html. */
+function rdvCard(){
+  var X={fr:{h:"Rendez-vous visa en direct",d:"Un créneau vient de s'ouvrir ? Signalez-le ou voyez ce que la communauté a vu à Tunis, Sfax et Sousse.",a:"Signaler un créneau",b:"Voir en direct"},en:{h:"Live visa appointments",d:"A slot just opened? Report it, or see what the community spotted in Tunis, Sfax and Sousse.",a:"Report a slot",b:"See live"},ar:{h:"مواعيد التأشيرة مباشرة",d:"هل فُتح موعد للتو؟ بلّغ عنه أو اطّلع على ما رصده المجتمع في تونس وصفاقس وسوسة.",a:"بلّغ عن موعد",b:"شاهد مباشرة"}}[S.lang]||null;
+  if(!X)X={h:"Rendez-vous visa en direct",d:"Un créneau vient de s'ouvrir ? Signalez-le ou voyez ce que la communauté a vu à Tunis, Sfax et Sousse.",a:"Signaler un créneau",b:"Voir en direct"};
+  return '<a class="vc-rdv-card" href="./rdv-direct.html"><span class="vc-rdv-dot" aria-hidden="true"></span><span class="vc-rdv-copy"><b>'+X.h+'</b><small>'+X.d+'</small></span><span class="vc-rdv-go">'+X.a+' ↗</span><span class="vc-rdv-sub">'+X.b+'</span></a>';
 }
 /* ===== Pays du passeport (Tunisie, Maroc, Algérie) =====
    ORI_READY : destinations dont la liste de pièces est prête pour chaque pays de départ. Maroc et Algérie : vides tant que les listes ne sont pas vérifiées sur sources officielles. */

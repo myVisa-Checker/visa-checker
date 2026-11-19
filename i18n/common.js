@@ -28,6 +28,10 @@ SI.add({
   "Privacy",
   "الخصوصية"
  ],
+ "Rendez-vous en direct": [
+  "Live appointments",
+  "مواعيد مباشرة"
+ ],
  "Garantie": [
   "Guarantee",
   "الضمان"
