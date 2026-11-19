@@ -1320,6 +1320,7 @@ var SPT={
  local:{fr:"Partenaires locaux",en:"Local partners",ar:"شركاء محليون"},
  sAg:{fr:"Agences de voyages",en:"Travel agencies",ar:"وكالات السفر"},sIns:{fr:"Assurance voyage",en:"Travel insurance",ar:"تأمين السفر"},sCar:{fr:"Location de voiture",en:"Car rental",ar:"تأجير السيارات"},pick:{fr:"Touchez une catégorie pour voir la liste",en:"Tap a category to see the list",ar:"اختر فئة لعرض القائمة"},soon:{fr:"Bientôt disponible",en:"Coming soon",ar:"قريبًا"},
  cIns:{fr:"Assurance voyage",en:"Travel insurance",ar:"تأمين السفر"},cAg:{fr:"Agences de voyages",en:"Travel agencies",ar:"وكالات السفر"},cCar:{fr:"Location de voiture et transferts aéroport",en:"Car rental and airport transfers",ar:"تأجير السيارات والنقل من المطار"},cFh:{fr:"Vols et hôtels",en:"Flights and hotels",ar:"طيران وفنادق"},
+ sHot:{fr:"Hôtels",en:"Hotels",ar:"فنادق"},sFl:{fr:"Vols",en:"Flights",ar:"طيران"},sEsim:{fr:"eSIM",en:"eSIM",ar:"شريحة eSIM"},cHot:{fr:"Hôtels",en:"Hotels",ar:"فنادق"},cFl:{fr:"Vols",en:"Flights",ar:"طيران"},cEsim:{fr:"eSIM : internet mobile à l'étranger",en:"eSIM: mobile data abroad",ar:"eSIM: إنترنت الجوال في الخارج"},
  world:{fr:"Partenaires internationaux",en:"International partners",ar:"شركاء دوليون"},
  note:{fr:"Liens pratiques vers des sites indépendants. Certains sont des liens partenaires : CheckMyVisa peut recevoir une commission, sans frais pour vous. Pour le visa, choisissez des réservations annulables.",en:"Handy links to independent sites. Some are partner links: CheckMyVisa may earn a commission at no cost to you. For the visa, choose cancellable bookings.",ar:"روابط مفيدة لمواقع مستقلة. بعضها روابط شركاء: قد يحصل CheckMyVisa على عمولة دون أي تكلفة عليك. للتأشيرة، اختر حجوزات قابلة للإلغاء."}
 };
@@ -1638,20 +1639,22 @@ function assistGoHtml(who){
  return '<a class="vc-aicha-go" href="./'+(j?'view-joury.html':'view-dossier.html')+'"><img src="./images/'+(j?'joury':'aicha')+'-avatar.webp" data-a3d="'+(j?'joury':'aicha')+'" width="72" height="72" alt="" decoding="async"><span class="vc-aicha-go-copy"><strong><i class="vc-ia">IA</i> '+X.t+'</strong><small>'+X.d+'</small></span><span class="vc-aicha-go-cta">'+X.go+' ↗</span></a>';
 }
 function aichaGoHtml(){return assistGoHtml("aicha")}
-var SPSEL={local:"",world:""};
+var SPSEL={all:""};
+/* Une seule liste, classée par catégorie (plus de séparation locaux / internationaux). Un partenaire peut figurer dans plusieurs catégories (svc). */
+function spCats(x){return x.svc?x.svc.slice():[x.g]}
 function spGroups(){return [
- {id:"local",title:SPT.local,cats:[["ag",SPT.sAg,SPT.cAg],["ins",SPT.sIns,SPT.cIns],["car",SPT.sCar,SPT.cCar]],list:LOCAL},
- {id:"world",title:SPT.world,cats:[["car",SPT.sCar,SPT.cCar],["fh",SPT.cFh,SPT.cFh]],list:WORLD}]}
+ {id:"all",title:null,cats:[["hotel",SPT.sHot,SPT.cHot],["flight",SPT.sFl,SPT.cFl],["car",SPT.sCar,SPT.cCar],["esim",SPT.sEsim,SPT.cEsim],["ins",SPT.sIns,SPT.cIns],["ag",SPT.sAg,SPT.cAg]],list:WORLD.concat(LOCAL)}]}
 function spResult(g){
   var L=S.lang,sel=SPSEL[g.id],c=g.cats.filter(function(x){return x[0]===sel})[0];
   if(!c)return '<p class="sp-hint"><i aria-hidden="true">\uD83D\uDC46</i>'+SPT.pick[L]+'</p>';
-  var arr=g.list.filter(function(x){return x.g===sel});
+  var arr=g.list.filter(function(x){return spCats(x).indexOf(sel)>-1});
   return '<p class="sp-cat">'+c[2][L]+'</p>'+(arr.length?tilesHtml(arr):'<p class="sp-hint">'+SPT.soon[L]+'</p>');
 }
+function t0(){return {fr:"Catégories de partenaires",en:"Partner categories",ar:"فئات الشركاء"}[S.lang]||"Catégories"}
 function groupsHtml(){
   var L=S.lang;
   return spGroups().map(function(g){
-    return '<div class="spg" data-g="'+g.id+'"><div class="spg-head"><h3 class="sp-grp">'+g.title[L]+'</h3><div class="sp-cats" role="group" aria-label="'+g.title[L]+'">'
+    return '<div class="spg" data-g="'+g.id+'"><div class="spg-head"><div class="sp-cats" role="group" aria-label="'+esc(t0())+'">'
       +g.cats.map(function(c){return '<button type="button" class="sp-cb" data-spc="'+g.id+':'+c[0]+'" aria-pressed="'+(SPSEL[g.id]===c[0])+'">'+c[1][L]+'</button>'}).join("")
       +'</div></div><div class="sp-res" id="spr-'+g.id+'" aria-live="polite">'+spResult(g)+'</div></div>';
   }).join("");
