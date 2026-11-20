@@ -12,7 +12,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "bump-version.mjs"]) {
+for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -55,6 +55,20 @@ ok("aucun prestataire de paiement n'est codé en dur", !/KONNECT|FLOUCI|D17|PAY_
 ok("création et vérification de paiement désactivées explicitement", /body\.action === "pay_create" \|\| body\.action === "pay_check"/.test(workerCode) && /payment_unavailable/.test(workerCode));
 ok("accès par codes existants conservé", /INTERVIEW_CODES/.test(workerCode) && /mint:/.test(workerCode));
 ok("limite KV documentée comme best-effort", /KV n'offre pas d'incrément atomique/.test(read("worker/visa-chat-worker.js")));
+
+console.log("Réservation de vol temporaire (module flight-hold)");
+{
+  const fh = read("flight-hold.js"), fw = read("worker/visa-flight-worker.js");
+  const url = (fh.match(/var FLIGHT_URL = "([^"]*)"/) || [])[1];
+  ok("module désactivé tant que FLIGHT_URL est vide (ou en https)", url === "" || /^https:\/\//.test(url), String(url));
+  ok("carte branchée uniquement sur le parcours billet d'avion", /S\.need==="flight"&&window\.VCFlightHold&&window\.VCFlightHold\.enabled\(\)/.test(read("visa-app.js")));
+  ok("Worker : filtre Hold et commande de type hold", /requires_instant_payment === false/.test(fw) && /type: "hold"/.test(fw));
+  ok("Worker : contrôle d'origine et clé en secret", /origin !== allowed/.test(fw) && /env\.DUFFEL_API_KEY/.test(fw) && !/duffel_(test|live)_[A-Za-z0-9]{10,}/.test(fw));
+  ok("Worker : aucune donnée passager dans les journaux", !/console\.(log|error)\([^)]*(passenger|given_name|family_name|email|phone)/.test(fw));
+  ok("CSP autorise le Worker visa-flight", /connect-src[^"]*visa-flight\.rabehfly\.workers\.dev/.test(html));
+  ok("fichiers du module dans le cache hors ligne", /"flight-hold\.js"/.test(read("sw.js")) && /"flight-hold\.css"/.test(read("sw.js")));
+  ok("récapitulatif : mention « non émis » et date limite présentes en FR/EN/AR", (fh.match(/badge:/g) || []).length === 3 && (fh.match(/doc:/g) || []).length === 3);
+}
 
 console.log("Contraste des couleurs de marque (brand.css, WCAG AA = 4,5)");
 {

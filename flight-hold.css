@@ -1,0 +1,36 @@
+/* Réservation de vol temporaire (flight-hold.js). Reprend les variables du site avec des valeurs de secours. */
+.fh-card{border:2px solid var(--accent,#1d4ed8);background:var(--surface,#fff)}
+.fh-card .ag-meta{display:block;margin-top:4px;line-height:1.45}
+.fh-dlg{width:min(720px,calc(100vw - 20px));max-height:calc(100vh - 20px);max-height:calc(100dvh - 20px);margin:auto;padding:0;border:0;border-radius:20px;background:var(--surface,#fff);color:var(--ink,#14212b);box-shadow:0 30px 80px #0a1a4066;overflow:auto}
+.fh-dlg::backdrop{background:#0a1a4099}
+.fh-dlg:not([open]){display:none}
+.fh-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;background:inherit;border-bottom:1px solid var(--line,#e4eaf2)}
+.fh-head h2{margin:0;font-size:20px;line-height:1.2}
+.fh-x{width:40px;height:40px;border:0;border-radius:50%;background:transparent;color:inherit;font-size:26px;line-height:1;cursor:pointer}
+.fh-x:focus-visible{outline:3px solid #93b4ff}
+.fh-body{padding:16px 20px 22px}
+.fh-body h3{margin:18px 0 8px;font-size:16px}
+.fh-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fh-f{display:flex;flex-direction:column;gap:4px;font-size:14px}
+.fh-f .sel{width:100%}
+.fh-err{margin:12px 0;padding:10px 12px;border-radius:10px;background:#fdecec;color:#9b1c1c}
+.fh-offer{margin:10px 0;padding:14px;border:1px solid var(--line,#e4eaf2);border-radius:14px}
+.fh-row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
+.fh-sl{margin-top:8px;font-size:14px}.fh-sg{color:var(--muted,#617080);font-size:13px}
+.fh-offer .pay{margin-top:12px}
+.fh-legal{margin:18px 0 0;padding:12px;border-radius:12px;background:#fff7e0;color:#6b4e00;font-size:12.5px;line-height:1.5}
+.fh-receipt{padding:6px 0;text-align:center}
+.fh-badge{margin:0;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#9a5b00}
+.fh-k{margin:10px 0 0;font-size:13px;color:var(--muted,#617080)}
+.fh-pnr{margin:2px 0 14px;font:700 38px/1.1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.14em}
+.fh-dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0 0 10px;text-align:start;font-size:14px}.fh-dl dt{color:var(--muted,#617080)}.fh-dl dd{margin:0}
+.fh-receipt .fh-sl{text-align:start}
+.fh-warn{margin:12px 0;padding:10px 12px;border-radius:10px;background:#fdecec;color:#9b1c1c;font-size:14px;text-align:start}
+.fh-doc{margin:12px 0 0;font-size:12px;color:var(--muted,#617080)}
+.fh-body .chip{margin-top:10px}
+@media(max-width:640px){.fh-grid{grid-template-columns:1fr}.fh-pnr{font-size:30px}}
+@media print{
+  html.fh-printing body>*:not(.fh-dlg){display:none!important}
+  html.fh-printing .fh-dlg{position:static;max-height:none;box-shadow:none;width:100%;overflow:visible}
+  html.fh-printing .fh-head,.fh-noprint{display:none!important}
+}

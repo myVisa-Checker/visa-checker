@@ -1396,6 +1396,7 @@ function pickHtml(t){
   var svc=function(p){return p.svc.indexOf(S.need)>-1};
   var tabs=[["local",R.tabL]];if(INTL.filter(svc).length)tabs.push(["intl",R.tabI]);else pt="local";
   var h=stepper(2)+'<div class="panel"><span class="svc-pill">'+R.svc[S.need]+'</span>'+(tabs.length>1?'<div class="chips seg" role="group" aria-label="'+R.svc[S.need]+'">'+tabs.map(function(x){return '<button type="button" class="chip" data-pt="'+x[0]+'" aria-pressed="'+(pt===x[0])+'">'+x[1]+'</button>'}).join("")+'</div>':'');
+  if(S.need==="flight"&&window.VCFlightHold&&window.VCFlightHold.enabled())h+=window.VCFlightHold.card(L);
   if(pt==="intl"){h+=INTL.filter(svc).map(function(p,i){return agentCard(p,R,i+1)}).join("")}
   else{
     var seen={},list=[];delete PARTNERS._srv;Object.keys(PARTNERS).forEach(function(k){PARTNERS[k].forEach(function(p){if(!seen[p.id]&&svc(p)){seen[p.id]=1;list.push(p)}})});list=list.slice(0,4);
