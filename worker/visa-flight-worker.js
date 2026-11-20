@@ -2,7 +2,8 @@
  * CheckMyVisa — Worker « visa-flight » : réservation de vol temporaire (PNR en mode Hold) via l'API Duffel.
  *
  * Routes (POST, JSON) :
- *   /flight/search  -> offres compatibles Hold pour l'itinéraire demandé
+ *   /flight/places  -> {query} : suggestions d'aéroports/villes (autocomplétion de la page vols.html)
+ *   /flight/search  -> offres compatibles Hold pour l'itinéraire demandé (classe de cabine au choix)
  *   /flight/book    -> crée la commande Hold ; renvoie PNR + date limite de paiement + statut
  *   /flight/status  -> {pnr} : statut hold / expired / issued (échéance sauvegardée en KV, sans donnée personnelle)
  *
@@ -79,6 +80,8 @@ function parseDate(s) {
   return Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== s ? null : d;
 }
 
+const CABINS = ["economy", "premium_economy", "business", "first"];
+
 function validateSearch(b) {
   const origin = String(b?.origin ?? "").toUpperCase().trim();
   const destination = String(b?.destination ?? "").toUpperCase().trim();
@@ -93,7 +96,9 @@ function validateSearch(b) {
     if (!ret) throw new HttpError(422, "Date retour invalide.", "date");
     if (ret < dep) throw new HttpError(422, "Le retour doit suivre l'aller.", "date");
   }
-  return { origin, destination, departure_date: b.departure_date, return_date: ret ? b.return_date : null };
+  const cabin_class = b?.cabin_class == null || b.cabin_class === "" ? "economy" : String(b.cabin_class);
+  if (!CABINS.includes(cabin_class)) throw new HttpError(422, "Classe invalide.", "cabin");
+  return { origin, destination, departure_date: b.departure_date, return_date: ret ? b.return_date : null, cabin_class };
 }
 
 function validatePassenger(p) {
@@ -179,7 +184,7 @@ async function search(req, env) {
 
   const data = await duffel(env, "/air/offer_requests?return_offers=true&supplier_timeout=15000", {
     method: "POST",
-    body: { data: { slices, passengers: [{ type: "adult" }], cabin_class: "economy" } },
+    body: { data: { slices, passengers: [{ type: "adult" }], cabin_class: q.cabin_class } },
   });
   const all = data.offers ?? [];
   const offers = all
@@ -188,6 +193,22 @@ async function search(req, env) {
     .slice(0, MAX_OFFERS)
     .map(summarizeOffer);
   return { ok: true, total_found: all.length, hold_count: offers.length, offers };
+}
+
+async function places(req, env) {
+  if (await limited(env, req, "places", 120, 600)) throw new HttpError(429, "Trop de recherches. Réessayez dans un instant.", "rate");
+  const b = await req.json().catch(() => null);
+  const query = String(b?.query ?? "").trim().slice(0, 40);
+  if (query.length < 2) return { ok: true, places: [] };
+  const data = await duffel(env, `/places/suggestions?query=${encodeURIComponent(query)}`);
+  const out = [];
+  for (const p of data ?? []) {
+    if (p.iata_code && /^[A-Z]{3}$/.test(p.iata_code)) {
+      out.push({ iata: p.iata_code, type: p.type, name: p.name, city: p.city_name ?? p.city?.name ?? null, country: p.iata_country_code ?? null });
+    }
+    if (out.length >= 8) break;
+  }
+  return { ok: true, places: out };
 }
 
 async function book(req, env) {
@@ -281,6 +302,7 @@ export default {
     try {
       if (req.method !== "POST") return out({ ok: false, error: "method" }, 405);
       if (origin !== allowed) return out({ ok: false, error: "origin" }, 403);
+      if (pathname === "/flight/places") return out(await places(req, env));
       if (pathname === "/flight/search") return out(await search(req, env));
       if (pathname === "/flight/book") return out(await book(req, env));
       if (pathname === "/flight/status") return out(await status(req, env));

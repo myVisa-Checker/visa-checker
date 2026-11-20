@@ -12,7 +12,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs"]) {
+for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -69,6 +69,10 @@ console.log("Réservation de vol temporaire (module flight-hold)");
   ok("Worker : échéance sauvegardée en KV et statut hold/expired/issued", /holdStatus/.test(fw) && /fh:order:/.test(fw) && /\/flight\/status/.test(fw) && /"expired"/.test(fw));
   ok("récapitulatif : échéance, compte à rebours et statut « expirée » en FR/EN/AR", (fh.match(/stExpired:/g) || []).length === 3 && (fh.match(/untilT:/g) || []).length === 3 && /function paint/.test(fh));
   ok("CSP autorise le Worker visa-flight", /connect-src[^"]*visa-flight\.rabehfly\.workers\.dev/.test(html));
+  ok("clic « Billet d'avion » ouvre vols.html (si le module est actif)", /data-need[\s\S]{0,40}|nd\.dataset\.need==="flight"/.test(read("visa-app.js")) && /vols\.html/.test(read("visa-app.js")));
+  ok("vols.html : CSP autorise le Worker visa-flight, scripts locaux seulement", /connect-src[^"]*visa-flight\.rabehfly\.workers\.dev/.test(read("vols.html")) && !/<script(?![^>]*src=)/.test(read("vols.html")));
+  ok("Worker : /flight/places et classe de cabine validée", /\/flight\/places/.test(fw) && /CABINS/.test(fw));
+  ok("vols.js : FR/EN/AR et page inactive tant que le module est caché", (read("vols.js").match(/untilT:/g) || []).length === 3 && /FH\.enabled\(\)/.test(read("vols.js")));
   ok("fichiers du module dans le cache hors ligne", /"flight-hold\.js"/.test(read("sw.js")) && /"flight-hold\.css"/.test(read("sw.js")));
   ok("récapitulatif : mention « non émis » et date limite présentes en FR/EN/AR", (fh.match(/badge:/g) || []).length === 3 && (fh.match(/doc:/g) || []).length === 3);
 }

@@ -194,5 +194,5 @@
   });
   document.addEventListener("submit", function (e) { if (e.target && e.target.id === "fh-form") onSearch(e); });
 
-  window.VCFlightHold = { enabled: enabled, card: card };
+  window.VCFlightHold = { enabled: enabled, card: card, url: FLIGHT_URL };
 })();

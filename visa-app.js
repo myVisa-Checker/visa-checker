@@ -2815,6 +2815,7 @@ document.addEventListener("click",function(e){
   var cb=e.target.closest(".cp");
   if(cb&&cb.dataset.pdf==null){copyLetter(cb);return}
   var nd=e.target.closest("[data-need]");
+  if(nd&&nd.dataset.need==="flight"&&window.VCFlightHold&&window.VCFlightHold.enabled()){location.href="./vols.html"+(/[?&]fh=test(&|$)/.test(location.search)?"?fh=test":"");return}
   if(nd){S.need=nd.dataset.need;S.back=S.step;S.step=8;RQ.done=false;RQ.d1="";RQ.d2="";save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
   var pb=e.target.closest("[data-pt]");
   if(pb){S.pt=pb.dataset.pt;save();render();return}

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://visa-flight.rabehfly.workers.dev; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Réserver un vol | CheckMyVisa</title>
+<meta name="description" content="Cherchez un vol et obtenez une réservation vérifiable (code PNR) sans payer le billet, pour votre dossier de visa.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b1f4b">
+<link rel="icon" href="./icons/icon-192.png">
+<link rel="stylesheet" href="./nav.css">
+<link rel="stylesheet" href="./site.css">
+<link rel="stylesheet" href="./brand.css">
+<link rel="stylesheet" href="./flight-hold.css">
+<link rel="stylesheet" href="./vols.css">
+</head>
+<body>
+<nav class="sitenav" aria-label="Navigation principale">
+  <a class="sn-logo" href="./?accueil=1"><b>Check</b>MyVisa</a>
+  <ul>
+    <li><a href="./?accueil=1">Accueil</a></li>
+    <li><a href="./guide-visa.html">Guide</a></li>
+    <li><a href="./a-propos.html">À propos</a></li>
+    <li><a href="./contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="vols">
+  <section class="vl-hero">
+    <svg class="vl-plane" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" transform="translate(34 34) rotate(45) scale(2.6) translate(-12 -12)" fill="currentColor"/></svg>
+    <h1 id="vl-h1"></h1>
+    <p class="vl-sub" id="vl-sub"></p>
+    <ul class="vl-trust" id="vl-trust"></ul>
+
+    <form class="vl-card" id="vl-form" novalidate>
+      <div class="vl-tabs" role="group" id="vl-tabs"></div>
+      <div class="vl-row">
+        <div class="vl-f vl-ac"><label for="vl-from" id="vl-l-from"></label><input id="vl-from" class="sel" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="vl-from-list" dir="ltr"><ul id="vl-from-list" class="vl-list" role="listbox" hidden></ul></div>
+        <div class="vl-f vl-ac"><label for="vl-to" id="vl-l-to"></label><input id="vl-to" class="sel" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="vl-to-list" dir="ltr"><ul id="vl-to-list" class="vl-list" role="listbox" hidden></ul></div>
+        <div class="vl-f"><label for="vl-d1" id="vl-l-d1"></label><input id="vl-d1" class="sel" type="date"></div>
+        <div class="vl-f" id="vl-d2w"><label for="vl-d2" id="vl-l-d2"></label><input id="vl-d2" class="sel" type="date"></div>
+        <div class="vl-f"><label id="vl-l-pax"></label><div class="vl-static" id="vl-pax"></div></div>
+        <div class="vl-f"><label for="vl-cabin" id="vl-l-cabin"></label><select id="vl-cabin" class="sel"></select></div>
+        <button type="submit" class="pay vl-go" id="vl-go"></button>
+      </div>
+      <p class="fe fh-err" id="vl-err" role="alert" hidden></p>
+    </form>
+  </section>
+
+  <section class="vl-pop" id="vl-pop-s"><h2 id="vl-pop-t"></h2><div class="vl-chips" id="vl-pop"></div></section>
+
+  <section id="vl-results" aria-live="polite"></section>
+  <p class="fh-legal" id="vl-legal"></p>
+</main>
+
+<script src="./flight-hold.js"></script>
+<script src="./vols.js"></script>
+</body>
+</html>
