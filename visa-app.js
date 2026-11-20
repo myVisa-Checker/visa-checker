@@ -1305,6 +1305,8 @@ var WORLD=[
 ];
 /* Agoda : demande de partenariat en attente (lien simple, sans identifiant d'affilié tant qu'elle n'est pas acceptée). */
 WORLD.splice(1,0,{g:"fh",n:"Agoda",dom:"agoda.com",svc:["hotel"],k:{fr:"Hôtels",en:"Hotels",ar:"فنادق"},u:"https://www.agoda.com",bg:"#ffffff",fg:"#5392f9",txt:"A"});
+/* Avionward : affiliation approuvée le 2026-11-20 (billet de continuation pour dossier de visa, commission 25 %). Lien d'affilié = ?ref=checkmyvisa. */
+WORLD.push({g:"fh",n:"Avionward",dom:"avionward.com",svc:["flight"],k:{fr:"Billet de vol pour dossier de visa",en:"Flight ticket for visa applications",ar:"تذكرة طيران لملف التأشيرة"},u:"https://avionward.com/?ref=checkmyvisa",bg:"#ffffff",fg:"#e5405e",txt:"AV"});
 var LOCAL=[
  {g:"ag",n:"Despina Travel and Events",k:{fr:"Hammamet",en:"Hammamet",ar:"الحمامات"},u:"",bg:"#e6efff",fg:"#1e3a8a",txt:"DTE"}
 ];
@@ -1314,7 +1316,7 @@ function tileHtml(x){
   else if(x.dom)ic='<span class="tile-ic" style="--tb:'+x.bg+';--tf:'+x.fg+'"><img class="fav" src="https://www.google.com/s2/favicons?domain='+x.dom+'&sz=128" alt="" loading="lazy"><span class="fbt" aria-hidden="true">'+x.txt+'</span></span>';
   else ic='<span class="tile-ic fb" style="--tb:'+x.bg+';--tf:'+x.fg+'"><span class="fbt" aria-hidden="true">'+x.txt+'</span></span>';
   var inner=ic+'<span class="tile-n">'+x.n+'</span><span class="tile-k">'+x.k[S.lang]+'</span>';
-  if(x.u)return '<a class="tile" href="'+x.u+'" target="_blank" rel="noopener noreferrer" aria-label="'+x.n+'">'+inner+'</a>';
+  if(x.u)return '<a class="tile" href="'+x.u+'" target="_blank" rel="noopener noreferrer'+(/[?&](a_aid|ref)=/.test(x.u)?' sponsored':'')+'" aria-label="'+x.n+'">'+inner+'</a>';
   return '<span class="tile tile-static" role="group" aria-label="'+x.n+'">'+inner+'</span>';
 }
 function tilesHtml(list){return '<div class="tiles">'+list.map(tileHtml).join("")+'</div>'}
