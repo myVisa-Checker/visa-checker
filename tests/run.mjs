@@ -61,6 +61,7 @@ console.log("Réservation de vol temporaire (module flight-hold)");
   const fh = read("flight-hold.js"), fw = read("worker/visa-flight-worker.js");
   const url = (fh.match(/var FLIGHT_URL = "([^"]*)"/) || [])[1];
   ok("module désactivé tant que FLIGHT_URL est vide (ou en https)", url === "" || /^https:\/\//.test(url), String(url));
+  ok("module caché au public tant que FLIGHT_LIVE est false (test via ?fh=test)", /var FLIGHT_LIVE = false;/.test(fh) && /fh=test/.test(fh));
   ok("carte branchée uniquement sur le parcours billet d'avion", /S\.need==="flight"&&window\.VCFlightHold&&window\.VCFlightHold\.enabled\(\)/.test(read("visa-app.js")));
   ok("Worker : filtre Hold et commande de type hold", /requires_instant_payment === false/.test(fw) && /type: "hold"/.test(fw));
   ok("Worker : contrôle d'origine et clé en secret", /origin !== allowed/.test(fw) && /env\.DUFFEL_API_KEY/.test(fw) && !/duffel_(test|live)_[A-Za-z0-9]{10,}/.test(fw));

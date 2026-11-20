@@ -1,11 +1,14 @@
 /* CheckMyVisa — Réservation de vol temporaire (PNR en attente).
    Affichée dans le parcours « Billet d'avion » (étape de choix du serveur) : une carte ouvre une fenêtre
    avec le formulaire, la liste des vols réservables sans paiement, puis le récapitulatif imprimable.
-   FLIGHT_URL vide = module désactivé (la carte n'apparaît pas, le site reste inchangé).
+   FLIGHT_URL vide = module désactivé. FLIGHT_LIVE false = visible seulement avec ?fh=test dans l'adresse.
    Aucune donnée personnelle n'est gardée dans le navigateur. */
 (function () {
   "use strict";
-  var FLIGHT_URL = ""; /* ex. "https://visa-flight.rabehfly.workers.dev" une fois le Worker déployé */
+  var FLIGHT_URL = "https://visa-flight.rabehfly.workers.dev";
+  /* Mode test : tant que FLIGHT_LIVE est false, la carte n'apparaît que si l'adresse du site contient ?fh=test (le public ne la voit pas).
+     Passer FLIGHT_LIVE à true pour l'ouvrir à tout le monde. */
+  var FLIGHT_LIVE = false;
 
   var T = {
     fr: {
@@ -54,7 +57,7 @@
   function lang() { var l = document.documentElement.lang; return T[l] ? l : "fr"; }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function fmt(iso) { if (!iso) return "—"; try { return new Date(iso).toLocaleString(lang() === "ar" ? "ar-TN" : lang() === "en" ? "en-GB" : "fr-FR", { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return iso; } }
-  function enabled() { return /^https:\/\//.test(FLIGHT_URL); }
+  function enabled() { return /^https:\/\//.test(FLIGHT_URL) && (FLIGHT_LIVE || /[?&]fh=test(&|$)/.test(location.search)); }
 
   function card(L) {
     var t = T[L] || T.fr;
