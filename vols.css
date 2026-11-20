@@ -45,3 +45,7 @@
 #vols .pay.wide{display:block;width:100%;margin-top:12px}
 #vols .fh-receipt{border:1px solid var(--line,#d6e2f7);border-radius:16px;padding:18px;background:var(--surface,#fff)}
 #vols form#vp-form{margin-top:12px}
+
+.vl-pay{margin:18px 0 6px}.vl-pay h2{font-size:15px;margin:0 0 8px;color:var(--muted,#4a5f86)}
+.vl-paylist{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.vl-paylist li{padding:8px 16px;border:1px solid var(--line,#d6e2f7);border-radius:10px;background:var(--surface,#fff);font-weight:700;font-size:14px;direction:ltr}

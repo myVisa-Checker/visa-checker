@@ -13,7 +13,7 @@
       trust: ["Sans payer le billet", "Code PNR vérifiable auprès de la compagnie", "Annulation automatique à l'échéance"],
       one: "Aller simple", rt: "Aller-retour", from: "Départ", to: "Destination", d1: "Date de départ", d2: "Date de retour", pax: "Voyageurs", adult: "1 Adulte", cabin: "Classe",
       cabins: { economy: "Économique", premium_economy: "Premium éco", business: "Affaires", first: "Première" }, search: "Rechercher", searching: "Recherche en cours…",
-      popT: "Destinations populaires", ph: "Ville ou code (ex. TUN)", pick: "Choisissez un aéroport dans la liste.", dates: "Indiquez la date de départ (et de retour pour un aller-retour).",
+      popT: "Destinations populaires", payT: "Moyens de paiement en Tunisie", ph: "Ville ou code (ex. TUN)", pick: "Choisissez un aéroport dans la liste.", dates: "Indiquez la date de départ (et de retour pour un aller-retour).",
       found: function (n) { return n + " vol(s) réservable(s) sans paiement"; }, none: "Aucun vol réservable sans paiement sur ces dates. Essayez d'autres dates ou un aéroport proche.",
       net: "Connexion impossible. Réessayez dans un instant.", expires: "Valable jusqu'au", price: "Prix si vous confirmez", book: "Réserver ce vol (attente)", booking: "Réservation en cours…",
       back: "← Modifier la recherche", pax2: "Passager (comme sur le passeport)", given: "Prénom(s)", family: "Nom", gender: "Genre", m: "Masculin", f: "Féminin", born: "Date de naissance", mail: "E-mail", phone: "Téléphone (avec indicatif, ex. +216…)",
@@ -31,7 +31,7 @@
       trust: ["No need to pay for the ticket", "PNR code you can check with the airline", "Automatic cancellation at the deadline"],
       one: "One way", rt: "Round trip", from: "From", to: "To", d1: "Departure date", d2: "Return date", pax: "Travellers", adult: "1 Adult", cabin: "Class",
       cabins: { economy: "Economy", premium_economy: "Premium economy", business: "Business", first: "First" }, search: "Search", searching: "Searching…",
-      popT: "Popular destinations", ph: "City or code (e.g. TUN)", pick: "Pick an airport from the list.", dates: "Enter the departure date (and the return date for a round trip).",
+      popT: "Popular destinations", payT: "Payment methods in Tunisia", ph: "City or code (e.g. TUN)", pick: "Pick an airport from the list.", dates: "Enter the departure date (and the return date for a round trip).",
       found: function (n) { return n + " flight(s) bookable without payment"; }, none: "No flight can be held without payment on these dates. Try other dates or a nearby airport.",
       net: "Connection failed. Please try again in a moment.", expires: "Valid until", price: "Price if you confirm", book: "Hold this flight", booking: "Booking…",
       back: "← Change search", pax2: "Passenger (as on the passport)", given: "Given name(s)", family: "Family name", gender: "Gender", m: "Male", f: "Female", born: "Date of birth", mail: "Email", phone: "Phone (with country code, e.g. +216…)",
@@ -49,7 +49,7 @@
       trust: ["دون دفع ثمن التذكرة", "رمز PNR يمكن التحقق منه لدى الشركة", "إلغاء تلقائي عند انتهاء المهلة"],
       one: "ذهاب فقط", rt: "ذهاب وإياب", from: "من", to: "إلى", d1: "تاريخ الذهاب", d2: "تاريخ العودة", pax: "المسافرون", adult: "بالغ واحد", cabin: "الدرجة",
       cabins: { economy: "اقتصادية", premium_economy: "اقتصادية مميزة", business: "رجال الأعمال", first: "الأولى" }, search: "بحث", searching: "جارٍ البحث…",
-      popT: "وجهات شائعة", ph: "مدينة أو رمز (مثل TUN)", pick: "اختر مطارًا من القائمة.", dates: "أدخل تاريخ الذهاب (وتاريخ العودة للذهاب والإياب).",
+      popT: "وجهات شائعة", payT: "وسائل الدفع في تونس", ph: "مدينة أو رمز (مثل TUN)", pick: "اختر مطارًا من القائمة.", dates: "أدخل تاريخ الذهاب (وتاريخ العودة للذهاب والإياب).",
       found: function (n) { return n + " رحلة قابلة للحجز دون دفع"; }, none: "لا توجد رحلة قابلة للحجز دون دفع في هذه التواريخ. جرّب تواريخ أخرى أو مطارًا قريبًا.",
       net: "تعذّر الاتصال. حاول مرة أخرى بعد قليل.", expires: "صالح حتى", price: "السعر عند التأكيد", book: "احجز هذه الرحلة (معلّق)", booking: "جارٍ الحجز…",
       back: "→ تعديل البحث", pax2: "المسافر (كما في جواز السفر)", given: "الاسم الشخصي", family: "اللقب", gender: "الجنس", m: "ذكر", f: "أنثى", born: "تاريخ الميلاد", mail: "البريد الإلكتروني", phone: "الهاتف (مع رمز الدولة، مثل +216…)",
@@ -95,7 +95,7 @@
     $("vl-l-pax").textContent = t.pax; $("vl-pax").textContent = t.adult; $("vl-l-cabin").textContent = t.cabin;
     $("vl-from").placeholder = t.ph; $("vl-to").placeholder = t.ph;
     $("vl-cabin").innerHTML = Object.keys(t.cabins).map(function (k) { return '<option value="' + k + '">' + esc(t.cabins[k]) + "</option>"; }).join("");
-    $("vl-go").textContent = t.search; $("vl-legal").textContent = t.legal; $("vl-pop-t").textContent = t.popT;
+    $("vl-go").textContent = t.search; $("vl-legal").textContent = t.legal; $("vl-pop-t").textContent = t.popT; $("vl-pay-t").textContent = t.payT;
     $("vl-pop").innerHTML = t.pop.map(function (p) { return '<button type="button" class="chip" data-dest="' + p[1] + '" data-name="' + esc(p[0]) + '">' + esc(p[0]) + "</button>"; }).join("");
     $("vl-d1").min = $("vl-d2").min = today();
     paintTabs();
