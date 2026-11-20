@@ -3,13 +3,14 @@
  *
  * Routes (POST, JSON) :
  *   /flight/search  -> offres compatibles Hold pour l'itinéraire demandé
- *   /flight/book    -> crée la commande Hold ; renvoie PNR + date limite de paiement
+ *   /flight/book    -> crée la commande Hold ; renvoie PNR + date limite de paiement + statut
+ *   /flight/status  -> {pnr} : statut hold / expired / issued (échéance sauvegardée en KV, sans donnée personnelle)
  *
  * Secret (Cloudflare > Settings > Variables and secrets) :
  *   DUFFEL_API_KEY   duffel_test_... (Sandbox) puis duffel_live_... (production)
  * Variable optionnelle :
  *   ALLOWED_ORIGIN   adresses séparées par des virgules (défaut : checkmyvisa.org et www)
- * Liaison KV optionnelle « KV » : limite de débit par IP (sans elle, aucune limite n'est appliquée).
+ * Liaison KV optionnelle « KV » : limite de débit par IP et sauvegarde des échéances (sans elle, pas de limite ni de suivi /flight/status).
  *
  * Déploiement : « Edit code » dans Cloudflare (comme les autres Workers) ou
  *   npx wrangler deploy --config worker/wrangler.flight.toml
@@ -144,6 +145,13 @@ const summarizeOffer = (o) => ({
   slices: summarizeSlices(o.slices),
 });
 
+/** Statut d'un Hold : « hold » avant l'échéance, « expired » après (la compagnie annule alors le Hold non émis), « issued » si payé. */
+function holdStatus(expiresAt, paidAt, now = Date.now()) {
+  if (paidAt) return "issued";
+  if (!expiresAt) return "hold";
+  return now >= new Date(expiresAt).getTime() ? "expired" : "hold";
+}
+
 /* ------------------------------ Limite de débit --------------------------- */
 
 /** Best-effort (KV sans incrément atomique). Ne bloque jamais si KV est absente ou en erreur. */
@@ -202,15 +210,49 @@ async function book(req, env) {
       },
     },
   });
+  const expires = order.payment_status?.payment_required_by ?? null;
+  // Sauvegarde de l'échéance (PNR, id de commande, date limite : aucune donnée personnelle), pour suivre le statut.
+  if (env.KV && order.booking_reference) {
+    try {
+      const ttl = expires ? Math.max(60, Math.ceil((new Date(expires).getTime() - Date.now()) / 1000) + 30 * 86400) : 30 * 86400;
+      await env.KV.put(
+        `fh:order:${order.booking_reference}`,
+        JSON.stringify({ order_id: order.id, payment_required_by: expires, created_at: new Date().toISOString() }),
+        { expirationTtl: ttl }
+      );
+    } catch (e) {
+      console.error("kv-save", e?.message);
+    }
+  }
   return {
     ok: true,
     pnr: order.booking_reference,
-    payment_required_by: order.payment_status?.payment_required_by ?? null,
+    status: holdStatus(expires, null),
+    payment_required_by: expires,
     total_amount: order.total_amount,
     total_currency: order.total_currency,
     passenger: { given_name: passenger.given_name, family_name: passenger.family_name },
     slices: summarizeSlices(order.slices),
   };
+}
+
+async function status(req, env) {
+  if (await limited(env, req, "status", 30, 600)) throw new HttpError(429, "Trop de demandes. Réessayez plus tard.", "rate");
+  const b = await req.json().catch(() => null);
+  const pnr = String(b?.pnr ?? "").toUpperCase().trim();
+  if (!/^[A-Z0-9]{5,8}$/.test(pnr)) throw new HttpError(422, "Référence invalide.", "pnr");
+  if (!env.KV) throw new HttpError(503, "Suivi indisponible.", "not_configured");
+  const rec = await env.KV.get(`fh:order:${pnr}`, "json");
+  if (!rec) throw new HttpError(404, "Réservation introuvable.", "not_found");
+  let paidAt = null;
+  if (holdStatus(rec.payment_required_by, null) === "hold") {
+    try {
+      paidAt = (await duffel(env, `/air/orders/${rec.order_id}`)).payment_status?.paid_at ?? null;
+    } catch (e) {
+      /* repli sur l'horloge */
+    }
+  }
+  return { ok: true, pnr, status: holdStatus(rec.payment_required_by, paidAt), payment_required_by: rec.payment_required_by };
 }
 
 /* ------------------------------ Routeur ----------------------------------- */
@@ -241,6 +283,7 @@ export default {
       if (origin !== allowed) return out({ ok: false, error: "origin" }, 403);
       if (pathname === "/flight/search") return out(await search(req, env));
       if (pathname === "/flight/book") return out(await book(req, env));
+      if (pathname === "/flight/status") return out(await status(req, env));
       return out({ ok: false, error: "not_found" }, 404);
     } catch (e) {
       if (e instanceof HttpError) return out({ ok: false, error: e.message, code: e.code }, e.status);

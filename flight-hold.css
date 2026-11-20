@@ -26,6 +26,14 @@
 .fh-dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0 0 10px;text-align:start;font-size:14px}.fh-dl dt{color:var(--muted,#617080)}.fh-dl dd{margin:0}
 .fh-receipt .fh-sl{text-align:start}
 .fh-warn{margin:12px 0;padding:10px 12px;border-radius:10px;background:#fdecec;color:#9b1c1c;font-size:14px;text-align:start}
+.fh-exp{margin:0 0 14px;padding:14px;border:2px solid #d9a400;border-radius:14px;background:#fff9e6}
+.fh-exp[data-state="expired"]{border-color:#b42318;background:#fdecec}
+.fh-exp[data-state="issued"]{border-color:#16794c;background:#e8f7ef}
+.fh-until{margin:2px 0 4px;font-size:22px;font-weight:800}
+.fh-left{margin:0 0 6px;font-size:15px;font-weight:600}
+.fh-state{margin:0;font-size:14px;font-weight:700}
+.fh-exp[data-state="expired"] .fh-state{color:#b42318}.fh-exp[data-state="issued"] .fh-state{color:#16794c}
+.fh-note{margin:6px 0 0;font-size:13px;line-height:1.45}.fh-note:empty{display:none}
 .fh-doc{margin:12px 0 0;font-size:12px;color:var(--muted,#617080)}
 .fh-body .chip{margin-top:10px}
 @media(max-width:640px){.fh-grid{grid-template-columns:1fr}.fh-pnr{font-size:30px}}

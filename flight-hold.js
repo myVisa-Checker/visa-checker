@@ -9,6 +9,8 @@
 
   var T = {
     fr: {
+      untilT: "Valable jusqu'au", leftT: "Temps restant", stHold: "En attente — billet non émis", stExpired: "Expirée — annulée automatiquement par la compagnie", stIssued: "Payée — billet émis par la compagnie", refresh: "Actualiser le statut",
+      expiredNote: "La date limite est dépassée : la compagnie annule automatiquement une réservation non émise. Elle n'est plus valable pour un dossier de visa.", noDeadline: "La compagnie n'a pas communiqué de date limite. Vérifiez-la auprès d'elle avec le code PNR.",
       cardT: "Réservation vérifiable (code PNR)", cardS: "Réservation réelle en attente de paiement, avec un code PNR que vous pouvez vérifier auprès de la compagnie. Billet non émis.", cardB: "Obtenir mon code PNR",
       title: "Réservation de vol temporaire", close: "Fermer", pax: "Passager (comme sur le passeport)", given: "Prénom(s)", family: "Nom", gender: "Genre", m: "Masculin", f: "Féminin", born: "Date de naissance", mail: "E-mail", phone: "Téléphone (avec indicatif, ex. +21620123456)",
       trip: "Voyage", from: "Aéroport de départ (code, ex. TUN)", to: "Aéroport d'arrivée (code, ex. CDG)", d1: "Date d'aller", d2: "Date de retour (facultatif)", rdv: "Date du rendez-vous consulaire (facultatif)",
@@ -20,6 +22,8 @@
       doc: "Réservation en attente de paiement, annulée automatiquement à l'échéance. Ce document n'est pas un billet."
     },
     en: {
+      untilT: "Valid until", leftT: "Time left", stHold: "On hold — ticket not issued", stExpired: "Expired — automatically cancelled by the airline", stIssued: "Paid — ticket issued by the airline", refresh: "Refresh status",
+      expiredNote: "The deadline has passed: the airline automatically cancels a reservation that has not been ticketed. It is no longer valid for a visa file.", noDeadline: "The airline has not given a deadline. Check it with them using the PNR code.",
       cardT: "Verifiable booking (PNR code)", cardS: "A real booking held until payment, with a PNR code you can check with the airline. Ticket not issued.", cardB: "Get my PNR code",
       title: "Temporary flight reservation", close: "Close", pax: "Passenger (as on the passport)", given: "Given name(s)", family: "Family name", gender: "Gender", m: "Male", f: "Female", born: "Date of birth", mail: "Email", phone: "Phone (with country code, e.g. +21620123456)",
       trip: "Trip", from: "Departure airport (code, e.g. TUN)", to: "Arrival airport (code, e.g. CDG)", d1: "Departure date", d2: "Return date (optional)", rdv: "Consular appointment date (optional)",
@@ -31,6 +35,8 @@
       doc: "Reservation awaiting payment, automatically cancelled at the deadline. This document is not a ticket."
     },
     ar: {
+      untilT: "صالح حتى", leftT: "الوقت المتبقي", stHold: "معلّق — التذكرة غير مُصدرة", stExpired: "منتهي — ألغته شركة الطيران تلقائيًا", stIssued: "مدفوع — أصدرت الشركة التذكرة", refresh: "تحديث الحالة",
+      expiredNote: "انتهت المهلة: تلغي شركة الطيران تلقائيًا الحجز غير المُصدر. لم يعد صالحًا لملف التأشيرة.", noDeadline: "لم تحدد شركة الطيران مهلة. تحقق منها لديها باستخدام رمز PNR.",
       cardT: "حجز قابل للتحقق (رمز PNR)", cardS: "حجز حقيقي معلّق إلى حين الدفع، مع رمز PNR يمكنك التحقق منه لدى شركة الطيران. التذكرة غير مُصدرة.", cardB: "احصل على رمز PNR",
       title: "حجز طيران مؤقت", close: "إغلاق", pax: "المسافر (كما في جواز السفر)", given: "الاسم الشخصي", family: "اللقب", gender: "الجنس", m: "ذكر", f: "أنثى", born: "تاريخ الميلاد", mail: "البريد الإلكتروني", phone: "الهاتف (مع رمز الدولة، مثل +21620123456)",
       trip: "الرحلة", from: "مطار المغادرة (الرمز، مثل TUN)", to: "مطار الوصول (الرمز، مثل CDG)", d1: "تاريخ الذهاب", d2: "تاريخ العودة (اختياري)", rdv: "تاريخ موعد القنصلية (اختياري)",
@@ -43,7 +49,7 @@
     }
   };
 
-  var dlg = null, pax = null, appt = "";
+  var dlg = null, pax = null, appt = "", cur = null, tick = null;
 
   function lang() { var l = document.documentElement.lang; return T[l] ? l : "fr"; }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
@@ -90,6 +96,7 @@
 
   function build() {
     if (dlg) dlg.remove();
+    clearInterval(tick);
     var t = T[lang()];
     dlg = document.createElement("dialog");
     dlg.className = "fh-dlg";
@@ -98,7 +105,7 @@
     document.body.appendChild(dlg);
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
     document.documentElement.classList.add("modal-open");
-    dlg.addEventListener("close", function () { document.documentElement.classList.remove("modal-open"); pax = null; });
+    dlg.addEventListener("close", function () { document.documentElement.classList.remove("modal-open"); pax = null; cur = null; clearInterval(tick); });
     dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
   }
 
@@ -134,12 +141,42 @@
       .catch(function (err) { btn.disabled = false; btn.textContent = t.book; showErr(err && err.message && err.message !== "Failed to fetch" ? err.message : t.net); });
   }
 
+  function left(ms) {
+    var m = Math.max(0, Math.floor(ms / 60000)), d = Math.floor(m / 1440), h = Math.floor((m % 1440) / 60), u = { fr: ["j", "h", "min"], en: ["d", "h", "min"], ar: ["ي", "س", "د"] }[lang()];
+    return (d ? d + " " + u[0] + " " : "") + (d || h ? h + " " + u[1] + " " : "") + (m % 60) + " " + u[2];
+  }
+
+  /* Statut affiché : « payée » si la compagnie l'a confirmé, « expirée » dès que l'échéance est passée, sinon « en attente ». */
+  function paint() {
+    var box = dlg && dlg.querySelector("#fh-exp"); if (!box || !cur) return;
+    var t = T[lang()], exp = cur.payment_required_by ? new Date(cur.payment_required_by).getTime() : null;
+    var st = cur.status === "issued" ? "issued" : (exp && Date.now() >= exp) ? "expired" : "hold";
+    box.setAttribute("data-state", st);
+    box.querySelector("#fh-state").textContent = st === "issued" ? t.stIssued : st === "expired" ? t.stExpired : t.stHold;
+    var lf = box.querySelector("#fh-left");
+    lf.textContent = st === "hold" && exp ? t.leftT + " : " + left(exp - Date.now()) : "";
+    lf.hidden = !(st === "hold" && exp);
+    box.querySelector("#fh-note").textContent = st === "expired" ? t.expiredNote : (!exp && st === "hold" ? t.noDeadline : "");
+    if (st === "expired") clearInterval(tick);
+  }
+
   function showReceipt(o) {
     var t = T[lang()], late = appt && o.payment_required_by && new Date(o.payment_required_by) < new Date(appt + "T23:59:59");
+    cur = { pnr: o.pnr, status: o.status || "hold", payment_required_by: o.payment_required_by };
     dlg.querySelector("#fh-body").innerHTML = '<section class="fh-receipt" id="fh-receipt"><p class="fh-badge">' + t.badge + '</p><p class="fh-k">' + t.pnr + '</p><p class="fh-pnr" dir="ltr">' + esc(o.pnr) + "</p>" +
-      '<dl class="fh-dl"><dt>' + t.passenger + "</dt><dd dir=\"ltr\">" + esc(o.passenger.family_name) + " / " + esc(o.passenger.given_name) + "</dd><dt>" + t.expires + "</dt><dd><b>" + fmt(o.payment_required_by) + "</b></dd><dt>" + t.price + '</dt><dd dir="ltr">' + esc(o.total_amount) + " " + esc(o.total_currency) + "</dd></dl>" + segs(o.slices) +
+      '<div class="fh-exp" id="fh-exp" data-state="hold" aria-live="polite"><p class="fh-k">' + t.untilT + '</p><p class="fh-until">' + fmt(o.payment_required_by) + '</p><p class="fh-left" id="fh-left"></p><p class="fh-state" id="fh-state"></p><p class="fh-note" id="fh-note"></p></div>' +
+      '<dl class="fh-dl"><dt>' + t.passenger + "</dt><dd dir=\"ltr\">" + esc(o.passenger.family_name) + " / " + esc(o.passenger.given_name) + "</dd><dt>" + t.price + '</dt><dd dir="ltr">' + esc(o.total_amount) + " " + esc(o.total_currency) + "</dd></dl>" + segs(o.slices) +
       (late ? '<p class="fh-warn fh-noprint">' + t.warn(esc(appt)) + "</p>" : "") + '<p class="fh-doc">' + t.doc + '</p></section>' +
-      '<button type="button" class="pay wide fh-noprint" data-fh-print="1">' + t.print + '</button><button type="button" class="chip fh-noprint" data-fh-again="1">' + t.again + "</button>";
+      '<button type="button" class="pay wide fh-noprint" data-fh-print="1">' + t.print + '</button><button type="button" class="chip fh-noprint" data-fh-refresh="1">' + t.refresh + '</button> <button type="button" class="chip fh-noprint" data-fh-again="1">' + t.again + "</button>";
+    paint(); clearInterval(tick); tick = setInterval(paint, 30000);
+  }
+
+  function refresh(btn) {
+    if (!cur) return; btn.disabled = true;
+    post("/flight/status", { pnr: cur.pnr })
+      .then(function (r) { cur.status = r.status; cur.payment_required_by = r.payment_required_by || cur.payment_required_by; })
+      .catch(function () { /* repli : l'horloge du navigateur décide */ })
+      .then(function () { btn.disabled = false; paint(); });
   }
 
   document.addEventListener("click", function (e) {
@@ -148,6 +185,7 @@
     if (!dlg) return;
     if (e.target.closest("[data-fh-close]")) { dlg.close(); return; }
     if ((el = e.target.closest("[data-fh-book]"))) { onBook(el); return; }
+    if ((el = e.target.closest("[data-fh-refresh]"))) { refresh(el); return; }
     if (e.target.closest("[data-fh-print]")) { document.documentElement.classList.add("fh-printing"); window.print(); setTimeout(function () { document.documentElement.classList.remove("fh-printing"); }, 500); return; }
     if (e.target.closest("[data-fh-again]")) { build(); }
   });

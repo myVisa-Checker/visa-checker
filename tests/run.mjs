@@ -65,6 +65,8 @@ console.log("Réservation de vol temporaire (module flight-hold)");
   ok("Worker : filtre Hold et commande de type hold", /requires_instant_payment === false/.test(fw) && /type: "hold"/.test(fw));
   ok("Worker : contrôle d'origine et clé en secret", /origin !== allowed/.test(fw) && /env\.DUFFEL_API_KEY/.test(fw) && !/duffel_(test|live)_[A-Za-z0-9]{10,}/.test(fw));
   ok("Worker : aucune donnée passager dans les journaux", !/console\.(log|error)\([^)]*(passenger|given_name|family_name|email|phone)/.test(fw));
+  ok("Worker : échéance sauvegardée en KV et statut hold/expired/issued", /holdStatus/.test(fw) && /fh:order:/.test(fw) && /\/flight\/status/.test(fw) && /"expired"/.test(fw));
+  ok("récapitulatif : échéance, compte à rebours et statut « expirée » en FR/EN/AR", (fh.match(/stExpired:/g) || []).length === 3 && (fh.match(/untilT:/g) || []).length === 3 && /function paint/.test(fh));
   ok("CSP autorise le Worker visa-flight", /connect-src[^"]*visa-flight\.rabehfly\.workers\.dev/.test(html));
   ok("fichiers du module dans le cache hors ligne", /"flight-hold\.js"/.test(read("sw.js")) && /"flight-hold\.css"/.test(read("sw.js")));
   ok("récapitulatif : mention « non émis » et date limite présentes en FR/EN/AR", (fh.match(/badge:/g) || []).length === 3 && (fh.match(/doc:/g) || []).length === 3);
