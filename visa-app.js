@@ -1307,6 +1307,8 @@ var WORLD=[
 WORLD.splice(1,0,{g:"fh",n:"Agoda",dom:"agoda.com",svc:["hotel"],k:{fr:"Hôtels",en:"Hotels",ar:"فنادق"},u:"https://www.agoda.com",bg:"#ffffff",fg:"#5392f9",txt:"A"});
 /* Avionward : affiliation approuvée le 2026-11-20 (billet de continuation pour dossier de visa, commission 25 %). Lien d'affilié = ?ref=checkmyvisa. */
 WORLD.push({g:"fh",n:"Avionward",dom:"avionward.com",svc:["flight"],k:{fr:"Billet de vol pour dossier de visa",en:"Flight ticket for visa applications",ar:"تذكرة طيران لملف التأشيرة"},u:"https://avionward.com/?ref=checkmyvisa",bg:"#ffffff",fg:"#e5405e",txt:"AV"});
+/* BestOnwardTicket : affiliation approuvée le 2026-11-20 (billet de continuation vérifiable). Lien d'affilié = ?ref=351. Paiement des commissions par PayPal uniquement (e-mail de paiement à mettre à jour dans leur espace affilié). */
+WORLD.push({g:"fh",n:"BestOnwardTicket",dom:"bestonwardticket.com",svc:["flight"],k:{fr:"Billet de continuation vérifiable",en:"Verifiable onward ticket",ar:"تذكرة مغادرة قابلة للتحقق"},u:"https://bestonwardticket.com/?ref=351",bg:"#ffffff",fg:"#2f5090",txt:"BOT"});
 var LOCAL=[
  {g:"ag",n:"Despina Travel and Events",k:{fr:"Hammamet",en:"Hammamet",ar:"الحمامات"},u:"",bg:"#e6efff",fg:"#1e3a8a",txt:"DTE"}
 ];
