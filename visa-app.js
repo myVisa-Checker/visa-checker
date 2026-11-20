@@ -1396,7 +1396,6 @@ function pickHtml(t){
   var svc=function(p){return p.svc.indexOf(S.need)>-1};
   var tabs=[["local",R.tabL]];if(INTL.filter(svc).length)tabs.push(["intl",R.tabI]);else pt="local";
   var h=stepper(2)+'<div class="panel"><span class="svc-pill">'+R.svc[S.need]+'</span>'+(tabs.length>1?'<div class="chips seg" role="group" aria-label="'+R.svc[S.need]+'">'+tabs.map(function(x){return '<button type="button" class="chip" data-pt="'+x[0]+'" aria-pressed="'+(pt===x[0])+'">'+x[1]+'</button>'}).join("")+'</div>':'');
-  if(S.need==="flight"&&window.VCFlightHold&&window.VCFlightHold.enabled())h+=window.VCFlightHold.card(L);
   if(pt==="intl"){h+=INTL.filter(svc).map(function(p,i){return agentCard(p,R,i+1)}).join("")}
   else{
     var seen={},list=[];delete PARTNERS._srv;Object.keys(PARTNERS).forEach(function(k){PARTNERS[k].forEach(function(p){if(!seen[p.id]&&svc(p)){seen[p.id]=1;list.push(p)}})});list=list.slice(0,4);
@@ -2750,7 +2749,7 @@ function render(){
   var t=applyCountry(UI[S.lang]);
   if(cur.id!=="fr"&&S.mode==="appeal")S.mode="check";
   if(!ready&&S.step>0&&S.step<6)S.step=0;if(S.step===2||S.step===3)S.step=4;
-  if(S.step===7&&!evFind(S.evc))S.step=6;if(S.step>13||S.step<0)S.step=0;if(S.step>=8&&S.step<=10&&!S.need)S.step=0;if(S.step>=9&&S.step<=10&&!findAgent(S.agent))S.step=8;if(S.step===10&&!RQ.done)S.step=9;
+  if(S.step===7&&!evFind(S.evc))S.step=6;if(S.step>13||S.step<0)S.step=0;if(S.step>=8&&S.step<=10&&(!S.need||S.need==="flight"))S.step=0;if(S.step>=9&&S.step<=10&&!findAgent(S.agent))S.step=8;if(S.step===10&&!RQ.done)S.step=9;
   var st=S.step,e=eff();
   document.documentElement.lang=S.lang;
   document.documentElement.dir=S.lang==="ar"?"rtl":"ltr";renderChrome();
@@ -2815,7 +2814,7 @@ document.addEventListener("click",function(e){
   var cb=e.target.closest(".cp");
   if(cb&&cb.dataset.pdf==null){copyLetter(cb);return}
   var nd=e.target.closest("[data-need]");
-  if(nd&&nd.dataset.need==="flight"&&window.VCFlightHold&&window.VCFlightHold.enabled()){location.href="./vols.html"+(/[?&]fh=test(&|$)/.test(location.search)?"?fh=test":"");return}
+  if(nd&&nd.dataset.need==="flight"){location.href="./vols.html";return}
   if(nd){S.need=nd.dataset.need;S.back=S.step;S.step=8;RQ.done=false;RQ.d1="";RQ.d2="";save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
   var pb=e.target.closest("[data-pt]");
   if(pb){S.pt=pb.dataset.pt;save();render();return}

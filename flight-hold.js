@@ -8,7 +8,7 @@
   var FLIGHT_URL = "https://visa-flight.rabehfly.workers.dev";
   /* Mode test : tant que FLIGHT_LIVE est false, la carte n'apparaît que si l'adresse du site contient ?fh=test (le public ne la voit pas).
      Passer FLIGHT_LIVE à true pour l'ouvrir à tout le monde. */
-  var FLIGHT_LIVE = false;
+  var FLIGHT_LIVE = true;
 
   var T = {
     fr: {
