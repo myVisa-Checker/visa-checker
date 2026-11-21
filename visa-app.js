@@ -1630,7 +1630,9 @@ function advisorCards(){
  '<a class="vc-advisor-card vc-saden" href="./view-entretien.html"><span class="vc-avatar"><img src="./images/saden-avatar.webp" data-a3d="saden" alt="Portrait illustré de Consulat Saden" width="180" height="180"></span><span class="vc-advisor-copy"><b>'+c[6]+'</b><small>'+c[7]+'</small><em>'+c[5]+' ↗</em></span></a>'+
  '</div></section>';
 }
-function needsHtml(t){return '<div class="needs"><h2 class="hot">'+t.needTitle+'</h2><p class="ag-sub">'+t.needSub+'</p><div class="sp-chips">'+needCard('flight',t.needFlight)+needCard('hotel',t.needHotel)+'</div></div>'}
+/* Réservation de vol (vols.html) : réservée au propriétaire (?fh=test ouvert une fois dans ce navigateur ; ?fh=off retire l'accès). */
+function ownerFlight(){var q=location.search;try{if(/[?&]fh=test(&|$)/.test(q))localStorage.setItem("vc-owner-flight","1");else if(/[?&]fh=off(&|$)/.test(q))localStorage.removeItem("vc-owner-flight");return localStorage.getItem("vc-owner-flight")==="1"}catch(e){return /[?&]fh=test(&|$)/.test(q)}}
+function needsHtml(t){return '<div class="needs"><h2 class="hot">'+t.needTitle+'</h2><p class="ag-sub">'+t.needSub+'</p><div class="sp-chips">'+(ownerFlight()?needCard('flight',t.needFlight):'')+needCard('hotel',t.needHotel)+'</div></div>'}
 /* Raccourcis vers les assistants IA, en haut de l'étape « Analyse IA » : Aïcha (vérification du dossier) ou Joury (recours après refus). */
 var AICHAGO={
  fr:{t:"Analysez votre dossier avec Aïcha",d:"Importez vos documents : Aïcha les compare, repère ce qui manque et vous dit quoi corriger avant le dépôt.",go:"Ouvrir Aïcha"},
@@ -2814,7 +2816,7 @@ document.addEventListener("click",function(e){
   var cb=e.target.closest(".cp");
   if(cb&&cb.dataset.pdf==null){copyLetter(cb);return}
   var nd=e.target.closest("[data-need]");
-  if(nd&&nd.dataset.need==="flight"){location.href="./vols.html";return}
+  if(nd&&nd.dataset.need==="flight"){if(ownerFlight())location.href="./vols.html";return}
   if(nd){S.need=nd.dataset.need;S.back=S.step;S.step=8;RQ.done=false;RQ.d1="";RQ.d2="";save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
   var pb=e.target.closest("[data-pt]");
   if(pb){S.pt=pb.dataset.pt;save();render();return}

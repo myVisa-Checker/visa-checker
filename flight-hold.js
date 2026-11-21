@@ -6,9 +6,9 @@
 (function () {
   "use strict";
   var FLIGHT_URL = "https://visa-flight.rabehfly.workers.dev";
-  /* Mode test : tant que FLIGHT_LIVE est false, la carte n'apparaît que si l'adresse du site contient ?fh=test (le public ne la voit pas).
+  /* Mode propriétaire : tant que FLIGHT_LIVE est false, le parcours n'apparaît que dans le navigateur où ?fh=test a été ouvert (le public ne le voit pas).
      Passer FLIGHT_LIVE à true pour l'ouvrir à tout le monde. */
-  var FLIGHT_LIVE = true;
+  var FLIGHT_LIVE = false;
 
   var T = {
     fr: {
@@ -57,7 +57,15 @@
   function lang() { var l = document.documentElement.lang; return T[l] ? l : "fr"; }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function fmt(iso) { if (!iso) return "—"; try { return new Date(iso).toLocaleString(lang() === "ar" ? "ar-TN" : lang() === "en" ? "en-GB" : "fr-FR", { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return iso; } }
-  function enabled() { return /^https:\/\//.test(FLIGHT_URL) && (FLIGHT_LIVE || /[?&]fh=test(&|$)/.test(location.search)); }
+  function owner() {
+    var q = location.search;
+    try {
+      if (/[?&]fh=test(&|$)/.test(q)) localStorage.setItem("vc-owner-flight", "1");
+      else if (/[?&]fh=off(&|$)/.test(q)) localStorage.removeItem("vc-owner-flight");
+      return localStorage.getItem("vc-owner-flight") === "1";
+    } catch (e) { return /[?&]fh=test(&|$)/.test(q); }
+  }
+  function enabled() { return /^https:\/\//.test(FLIGHT_URL) && (FLIGHT_LIVE || owner()); }
 
   function card(L) {
     var t = T[L] || T.fr;
@@ -194,5 +202,5 @@
   });
   document.addEventListener("submit", function (e) { if (e.target && e.target.id === "fh-form") onSearch(e); });
 
-  window.VCFlightHold = { enabled: enabled, card: card, url: FLIGHT_URL };
+  window.VCFlightHold = { enabled: enabled, owner: owner, card: card, url: FLIGHT_URL };
 })();
