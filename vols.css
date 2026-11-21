@@ -257,3 +257,5 @@ html[dir="rtl"] #vols .vl-row select#vl-cabin{background-position:left 2px cente
 .vl-f label{white-space:nowrap;font-size:12.5px}
 .vl-sub{font-size:clamp(16px,1.9vw,22px)}
 @media (min-width:900px){.vl-row{grid-template-columns:1.35fr 1.35fr 1.55fr 1.55fr 1.15fr 1.25fr auto}}
+
+.vl-note{margin:10px 16px 0;color:#fff;font-size:14px;line-height:1.4}

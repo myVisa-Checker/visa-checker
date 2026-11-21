@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="./flight-hold.css">
 <link rel="stylesheet" href="./vols.css">
 </head>
-<body class="vols" data-version="2026.11.21.0308">
+<body class="vols" data-version="2026.11.21.0405">
 <nav class="sitenav vl-nav" aria-label="Navigation principale">
   <a class="sn-logo vl-logo" href="./?accueil=1" aria-label="CheckMyVisa">
     <svg class="vl-logo-i" viewBox="0 0 64 56" aria-hidden="true" focusable="false"><path d="M6 40C2 24 18 10 40 8" fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round"/><path d="M12 48c14 4 36-2 46-22" fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" opacity=".7"/><path d="M60 8 24 24l8 3 4 10 4-7 9-4 7-4-5 4 6-5-5 1z" fill="#fff"/></svg>
@@ -50,6 +50,7 @@
         <div class="vl-f"><label for="vl-cabin" id="vl-l-cabin"></label><select id="vl-cabin" class="sel"></select></div>
         <button type="submit" class="pay vl-go" id="vl-go"></button>
       </div>
+      <p class="vl-note" id="vl-note" hidden></p>
       <p class="fe fh-err" id="vl-err" role="alert" hidden></p>
     </form>
     <ul class="vl-stats" id="vl-stats"></ul>
@@ -66,11 +67,11 @@
   <p class="fh-legal" id="vl-legal"></p>
 </main>
 
-<a class="vl-joury" href="./joury.html"><img src="./images/joury-avatar.webp" alt="" width="64" height="64"><span id="vl-joury-t"></span></a>
+<a class="vl-joury" href="./view-dossier.html"><img src="./images/aicha-avatar.webp" alt="" width="64" height="64"><span id="vl-joury-t"></span></a>
 
 <div class="vl-upd" id="vl-upd" role="status" hidden><span id="vl-upd-t"></span> <button type="button" id="vl-upd-b"></button></div>
 
-<footer class="vl-foot"><p class="vl-foot-t" id="vl-foot-t"></p><p class="vl-ver" id="vl-ver">v 2026.11.21.0308</p></footer>
+<footer class="vl-foot"><p class="vl-foot-t" id="vl-foot-t"></p><p class="vl-ver" id="vl-ver">v 2026.11.21.0405</p></footer>
 
 <script src="./flight-hold.js"></script>
 <script src="./vols.js"></script>
