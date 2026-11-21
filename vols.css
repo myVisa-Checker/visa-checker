@@ -301,3 +301,9 @@ html[dir="rtl"] .vr-sel .vl-ic,html[dir="rtl"] .vr-cd .vl-ic{transform:scaleX(-1
 .vl-ps b{min-width:18px;text-align:center}
 .vp-blk{margin:12px 0;padding:12px;border:1px solid var(--line,#d6e2f7);border-radius:14px}
 .vp-blk legend{padding:0 8px;font-weight:700}
+
+/* Les listes (aéroports, voyageurs) passent au-dessus des destinations populaires ; classe retirée pour le moment */
+.vl-hero{position:relative;z-index:6}
+.vl-dest{z-index:1}
+.vl-card{position:relative;z-index:7}
+@media (min-width:900px){.vl-row{grid-template-columns:1.5fr 1.5fr 1.6fr 1.6fr 1.3fr auto}}

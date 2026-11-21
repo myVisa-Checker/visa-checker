@@ -121,9 +121,8 @@
     $("vl-h1").innerHTML = esc(t.h1[0]) + " <em>" + esc(t.h1[1]) + "</em>";
     $("vl-sub").textContent = t.sub;
     lab("vl-l-from", "plane", t.from); lab("vl-l-to", "pin", t.to); lab("vl-l-d1", "cal", t.d1); lab("vl-l-d2", "cal", t.d2);
-    lab("vl-l-pax", "user", t.pax); paintPax(); lab("vl-l-cabin", "seat", t.cabin);
+    lab("vl-l-pax", "user", t.pax); paintPax();
     $("vl-from").placeholder = t.ph; $("vl-to").placeholder = t.ph;
-    $("vl-cabin").innerHTML = Object.keys(t.cabins).map(function (k) { return '<option value="' + k + '">' + esc(t.cabins[k]) + "</option>"; }).join("");
     setGo(t.search, true); $("vl-legal").textContent = t.legal;
     $("vl-d1").min = $("vl-d2").min = today();
     var tIc = ["shield", "bolt", "wallet"];
@@ -254,7 +253,7 @@
     if (!/^[A-Z]{3}$/.test(pick.from) || !/^[A-Z]{3}$/.test(pick.to)) return showErr(t.pick);
     if (!d1 || (trip === "rt" && !d2)) return showErr(t.dates);
     var btn = $("vl-go"); btn.disabled = true; setGo(t.searching, false);
-    post("/flight/search", { origin: pick.from, destination: pick.to, departure_date: d1, return_date: d2 || null, cabin_class: $("vl-cabin").value, adults: cnt.a, children: cnt.c, infants: cnt.i })
+    post("/flight/search", { origin: pick.from, destination: pick.to, departure_date: d1, return_date: d2 || null, cabin_class: "economy", adults: cnt.a, children: cnt.c, infants: cnt.i })
       .then(function (r) {
         lastCnt = { a: cnt.a, c: cnt.c, i: cnt.i };
         offers = r.offers || [];
