@@ -2,7 +2,7 @@
 #vols{max-width:1040px;margin:0 auto;padding:0 12px 40px}
 .vl-hero{position:relative;margin:12px 0 22px;padding:28px 20px 20px;border-radius:24px;color:#fff;overflow:hidden;
   background:radial-gradient(900px 380px at 85% -10%,#38bdf877,transparent 70%),linear-gradient(160deg,#061330 0%,#12306b 55%,#1d4ed8 100%)}
-.vl-plane{position:absolute;inset-inline-end:-10px;top:-6px;width:190px;height:190px;color:#ffffff22;pointer-events:none}
+.vl-plane{display:none;position:absolute;inset-inline-end:-10px;top:-6px;width:190px;height:190px;color:#ffffff22;pointer-events:none}
 .vl-hero h1{margin:0 0 6px;font-size:clamp(28px,5vw,46px);line-height:1.1;max-width:14em}
 .vl-hero h1 em{font-style:normal;color:#38bdf8}
 .vl-sub{margin:0 0 14px;font-size:17px;opacity:.95}
@@ -52,3 +52,29 @@
 .vl-paylist svg{height:32px;width:auto}
 .vl-paylist span{font-weight:800;font-size:17px;letter-spacing:.2px;color:#1a1f71}
 @media print{.vl-foot{display:none!important}}
+
+/* Visuel d'ouverture : avion et monuments (images/hero-vols.jpg), fondu vers le bleu à gauche */
+.vl-art{position:absolute;inset:0 0 auto auto;width:68%;height:360px;background:url(./images/hero-vols.jpg) right top/cover no-repeat;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 38%);mask-image:linear-gradient(to right,transparent,#000 38%);pointer-events:none}
+:root[dir="rtl"] .vl-art,html[dir="rtl"] .vl-art{inset:0 auto auto 0;transform:scaleX(-1)}
+.vl-hero>*:not(.vl-art){position:relative;z-index:1}
+.vl-hero{min-height:420px}
+.vl-hero h1{text-shadow:0 2px 14px #0a1a4088}
+@media (max-width:700px){.vl-art{width:100%;height:240px;opacity:.55;-webkit-mask-image:linear-gradient(to bottom,#000 30%,transparent);mask-image:linear-gradient(to bottom,#000 30%,transparent)}}
+.vl-list li small{display:block;color:var(--muted,#4a5f86);font-size:12px}
+.vl-list li.vl-c{background:var(--accent-soft,#e6efff);font-weight:600}
+.vl-list li.vl-a{padding-inline-start:22px}
+.vl-city{font-weight:700}
+/* Assistante Joury, bulle en bas à droite */
+.vl-joury{position:fixed;inset-inline-end:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:30;display:flex;align-items:flex-end;gap:8px;max-width:min(300px,86vw);text-decoration:none;color:var(--ink,#0b1f4b)}
+.vl-joury span{padding:10px 14px;border-radius:16px 16px 4px 16px;background:#fff;box-shadow:0 10px 28px -10px #0a1a4099;font-size:14px;line-height:1.35}
+.vl-joury img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 8px 20px -8px #0a1a4099;background:#fff;order:2}
+@media print{.vl-joury{display:none!important}}
+
+/* Corrections : la liste d'aéroports déborde du bandeau ; image mieux fondue ; bulle Joury discrète sur mobile */
+.vl-hero{overflow:visible}
+.vl-art{border-radius:24px;-webkit-mask-image:linear-gradient(to right,transparent 8%,#000 60%);mask-image:linear-gradient(to right,transparent 8%,#000 60%);width:62%}
+.vl-art::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(to bottom,transparent 55%,#061330cc)}
+.vl-list{min-width:min(340px,86vw)}
+.vl-list li span{min-width:0}
+@media (max-width:700px){.vl-art{opacity:.32;-webkit-mask-image:linear-gradient(to bottom,#000 20%,transparent);mask-image:linear-gradient(to bottom,#000 20%,transparent)}.vl-joury span{display:none}}

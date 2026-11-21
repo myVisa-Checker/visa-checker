@@ -10,7 +10,7 @@
   var T = {
     fr: {
       h1: ["Réservez votre vol", "en toute confiance"], sub: "Cherchez. Réservez. Obtenez un code PNR vérifiable.",
-      trust: ["Sans payer le billet", "Code PNR vérifiable auprès de la compagnie", "Annulation automatique à l'échéance"],
+      allAp: "Tous les aéroports", trust: ["Sans payer le billet", "Code PNR vérifiable auprès de la compagnie", "Annulation automatique à l'échéance"],
       one: "Aller simple", rt: "Aller-retour", from: "Départ", to: "Destination", d1: "Date de départ", d2: "Date de retour", pax: "Voyageurs", adult: "1 Adulte", cabin: "Classe",
       cabins: { economy: "Économique", premium_economy: "Premium éco", business: "Affaires", first: "Première" }, search: "Rechercher", searching: "Recherche en cours…",
       ph: "Ville ou code (ex. TUN)", pick: "Choisissez un aéroport dans la liste.", dates: "Indiquez la date de départ (et de retour pour un aller-retour).",
@@ -28,7 +28,7 @@
     },
     en: {
       h1: ["Book your flight", "with confidence"], sub: "Search. Hold. Get a verifiable PNR code.",
-      trust: ["No need to pay for the ticket", "PNR code you can check with the airline", "Automatic cancellation at the deadline"],
+      allAp: "All airports", trust: ["No need to pay for the ticket", "PNR code you can check with the airline", "Automatic cancellation at the deadline"],
       one: "One way", rt: "Round trip", from: "From", to: "To", d1: "Departure date", d2: "Return date", pax: "Travellers", adult: "1 Adult", cabin: "Class",
       cabins: { economy: "Economy", premium_economy: "Premium economy", business: "Business", first: "First" }, search: "Search", searching: "Searching…",
       ph: "City or code (e.g. TUN)", pick: "Pick an airport from the list.", dates: "Enter the departure date (and the return date for a round trip).",
@@ -46,7 +46,7 @@
     },
     ar: {
       h1: ["احجز رحلتك", "بثقة"], sub: "ابحث. احجز. واحصل على رمز PNR قابل للتحقق.",
-      trust: ["دون دفع ثمن التذكرة", "رمز PNR يمكن التحقق منه لدى الشركة", "إلغاء تلقائي عند انتهاء المهلة"],
+      allAp: "كل المطارات", trust: ["دون دفع ثمن التذكرة", "رمز PNR يمكن التحقق منه لدى الشركة", "إلغاء تلقائي عند انتهاء المهلة"],
       one: "ذهاب فقط", rt: "ذهاب وإياب", from: "من", to: "إلى", d1: "تاريخ الذهاب", d2: "تاريخ العودة", pax: "المسافرون", adult: "بالغ واحد", cabin: "الدرجة",
       cabins: { economy: "اقتصادية", premium_economy: "اقتصادية مميزة", business: "رجال الأعمال", first: "الأولى" }, search: "بحث", searching: "جارٍ البحث…",
       ph: "مدينة أو رمز (مثل TUN)", pick: "اختر مطارًا من القائمة.", dates: "أدخل تاريخ الذهاب (وتاريخ العودة للذهاب والإياب).",
@@ -108,10 +108,11 @@
   }
 
   /* ---------- autocomplétion ---------- */
+  function countryName(c) { try { return c ? new Intl.DisplayNames([locale], { type: "region" }).of(c) : ""; } catch (e) { return ""; } }
   function setupAc(key) {
     var inp = $("vl-" + key), list = $("vl-" + key + "-list"), timer = null, seq = 0, items = [], idx = -1;
     function close() { list.hidden = true; inp.setAttribute("aria-expanded", "false"); idx = -1; }
-    function choose(p) { pick[key] = p.iata; inp.value = (p.city || p.name) + " (" + p.iata + ")"; close(); }
+    function choose(p) { pick[key] = p.iata; inp.value = (p.type === "city" ? p.name : (p.city || p.name) + " — " + p.name) + " (" + p.iata + ")"; close(); }
     function hl() { Array.prototype.forEach.call(list.children, function (li, i) { li.setAttribute("aria-selected", String(i === idx)); }); }
     inp.addEventListener("input", function () {
       pick[key] = "";
@@ -124,7 +125,10 @@
           if (my !== seq) return;
           items = r.places || [];
           if (!items.length) return close();
-          list.innerHTML = items.map(function (p, i) { return '<li role="option" data-i="' + i + '"><span>' + esc((p.city || p.name) + (p.city && p.name && p.name !== p.city ? " — " + p.name : "")) + "</span><b>" + esc(p.iata) + "</b></li>"; }).join("");
+          list.innerHTML = items.map(function (p, i) {
+            var label = p.type === "city" ? "<b class=\"vl-city\">" + esc(p.name) + "</b> · " + esc(t.allAp) : esc((p.city ? p.city + " — " : "") + p.name);
+            return '<li role="option" data-i="' + i + '" class="' + (p.type === "city" ? "vl-c" : "vl-a") + '"><span>' + label + (countryName(p.country) ? ' <small>' + esc(countryName(p.country)) + "</small>" : "") + "</span><b>" + esc(p.iata) + "</b></li>";
+          }).join("");
           list.hidden = false; inp.setAttribute("aria-expanded", "true"); idx = -1;
         }).catch(close);
       }, 250);
@@ -239,6 +243,8 @@
   });
   document.addEventListener("submit", function (e) { if (e.target.id === "vl-form") onSearch(e); else if (e.target.id === "vp-form") onBook(e); });
 
+  var jt = { fr: ["Bonjour !", "Je suis Joury, votre assistante voyage."], en: ["Hello!", "I am Joury, your travel assistant."], ar: ["مرحبًا!", "أنا جوري، مساعدتك في السفر."] }[L];
+  $("vl-joury-t").innerHTML = "<b>" + esc(jt[0]) + "</b> " + esc(jt[1]);
   paintStatic();
   $("vl-from").value = "Tunis (TUN)";
   setupAc("from"); setupAc("to");

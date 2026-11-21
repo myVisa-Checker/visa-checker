@@ -201,12 +201,20 @@ async function places(req, env) {
   const query = String(b?.query ?? "").trim().slice(0, 40);
   if (query.length < 2) return { ok: true, places: [] };
   const data = await duffel(env, `/places/suggestions?query=${encodeURIComponent(query)}`);
-  const out = [];
+  const out = [], seen = new Set();
+  const add = (p, kind, city) => {
+    const iata = p?.iata_code;
+    if (!iata || !/^[A-Z]{3}$/.test(iata) || seen.has(kind + iata) || out.length >= 10) return;
+    seen.add(kind + iata);
+    out.push({ iata, type: kind, name: p.name, city: city ?? p.city_name ?? p.city?.name ?? null, country: p.iata_country_code ?? null });
+  };
   for (const p of data ?? []) {
-    if (p.iata_code && /^[A-Z]{3}$/.test(p.iata_code)) {
-      out.push({ iata: p.iata_code, type: p.type, name: p.name, city: p.city_name ?? p.city?.name ?? null, country: p.iata_country_code ?? null });
+    if (p.type === "city") {
+      add(p, "city", p.name); // « Paris : tous les aéroports » (PAR)
+      for (const a of p.airports ?? []) add({ ...a, iata_country_code: a.iata_country_code ?? p.iata_country_code }, "airport", p.name);
+    } else {
+      add(p, "airport", null);
     }
-    if (out.length >= 8) break;
   }
   return { ok: true, places: out };
 }
