@@ -21,15 +21,14 @@
 .vl-list li{padding:9px 10px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;justify-content:space-between;gap:10px}
 .vl-list li[aria-selected="true"],.vl-list li:hover{background:var(--accent-soft,#e6efff)}
 .vl-list b{direction:ltr}
-.vl-pop h2,#vl-results h2{font-size:20px;margin:6px 0 10px}
-.vl-chips{display:flex;flex-wrap:wrap;gap:8px}
+#vl-results h2{font-size:20px;margin:6px 0 10px}
 #vl-results .fh-offer{background:var(--surface,#fff)}
 #vl-results .fh-body-in{padding:0}
 .vl-pax{padding:6px 0}
 .vl-back{margin:0 0 12px}
 @media (min-width:900px){.vl-go{grid-column:auto}.vl-row{grid-template-columns:1.6fr 1.6fr 1.5fr 1.5fr .9fr 1.3fr auto}.vl-row .vl-ac{grid-column:auto}}
 @media (max-width:560px){.vl-row{grid-template-columns:1fr 1fr}.vl-row .vl-ac{grid-column:1/-1}}
-@media print{.sitenav,.vl-hero,.vl-pop,.fh-noprint,.fh-legal{display:none!important}}
+@media print{.sitenav,.vl-hero,.fh-noprint,.fh-legal{display:none!important}}
 
 /* Éléments de formulaire propres à cette page (vc.css n'est pas chargé ici) */
 .vl-hero h1{color:#fff}
@@ -46,6 +45,10 @@
 #vols .fh-receipt{border:1px solid var(--line,#d6e2f7);border-radius:16px;padding:18px;background:var(--surface,#fff)}
 #vols form#vp-form{margin-top:12px}
 
-.vl-pay{margin:18px 0 6px}.vl-pay h2{font-size:15px;margin:0 0 8px;color:var(--muted,#4a5f86)}
-.vl-paylist{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
-.vl-paylist li{padding:8px 16px;border:1px solid var(--line,#d6e2f7);border-radius:10px;background:var(--surface,#fff);font-weight:700;font-size:14px;direction:ltr}
+
+.vl-foot{margin-top:8px;padding:22px 12px calc(22px + env(safe-area-inset-bottom));background:var(--navy-900,#0b1f4b)}
+.vl-paylist{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;margin:0 auto;padding:0;list-style:none;max-width:1040px}
+.vl-paylist li{display:flex;align-items:center;justify-content:center;min-width:104px;height:54px;padding:0 14px;border-radius:10px;background:#fff;direction:ltr}
+.vl-paylist svg{height:32px;width:auto}
+.vl-paylist span{font-weight:800;font-size:17px;letter-spacing:.2px;color:#1a1f71}
+@media print{.vl-foot{display:none!important}}

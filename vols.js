@@ -13,7 +13,7 @@
       trust: ["Sans payer le billet", "Code PNR vérifiable auprès de la compagnie", "Annulation automatique à l'échéance"],
       one: "Aller simple", rt: "Aller-retour", from: "Départ", to: "Destination", d1: "Date de départ", d2: "Date de retour", pax: "Voyageurs", adult: "1 Adulte", cabin: "Classe",
       cabins: { economy: "Économique", premium_economy: "Premium éco", business: "Affaires", first: "Première" }, search: "Rechercher", searching: "Recherche en cours…",
-      popT: "Destinations populaires", payT: "Moyens de paiement en Tunisie", ph: "Ville ou code (ex. TUN)", pick: "Choisissez un aéroport dans la liste.", dates: "Indiquez la date de départ (et de retour pour un aller-retour).",
+      ph: "Ville ou code (ex. TUN)", pick: "Choisissez un aéroport dans la liste.", dates: "Indiquez la date de départ (et de retour pour un aller-retour).",
       found: function (n) { return n + " vol(s) réservable(s) sans paiement"; }, none: "Aucun vol réservable sans paiement sur ces dates. Essayez d'autres dates ou un aéroport proche.",
       net: "Connexion impossible. Réessayez dans un instant.", expires: "Valable jusqu'au", price: "Prix si vous confirmez", book: "Réserver ce vol (attente)", booking: "Réservation en cours…",
       back: "← Modifier la recherche", pax2: "Passager (comme sur le passeport)", given: "Prénom(s)", family: "Nom", gender: "Genre", m: "Masculin", f: "Féminin", born: "Date de naissance", mail: "E-mail", phone: "Téléphone (avec indicatif, ex. +216…)",
@@ -24,14 +24,14 @@
       warn: function (d) { return "Attention : cette réservation expire avant votre rendez-vous consulaire (" + d + "). Refaites-la plus près de la date."; },
       legal: "Il s'agit d'une réservation temporaire (mode attente), non émise et à validité limitée, destinée aux démarches de visa. Elle s'annule automatiquement à la date limite fixée par la compagnie si elle n'est pas payée. Ce n'est pas un billet.",
       doc: "Réservation en attente de paiement, annulée automatiquement à l'échéance. Ce document n'est pas un billet.",
-      pop: [["Paris", "PAR"], ["Dubaï", "DXB"], ["New York", "NYC"], ["Istanbul", "IST"], ["Londres", "LON"]], d: ["j", "h", "min"]
+      d: ["j", "h", "min"]
     },
     en: {
       h1: ["Book your flight", "with confidence"], sub: "Search. Hold. Get a verifiable PNR code.",
       trust: ["No need to pay for the ticket", "PNR code you can check with the airline", "Automatic cancellation at the deadline"],
       one: "One way", rt: "Round trip", from: "From", to: "To", d1: "Departure date", d2: "Return date", pax: "Travellers", adult: "1 Adult", cabin: "Class",
       cabins: { economy: "Economy", premium_economy: "Premium economy", business: "Business", first: "First" }, search: "Search", searching: "Searching…",
-      popT: "Popular destinations", payT: "Payment methods in Tunisia", ph: "City or code (e.g. TUN)", pick: "Pick an airport from the list.", dates: "Enter the departure date (and the return date for a round trip).",
+      ph: "City or code (e.g. TUN)", pick: "Pick an airport from the list.", dates: "Enter the departure date (and the return date for a round trip).",
       found: function (n) { return n + " flight(s) bookable without payment"; }, none: "No flight can be held without payment on these dates. Try other dates or a nearby airport.",
       net: "Connection failed. Please try again in a moment.", expires: "Valid until", price: "Price if you confirm", book: "Hold this flight", booking: "Booking…",
       back: "← Change search", pax2: "Passenger (as on the passport)", given: "Given name(s)", family: "Family name", gender: "Gender", m: "Male", f: "Female", born: "Date of birth", mail: "Email", phone: "Phone (with country code, e.g. +216…)",
@@ -42,14 +42,14 @@
       warn: function (d) { return "Warning: this reservation expires before your consular appointment (" + d + "). Book it again closer to the date."; },
       legal: "This is a temporary reservation (on hold), not ticketed and valid for a limited time, intended for visa applications. It is cancelled automatically at the airline's deadline if it is not paid. It is not a ticket.",
       doc: "Reservation awaiting payment, automatically cancelled at the deadline. This document is not a ticket.",
-      pop: [["Paris", "PAR"], ["Dubai", "DXB"], ["New York", "NYC"], ["Istanbul", "IST"], ["London", "LON"]], d: ["d", "h", "min"]
+      d: ["d", "h", "min"]
     },
     ar: {
       h1: ["احجز رحلتك", "بثقة"], sub: "ابحث. احجز. واحصل على رمز PNR قابل للتحقق.",
       trust: ["دون دفع ثمن التذكرة", "رمز PNR يمكن التحقق منه لدى الشركة", "إلغاء تلقائي عند انتهاء المهلة"],
       one: "ذهاب فقط", rt: "ذهاب وإياب", from: "من", to: "إلى", d1: "تاريخ الذهاب", d2: "تاريخ العودة", pax: "المسافرون", adult: "بالغ واحد", cabin: "الدرجة",
       cabins: { economy: "اقتصادية", premium_economy: "اقتصادية مميزة", business: "رجال الأعمال", first: "الأولى" }, search: "بحث", searching: "جارٍ البحث…",
-      popT: "وجهات شائعة", payT: "وسائل الدفع في تونس", ph: "مدينة أو رمز (مثل TUN)", pick: "اختر مطارًا من القائمة.", dates: "أدخل تاريخ الذهاب (وتاريخ العودة للذهاب والإياب).",
+      ph: "مدينة أو رمز (مثل TUN)", pick: "اختر مطارًا من القائمة.", dates: "أدخل تاريخ الذهاب (وتاريخ العودة للذهاب والإياب).",
       found: function (n) { return n + " رحلة قابلة للحجز دون دفع"; }, none: "لا توجد رحلة قابلة للحجز دون دفع في هذه التواريخ. جرّب تواريخ أخرى أو مطارًا قريبًا.",
       net: "تعذّر الاتصال. حاول مرة أخرى بعد قليل.", expires: "صالح حتى", price: "السعر عند التأكيد", book: "احجز هذه الرحلة (معلّق)", booking: "جارٍ الحجز…",
       back: "→ تعديل البحث", pax2: "المسافر (كما في جواز السفر)", given: "الاسم الشخصي", family: "اللقب", gender: "الجنس", m: "ذكر", f: "أنثى", born: "تاريخ الميلاد", mail: "البريد الإلكتروني", phone: "الهاتف (مع رمز الدولة، مثل +216…)",
@@ -60,7 +60,7 @@
       warn: function (d) { return "تنبيه: ينتهي هذا الحجز قبل موعد القنصلية (" + d + "). أعد الحجز قرب الموعد."; },
       legal: "هذا حجز مؤقت (معلّق)، غير مُصدر وصالح لمدة محدودة، مخصص لإجراءات التأشيرة. يُلغى تلقائيًا في الموعد الذي تحدده الشركة إذا لم يُدفع. هذه ليست تذكرة.",
       doc: "حجز في انتظار الدفع، يُلغى تلقائيًا عند انتهاء المهلة. هذه الوثيقة ليست تذكرة.",
-      pop: [["باريس", "PAR"], ["دبي", "DXB"], ["نيويورك", "NYC"], ["إسطنبول", "IST"], ["لندن", "LON"]], d: ["ي", "س", "د"]
+      d: ["ي", "س", "د"]
     }
   };
 
@@ -95,9 +95,11 @@
     $("vl-l-pax").textContent = t.pax; $("vl-pax").textContent = t.adult; $("vl-l-cabin").textContent = t.cabin;
     $("vl-from").placeholder = t.ph; $("vl-to").placeholder = t.ph;
     $("vl-cabin").innerHTML = Object.keys(t.cabins).map(function (k) { return '<option value="' + k + '">' + esc(t.cabins[k]) + "</option>"; }).join("");
-    $("vl-go").textContent = t.search; $("vl-legal").textContent = t.legal; $("vl-pop-t").textContent = t.popT; $("vl-pay-t").textContent = t.payT;
-    $("vl-pop").innerHTML = t.pop.map(function (p) { return '<button type="button" class="chip" data-dest="' + p[1] + '" data-name="' + esc(p[0]) + '">' + esc(p[0]) + "</button>"; }).join("");
+    $("vl-go").textContent = t.search; $("vl-legal").textContent = t.legal;
     $("vl-d1").min = $("vl-d2").min = today();
+    var konnect = '<svg viewBox="0 0 172 44" role="img" aria-label="Konnect"><g fill="none" stroke="#9bdc36" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"><path d="M8 7h12v12H8zM25 7h12v12H25zM8 24h12v12H8z"/><path d="M25 24l12 12M37 24L25 36"/></g><text x="48" y="30" fill="#12334a" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="-1">konnect</text></svg>';
+    var flouci = '<svg viewBox="0 0 172 44" role="img" aria-label="Flouci"><g transform="translate(4 5)"><path d="M4 7c8-7 18-5 22 2 4 8-2 18-12 19-5 1-10-1-13-5 9 2 16-3 16-9 0-5-5-8-13-7z" fill="#ef8b47"/><path d="M12 25c8 2 15-3 15-10 0-4-2-7-6-9 10 3 14 14 7 22-7 8-20 6-25-1 3 0 6-1 9-2z" fill="#0eaa7e"/></g><text x="43" y="30" fill="#153b43" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="-1">flouci</text></svg>';
+    $("vl-pay").innerHTML = "<li>" + flouci + "</li><li>" + konnect + "</li><li><span>Visa</span></li><li><span>Mastercard</span></li>";
     paintTabs();
   }
   function paintTabs() {
@@ -225,7 +227,6 @@
   document.addEventListener("click", function (e) {
     var el;
     if ((el = e.target.closest("[data-trip]"))) { trip = el.getAttribute("data-trip"); paintTabs(); return; }
-    if ((el = e.target.closest("[data-dest]"))) { pick.to = el.getAttribute("data-dest"); $("vl-to").value = el.getAttribute("data-name") + " (" + pick.to + ")"; $("vl-d1").focus(); return; }
     if ((el = e.target.closest("[data-offer]"))) { showPassenger(el.getAttribute("data-offer")); return; }
     if (e.target.closest("[data-back]")) { $("vl-form").scrollIntoView({ behavior: "smooth" }); $("vl-results").innerHTML = ""; return; }
     if ((el = e.target.closest("[data-refresh]"))) {
