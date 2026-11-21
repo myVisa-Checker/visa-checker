@@ -332,7 +332,7 @@ export default {
     const origin = req.headers.get("Origin") || "";
     const allowed = list.includes(origin) ? origin : list[0];
     const out = (body, status = 200) =>
-      new Response(JSON.stringify(body), {
+      new Response(status === 204 ? null : JSON.stringify(body), {
         status,
         headers: {
           "Content-Type": "application/json; charset=utf-8",
