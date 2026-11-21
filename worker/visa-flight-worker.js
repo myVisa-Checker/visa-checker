@@ -204,7 +204,7 @@ async function places(req, env) {
   const out = [], seen = new Set();
   const add = (p, kind, city) => {
     const iata = p?.iata_code;
-    if (!iata || !/^[A-Z]{3}$/.test(iata) || seen.has(kind + iata) || out.length >= 10) return;
+    if (!iata || !/^[A-Z]{3}$/.test(iata) || seen.has(kind + iata) || out.length >= 25) return;
     seen.add(kind + iata);
     out.push({ iata, type: kind, name: p.name, city: city ?? p.city_name ?? p.city?.name ?? null, country: p.iata_country_code ?? null });
   };

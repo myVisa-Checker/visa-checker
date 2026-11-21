@@ -12,7 +12,7 @@
       h1: ["Réservez votre vol", "en toute confiance"], sub: "Cherchez. Réservez. Obtenez un code PNR vérifiable.",
       allAp: "Tous les aéroports", upd: ["Nouvelle version disponible", "Mettre à jour"], trust: ["Code PNR vérifiable", "Réservation immédiate", "Sans payer le billet"],
       nav: ["Guide Visa", "À propos", "Contact"], destT: "Destinations populaires", destGo: "Chercher un vol",
-      stats: [["FR · EN · AR", "Interface en 3 langues"], ["Réservation vérifiable", "Code PNR contrôlable chez la compagnie"], ["Compagnies aériennes", "Vols proposés via Duffel"], ["Assistante IA Joury", "Pour vous guider dans votre dossier"]],
+      stats: [["FR · EN · AR", "Interface en 3 langues"], ["Réservation vérifiable", "Code PNR contrôlable chez la compagnie"], ["Compagnies aériennes", "Choisissez parmi plusieurs vols"], ["Assistante IA Aïcha", "Elle vérifie votre dossier"]],
       dest: { PAR: "Paris", DXB: "Dubaï", NYC: "New York", IST: "Istanbul", LON: "Londres" }, footT: "Réservation en attente : billet non émis, annulée automatiquement à l'échéance.",
       one: "Aller simple", rt: "Aller-retour", from: "Départ", to: "Destination", d1: "Date de départ", d2: "Date de retour", pax: "Voyageurs", adult: "1 Adulte", cabin: "Classe",
       cabins: { economy: "Économique", premium_economy: "Premium éco", business: "Affaires", first: "Première" }, search: "Rechercher", searching: "Recherche en cours…",
@@ -33,7 +33,7 @@
       h1: ["Book your flight", "with confidence"], sub: "Search. Hold. Get a verifiable PNR code.",
       allAp: "All airports", upd: ["New version available", "Update"], trust: ["Verifiable PNR code", "Instant booking", "No need to pay for the ticket"],
       nav: ["Visa Guide", "About", "Contact"], destT: "Popular destinations", destGo: "Search a flight",
-      stats: [["FR · EN · AR", "Interface in 3 languages"], ["Verifiable booking", "PNR code you can check with the airline"], ["Airlines", "Flights offered through Duffel"], ["Joury AI assistant", "To guide you through your file"]],
+      stats: [["FR · EN · AR", "Interface in 3 languages"], ["Verifiable booking", "PNR code you can check with the airline"], ["Airlines", "Choose among several flights"], ["Aicha AI assistant", "She checks your file"]],
       dest: { PAR: "Paris", DXB: "Dubai", NYC: "New York", IST: "Istanbul", LON: "London" }, footT: "Booking on hold: ticket not issued, automatically cancelled at the deadline.",
       one: "One way", rt: "Round trip", from: "From", to: "To", d1: "Departure date", d2: "Return date", pax: "Travellers", adult: "1 Adult", cabin: "Class",
       cabins: { economy: "Economy", premium_economy: "Premium economy", business: "Business", first: "First" }, search: "Search", searching: "Searching…",
@@ -54,7 +54,7 @@
       h1: ["احجز رحلتك", "بثقة"], sub: "ابحث. احجز. واحصل على رمز PNR قابل للتحقق.",
       allAp: "كل المطارات", upd: ["إصدار جديد متاح", "تحديث"], trust: ["رمز PNR قابل للتحقق", "حجز فوري", "دون دفع ثمن التذكرة"],
       nav: ["دليل التأشيرة", "من نحن", "اتصل بنا"], destT: "وجهات شائعة", destGo: "ابحث عن رحلة",
-      stats: [["FR · EN · AR", "واجهة بثلاث لغات"], ["حجز قابل للتحقق", "رمز PNR يمكنك التحقق منه لدى الشركة"], ["شركات الطيران", "رحلات عبر Duffel"], ["المساعدة الذكية جوري", "لمرافقتك في ملفك"]],
+      stats: [["FR · EN · AR", "واجهة بثلاث لغات"], ["حجز قابل للتحقق", "رمز PNR يمكنك التحقق منه لدى الشركة"], ["شركات الطيران", "اختر من بين عدة رحلات"], ["المساعدة الذكية عائشة", "تتحقق من ملفك"]],
       dest: { PAR: "باريس", DXB: "دبي", NYC: "نيويورك", IST: "إسطنبول", LON: "لندن" }, footT: "حجز معلّق: التذكرة غير مُصدرة، ويُلغى تلقائيًا عند انتهاء المهلة.",
       one: "ذهاب فقط", rt: "ذهاب وإياب", from: "من", to: "إلى", d1: "تاريخ الذهاب", d2: "تاريخ العودة", pax: "المسافرون", adult: "بالغ واحد", cabin: "الدرجة",
       cabins: { economy: "اقتصادية", premium_economy: "اقتصادية مميزة", business: "رجال الأعمال", first: "الأولى" }, search: "بحث", searching: "جارٍ البحث…",
@@ -86,7 +86,11 @@
   var today = function () { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
 
   var trip = "rt", pax = null, offers = [], cur = null, tick = null, appt = "";
-  var pick = { from: "TUN", to: "" };
+  var pick = { from: "TUN", to: "" }, notes = { from: "", to: "" };
+  function showNotes() {
+    var n = $("vl-note"), txt = [notes.from, notes.to].filter(Boolean).join("  ·  ");
+    n.textContent = txt; n.hidden = !txt;
+  }
 
   function post(path, payload) {
     return fetch(URL_ + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
@@ -144,10 +148,17 @@
   function setupAc(key) {
     var inp = $("vl-" + key), list = $("vl-" + key + "-list"), timer = null, seq = 0, items = [], idx = -1;
     function close() { list.hidden = true; inp.setAttribute("aria-expanded", "false"); idx = -1; }
-    function choose(p) { pick[key] = p.iata; inp.value = (p.type === "city" ? p.name : (p.city || p.name) + " — " + p.name) + " (" + p.iata + ")"; close(); }
+    function choose(p) {
+      notes[key] = "";
+      if (p.type === "city") {
+        var ap = items.filter(function (x) { return x.type === "airport" && x.city === p.name; }).map(function (x) { return x.name + " (" + x.iata + ")"; });
+        if (ap.length) notes[key] = p.name + " (" + p.iata + ") : " + ap.join(", ");
+      }
+      showNotes();
+      pick[key] = p.iata; inp.value = (p.type === "city" ? p.name : (p.city || p.name) + " — " + p.name) + " (" + p.iata + ")"; close(); }
     function hl() { Array.prototype.forEach.call(list.children, function (li, i) { li.setAttribute("aria-selected", String(i === idx)); }); }
     inp.addEventListener("input", function () {
-      pick[key] = "";
+      pick[key] = ""; notes[key] = ""; showNotes();
       var q = inp.value.trim(); clearTimeout(timer);
       if (q.length < 2) return close();
       if (/^[A-Za-z]{3}$/.test(q)) pick[key] = q.toUpperCase();
@@ -263,7 +274,7 @@
   document.addEventListener("click", function (e) {
     var el;
     if ((el = e.target.closest("[data-dest]"))) {
-      var c = el.getAttribute("data-dest"); pick.to = c; $("vl-to").value = t.dest[c] + " (" + c + ")";
+      var c = el.getAttribute("data-dest"); pick.to = c; notes.to = ""; showNotes(); $("vl-to").value = t.dest[c] + " (" + c + ")";
       $("vl-form").scrollIntoView({ behavior: "smooth", block: "center" }); return;
     }
     if ((el = e.target.closest("[data-trip]"))) { trip = el.getAttribute("data-trip"); paintTabs(); return; }
@@ -279,7 +290,7 @@
   });
   document.addEventListener("submit", function (e) { if (e.target.id === "vl-form") onSearch(e); else if (e.target.id === "vp-form") onBook(e); });
 
-  var jt = { fr: ["Bonjour !", "Je suis Joury, votre assistante voyage."], en: ["Hello!", "I am Joury, your travel assistant."], ar: ["مرحبًا!", "أنا جوري، مساعدتك في السفر."] }[L];
+  var jt = { fr: ["Bonjour !", "Je suis Aïcha, je vérifie votre dossier."], en: ["Hello!", "I am Aicha, I check your file."], ar: ["مرحبًا!", "أنا عائشة، أتحقق من ملفك."] }[L];
   $("vl-joury-t").innerHTML = "<b>" + esc(jt[0]) + "</b> " + esc(jt[1]);
   /* Nouvelle version : compare la version de cette page à version.json (jamais mis en cache) ; le bouton vide le cache puis recharge. */
   function checkVersion() {
