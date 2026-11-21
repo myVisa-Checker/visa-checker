@@ -259,3 +259,14 @@ html[dir="rtl"] #vols .vl-row select#vl-cabin{background-position:left 2px cente
 @media (min-width:900px){.vl-row{grid-template-columns:1.35fr 1.35fr 1.55fr 1.55fr 1.15fr 1.25fr auto}}
 
 .vl-note{margin:10px 16px 0;color:#fff;font-size:14px;line-height:1.4}
+
+/* Suggestions façon BestOnwardTicket : drapeau + « CDG - Paris, France », champs arrondis à bordure bleue sur mobile */
+.vl-list li.vl-a{padding-inline-start:10px;justify-content:flex-start;align-items:center;gap:10px}
+.vl-list li .vl-fl{flex:none;width:22px;height:16px;object-fit:cover;border-radius:2px;display:inline-block}
+.vl-list li span b{color:#1d4ed8}
+.vl-list li small{margin-top:1px}
+@media (max-width:700px){
+  #vols .vl-row .sel,.vl-static{border:2px solid #2f4f8f;border-radius:16px;min-height:52px;padding-inline:14px}
+  .vl-list{border:2px solid #2f4f8f;border-radius:16px}
+  .vl-list li{padding:12px}
+}

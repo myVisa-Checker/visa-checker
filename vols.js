@@ -155,7 +155,7 @@
         if (ap.length) notes[key] = p.name + " (" + p.iata + ") : " + ap.join(", ");
       }
       showNotes();
-      pick[key] = p.iata; inp.value = (p.type === "city" ? p.name : (p.city || p.name) + " — " + p.name) + " (" + p.iata + ")"; close(); }
+      pick[key] = p.iata; inp.value = p.iata + " - " + (p.city || p.name) + (countryName(p.country) ? ", " + countryName(p.country) : ""); close(); }
     function hl() { Array.prototype.forEach.call(list.children, function (li, i) { li.setAttribute("aria-selected", String(i === idx)); }); }
     inp.addEventListener("input", function () {
       pick[key] = ""; notes[key] = ""; showNotes();
@@ -167,10 +167,14 @@
         post("/flight/places", { query: q }).then(function (r) {
           if (my !== seq) return;
           items = r.places || [];
+          var aps = items.filter(function (x) { return x.type === "airport"; });
+          if (aps.length) items = aps;
           if (!items.length) return close();
           list.innerHTML = items.map(function (p, i) {
-            var label = p.type === "city" ? "<b class=\"vl-city\">" + esc(p.name) + "</b> · " + esc(t.allAp) : esc((p.city ? p.city + " — " : "") + p.name);
-            return '<li role="option" data-i="' + i + '" class="' + (p.type === "city" ? "vl-c" : "vl-a") + '"><span>' + label + (countryName(p.country) ? ' <small>' + esc(countryName(p.country)) + "</small>" : "") + "</span><b>" + esc(p.iata) + "</b></li>";
+            var cc = /^[A-Za-z]{2}$/.test(p.country || "") ? p.country.toLowerCase() : "";
+            var nm = p.type === "city" ? p.name : (p.city || p.name);
+            var ctry = countryName(p.country);
+            return '<li role="option" data-i="' + i + '" class="vl-a">' + (cc ? '<img class="vl-fl" src="./flags/' + cc + '.png" alt="" width="22" height="16">' : '<i class="vl-fl"></i>') + "<span><b dir=\"ltr\">" + esc(p.iata) + "</b> - " + esc(nm) + (ctry ? ", " + esc(ctry) : "") + (p.type === "airport" && p.name && p.name !== nm ? "<small>" + esc(p.name) + "</small>" : "") + "</span></li>";
           }).join("");
           list.hidden = false; inp.setAttribute("aria-expanded", "true"); idx = -1;
         }).catch(close);
@@ -184,6 +188,7 @@
       else if (e.key === "Escape") close();
     });
     list.addEventListener("mousedown", function (e) { var li = e.target.closest("li"); if (li) { e.preventDefault(); choose(items[+li.getAttribute("data-i")]); } });
+    list.addEventListener("error", function (e) { if (e.target.tagName === "IMG") e.target.style.visibility = "hidden"; }, true);
     inp.addEventListener("blur", function () { setTimeout(close, 120); });
   }
 
