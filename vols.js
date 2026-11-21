@@ -143,6 +143,18 @@
   }
 
   /* ---------- autocomplétion ---------- */
+  /* Aéroports tunisiens : repli si le Worker ne répond pas (et recherche par « Tunisie »). */
+  var TN_AP = [
+    ["TUN", "Tunis", "Tunis-Carthage"], ["NBE", "Enfidha", "Enfidha-Hammamet"], ["MIR", "Monastir", "Habib Bourguiba"], ["DJE", "Djerba", "Djerba-Zarzis"],
+    ["SFA", "Sfax", "Thyna"], ["TOE", "Tozeur", "Tozeur-Nefta"], ["TBJ", "Tabarka", "Tabarka-Aïn Draham"], ["GAF", "Gafsa", "Gafsa-Ksar"], ["GAE", "Gabès", "Gabès-Matmata"]
+  ];
+  function plain(s) { return String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+  function localPlaces(q) {
+    var k = plain(q).trim(); if (k.length < 2) return [];
+    var all = "tunisie tunisia tunisien تونس".indexOf(k) > -1 || k === "tn";
+    return TN_AP.filter(function (a) { return all || plain(a[0] + " " + a[1] + " " + a[2]).indexOf(k) > -1; })
+      .map(function (a) { return { iata: a[0], type: "airport", name: a[2], city: a[1], country: "TN" }; });
+  }
   function countryName(c) { try { return c ? new Intl.DisplayNames([locale], { type: "region" }).of(c) : ""; } catch (e) { return ""; } }
   function setupAc(key) {
     var inp = $("vl-" + key), list = $("vl-" + key + "-list"), timer = null, seq = 0, items = [], idx = -1;
@@ -163,12 +175,15 @@
       if (/^[A-Za-z]{3}$/.test(q)) pick[key] = q.toUpperCase();
       timer = setTimeout(function () {
         var my = ++seq;
-        post("/flight/places", { query: q }).then(function (r) {
-          if (my !== seq) return;
-          items = r.places || [];
+        function render(list0, errTxt) {
+          items = list0 || [];
           var aps = items.filter(function (x) { return x.type === "airport"; });
           if (aps.length) items = aps;
-          if (!items.length) return close();
+          if (!items.length) {
+            if (!errTxt) return close();
+            list.innerHTML = '<li class="vl-err" role="option" aria-disabled="true"><span>' + esc(errTxt) + "</span></li>";
+            list.hidden = false; inp.setAttribute("aria-expanded", "true"); idx = -1; return;
+          }
           list.innerHTML = items.map(function (p, i) {
             var cc = /^[A-Za-z]{2}$/.test(p.country || "") ? p.country.toLowerCase() : "";
             var nm = p.type === "city" ? p.name : (p.city || p.name);
@@ -176,7 +191,16 @@
             return '<li role="option" data-i="' + i + '" class="vl-a">' + (cc ? '<img class="vl-fl" src="./flags/' + cc + '.png" alt="" width="22" height="16">' : '<i class="vl-fl"></i>') + "<span><b dir=\"ltr\">" + esc(p.iata) + "</b> - " + esc(nm) + (ctry ? ", " + esc(ctry) : "") + (p.type === "airport" && p.name && p.name !== nm ? "<small>" + esc(p.name) + "</small>" : "") + "</span></li>";
           }).join("");
           list.hidden = false; inp.setAttribute("aria-expanded", "true"); idx = -1;
-        }).catch(close);
+        }
+        post("/flight/places", { query: q }).then(function (r) {
+          if (my !== seq) return;
+          var got = r.places || [], loc = localPlaces(q);
+          render(got.length ? got : loc);
+        }).catch(function (er) {
+          if (my !== seq) return;
+          var loc = localPlaces(q);
+          render(loc, loc.length ? "" : msg(er));
+        });
       }, 250);
     });
     inp.addEventListener("keydown", function (e) {
@@ -186,7 +210,7 @@
       else if (e.key === "Enter" && idx >= 0) { choose(items[idx]); e.preventDefault(); }
       else if (e.key === "Escape") close();
     });
-    list.addEventListener("mousedown", function (e) { var li = e.target.closest("li"); if (li) { e.preventDefault(); choose(items[+li.getAttribute("data-i")]); } });
+    list.addEventListener("mousedown", function (e) { var li = e.target.closest("li[data-i]"); if (li) { e.preventDefault(); choose(items[+li.getAttribute("data-i")]); } });
     list.addEventListener("error", function (e) { if (e.target.tagName === "IMG") e.target.style.visibility = "hidden"; }, true);
     inp.addEventListener("blur", function () { setTimeout(close, 120); });
   }
