@@ -201,6 +201,28 @@
     }).join("");
   }
 
+  /* ---------- cartes de résultats ---------- */
+  var X = {
+    fr: { sel: "Choisir", det: "Voir les détails", direct: "Direct", stops: function (n) { return n + " escale" + (n > 1 ? "s" : ""); } },
+    en: { sel: "Select", det: "View details", direct: "Direct", stops: function (n) { return n + " stop" + (n > 1 ? "s" : ""); } },
+    ar: { sel: "اختيار", det: "عرض التفاصيل", direct: "مباشر", stops: function (n) { return n + (n > 1 ? " توقفات" : " توقف"); } }
+  }[L];
+  function hm(iso) { return /T(\d\d:\d\d)/.test(iso || "") ? RegExp.$1 : "—"; }
+  function dmy(iso) { try { return new Date(String(iso).slice(0, 10) + "T12:00:00").toLocaleDateString(locale, { dateStyle: "medium" }); } catch (e) { return ""; } }
+  function dur(d) { var m = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?$/.exec(d || ""); if (!m) return ""; var h = (+m[1] || 0) * 24 + (+m[2] || 0); return (h ? h + "h" : "") + (m[3] ? String(+m[3]).padStart(h ? 2 : 1, "0") + (h ? "" : "min") : ""); }
+  function offerCard(o) {
+    var sl = (o.slices || []).map(function (s) {
+      var g = s.segments || [], a = g[0] || {}, z = g[g.length - 1] || {}, d = dur(s.duration);
+      return '<div class="vr-sl" dir="ltr"><div class="vr-tm"><span>' + esc(dmy(a.departing_at)) + "<b>" + esc(hm(a.departing_at)) + '</b></span><span class="vr-r">' + esc(dmy(z.arriving_at)) + "<b>" + esc(hm(z.arriving_at)) + "</b></span></div>" +
+        '<div class="vr-cd"><b>' + esc(s.origin) + '</b><i class="vl-ic">' + IC.arrow + "</i><b>" + esc(s.destination) + "</b></div>" +
+        '<p class="vr-m">' + (d ? esc(d) + " · " : "") + esc(g.length > 1 ? X.stops(g.length - 1) : X.direct) + "</p></div>";
+    }).join("");
+    return '<div class="vr-card"><div class="vr-air">' + (/^https:\/\//.test(o.owner_logo || "") ? '<img src="' + esc(o.owner_logo) + '" alt="" width="40" height="40" loading="lazy">' : "") + "<b>" + esc(o.owner) + "</b></div>" + sl +
+      '<p class="vr-pr" dir="ltr">' + esc(o.total_amount) + " " + esc(o.total_currency) + "</p>" +
+      '<button type="button" class="pay wide vr-sel" data-offer="' + esc(o.id) + '">' + esc(X.sel) + '<i class="vl-ic">' + IC.arrow + "</i></button>" +
+      '<details class="vr-det"><summary>' + esc(X.det) + "</summary><p class=\"fh-row\"><span>" + esc(t.expires) + " " + fmt(o.payment_required_by) + "</span></p>" + segs(o.slices) + "</details></div>";
+  }
+
   function onSearch(e) {
     e.preventDefault(); showErr("");
     var d1 = $("vl-d1").value, d2 = trip === "rt" ? $("vl-d2").value : "";
@@ -212,10 +234,7 @@
         offers = r.offers || [];
         var box = $("vl-results");
         if (!offers.length) { box.innerHTML = ""; return showErr(t.none); }
-        box.innerHTML = "<h2>" + esc(t.found(r.hold_count)) + "</h2>" + offers.map(function (o) {
-          return '<div class="fh-offer"><div class="fh-row"><b>' + esc(o.owner) + "</b><span dir=\"ltr\">" + esc(o.total_amount) + " " + esc(o.total_currency) + "</span></div><div class=\"fh-row\"><span>" + esc(t.expires) + " " + fmt(o.payment_required_by) + "</span></div>" + segs(o.slices) +
-            '<button type="button" class="pay wide" data-offer="' + esc(o.id) + '">' + esc(t.book) + "</button></div>";
-        }).join("");
+        box.innerHTML = "<h2>" + esc(t.found(r.hold_count)) + "</h2>" + offers.map(offerCard).join("");
         box.scrollIntoView({ behavior: "smooth", block: "start" });
       })
       .catch(function (er) { showErr(msg(er)); })

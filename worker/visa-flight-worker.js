@@ -131,6 +131,7 @@ const summarizeSlices = (slices = []) =>
   slices.map((s) => ({
     origin: s.origin?.iata_code,
     destination: s.destination?.iata_code,
+    duration: s.duration ?? null,
     segments: (s.segments ?? []).map((g) => ({
       carrier: g.marketing_carrier?.name ?? g.marketing_carrier?.iata_code,
       flight_number: `${g.marketing_carrier?.iata_code ?? ""}${g.marketing_carrier_flight_number ?? ""}`,
@@ -144,6 +145,7 @@ const summarizeSlices = (slices = []) =>
 const summarizeOffer = (o) => ({
   id: o.id,
   owner: o.owner?.name,
+  owner_logo: o.owner?.logo_symbol_url ?? null,
   total_amount: o.total_amount,
   total_currency: o.total_currency,
   payment_required_by: o.payment_requirements?.payment_required_by ?? null,

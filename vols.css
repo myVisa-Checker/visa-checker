@@ -270,3 +270,23 @@ html[dir="rtl"] #vols .vl-row select#vl-cabin{background-position:left 2px cente
   .vl-list{border:2px solid #2f4f8f;border-radius:16px}
   .vl-list li{padding:12px}
 }
+
+/* Résultats : cartes (compagnie, horaires, codes, durée, prix, Choisir, détails) */
+#vl-results .vr-card{margin:14px 0;padding:18px;background:#fff;color:#0b1f4b;border:1px solid var(--line,#d6e2f7);border-radius:26px;box-shadow:0 12px 28px -18px #0a1a40}
+.vr-air{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.vr-air img{width:40px;height:40px;object-fit:contain}
+.vr-tm{display:flex;justify-content:space-between;gap:10px;color:#4a5f86;font-size:15px}
+.vr-tm span{display:flex;flex-direction:column;gap:2px}.vr-tm .vr-r{text-align:end}
+.vr-tm b{font-size:20px;font-weight:600;color:#0b1f4b}
+.vr-cd{display:flex;align-items:center;justify-content:space-between;margin:2px 0}
+.vr-cd b{font-size:30px;font-weight:800}
+.vr-cd .vl-ic{width:26px;height:26px;margin:0;color:#4a5f86}
+.vr-m{margin:4px 0 0;text-align:center;color:#4a5f86;font-size:15px}
+.vr-sl+.vr-sl{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line,#d6e2f7)}
+.vr-pr{margin:14px 0 0;text-align:center;font-size:30px;font-weight:800}
+#vl-results .vr-sel{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:54px;margin-top:12px;border-radius:14px;font-size:19px}
+.vr-sel .vl-ic{width:20px;height:20px;margin:0;color:#fff}
+html[dir="rtl"] .vr-sel .vl-ic,html[dir="rtl"] .vr-cd .vl-ic{transform:scaleX(-1)}
+.vr-det{margin-top:10px;text-align:center}
+.vr-det summary{cursor:pointer;color:#0b2a6b;font-size:16px;padding:8px}
+.vr-det .fh-sl,.vr-det .fh-row{text-align:start}
