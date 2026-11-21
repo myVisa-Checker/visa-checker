@@ -86,13 +86,22 @@
   var msg = function (e) { return e && e.message && e.message !== "Failed to fetch" ? e.message : t.net; };
   function showErr(m) { var e = $("vl-err"); e.textContent = m || ""; e.hidden = !m; }
 
+  var IC = {
+    plane: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>',
+    pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.500a2.5 2.5 0 0 1 0 5z"/></svg>',
+    cal: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2zM5 9h14v11H5z"/></svg>',
+    user: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4 0-8 2-8 5v3h16v-3c0-3-4-5-8-5z"/></svg>',
+    seat: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h7l3 5h2.500l-3-5.500A2 2 0 0 0 17 11V4a2 2 0 0 0-2-2zM4 17v2h9v-2z"/></svg>',
+    swap: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h11l-3-3 1.400-1.400L22 8l-5.600 5.400L15 12l3-3H7zm10 10H6l3 3-1.400 1.400L2 16l5.600-5.400L9 12l-3 3h11z"/></svg>'
+  };
+  function lab(id, ic, text) { $(id).innerHTML = '<i class="vl-ic">' + IC[ic] + "</i>" + esc(text); }
   /* ---------- texte statique ---------- */
   function paintStatic() {
     $("vl-h1").innerHTML = esc(t.h1[0]) + " <em>" + esc(t.h1[1]) + "</em>";
     $("vl-sub").textContent = t.sub;
     $("vl-trust").innerHTML = t.trust.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
-    $("vl-l-from").textContent = t.from; $("vl-l-to").textContent = t.to; $("vl-l-d1").textContent = t.d1; $("vl-l-d2").textContent = t.d2;
-    $("vl-l-pax").textContent = t.pax; $("vl-pax").textContent = t.adult; $("vl-l-cabin").textContent = t.cabin;
+    lab("vl-l-from", "plane", t.from); lab("vl-l-to", "pin", t.to); lab("vl-l-d1", "cal", t.d1); lab("vl-l-d2", "cal", t.d2);
+    lab("vl-l-pax", "user", t.pax); $("vl-pax").textContent = t.adult; lab("vl-l-cabin", "seat", t.cabin);
     $("vl-from").placeholder = t.ph; $("vl-to").placeholder = t.ph;
     $("vl-cabin").innerHTML = Object.keys(t.cabins).map(function (k) { return '<option value="' + k + '">' + esc(t.cabins[k]) + "</option>"; }).join("");
     $("vl-go").textContent = t.search; $("vl-legal").textContent = t.legal;
@@ -103,7 +112,7 @@
     paintTabs();
   }
   function paintTabs() {
-    $("vl-tabs").innerHTML = [["one", t.one], ["rt", t.rt]].map(function (x) { return '<button type="button" class="chip" data-trip="' + x[0] + '" aria-pressed="' + (trip === x[0]) + '">' + esc(x[1]) + "</button>"; }).join("");
+    $("vl-tabs").innerHTML = [["one", t.one, "plane"], ["rt", t.rt, "swap"]].map(function (x) { return '<button type="button" class="chip" data-trip="' + x[0] + '" aria-pressed="' + (trip === x[0]) + '"><i class="vl-ic">' + IC[x[2]] + "</i>" + esc(x[1]) + "</button>"; }).join("");
     $("vl-d2w").hidden = trip === "one";
   }
 
@@ -246,6 +255,16 @@
   var jt = { fr: ["Bonjour !", "Je suis Joury, votre assistante voyage."], en: ["Hello!", "I am Joury, your travel assistant."], ar: ["مرحبًا!", "أنا جوري، مساعدتك في السفر."] }[L];
   $("vl-joury-t").innerHTML = "<b>" + esc(jt[0]) + "</b> " + esc(jt[1]);
   paintStatic();
+  var phTxt = { fr: "jj/mm/aaaa", en: "dd/mm/yyyy", ar: "يوم/شهر/سنة" }[L];
+  ["vl-d1", "vl-d2"].forEach(function (id) {
+    var inp = $(id), ph = document.createElement("span");
+    ph.className = "vl-ph"; ph.textContent = phTxt; ph.setAttribute("aria-hidden", "true");
+    inp.parentNode.appendChild(ph);
+    var sync = function () { if (inp.value) inp.removeAttribute("data-empty"); else inp.setAttribute("data-empty", "1"); ph.hidden = !!inp.value; };
+    inp.addEventListener("input", sync); inp.addEventListener("change", sync); sync();
+  });
+  var lg = $("vl-lang"); lg.value = L;
+  lg.addEventListener("change", function () { try { localStorage.setItem("vc_lang", lg.value); } catch (e) { /* ignore */ } location.reload(); });
   $("vl-from").value = "Tunis (TUN)";
   setupAc("from"); setupAc("to");
 })();

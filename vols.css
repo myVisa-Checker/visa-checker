@@ -78,3 +78,59 @@
 .vl-list{min-width:min(340px,86vw)}
 .vl-list li span{min-width:0}
 @media (max-width:700px){.vl-art{opacity:.32;-webkit-mask-image:linear-gradient(to bottom,#000 20%,transparent);mask-image:linear-gradient(to bottom,#000 20%,transparent)}.vl-joury span{display:none}}
+
+/* ===== Design immersif (même esprit que la maquette) ===== */
+body.vols{overflow-x:hidden}
+body.vols .sitenav{background:#061330;border-bottom:1px solid #12306b}
+body.vols .sitenav a{color:#fff}
+body.vols .sitenav a:hover{color:#38bdf8;border-bottom-color:#38bdf8}
+body.vols .sitenav .sn-logo b{color:#38bdf8}
+.vl-lang{font:inherit;font-weight:700;font-size:13px;color:#fff;background:transparent;border:1px solid #3b82f6;border-radius:999px;padding:5px 10px}
+.vl-lang option{color:#0b1f4b}
+#vols{max-width:none;padding:0 0 0}
+.vl-hero{margin:0;border-radius:0;padding:34px max(16px,calc(50% - 520px)) 36px;min-height:470px;
+  background:radial-gradient(1000px 420px at 80% 0,#2563eb66,transparent 70%),radial-gradient(700px 300px at 0 100%,#1d4ed8aa,transparent 70%),linear-gradient(170deg,#061330 0%,#0b2a6b 60%,#1d4ed8 130%)}
+.vl-art{inset:0 0 auto auto;width:64%;height:100%;border-radius:0;
+  background-position:right 40%;-webkit-mask-image:linear-gradient(to right,transparent 6%,#000 55%);mask-image:linear-gradient(to right,transparent 6%,#000 55%)}
+.vl-art::after{background:linear-gradient(to bottom,transparent 60%,#061330cc)}
+.vl-hero h1{font-size:clamp(32px,5.6vw,58px);max-width:11em}
+.vl-card{background:#ffffffee;backdrop-filter:blur(8px);border:1px solid #ffffff66;border-radius:22px;padding:10px 14px 14px}
+.vl-tabs{margin:-44px 0 10px;position:relative}
+.vl-tabs .chip{display:inline-flex;align-items:center;gap:8px;border-radius:16px 16px 0 0;min-height:44px;background:#0b2a6b;color:#fff;border:0}
+.vl-tabs .chip[aria-pressed="true"]{background:#1d4ed8}
+.vl-ic{display:inline-flex;width:18px;height:18px;margin-inline-end:6px;vertical-align:-3px;color:var(--accent,#1d4ed8)}
+.vl-ic svg{width:100%;height:100%;fill:currentColor}
+.vl-tabs .vl-ic{color:#fff;margin:0}
+.vl-f label{display:flex;align-items:center}
+.vl-f .sel,.vl-static{border:0;border-bottom:0;background:transparent;font-weight:600;font-size:16px;padding-inline:6px}
+.vl-f{border-inline-end:1px solid var(--line,#d6e2f7);padding-inline-end:8px}
+.vl-f:last-of-type{border:0}
+.vl-ph{position:absolute;inset-inline-start:6px;bottom:11px;color:#6b7fa6;font-size:15px;pointer-events:none}
+.vl-ph[hidden]{display:none}
+#vols input[type=date][data-empty]::-webkit-datetime-edit{opacity:0}
+.vl-trust{gap:10px 22px;font-size:15px}
+.vl-foot{margin-top:0}
+@media (max-width:700px){
+  .vl-hero{padding-top:24px;min-height:0}
+  .vl-art{width:100%;height:260px;opacity:.4}
+  .vl-tabs{margin-top:0}
+  .vl-tabs .chip{border-radius:999px}
+  .vl-f{border:0;padding:0}
+  .vl-f .sel,.vl-static{border:1px solid var(--line,#d6e2f7);background:var(--surface,#fff)}
+  .vl-ph{bottom:13px;inset-inline-start:10px}
+  .vl-foot{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+}
+#vl-results,.fh-legal{max-width:1040px;margin-inline:auto;padding-inline:12px}
+.fh-legal{margin-top:16px}
+
+/* Correctifs de priorité */
+body.vols .sitenav{background:#061330!important;border-bottom:1px solid #12306b!important}
+body.vols .sitenav a{color:#fff!important}
+body.vols .sitenav a:hover{color:#38bdf8!important}
+body.vols .sitenav .sn-logo b{color:#38bdf8!important}
+.vl-tabs{margin:0 0 10px}
+#vols .vl-tabs .chip{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:#eaf2ff;color:#0b1f4b;border:1px solid var(--line,#d6e2f7)}
+#vols .vl-tabs .chip .vl-ic{color:#1d4ed8}
+#vols .vl-tabs .chip[aria-pressed="true"]{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+#vols .vl-tabs .chip[aria-pressed="true"] .vl-ic{color:#fff}
+.vl-ic{flex:none;min-width:18px}
