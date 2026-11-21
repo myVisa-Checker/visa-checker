@@ -307,3 +307,13 @@ html[dir="rtl"] .vr-sel .vl-ic,html[dir="rtl"] .vr-cd .vl-ic{transform:scaleX(-1
 .vl-dest{z-index:1}
 .vl-card{position:relative;z-index:7}
 @media (min-width:900px){.vl-row{grid-template-columns:1.5fr 1.5fr 1.6fr 1.6fr 1.3fr auto}}
+
+/* Correctif tactile (mobile) : pas de flou d'arrière-plan sur la carte (couche GPU qui bloquait les appuis sur certains téléphones),
+   calques décoratifs jamais cliquables, champs sans délai tactile, dates et voyageurs qui tiennent dans leur case. */
+.vl-card{-webkit-backdrop-filter:none;backdrop-filter:none;background:#0b2a6b59}
+.vl-art,.vl-art::after,.vl-plane,.vl-ph{pointer-events:none!important}
+#vols input,#vols select,#vols button,#vols label{touch-action:manipulation}
+#vols .vl-row input[type=date]{font-size:15px;padding-inline:8px;min-width:0}
+#vols .vl-row input[type=date]::-webkit-calendar-picker-indicator{margin:0;padding:0}
+.vl-static,.vl-paxb{white-space:normal;line-height:1.2;font-size:15px}
+@media (max-width:560px){.vl-row .vl-f:has(#vl-pax){grid-column:1/-1}}
