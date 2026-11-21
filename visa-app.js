@@ -424,124 +424,6 @@ function paymentMethodsHtml(lang){
   '</section>';
 }
 
-/* ===== Pages « Ma demande » : liens des mails (client, agence, CheckMyVisa) =====
-   Le Worker garde la demande, vérifie le délai de 48 h et les droits de chaque lien : ces pages affichent et envoient. */
-var ORDER_URL=UNLOCK_URL.replace(/\/unlock$/,"/order");
-function ordRef(id){return "VC-"+String(id||"").replace(/[^A-Za-z0-9]/g,"").slice(0,6).toUpperCase()}
-var OV={id:"",k:"",a:"pay",role:"",L:"fr",od:null};
-var OVX={
-fr:{loading:"Chargement…",bad:"Lien invalide ou expiré. Faites une nouvelle demande.",payT:"Confirmer et payer",editT:"Modifier mes dates",recap:"Votre demande",left:function(h){return "Il vous reste environ "+h+" h pour modifier vos dates."},expired:"Les 48 h sont dépassées : la modification n'est plus possible. Faites une nouvelle demande.",newReq:"Faire une nouvelle demande",save:"Enregistrer mes dates",saving:"Envoi…",saved:"Dates modifiées. L'agence a été prévenue.",err:"Dates invalides ou envoi impossible. Vérifiez puis réessayez.",goPay:"Continuer vers le paiement",goEdit:"Modifier mes dates",locked:"Le nom et le prénom ne sont pas modifiables.",check:"Vérifiez vos informations, puis payez.",wait:"Votre demande est bien reçue. L'agence fixe le prix : vous recevrez un e-mail dès qu'il est prêt.",amt:"Montant à payer",paid:"J'ai payé",claimed:"Paiement signalé. Nous vérifions et vous prévenons par e-mail.",ok:"Paiement confirmé ✓ L'agence prépare votre document.",sent:"Document envoyé ✓ Vérifiez vos e-mails."},
-en:{loading:"Loading…",bad:"Invalid or expired link. Please make a new request.",payT:"Confirm and pay",editT:"Change my dates",recap:"Your request",left:function(h){return "You have about "+h+" h left to change your dates."},expired:"The 48 hours have passed: changes are no longer possible. Please make a new request.",newReq:"Make a new request",save:"Save my dates",saving:"Sending…",saved:"Dates changed. The agency has been informed.",err:"Invalid dates or sending failed. Check and try again.",goPay:"Continue to payment",goEdit:"Change my dates",locked:"First and last name cannot be changed.",check:"Check your details, then pay.",wait:"Your request has been received. The agency sets the price: you will get an e-mail as soon as it is ready.",amt:"Amount to pay",paid:"I have paid",claimed:"Payment reported. We are checking and will e-mail you.",ok:"Payment confirmed ✓ The agency is preparing your document.",sent:"Document sent ✓ Check your e-mails."},
-ar:{loading:"جارٍ التحميل…",bad:"رابط غير صالح أو منتهي. قدّم طلبًا جديدًا.",payT:"تأكيد ودفع",editT:"تعديل التواريخ",recap:"طلبك",left:function(h){return "بقي لك حوالي "+h+" ساعة لتعديل التواريخ."},expired:"انقضت الـ 48 ساعة: لم يعد التعديل ممكنًا. قدّم طلبًا جديدًا.",newReq:"تقديم طلب جديد",save:"حفظ التواريخ",saving:"جارٍ الإرسال…",saved:"تم تعديل التواريخ وإبلاغ الوكالة.",err:"تواريخ غير صالحة أو تعذّر الإرسال. تحقق وأعد المحاولة.",goPay:"المتابعة إلى الدفع",goEdit:"تعديل التواريخ",locked:"لا يمكن تعديل الاسم واللقب.",check:"تحقق من بياناتك ثم ادفع.",wait:"تم استلام طلبك. تحدد الوكالة السعر وستصلك رسالة بريد فور جاهزيته.",amt:"المبلغ المطلوب",paid:"دفعت",claimed:"تم الإبلاغ عن الدفع. نتحقق وسنراسلك بالبريد.",ok:"تم تأكيد الدفع ✓ الوكالة تجهّز وثيقتك.",sent:"تم إرسال الوثيقة ✓ راجع بريدك."}
-};
-function ordShell(L,inner){
-  var o=$("ordv");
-  if(!o){o=document.createElement("div");o.id="ordv";o.className="ordv";document.body.appendChild(o)}
-  o.setAttribute("dir",L==="ar"?"rtl":"ltr");o.setAttribute("lang",L);
-  o.innerHTML='<div class="ordv-in">'+inner+'</div>';o.scrollTop=0;
-  document.documentElement.classList.add("modal-open");
-}
-function ordClose(){
-  var o=$("ordv");if(o&&o.parentNode)o.parentNode.removeChild(o);
-  document.documentElement.classList.remove("modal-open");
-  try{history.replaceState(null,"",location.pathname)}catch(e){}
-}
-function ordRecap(L,od){
-  var R=RT[L]||RT.fr,X=OVX[L]||OVX.fr,hot=od.svc==="hotel",sh=function(x){return String(x).replace(/\s*\(.*?\)/g,"")};
-  var rows=[[(R.svc&&R.svc[od.svc])||od.svc,od.dest+(od.city?" · "+od.city:"")],[sh(R.ln),od.ln],[sh(R.fn),od.fn],[sh(hot?R.d1h:R.d1f),fmtD(od.d1)],[sh(hot?R.d2h:R.d2f),od.d2?fmtD(od.d2):"-"]];
-  /* Tarif affiché uniquement après activation du paiement. */
-  rows.push(["Réf.",od.ref]);
-  return '<div class="recap"><h2>'+X.recap+'</h2><dl>'+rows.map(function(r){return '<div><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>'}).join("")+'</dl></div>';
-}
-function ordBad(){ordShell(OV.L,'<h1>CheckMyVisa</h1><p class="n48" role="alert">'+(OVX[OV.L]||OVX.fr).bad+'</p><button type="button" class="pay wide" data-ovnew>'+(OVX[OV.L]||OVX.fr).newReq+'</button>')}
-/* ---- client : confirmer et payer ---- */
-function ordPayView(){
-  var L=OV.L,X=OVX[L],od=OV.od;
-  var h='<h1>'+X.payT+'</h1><p class="rf-sub">'+X.check+'</p>'+ordRecap(L,od)+n48(L);
-  if(od.status==="sent"){h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.sent+'</b></p>'}
-  else if(od.status==="paid"){h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.ok+'</b></p>'}
-  
-  if(od.canEdit)h+='<button type="button" class="reset wide" data-ovedit>'+X.goEdit+'</button>';
-  ordShell(L,h);
-}
-/* ---- client : modifier les dates ---- */
-function ordEditView(msg){
-  var L=OV.L,X=OVX[L],R=RT[L]||RT.fr,od=OV.od,hot=od.svc==="hotel",sh=function(x){return String(x).replace(/\s*\(.*?\)/g,"")};
-  if(!od.canEdit)return ordShell(L,'<h1>'+X.editT+'</h1><p class="n48" role="alert">'+X.expired+'</p>'+ordRecap(L,od)+'<button type="button" class="pay wide" data-ovnew>'+X.newReq+'</button>');
-  var h='<h1>'+X.editT+'</h1><p class="rf-sub">'+X.left(od.hoursLeft)+'</p>'+ordRecap(L,od)+'<p class="ag-note">'+X.locked+'</p>'+n48(L)
-   +'<div class="f-row"><div class="field"><label class="q-label" for="ov-d1">'+sh(hot?R.d1h:R.d1f)+'</label><input class="sel" id="ov-d1" type="date" min="'+today()+'" value="'+escA(od.d1)+'"></div>'
-   +(od.d2?'<div class="field"><label class="q-label" for="ov-d2">'+sh(hot?R.d2h:R.d2f)+'</label><input class="sel" id="ov-d2" type="date" min="'+today()+'" value="'+escA(od.d2)+'"></div>':'')+'</div>'
-   +'<span class="fe" id="ov-err" role="alert">'+(msg||"")+'</span><button type="button" class="pay wide" data-ovsave>'+X.save+'</button>'
-   +'<button type="button" class="reset wide" data-ovpay>'+X.goPay+'</button>';
-  ordShell(L,h);
-}
-function ordSentView(){
-  var od=OV.od,h='<h1>Document envoyé ?</h1>'+ordRecap("fr",od);
-  if(od.status==="sent")h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>Document déjà marqué comme envoyé.</b></p>';
-  else if(od.status==="paid")h+='<p class="rf-sub">Le paiement est confirmé. Envoyez le document au client, puis cliquez.</p><button type="button" class="pay wide" data-ovact="sent">J\'ai envoyé le document</button>';
-  else h+='<p class="n48" role="alert">Le paiement n\'est pas encore confirmé : n\'envoyez pas le document.</p>';
-  ordShell("fr",h);
-}
-/* ---- CheckMyVisa : paiement reçu ---- */
-function ordConfirmView(){
-  var od=OV.od,h='<h1>Paiement reçu ?</h1>'+ordRecap("fr",od);
-  if(od.status==="paid"||od.status==="sent")h+='<p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>Paiement déjà confirmé.</b></p>';
-  else h+='<p class="rf-sub">Confirmez uniquement après vérification effective du paiement dans le compte du prestataire.</p><button type="button" class="pay wide" data-ovact="paid">Paiement vérifié et reçu</button>';
-  ordShell("fr",h);
-}
-function ordView(){
-  var r=OV.role,a=OV.a;
-  if(r==="a")return ordSentView();
-  if(r==="v")return ordConfirmView();
-  return a==="edit"?ordEditView():ordPayView();
-}
-function ordLoad(){
-  fetch(ORDER_URL+"?id="+encodeURIComponent(OV.id)+"&k="+encodeURIComponent(OV.k),{cache:"no-store"}).then(function(r){return r.json().catch(function(){return {}})}).then(function(j){
-    if(!j||!j.ok||!j.order){ordBad();return}
-    OV.od=j.order;OV.role=j.role||"c";if(OV.role==="c"&&OVX[j.order.lang])OV.L=j.order.lang;
-    ordView();
-  },ordBad);
-}
-function orderInit(){
-  var q;try{q=new URLSearchParams(location.search)}catch(e){return}
-  var id=q.get("order"),k=q.get("k");
-  if(!id||!k||!/^[A-Za-z0-9_-]{8,64}$/.test(id)||!/^[a-f0-9]{16,64}$/.test(k))return;
-  OV.id=id;OV.k=k;OV.L=S.lang;OV.a=q.get("a")||"pay";
-  ordShell(OV.L,'<p>'+(OVX[OV.L]||OVX.fr).loading+'</p>');
-  ordLoad();
-}
-function ordPost(path,body){
-  body.id=OV.id;body.k=OV.k;
-  return fetch(ORDER_URL+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
-   .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {s:r.status,j:j}})});
-}
-document.addEventListener("click",function(e){
-  var t=e.target.closest&&e.target.closest("[data-ovnew],[data-ovedit],[data-ovpay],[data-ovsave],[data-ovact]");
-  if(!t)return;
-  var X=OVX[OV.L]||OVX.fr;
-  if(t.hasAttribute("data-ovnew")){ordClose();return}
-  if(t.hasAttribute("data-ovedit")){ordEditView();return}
-  if(t.hasAttribute("data-ovpay")){ordPayView();return}
-  if(t.hasAttribute("data-ovact")){
-    var act=t.getAttribute("data-ovact"),body={},er=$("ov-err");
-    t.disabled=true;
-    ordPost("/"+act,body).then(function(x){
-      if(x.j&&x.j.ok){ordLoad();return}
-      t.disabled=false;if(er)er.textContent="Action impossible. Rechargez la page.";
-      if(!er)ordLoad();
-    },function(){t.disabled=false;if(er)er.textContent="Pas de connexion. Réessayez."});
-    return;
-  }
-  var d1=$("ov-d1"),d2=$("ov-d2");
-  t.disabled=true;t.textContent=X.saving;
-  ordPost("/edit",{date1:d1?d1.value:"",date2:d2?d2.value:""}).then(function(x){
-     if(x.s===410){OV.od.canEdit=false;ordEditView();return}
-     if(x.j&&x.j.ok){OV.od.d1=x.j.d1;OV.od.d2=x.j.d2;ordShell(OV.L,'<h1>'+X.editT+'</h1><p class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+X.saved+'</b></p>'+ordRecap(OV.L,OV.od)+'<button type="button" class="pay wide" data-ovpay>'+X.goPay+'</button>');return}
-     ordEditView(X.err);
-   },function(){ordEditView(X.err)});
-});
-setTimeout(orderInit,0);
-
 var UNLOCK_DEV_MODE=false;
 var UNLOCK_DEV_HASHES={advisors:[],pack:[]};
 var UNX={
@@ -583,7 +465,7 @@ function doUnlock(kind,inputId,errId,btn){
   verifyCode(kind,code).then(function(r){
     btn.disabled=false;btn.removeAttribute("aria-busy");
     if(!r.ok){err.textContent=X[r.err]||X.server;$(inputId).setAttribute("aria-invalid","true");return}
-    if(kind==="advisors")S.paid=true;else{S.pack=true;S.tok=r.token;PACK_STATE="idle"}
+    S.pack=true;S.tok=r.token;PACK_STATE="idle"
     save();render();
   });
 }
@@ -729,30 +611,6 @@ function applyCountry0(t){
   o.msg0=PX.msg0[L];o.linkFV=PX.link[L]+" · "+n[L];
   o.disc=t.disc.replace("France-Visas et auprès de TLScontact","le site officiel de "+n.fr+" et du centre de dépôt").replace("France-Visas and with TLScontact","the official website of "+n.en+" and the application centre").replace("France-Visas ولدى TLScontact","الموقع الرسمي لدولة "+n.ar+" ومركز الإيداع");
   return o;
-}
-/* Partner agencies by governorate id. Despina Travel and Events is an example entry: edit or remove it. */
-var PARTNERS={
- nabeul:[{id:"despina",name:"Despina Travel and Events",city:"Hammamet",svc:["flight","hotel"],what:{fr:"Réservations d'hôtel et de vol",en:"Hotel and flight reservations",ar:"حجوزات الفنادق والطيران"},adv:{fr:"Conseil pour votre dossier de visa",en:"Advice on your visa file",ar:"نصائح لملف التأشيرة"},contact:"",email:"despinatravelandevents@gmail.com",telegram:"",whatsapp:""}]
-};
-/* Agences : la liste ci-dessus sert de secours ; partners.json (même dossier) la remplace s'il est valide. */
-function cleanPartners(j){
-  var out={},n=0;if(!j||typeof j!=="object"||!j.partners||typeof j.partners!=="object")return null;
-  function str(v,m){return typeof v==="string"?cleanTxt(v).slice(0,m):""}
-  function tri(o,f){var r={};["fr","en","ar"].forEach(function(l){r[l]=str(o&&o[l],120)||f||""});return r}
-  Object.keys(j.partners).slice(0,60).forEach(function(g){
-    if(!/^[a-z0-9-]{1,30}$/.test(g)||!Array.isArray(j.partners[g]))return;
-    var l=[];j.partners[g].slice(0,20).forEach(function(p){
-      if(!p||typeof p!=="object"||p.soon||!/^[a-z0-9-]{1,40}$/.test(p.id||"")||!str(p.name,80))return;
-      var em=str(p.email,120);if(em&&!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em))em="";
-      var svc=(Array.isArray(p.svc)?p.svc:[]).filter(function(x){return x==="flight"||x==="hotel"});if(!svc.length)return;
-      var w=tri(p.what),ad=tri(p.adv);w.ar=w.ar||w.fr;
-      l.push({id:p.id,name:str(p.name,80),city:str(p.city,60),svc:svc,what:w,adv:ad,contact:str(p.contact,120),email:em,telegram:str(p.telegram,60).replace(/[^\w@.]/g,""),whatsapp:str(p.whatsapp,30).replace(/[^\d+]/g,"")});n++});
-    if(l.length)out[g]=l});
-  return n?out:null;
-}
-function loadPartners(){
-  try{var c=new AbortController(),tm=setTimeout(function(){c.abort()},6000);
-    fetch("partners.json",{signal:c.signal,cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(function(j){clearTimeout(tm);var p=cleanPartners(j);if(p){PARTNERS=p;if(S.step===8)render()}}).catch(function(){})}catch(e){}
 }
 /* Traducteurs assermentés : données reprises de la liste officielle du Consulat général de France à Tunis (valide au 10/06/2026). Format : [nom, ville, adresse, téléphones, e-mails, index du téléphone WhatsApp ou -1] */
 var TR_SRC={date:"10/06/2026",url:"https://tn.diplomatie.gouv.fr/files/tn/files/Consulat/traducteurs-et-interpretes-assermentes-en-langue-francaise_liste-valide-au-10062026.pdf"};
@@ -1334,18 +1192,8 @@ var ICONS={
  bed:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20V6M3 16h18v4M21 16v-3a3 3 0 0 0-3-3h-7v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
  plane:'<svg class="sp-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>'
 };
-/* ===== Demande de documents de voyage (billet d'avion / hôtel) =====
-   REQUEST_URL : adresse qui reçoit la demande en POST JSON (Make, n8n, Zapier, Formspree...). Vide = mode test (envoi manuel par bouton).
-   Chaque agence a ses contacts (email, telegram, whatsapp). Les données personnelles ne sont pas gardées dans le navigateur. */
-var REQUEST_URL="https://visa-proxy.rabehfly.workers.dev";
-/* REQUEST_MODE : "opaque" = envoi sans lecture de la réponse (aucun en-tête CORS requis ; on ne connaît que l'échec réseau)
-                  "cors"   = envoi JSON et lecture du statut HTTP (le serveur doit renvoyer les en-têtes CORS : voir ARCHITECTURE-SECURITE.md). */
-var REQUEST_MODE="cors";
-var REQUEST_TIMEOUT_MS=10000,REQUEST_RETRIES=1,REQUEST_COOLDOWN_MS=30000;
-var INTL=[]; /* partenaires internationaux de commande : à ajouter un par un (logo, infos, réglages) */
-var RQ={sending:false,tries:0,chan:"email",ln:"",fn:"",d1:"",d2:"",city:"",dest:"",cc:"+216",phone:"",tg:"",mail:"",consent:false,done:false,mode:"",failed:false,er:{}};
 var RT={
-fr:{svc:{flight:"Billet d'avion",hotel:"Réservation d'hôtel"},t8:"Choisissez votre agence",s8:"Choisissez l'une de nos agences, ou un partenaire international.",t9:"Vos informations",s9:"Saisissez-les comme sur votre passeport.",t10a:"Demande envoyée",t10b:"Dernière étape",s10a:"L'agence vous répond bientôt.",s10b:"Envoyez votre demande à l'agence.",
+fr:{svc:{flight:"Billet d'avion",hotel:"Réservation d'hôtel"},t8:"Réservation d'hôtel",s8:"Comparez et réservez sur un site partenaire.",t9:"Vos informations",s9:"Saisissez-les comme sur votre passeport.",t10a:"Demande envoyée",t10b:"Dernière étape",s10a:"L'agence vous répond bientôt.",s10b:"Envoyez votre demande à l'agence.",
  tabL:"Agences locales",tabI:"Partenaires internationaux",choose:"Choisir cette agence",test:"Agence test",noLocal:"Pas encore d'agence locale pour ce service. Essayez un partenaire international.",anyWhere:"Où que vous soyez, vous recevez votre document. Choisissez l'une des agences ci-dessous.",agN:"Serveur ",
  selfT:"Vous préférez réserver vous-même ?",selfN:"Sites indépendants, sans lien avec CheckMyVisa. Pour le visa, prenez une réservation annulable.",you:"Agence choisie",
  ln:"Nom (comme sur le passeport)",fn:"Prénom(s) (comme sur le passeport)",d1f:"Date d'aller",d2f:"Date de retour",d1h:"Check-in (arrivée)",d2h:"Check-out (départ)",city:"Ville de destination",phone:"Numéro WhatsApp / téléphone",tg:"Identifiant Telegram (facultatif)",mail:"E-mail (obligatoire)",chan:"Comment voulez-vous être prévenu(e) ?",chanNote:"Le lien de paiement et le document sont toujours envoyés par e-mail. Si vous choisissez WhatsApp, nous vous écrirons seulement pour vous dire de vérifier votre e-mail.",
@@ -1356,7 +1204,7 @@ fr:{svc:{flight:"Billet d'avion",hotel:"Réservation d'hôtel"},t8:"Choisissez v
  okT:function(a){return "Demande envoyée"},okTxt:function(c,v){return "Vous recevrez le lien de paiement, puis votre document, par "+c+" ("+v+")."},
  manT:"Envoyez votre demande à l'agence",manTxt:"Cette page n'est pas encore reliée à un serveur (mode test). Utilisez un des boutons : l'agence vous répondra avec le lien de paiement.",failTxt:"L'envoi automatique a échoué. Utilisez un des boutons pour envoyer la demande à l'agence.",
  recap:"Récapitulatif",bWA:"Envoyer par WhatsApp",bMail:"Envoyer par e-mail",bTg:"Ouvrir Telegram (texte copié)",tgHint:"Le texte est copié : collez-le dans la conversation Telegram."},
-en:{svc:{flight:"Flight ticket",hotel:"Hotel booking"},t8:"Choose your agency",s8:"Choose one of our agencies, or an international partner.",t9:"Your details",s9:"Enter them exactly as in your passport.",t10a:"Request sent",t10b:"Last step",s10a:"The agency will reply soon.",s10b:"Send your request to the agency.",
+en:{svc:{flight:"Flight ticket",hotel:"Hotel booking"},t8:"Hotel booking",s8:"Compare and book on a partner site.",t9:"Your details",s9:"Enter them exactly as in your passport.",t10a:"Request sent",t10b:"Last step",s10a:"The agency will reply soon.",s10b:"Send your request to the agency.",
  tabL:"Local agencies",tabI:"International partners",choose:"Choose this agency",test:"Test agency",noLocal:"No local agency for this service yet. Try an international partner.",anyWhere:"Wherever you are, you receive your document. Choose one of the agencies below.",agN:"Server ",
  selfT:"Prefer to book yourself?",selfN:"Independent sites, not affiliated with CheckMyVisa. For the visa, choose a cancellable booking.",you:"Chosen agency",
  ln:"Last name (as in passport)",fn:"First name(s) (as in passport)",d1f:"Departure date",d2f:"Return date",d1h:"Check-in (arrival)",d2h:"Check-out (departure)",city:"Destination city (optional)",phone:"WhatsApp / phone number",tg:"Telegram username (optional)",mail:"E-mail (required)",chan:"How would you like to be notified?",chanNote:"The payment link and the document are always sent by e-mail. If you choose WhatsApp, we will only message you to check your e-mail.",
@@ -1367,7 +1215,7 @@ en:{svc:{flight:"Flight ticket",hotel:"Hotel booking"},t8:"Choose your agency",s
  okT:function(a){return "Request sent"},okTxt:function(c,v){return "You will receive the payment link, then your document, by "+c+" ("+v+")."},
  manT:"Send your request to the agency",manTxt:"This page is not connected to a server yet (test mode). Use one of the buttons: the agency will reply with the payment link.",failTxt:"Automatic sending failed. Use one of the buttons to send the request to the agency.",
  recap:"Summary",bWA:"Send by WhatsApp",bMail:"Send by e-mail",bTg:"Open Telegram (text copied)",tgHint:"The text is copied: paste it into the Telegram chat."},
-ar:{svc:{flight:"تذكرة طيران",hotel:"حجز فندق"},t8:"اختر وكالتك",s8:"اختر إحدى وكالاتنا، أو شريكًا دوليًا.",t9:"بياناتك",s9:"اكتبها تمامًا كما في جواز سفرك.",t10a:"تم إرسال الطلب",t10b:"الخطوة الأخيرة",s10a:"ستردّ عليك الوكالة قريبًا.",s10b:"أرسل طلبك إلى الوكالة.",
+ar:{svc:{flight:"تذكرة طيران",hotel:"حجز فندق"},t8:"حجز فندق",s8:"قارن واحجز عبر موقع شريك.",t9:"بياناتك",s9:"اكتبها تمامًا كما في جواز سفرك.",t10a:"تم إرسال الطلب",t10b:"الخطوة الأخيرة",s10a:"ستردّ عليك الوكالة قريبًا.",s10b:"أرسل طلبك إلى الوكالة.",
  tabL:"وكالات محلية",tabI:"شركاء دوليون",choose:"اختر هذه الوكالة",test:"وكالة تجريبية",noLocal:"لا توجد وكالة محلية لهذه الخدمة بعد. جرّب شريكًا دوليًا.",anyWhere:"أينما كنت، ستستلم وثيقتك. اختر إحدى الوكالات أدناه.",agN:"الخادم ",
  selfT:"تفضّل الحجز بنفسك؟",selfN:"مواقع مستقلة لا علاقة لها بـ CheckMyVisa. للتأشيرة، اختر حجزًا قابلًا للإلغاء.",you:"الوكالة المختارة",
  ln:"اللقب (كما في جواز السفر)",fn:"الاسم (كما في جواز السفر)",d1f:"تاريخ الذهاب",d2f:"تاريخ العودة",d1h:"الوصول (Check-in)",d2h:"المغادرة (Check-out)",city:"مدينة الوجهة (اختياري)",phone:"رقم واتساب / الهاتف",tg:"معرّف تيليغرام (اختياري)",mail:"البريد الإلكتروني (إلزامي)",chan:"كيف تريد أن نُخطرك؟",chanNote:"يصلك رابط الدفع والوثيقة دائمًا عبر البريد الإلكتروني. إذا اخترت واتساب فسنراسلك فقط لنطلب منك مراجعة بريدك الإلكتروني.",
@@ -1382,238 +1230,12 @@ ar:{svc:{flight:"تذكرة طيران",hotel:"حجز فندق"},t8:"اختر و
 function escA(s){return esc(s).replace(/"/g,"&quot;")}
 function today(){return new Date().toISOString().slice(0,10)}
 function fmtD(v){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(v||"");return m?m[3]+"/"+m[2]+"/"+m[1]:v}
-function findAgent(id){var k,i,l;for(k in PARTNERS){l=PARTNERS[k];for(i=0;i<l.length;i++){if(l[i].id===id)return l[i]}}for(i=0;i<INTL.length;i++){if(INTL[i].id===id)return INTL[i]}return null}
-function rq(st){var R=RT[S.lang];return st===8?R.t8:st===9?R.t9:(RQ.mode==="sent"?R.t10a:R.t10b)}
-function rqs(st){var R=RT[S.lang];return st===8?R.s8:st===9?R.s9:(RQ.mode==="sent"?R.s10a:R.s10b)}
-var STP={fr:["Service","Agence","Infos","Envoi"],en:["Service","Agency","Details","Send"],ar:["الخدمة","الوكالة","البيانات","الإرسال"]};
-var NS={fr:["L'agence reçoit votre demande","Vous recevez le lien de paiement","Vous payez et recevez votre document"],en:["The agency receives your request","You receive the payment link","You pay and receive your document"],ar:["تستلم الوكالة طلبك","يصلك رابط الدفع","تدفع وتستلم وثيقتك"]};
-function stepper(n,labels){var Lb=labels||STP[S.lang];return '<ol class="stp" aria-label="'+Lb.join(", ")+'">'+Lb.map(function(x,i){return '<li class="'+(i+1<n?'dn':i+1===n?'on':'')+'"'+(i+1===n?' aria-current="step"':'')+'><i>'+(i+1<n?'✓':i+1)+'</i><span>'+x+'</span></li>'}).join("")+'</ol>'}
-function initials(n){return n.split(/\s+/).slice(0,2).map(function(w){return w.charAt(0)}).join("").toUpperCase()}
-function avHtml(p){return '<span class="av" aria-hidden="true">'+(p.logo?'<img src="'+p.logo+'" alt="">':initials(p.name))+'</span>'}
-function agentCard(p,R,n){return '<div class="ag-card ag-anon"><div class="ag-body"><span class="ag-no">'+R.agN+n+'</span><span class="ag-meta">'+p.what[S.lang]+'</span></div><button type="button" class="pay wide" data-agent="'+p.id+'">'+R.choose+'</button></div>'}
-function pickHtml(t){
-  var R=RT[S.lang],L=S.lang,pt=S.pt==="intl"?"intl":"local";
-  var svc=function(p){return p.svc.indexOf(S.need)>-1};
-  var tabs=[["local",R.tabL]];if(INTL.filter(svc).length)tabs.push(["intl",R.tabI]);else pt="local";
-  var h=stepper(2)+'<div class="panel"><span class="svc-pill">'+R.svc[S.need]+'</span>'+(tabs.length>1?'<div class="chips seg" role="group" aria-label="'+R.svc[S.need]+'">'+tabs.map(function(x){return '<button type="button" class="chip" data-pt="'+x[0]+'" aria-pressed="'+(pt===x[0])+'">'+x[1]+'</button>'}).join("")+'</div>':'');
-  if(pt==="intl"){h+=INTL.filter(svc).map(function(p,i){return agentCard(p,R,i+1)}).join("")}
-  else{
-    var seen={},list=[];delete PARTNERS._srv;Object.keys(PARTNERS).forEach(function(k){PARTNERS[k].forEach(function(p){if(!seen[p.id]&&svc(p)){seen[p.id]=1;list.push(p)}})});list=list.slice(0,4);
-    /* Le client ne voit que « Serveur 1, 2, 3 » (jamais le nom d'une agence). Chaque serveur garde les contacts de l'agence réelle (real/rid servent à l'envoi). Au moins 3 serveurs. */
-    if(list.length){var base=list.slice(),srv=[],cnt=Math.max(3,list.length);for(var j=0;j<cnt;j++){var b=base[j%base.length];srv.push(Object.assign({},b,{id:"srv"+(j+1)+"-"+b.id,name:R.agN+(j+1),real:b.name,rid:b.id}))}list=srv;PARTNERS._srv=srv}
-    h+=list.length?'<p class="ag-sub srv-sub">'+R.anyWhere+'</p><div class="srv-row">'+list.map(function(p,i){return agentCard(p,R,i+1)}).join("")+'</div>':'<p class="ag-none">'+R.noLocal+'</p>';
-  }
-  h+='</div>';
-  var links=WORLD.filter(function(x){return x.svc.indexOf(S.need)>-1});
-  h+='<div class="needs"><h2>'+R.selfT+'</h2><p class="ag-sub">'+R.selfN+'</p>'+tilesHtml(links)+'</div>';
-  return h;
-}
-var A11Y={
-  fr:{cons:"Consentement",sum:function(n,l){return n+(n>1?" champs à corriger : ":" champ à corriger : ")+l}},
-  en:{cons:"Consent",sum:function(n,l){return n+(n>1?" fields to fix: ":" field to fix: ")+l}},
-  ar:{cons:"الموافقة",sum:function(n,l){return "عدد الحقول التي تحتاج تصحيحًا: "+n+" — "+l}}
-};
-function fErr(k){return (RQ.er&&RQ.er[k])||""}
-function phoneFld(R){var cc=RQ.cc||"+216";return '<div class="field"><label class="q-label" for="rq-phone">'+R.phone+'</label><div class="ph-row"><select class="sel ph-cc" id="rq-cc" data-f="cc" dir="ltr" aria-label="'+TXB[S.lang].cc+'" autocomplete="tel-country-code">'+DIAL.map(function(d){return '<option value="'+d[0]+'"'+(d[0]===cc?' selected':'')+'>'+d[0]+'</option>'}).join("")+'</select><input class="sel" id="rq-phone" data-f="phone" type="tel" inputmode="tel" dir="ltr" autocomplete="tel-national" placeholder="20 123 456" value="'+escA(RQ.phone)+'" aria-describedby="fe-phone" aria-required="true" aria-invalid="'+(fErr("phone")?"true":"false")+'"></div><span class="fe" id="fe-phone">'+esc(fErr("phone"))+'</span></div>'}
-function destName(){var c=COUNTRIES.filter(function(x){return x.id===RQ.dest})[0];return c?c.n.fr:""}
-function destFld(R){var L=S.lang,cmp=function(a,b){return nm(a).localeCompare(nm(b),L)};return '<div class="field"><label class="q-label" for="rq-dest">'+TXB[L].destL+'</label><select class="sel" id="rq-dest" data-f="dest" aria-describedby="fe-dest" aria-required="true" aria-invalid="'+(fErr("dest")?"true":"false")+'"><option value="">'+TXB[L].destPh+'</option>'+COUNTRIES.slice().sort(cmp).map(function(c){return '<option value="'+c.id+'"'+(c.id===RQ.dest?' selected':'')+'>'+esc(nm(c))+'</option>'}).join("")+'</select><span class="fe" id="fe-dest">'+esc(fErr("dest"))+'</span></div>'}
-function cityFld(R){var c=COUNTRIES.filter(function(x){return x.id===RQ.dest})[0],L=c?(cityList(c.id)||[]):[];return fld("city",c?TXB[S.lang].cityL(c.n[S.lang]):TXB[S.lang].cityG,"text",'autocomplete="off" list="dl-city" placeholder="'+escA(TXB[S.lang].cityPh)+'"'+(c?'':' disabled'))+'<datalist id="dl-city">'+L.map(function(x){return '<option value="'+escA(x[0])+'"></option>'}).join("")+'</datalist>'}
-function fld(id,label,type,extra){var req=/^(ln|fn|d1|d2|phone|city)$/.test(id);return '<div class="field"><label class="q-label" for="rq-'+id+'">'+label+'</label><input class="sel" id="rq-'+id+'" data-f="'+id+'" type="'+type+'" value="'+escA(RQ[id])+'" aria-describedby="fe-'+id+'" aria-invalid="'+(fErr(id)?"true":"false")+'"'+(req?' aria-required="true"':'')+' '+(extra||'')+'><span class="fe" id="fe-'+id+'">'+esc(fErr(id))+'</span></div>'}
-function formHtml(t){
-  var R=RT[S.lang],a=findAgent(S.agent),hot=S.need==="hotel",td=today(),up='autocapitalize="characters" autocomplete="off" style="text-transform:uppercase"';
-  return stepper(3)+'<div class="panel"><div class="ag-card sel-ag ag-anon"><div class="ag-body"><b>'+R.svc[S.need]+'</b></div></div>'
-   +'<form class="req-form" id="rqform" novalidate>'
-   +'<div class="f-row">'+fld("ln",R.ln,"text",up)+fld("fn",R.fn,"text",up)+'</div>'
-   +'<div class="f-row">'+fld("d1",hot?R.d1h:R.d1f,"date",'min="'+td+'"')+fld("d2",hot?R.d2h:R.d2f,"date",'min="'+(RQ.d1||td)+'"')+'</div>'
-   +destFld(R)+cityFld(R)
-   +phoneFld(R)
-   +fld("mail",R.mail,"email",'dir="ltr" autocomplete="email" autocapitalize="off"')
-   +'<div class="q"><span class="q-label">'+R.chan+'</span><div class="chips chgrid" role="group" aria-label="'+R.chan+'">'+["email","whatsapp"].map(function(c){return '<button type="button" class="chip" data-chan="'+c+'" aria-pressed="'+(RQ.chan===c)+'">'+R.ch[c]+'</button>'}).join("")+'</div><p class="rf-sub">'+R.chanNote+'</p></div>'
-   +'<div class="field"><label class="item"><input type="checkbox" data-f="consent" id="rq-consent" aria-required="true" aria-describedby="fe-consent" aria-invalid="'+(fErr("consent")?"true":"false")+'"'+(RQ.consent?' checked':'')+'><span class="i-body"><span class="i-title">'+R.consent+'</span></span></label><span class="fe" id="fe-consent">'+esc(fErr("consent"))+'</span></div>'
-   +'<div class="hp" aria-hidden="true"><label for="rq-website">Website</label><input type="text" id="rq-website" name="website" tabindex="-1" autocomplete="off"></div>'+'<p class="ag-note">'+R.payNote+'</p><span class="fe" id="fe-form" role="alert"></span>'
-   +n48()+'<button type="submit" class="pay wide" id="rqsend">'+R.send+'</button></form></div>';
-}
-
-/* ===== Villes de destination par pays du visa (la ville doit appartenir au pays choisi). Variantes séparées par « | » ; la première s'affiche.
-   Pour ajouter une ville : ajoutez-la à la chaîne du pays. ===== */
-var CITIES={
- fr:"Paris,Marseille,Lyon,Nice,Toulouse,Bordeaux,Lille,Strasbourg,Nantes,Montpellier,Cannes,Rennes,Grenoble,Rouen,Annecy,Avignon,Biarritz,Perpignan,Toulon,Dijon,Nîmes|Nimes,Metz,Tours,Reims,Saint-Étienne|Saint-Etienne,Clermont-Ferrand,Le Havre,Brest,Ajaccio,Bastia,Aix-en-Provence,Orléans|Orleans,Angers,Caen,Limoges,Poitiers,Mulhouse,Colmar,La Rochelle,Chamonix,Disneyland Paris|Marne-la-Vallée",
- de:"Berlin,Munich|München|Munchen,Frankfurt,Hambourg|Hamburg,Cologne|Köln|Koln,Düsseldorf|Dusseldorf,Stuttgart,Leipzig,Dresde|Dresden,Nuremberg|Nürnberg|Nurnberg,Hanovre|Hannover,Brême|Bremen,Dortmund,Essen,Bonn,Heidelberg,Fribourg|Freiburg,Mannheim,Karlsruhe,Aix-la-Chapelle|Aachen,Mayence|Mainz,Wiesbaden,Potsdam,Augsbourg|Augsburg,Münster|Munster,Kiel,Rostock,Ulm,Wolfsburg,Bielefeld",
- it:"Rome|Roma,Milan|Milano,Venise|Venice|Venezia,Florence|Firenze,Naples|Napoli,Turin|Torino,Bologne|Bologna,Gênes|Genes|Genova,Vérone|Verona,Pise|Pisa,Palerme|Palermo,Catane|Catania,Bari,Cagliari,Padoue|Padova,Trieste,Bergame|Bergamo,Rimini,Sorrente|Sorrento,Amalfi,Sienne|Siena,Parme|Parma,Lucques|Lucca,Brescia,Modène|Modena,Pérouse|Perugia,Ancône|Ancona,Lecce,Côme|Como,Syracuse|Siracusa,Taormine|Taormina,Capri",
- es:"Madrid,Barcelone|Barcelona,Valence|Valencia,Séville|Seville|Sevilla,Malaga|Málaga,Bilbao,Grenade|Granada,Alicante,Palma de Majorque|Palma|Palma de Mallorca,Tenerife,Las Palmas,Ibiza,Saragosse|Zaragoza,Murcie|Murcia,Saint-Sébastien|San Sebastian|San Sebastián,Cordoue|Cordoba|Córdoba,Marbella,Tolède|Toledo,Salamanque|Salamanca,Saint-Jacques-de-Compostelle|Santiago de Compostela,Gérone|Girona,Benidorm,Cadix|Cadiz|Cádiz,Valladolid,Pampelune|Pamplona,Lanzarote,Minorque|Menorca,Torremolinos,Salou",
- be:"Bruxelles|Brussels,Anvers|Antwerp|Antwerpen,Gand|Ghent|Gent,Bruges|Brugge,Liège|Liege,Charleroi,Namur,Louvain|Leuven,Mons,Ostende|Ostend,Malines|Mechelen,Hasselt,Tournai,Waterloo,Spa,Dinant",
- nl:"Amsterdam,Rotterdam,La Haye|The Hague|Den Haag,Utrecht,Eindhoven,Groningue|Groningen,Maastricht,Haarlem,Leyde|Leiden,Delft,Nimègue|Nijmegen,Breda,Arnhem,Tilburg,Almere,Zwolle,Alkmaar",
- ch:"Zurich|Zürich,Genève|Geneva|Genf|Geneve,Bâle|Basel|Bale,Berne|Bern,Lausanne,Lucerne|Luzern,Lugano,Zermatt,Interlaken,Saint-Gall|St. Gallen,Winterthour|Winterthur,Montreux,Neuchâtel|Neuchatel,Fribourg,Sion,Davos,Saint-Moritz|St. Moritz,Locarno,Verbier",
- at:"Vienne|Vienna|Wien,Salzbourg|Salzburg,Innsbruck,Graz,Linz,Klagenfurt,Hallstatt,Bregenz,Villach,Sankt Pölten|St. Pölten,Kitzbühel|Kitzbuhel",
- dk:"Copenhague|Copenhagen|København|Kobenhavn,Aarhus,Odense,Aalborg,Billund,Esbjerg,Roskilde,Kolding,Helsingør|Helsingor",
- fi:"Helsinki,Espoo,Tampere,Turku,Oulu,Rovaniemi,Vantaa,Lahti,Kuopio,Jyväskylä|Jyvaskyla,Vaasa,Levi,Ivalo",
- pt:"Lisbonne|Lisbon|Lisboa,Porto,Faro,Funchal|Madère|Madeira,Coimbra,Braga,Albufeira,Cascais,Sintra,Évora|Evora,Ponta Delgada|Açores|Azores,Lagos,Aveiro,Guimarães|Guimaraes,Setúbal|Setubal,Fatima|Fátima",
- gr:"Athènes|Athens|Athina,Thessalonique|Thessaloniki|Salonique,Héraklion|Heraklion,Santorin|Santorini,Mykonos,Rhodes,Corfou|Corfu,La Canée|Chania,Patras,Zante|Zakynthos,Kos,Crète|Crete,Nauplie|Nafplio,Volos,Delphes|Delphi,Naxos,Paros",
- pl:"Varsovie|Warsaw|Warszawa,Cracovie|Krakow|Kraków,Gdansk|Gdańsk,Wroclaw|Wrocław,Poznan|Poznań,Lodz|Łódź,Katowice,Szczecin,Lublin,Zakopane,Torun|Toruń,Rzeszow|Rzeszów,Bydgoszcz",
- cz:"Prague|Praha,Brno,Ostrava,Pilsen|Plzeň|Plzen,Olomouc,Karlovy Vary,Český Krumlov|Cesky Krumlov,Liberec,Kutná Hora|Kutna Hora",
- hu:"Budapest,Debrecen,Szeged,Pécs|Pecs,Győr|Gyor,Eger,Miskolc,Hévíz|Heviz,Balatonfüred|Balatonfured,Siófok|Siofok",
- se:"Stockholm,Göteborg|Gothenburg|Gothembourg|Goteborg,Malmö|Malmo,Uppsala,Lund,Kiruna,Umeå|Umea,Linköping|Linkoping,Örebro|Orebro,Västerås|Vasteras,Visby",
- no:"Oslo,Bergen,Trondheim,Stavanger,Tromsø|Tromso,Ålesund|Alesund,Kristiansand,Bodø|Bodo,Lofoten,Narvik",
- mt:"La Valette|Valletta,Sliema,Saint-Julien|St. Julian's|San Giljan,Mdina,Mellieħa|Mellieha,Gozo,Birgu,Marsaskala,Bugibba,Marsaxlokk",
- lu:"Luxembourg,Esch-sur-Alzette,Differdange,Dudelange,Echternach,Vianden,Clervaux",
- hr:"Zagreb,Split,Dubrovnik,Zadar,Pula,Rijeka,Šibenik|Sibenik,Hvar,Opatija,Rovinj,Poreč|Porec,Makarska,Trogir",
- si:"Ljubljana,Maribor,Bled,Piran,Koper,Celje,Portorož|Portoroz,Kranj,Bohinj",
- sk:"Bratislava,Košice|Kosice,Žilina|Zilina,Poprad,Banská Bystrica|Banska Bystrica,Nitra,Prešov|Presov,Trnava",
- lt:"Vilnius,Kaunas,Klaipėda|Klaipeda,Šiauliai|Siauliai,Palanga,Trakai",
- lv:"Riga|Rīga,Jūrmala|Jurmala,Liepāja|Liepaja,Daugavpils,Sigulda,Cēsis|Cesis",
- ee:"Tallinn,Tartu,Pärnu|Parnu,Narva,Kuressaare",
- is:"Reykjavik|Reykjavík,Akureyri,Keflavik|Keflavík,Selfoss,Húsavík|Husavik,Vík|Vik",
- li:"Vaduz,Schaan,Balzers,Triesen,Triesenberg",
- bg:"Sofia,Plovdiv,Varna,Bourgas|Burgas,Bansko,Sunny Beach|Slanchev Bryag,Golden Sands,Veliko Tarnovo,Ruse",
- ro:"Bucarest|Bucharest|București|Bucuresti,Cluj-Napoca|Cluj,Timișoara|Timisoara,Brașov|Brasov,Iași|Iasi,Constanța|Constanta,Sibiu,Oradea,Craiova,Sinaia",
- ca:"Toronto,Montréal|Montreal,Vancouver,Ottawa,Calgary,Québec|Quebec,Edmonton,Winnipeg,Halifax,Victoria,Niagara Falls,Mississauga,Gatineau,Laval,Hamilton,Saskatoon,Regina,Banff,Whistler",
- us:"New York,Los Angeles,Chicago,Miami,San Francisco,Washington|Washington D.C.|Washington DC,Boston,Las Vegas,Orlando,Houston,Dallas,Atlanta,Seattle,San Diego,Philadelphie|Philadelphia,Denver,Phoenix,La Nouvelle-Orléans|New Orleans,Honolulu,Détroit|Detroit,Austin,Nashville,Minneapolis,Portland,Salt Lake City,Tampa",
- gb:"Londres|London,Manchester,Édimbourg|Edimbourg|Edinburgh,Birmingham,Liverpool,Glasgow,Bristol,Leeds,Cardiff,Belfast,Oxford,Cambridge,Newcastle,Southampton,Nottingham,Brighton,Bath,York,Sheffield,Aberdeen",
- ae:"Dubaï|Dubai,Abou Dabi|Abu Dhabi,Charjah|Sharjah,Ajman,Ras Al Khaimah,Fujairah,Al Ain,Umm Al Quwain",
- sa:"Riyad|Riyadh,Djeddah|Jeddah,La Mecque|Mecca|Makkah,Médine|Medine|Medina|Madinah,Dammam,Taëf|Taif,Tabuk,Abha,AlUla|Al Ula,Yanbu,Khobar|Al Khobar,Neom",
- jp:"Tokyo,Osaka|Ōsaka,Kyoto|Kyōto,Nagoya,Sapporo,Fukuoka,Hiroshima,Nara,Yokohama,Kobe|Kōbe,Nagasaki,Naha|Okinawa,Sendai,Kanazawa,Hakone,Nikko|Nikkō,Kamakura",
- au:"Sydney,Melbourne,Brisbane,Perth,Adélaïde|Adelaide,Gold Coast,Canberra,Cairns,Darwin,Hobart,Newcastle",
- nz:"Auckland,Wellington,Christchurch,Queenstown,Rotorua,Dunedin,Hamilton,Napier,Tauranga",
- cn:"Pékin|Beijing|Peking,Shanghai|Shanghaï,Canton|Guangzhou,Shenzhen,Chengdu,Hong Kong|Hongkong,Xi'an|Xian,Hangzhou,Chongqing,Nankin|Nanjing,Wuhan,Macao|Macau,Tianjin,Suzhou,Guilin"
-};
-function normC(v){return String(v||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g," ").trim()}
-function cityList(id){var c=CITIES[id];return c?c.split(",").map(function(x){return x.split("|")}):null}
-function cityMatch(id,v){var L=cityList(id);if(!L)return v;var n=normC(v),i,j;for(i=0;i<L.length;i++)for(j=0;j<L[i].length;j++)if(normC(L[i][j])===n)return L[i][0];return null}
-var DIAL=[["+216","TN"],["+213","DZ"],["+212","MA"],["+218","LY"],["+20","EG"],["+222","MR"],["+221","SN"],["+225","CI"],["+249","SD"],["+33","FR"],["+49","DE"],["+39","IT"],["+34","ES"],["+32","BE"],["+31","NL"],["+41","CH"],["+43","AT"],["+44","GB"],["+1","US/CA"],["+971","AE"],["+966","SA"],["+974","QA"],["+90","TR"],["+961","LB"],["+962","JO"]];
-var TXB={
- fr:{cc:"Indicatif du pays",cityL:function(c){return "Ville de destination ("+c+")"},cityBad:function(c){return "Choisissez une ville de "+c+" dans la liste proposée (la destination doit correspondre au pays du visa)."},cityPh:"Commencez à taper…",destL:"Pays de destination",destPh:"Choisir un pays",cityG:"Ville (choisissez d'abord le pays)"},
- en:{cc:"Country dialling code",cityL:function(c){return "Destination city ("+c+")"},cityBad:function(c){return "Choose a city in "+c+" from the list (the destination must match the visa country)."},cityPh:"Start typing…",destL:"Destination country",destPh:"Choose a country",cityG:"City (choose the country first)"},
- ar:{cc:"رمز الدولة",cityL:function(c){return "مدينة الوجهة ("+c+")"},cityBad:function(c){return "اختر مدينة في "+c+" من القائمة (يجب أن تطابق الوجهة بلد التأشيرة)."},cityPh:"ابدأ بالكتابة…",destL:"بلد الوجهة",destPh:"اختر بلداً",cityG:"المدينة (اختر البلد أولاً)"}
-};
-function normPhoneCC(cc,v){var d=String(v||"").replace(/[\s().\-]/g,"");if(!d)return "";if(/^00/.test(d))d="+"+d.slice(2);else if(d.charAt(0)!=="+")d=(cc||"+216")+d.replace(/^0+/,"");return /^\+[0-9]{8,15}$/.test(d)?d:""}
-function normPhone(v){var d=String(v||"").replace(/[\s().\-]/g,"");if(/^00/.test(d))d="+"+d.slice(2);if(/^216[0-9]{8}$/.test(d))d="+"+d;if(/^[0-9]{8}$/.test(d))d="+216"+d;return /^\+[0-9]{8,15}$/.test(d)?d:""}
-function normTg(v){return String(v||"").trim().replace(/^https?:\/\/t\.me\//i,"").replace(/^@/,"")}
-var SVCFR={flight:"Billet d'avion",hotel:"Réservation d'hôtel"},CHFR={whatsapp:"WhatsApp",telegram:"Telegram",email:"E-mail",sms:"SMS"};
-function reqText(){
-  var a=findAgent(S.agent),hot=S.need==="hotel",F=RQ;
-  var l=["Demande CheckMyVisa : "+SVCFR[S.need],"Agence : "+a.name,"Pays de destination : "+destName(),"Nom : "+F.ln,"Prénom(s) : "+F.fn,(hot?"Check-in : ":"Date d'aller : ")+fmtD(F.d1),(hot?"Check-out : ":"Date de retour : ")+fmtD(F.d2)];
-  if(F.city)l.push("Ville : "+F.city);
-  l.push("Téléphone / WhatsApp : "+F.phone);if(F.tg)l.push("Telegram : @"+F.tg);if(F.mail)l.push("E-mail : "+F.mail);
-  l.push("Canal pour le paiement et le document : "+CHFR[F.chan]);
-  /* Lien de réponse en un clic pour l'agence, selon le canal choisi par le client */
-  var reply=F.chan==="whatsapp"&&F.phone?"https://wa.me/"+F.phone.replace(/[^\d]/g,""):F.chan==="telegram"&&F.tg?"https://t.me/"+F.tg:F.chan==="email"&&F.mail?"mailto:"+F.mail:"";
-  l.push("Paiement : utilisez uniquement le moyen de paiement sécurisé qui sera indiqué sur le site lorsqu’il sera activé. N’envoyez le document qu’après confirmation effective du paiement.");
-  l.push("Modification : 48 h maximum, dates uniquement, jamais le nom ni le prénom.");
-  if(reply)l.push("Répondre au client "+"(pour toute question)"+" : "+reply);
-  return l.join("\n");
-}
-function contactFor(){return RQ.chan==="telegram"?"@"+RQ.tg:RQ.chan==="email"?RQ.mail:RQ.phone}
-function doneHtml(t){
-  var R=RT[S.lang],a=findAgent(S.agent),txt=reqText(),hot=S.need==="hotel",F=RQ,L=S.lang;
-  var sh=function(x){return x.replace(/\s*\(.*?\)/g,'')},CHL={fr:'Canal',en:'Channel',ar:'القناة'};
-  var rows=[[STP[L][0],R.svc[S.need]],[sh(R.ln),F.ln],[sh(R.fn),F.fn],[sh(hot?R.d1h:R.d1f),fmtD(F.d1)],[sh(hot?R.d2h:R.d2f),fmtD(F.d2)],[R.phone,F.phone]];
-  if(F.tg)rows.push([sh(R.tg),"@"+F.tg]);if(F.mail)rows.push([sh(R.mail),F.mail]);rows.push([CHL[L],R.ch[F.chan]]);
-  var h=stepper(4);
-  if(F.mode==="sent"){
-    h+='<div class="ok-hero"><span class="ok-ic" aria-hidden="true">✓</span><b>'+esc(R.okT(a.name))+'</b><p>'+esc(R.okTxt(R.ch[F.chan],contactFor()))+'</p></div>'
-     +'<ol class="nxt">'+NS[L].map(function(x,i){return '<li class="'+(i===0?'dn':'')+'"><i>'+(i===0?'✓':i+1)+'</i><span>'+x+'</span></li>'}).join("")+'</ol>';
-    h+=laterNotice(a);
-  }else{
-    var enc=encodeURIComponent(txt),b='';
-    if(a.email)b+='<a class="pay wide" href="mailto:'+a.email+'?subject='+encodeURIComponent("CheckMyVisa : "+SVCFR[S.need])+'&body='+enc+'">'+R.bMail+'</a>';
-    if(a.whatsapp)b+='<a class="pay wide alt" href="https://wa.me/'+a.whatsapp+'?text='+enc+'" target="_blank" rel="noopener noreferrer">'+R.bWA+'</a>';
-    h+='<div class="book"><b>'+R.manT+'</b><p>'+(F.failed?R.failTxt:R.manTxt)+'</p></div><div class="act">'+b+'</div>';
-  }
-  h+=n48();
-  h+='<div class="recap"><h2>'+R.recap+'</h2><dl>'+rows.map(function(r){return '<div><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>'}).join("")+'</dl></div>';
-  return h;
-}
-var ERX={
- fr:{long:"Trop long (60 caractères au maximum).",city:"Caractères non autorisés dans la ville.",date:"Date invalide.",far:"Choisissez une date dans les 18 prochains mois.",stay:"Séjour trop long (365 jours au maximum).",mailLong:"E-mail trop long.",
-  dup:"Une demande vient d'être envoyée. Patientez quelques secondes avant d'en envoyer une autre.",
-  net:"Pas de connexion. Vérifiez votre réseau puis réessayez.",timeout:"Le serveur met trop de temps à répondre. Réessayez.",invalid:"La demande a été refusée : vérifiez les champs puis réessayez.",rate:"Trop de demandes. Réessayez dans quelques minutes.",server:"Service momentanément indisponible. Réessayez."},
- en:{long:"Too long (60 characters maximum).",city:"Characters not allowed in the city.",date:"Invalid date.",far:"Choose a date within the next 18 months.",stay:"Stay too long (365 days maximum).",mailLong:"E-mail too long.",
-  dup:"A request was just sent. Wait a few seconds before sending another one.",
-  net:"No connection. Check your network and try again.",timeout:"The server is taking too long to answer. Try again.",invalid:"The request was rejected: check the fields and try again.",rate:"Too many requests. Try again in a few minutes.",server:"Service temporarily unavailable. Try again."},
- ar:{long:"طويل جدًا (60 حرفًا كحد أقصى).",city:"أحرف غير مسموح بها في اسم المدينة.",date:"تاريخ غير صالح.",far:"اختر تاريخًا ضمن الأشهر الـ18 القادمة.",stay:"مدة الإقامة طويلة جدًا (365 يومًا كحد أقصى).",mailLong:"البريد الإلكتروني طويل جدًا.",
-  dup:"تم إرسال طلب للتو. انتظر بضع ثوانٍ قبل إرسال طلب آخر.",
-  net:"لا يوجد اتصال. تحقق من الشبكة ثم أعد المحاولة.",timeout:"الخادم يتأخر في الرد. أعد المحاولة.",invalid:"تم رفض الطلب: تحقق من الحقول ثم أعد المحاولة.",rate:"طلبات كثيرة. أعد المحاولة بعد دقائق.",server:"الخدمة غير متاحة مؤقتًا. أعد المحاولة."}
-};
-function isoOk(v){if(!/^\d{4}-\d{2}-\d{2}$/.test(v))return false;var d=new Date(v+"T00:00:00Z");return !isNaN(d)&&d.toISOString().slice(0,10)===v}
-function dayDiff(a,b){return Math.round((new Date(b+"T00:00:00Z")-new Date(a+"T00:00:00Z"))/864e5)}
 function cleanTxt(v){return String(v||"").replace(/[\u0000-\u001f\u007f]/g,"").replace(/\s+/g," ").trim()}
-/* Validation stricte : renvoie {er:{champ:message}, clean:{valeurs nettoyées}} */
-function validateRequest(F,need){
-  var R=RT[S.lang],E=R.e,X=ERX[S.lang],er={},hot=need==="hotel",td=today(),lim=new Date(Date.now()+548*864e5).toISOString().slice(0,10);
-  var ln=cleanTxt(F.ln),fn=cleanTxt(F.fn),city=cleanTxt(F.city),mail=cleanTxt(F.mail).toLowerCase(),tg=normTg(cleanTxt(F.tg)),phone=normPhoneCC(F.cc,F.phone),latin=/^[A-Za-z][A-Za-z' \-]*$/;
-  if(!ln)er.ln=E.req;else if(ln.length>60)er.ln=X.long;else if(!latin.test(ln))er.ln=E.name;
-  if(!fn)er.fn=E.req;else if(fn.length>60)er.fn=X.long;else if(!latin.test(fn))er.fn=E.name;
-  if(!F.d1)er.d1=E.req;else if(!isoOk(F.d1))er.d1=X.date;else if(F.d1<td)er.d1=E.past;else if(F.d1>lim)er.d1=X.far;
-  if(!F.d2)er.d2=E.req;else if(!isoOk(F.d2))er.d2=X.date;else if(F.d1&&isoOk(F.d1)){
-    if(hot?F.d2<=F.d1:F.d2<F.d1)er.d2=hot?E.dHotel:E.dFlight;else if(dayDiff(F.d1,F.d2)>365)er.d2=X.stay}
-  var dc=COUNTRIES.filter(function(x){return x.id===F.dest})[0];
-  if(!dc)er.dest=E.req;
-  var cmatch=(city&&dc)?cityMatch(dc.id,city):null;
-  if(!city)er.city=E.req;else if(city.length>60)er.city=X.long;else if(dc&&cmatch===null)er.city=TXB[S.lang].cityBad(dc.n[S.lang]);
-  if(!phone)er.phone=cleanTxt(F.phone)?E.phone:E.req;
-  if(tg&&!/^[A-Za-z0-9_]{5,32}$/.test(tg))er.tg=E.tg;
-  if(mail){if(mail.length>254)er.mail=X.mailLong;else if(!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(mail))er.mail=E.mail}
-  if(F.chan==="telegram"&&!tg&&!er.tg)er.tg=E.needTg;
-  if(!mail&&!er.mail)er.mail=E.needMail;
-  if(!F.consent)er.consent=E.consent;
-  return {er:er,clean:{ln:ln.toUpperCase(),fn:fn.toUpperCase(),city:cmatch||city,mail:mail,tg:tg,phone:phone}};
-}
-function newId(){try{if(crypto.randomUUID)return crypto.randomUUID()}catch(e){}return "r"+Date.now().toString(36)+Math.random().toString(36).slice(2,10)}
-/* Envoi avec délai maximal, nouvelle tentative (erreurs réseau / 5xx) et lecture du statut HTTP en mode "cors". */
-function postRequest(payload){
-  var attempt=0;
-  function once(){
-    if(REQUEST_MODE==="cors"){
-      return fetchJson(REQUEST_URL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","Idempotency-Key":payload.requestId},body:JSON.stringify(payload)},REQUEST_TIMEOUT_MS).then(function(r){
-        if(r.err)return {ok:false,kind:r.err,retry:true};
-        if(r.ok)return {ok:true,kind:"sent"};
-        if(r.status===429)return {ok:false,kind:"rate",status:429};
-        if(r.status>=400&&r.status<500)return {ok:false,kind:"invalid",status:r.status};
-        return {ok:false,kind:"server",status:r.status,retry:true};
-      });
-    }
-    var fd=new URLSearchParams(),k;
-    for(k in payload){if(k!=="agency")fd.append(k,payload[k])}
-    fd.append("agencyName",payload.agency.name);fd.append("agencyEmail",payload.agency.email);fd.append("agencyTelegram",payload.agency.telegram);fd.append("agencyWhatsapp",payload.agency.whatsapp);
-    var ctl=typeof AbortController==="function"?new AbortController():null,timer=ctl&&setTimeout(function(){ctl.abort()},REQUEST_TIMEOUT_MS);
-    return fetch(REQUEST_URL,{method:"POST",mode:"no-cors",credentials:"omit",body:fd,signal:ctl?ctl.signal:undefined}).then(function(){clearTimeout(timer);return {ok:true,kind:"sent"}},
-      function(err){clearTimeout(timer);return {ok:false,kind:(err&&err.name==="AbortError")?"timeout":"net",retry:true}});
-  }
-  function run(){return once().then(function(r){
-    if(r.ok||!r.retry||attempt>=REQUEST_RETRIES)return r;
-    attempt++;return new Promise(function(ok){setTimeout(ok,800*Math.pow(2,attempt-1))}).then(run);
-  })}
-  return run();
-}
-function submitReq(){
-  if(RQ.sending)return;
-  var R=RT[S.lang],X=ERX[S.lang],a=findAgent(S.agent),F=RQ,v=validateRequest(F,S.need),er=v.er,c=v.clean;
-  RQ.er=er;
-  ["ln","fn","d1","d2","dest","city","phone","tg","mail","consent"].forEach(function(k){var s=$("fe-"+k),i=$("rq-"+k);if(s)s.textContent=er[k]||"";if(i)i.setAttribute("aria-invalid",er[k]?"true":"false")});
-  var form=$("fe-form");if(form)form.textContent="";
-  var bad=Object.keys(er);
-  if(bad.length){
-    var hot=S.need==="hotel",LB={ln:R.ln,fn:R.fn,d1:hot?R.d1h:R.d1f,d2:hot?R.d2h:R.d2f,dest:TXB[S.lang].destL,city:TXB[S.lang].cityG,phone:R.phone,tg:R.tg,mail:R.mail,consent:A11Y[S.lang].cons};
-    if(form)form.textContent=A11Y[S.lang].sum(bad.length,bad.map(function(k){return LB[k]}).join(", "));
-    var f=$("rq-"+bad[0]);if(f)f.focus();return}
-  RQ.er={};F.ln=c.ln;F.fn=c.fn;F.city=c.city;F.phone=c.phone;F.tg=c.tg;F.mail=c.mail;
-  function fin(mode,failed){F.done=true;F.mode=mode;F.failed=!!failed;F.tries=0;S.step=10;save();render();window.scrollTo(0,0)}
-  var hp=$("rq-website");if(hp&&hp.value){fin("sent");return}              /* champ piège rempli par un robot : on fait semblant */
-  try{var last=+sessionStorage.getItem("vc-last-send")||0;if(Date.now()-last<REQUEST_COOLDOWN_MS){if(form)form.textContent=X.dup;return}}catch(e){}
-  if(!REQUEST_URL){fin("manual");return}
-  F.rid=newId();
-  var payload={requestId:F.rid,service:S.need,destination:destName(),lastName:c.ln,firstName:c.fn,date1:F.d1,date2:F.d2,city:c.city,phone:c.phone,telegram:c.tg,email:c.mail,channel:F.chan,lang:S.lang,sentAt:new Date().toISOString(),
-    agency:{id:a.rid||a.id,name:a.real||a.name,email:a.email||"",telegram:a.telegram||"",whatsapp:a.whatsapp||""},message:reqText()};
-  var btn=$("rqsend");RQ.sending=true;btn.disabled=true;btn.setAttribute("aria-busy","true");btn.textContent=R.sending;
-  postRequest(payload).then(function(r){
-    RQ.sending=false;
-    if(r.ok){try{sessionStorage.setItem("vc-last-send",String(Date.now()))}catch(e){}fin("sent");return}
-    F.tries=(F.tries||0)+1;
-    if(F.tries>=2&&r.kind!=="invalid"&&r.kind!=="rate"){fin("manual",true);return}           /* 2 échecs : on propose l'envoi manuel */
-    var b=$("rqsend"),fe=$("fe-form");
-    if(b){b.disabled=false;b.removeAttribute("aria-busy");b.textContent=R.send}
-    if(fe)fe.textContent=X[r.kind==="net"?"net":r.kind]||X.server;
-  });
+function rq(st){return RT[S.lang].t8}
+function rqs(st){return RT[S.lang].s8}
+function pickHtml(t){
+  var R=RT[S.lang],links=WORLD.filter(function(x){return x.svc.indexOf(S.need)>-1});
+  return '<div class="panel"><span class="svc-pill">'+R.svc[S.need]+'</span></div><div class="needs"><h2>'+R.selfT+'</h2><p class="ag-sub">'+R.selfN+'</p>'+tilesHtml(links)+'</div>';
 }
 var NEEDART={flight:'<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="ngf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b8cff"/><stop offset=".6" stop-color="#7cc4ff"/><stop offset="1" stop-color="#ffb347"/></linearGradient></defs><rect width="64" height="64" fill="url(#ngf)"/><circle cx="46" cy="44" r="11" fill="#fff3c4" opacity=".9"/><ellipse cx="16" cy="50" rx="16" ry="7" fill="#fff" opacity=".95"/><ellipse cx="50" cy="56" rx="18" ry="7" fill="#fff"/><path class="nt" d="M6 40C16 36 24 30 32 24" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 6" fill="none"/><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" transform="translate(37 22) rotate(45) scale(1.5) translate(-12 -12)" fill="#fff" stroke="#1d4ed8" stroke-width="1.1" paint-order="stroke"/></svg>',hotel:'<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="nhg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2a8c"/><stop offset=".55" stop-color="#b24a8f"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs><rect width="64" height="64" fill="url(#nhg)"/><g fill="#fff"><circle cx="10" cy="10" r="1.3"/><circle cx="26" cy="7" r="1"/><circle cx="56" cy="9" r="1.3"/><circle cx="38" cy="14" r="1"/></g><circle cx="47" cy="24" r="11" fill="#ffd27a" opacity=".5"/><circle cx="47" cy="24" r="4.5" fill="#fff3c4"/><rect x="7" y="22" width="5" height="32" rx="2" fill="#fff"/><rect x="7" y="38" width="50" height="12" rx="3" fill="#fff"/><rect x="24" y="38" width="33" height="12" rx="3" fill="#ffb347"/><rect x="13" y="31" width="15" height="8" rx="4" fill="#fff3e6"/><rect x="10" y="50" width="4" height="6" rx="1" fill="#fff"/><rect x="50" y="50" width="4" height="6" rx="1" fill="#fff"/></svg>'};
 /* Photos réelles (optionnelles) : déposez photo-avion.jpg et photo-hotel.jpg à côté de index.html. Si le fichier est absent, l'illustration reste affichée. */
@@ -1706,29 +1328,6 @@ function panelHtml(t){
   if(e==="reunion"){return chips("purpose",t.s_purpose)+chips("party",t.s_party)+'<div class="book"><b>'+t.reunTitle+'</b><p>'+t.reunText+'</p></div>'+j}
   if(e==="medical"){return '<div class="book"><b>'+t.gMed+'</b><p>'+t.medNote+'</p></div>'+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay)+j}
   return chips("purpose",t.s_purpose)+chips("status",t.s_status)+chips("party",t.s_party)+chips("stay",t.s_stay)+chips("pay",t.s_pay)+j;
-}
-function allAdvisors(){var a=[];for(var k in PARTNERS){if(k==="_srv")continue;PARTNERS[k].forEach(function(p){a.push(p)})}return a}
-function advMsg(){var t=UI[S.lang];return "CheckMyVisa : "+t.advSubject+"\n"+t.advDest+" : "+nm(curC())+"\n"+t.advCase+" : "+(S.refus||"-")}
-function renderAgency(t){
-  var L=S.lang,list=allAdvisors();
-  var h='<h2>'+t.agTitle+'</h2><p class="ag-sub">'+t.agSub+'</p>';
-  h+='<div class="q"><label class="q-label" for="refcase">'+t.caseLabel+'</label><textarea class="sel" id="refcase" rows="3" maxlength="300" placeholder="'+escA(t.casePh)+'">'+esc(S.refus||"")+'</textarea><span class="i-note">'+t.caseHint+'</span></div>';
-  if(!list.length){h+='<p class="ag-none">'+t.agNone+'</p>'}
-  else if(S.paid){
-    list.forEach(function(p){
-      var m=encodeURIComponent(advMsg());
-      h+='<div class="partner"><b>'+p.name+'</b><span class="i-note">'+(p.adv||p.what)[L]+'</span>';
-      if(p.contact)h+='<span class="i-note">'+p.contact+'</span>';
-      if(p.email)h+='<a class="pay wide" href="mailto:'+p.email+'?subject='+encodeURIComponent("CheckMyVisa")+'&body='+m+'">'+t.advMail+'</a>';
-      if(p.whatsapp)h+='<a class="pay wide" href="https://wa.me/'+String(p.whatsapp).replace(/\D/g,"")+'?text='+m+'" target="_blank" rel="noopener">'+t.advWA+'</a>';
-      if(!p.contact&&!p.email&&!p.whatsapp)h+='<span class="i-note">'+t.contactSoon+'</span>';
-      h+='</div>';
-    });
-  }else{
-    h+='<div class="locked"><b>'+t.agCount(list.length)+'</b><i></i><i></i></div>';
-  }
-  h+='<p class="ag-note">'+t.agNote+'</p>';
-  $("agency").innerHTML=h;
 }
 /* ===== e-Visa section: countries where Tunisian passports can use an electronic visa or authorisation. =====
    Sources checked on 20 Oct 2026: Henley Passport Index 2026 (via La Presse), Wikipedia "Visa requirements for Tunisian citizens",
@@ -2674,7 +2273,7 @@ function patchHTML(el,html){var t=document.createElement("template");t.innerHTML
 /* Les conteneurs de rendu reçoivent un « innerHTML » qui applique patchHTML : le reste du code n'a pas à changer. */
 (function(){
   var d=Object.getOwnPropertyDescriptor(Element.prototype,"innerHTML");
-  ["h1","stepper","home","mode","dest","panel","req","tools","evisa","list","agency","refus","sponsors","dock","nav","links","legal"].forEach(function(id){
+  ["h1","stepper","home","mode","dest","panel","req","tools","evisa","list","refus","sponsors","dock","nav","links","legal"].forEach(function(id){
     var el=document.getElementById(id);if(!el)return;
     Object.defineProperty(el,"innerHTML",{configurable:true,get:function(){return d.get.call(el)},set:function(h){patchHTML(el,String(h))}});
   });
@@ -2751,13 +2350,13 @@ function render(){
   var t=applyCountry(UI[S.lang]);
   if(cur.id!=="fr"&&S.mode==="appeal")S.mode="check";
   if(!ready&&S.step>0&&S.step<6)S.step=0;if(S.step===2||S.step===3)S.step=4;
-  if(S.step===7&&!evFind(S.evc))S.step=6;if(S.step>13||S.step<0)S.step=0;if(S.step>=8&&S.step<=10&&(!S.need||S.need==="flight"))S.step=0;if(S.step>=9&&S.step<=10&&!findAgent(S.agent))S.step=8;if(S.step===10&&!RQ.done)S.step=9;
+  if(S.step===7&&!evFind(S.evc))S.step=6;if(S.step>13||S.step<0)S.step=0;if(S.step>=8&&S.step<=10&&(!S.need||S.need==="flight"))S.step=0;
   var st=S.step,e=eff();
   document.documentElement.lang=S.lang;
   document.documentElement.dir=S.lang==="ar"?"rtl":"ltr";renderChrome();
-  setLogo(st>=8&&st<=10?(S.need==="flight"?"plane":S.need==="hotel"?"bed":"check"):"check");$("stamp").hidden=true;
-  if(st===0){$("h1").innerHTML=t.sloganA+'<span class="acc">'+t.sloganB+'</span>'}else{$("h1").textContent=[0,t.modeTitle,t.destTitle,t.pTitle,t.dTitle,S.mode==="appeal"?t.apTitle:t.hTitle,EVT[S.lang].listTitle,evTitle(),rq(8),rq(9),rq(10),TLS[S.lang].t11,TLS[S.lang].t12,TLS[S.lang].t13][st]}
-  $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),rqs(9),rqs(10),TLS[S.lang].s11,TLS[S.lang].s12,TLS[S.lang].s13][st];document.body.dataset.step=st;
+  setLogo(st===8?(S.need==="flight"?"plane":S.need==="hotel"?"bed":"check"):"check");$("stamp").hidden=true;
+  if(st===0){$("h1").innerHTML=t.sloganA+'<span class="acc">'+t.sloganB+'</span>'}else{$("h1").textContent=[0,t.modeTitle,t.destTitle,t.pTitle,t.dTitle,S.mode==="appeal"?t.apTitle:t.hTitle,EVT[S.lang].listTitle,evTitle(),rq(8),"","",TLS[S.lang].t11,TLS[S.lang].t12,TLS[S.lang].t13][st]}
+  $("sub").textContent=st===0?t.homeSub2:[0,t.modeSub,t.destSub,t.pSub,t.dSub,S.mode==="appeal"?t.apSub:t.hSub,EVT[S.lang].listSub,EVT[S.lang].detailSub,rqs(8),"","",TLS[S.lang].s11,TLS[S.lang].s12,TLS[S.lang].s13][st];document.body.dataset.step=st;
   $("disc").textContent=(st===0||st>=6)?GENDISC[S.lang]:t.disc;renderLegal();renderBpn();renderTrans();$("homeBtn").hidden=st===0;$("homeBtn").setAttribute("aria-label",HOMEL[S.lang]);$("homeBtn").title=HOMEL[S.lang];$("reset").textContent=t.reset;$("reset").hidden=st!==4;
   ["fr","en","ar"].forEach(function(l){$("l-"+l).setAttribute("aria-pressed",S.lang===l)});
   $("links").innerHTML=(!ready||st<4||st>5||S.mode==="appeal")?"":'<a href="'+oriLink(cur)+'" target="_blank" rel="noopener noreferrer">'+t.linkFV+'</a>';
@@ -2767,8 +2366,8 @@ function render(){
   $("mode").hidden=st!==1;if(st===1)$("mode").innerHTML=modeHtml(t);
   $("dest").hidden=st!==2;if(st===2)$("dest").innerHTML=destHtml(t);
   $("panel").hidden=st!==3;if(st===3){$("panel").innerHTML=panelHtml(t);$("panel").insertAdjacentHTML("beforeend",visaEligibilityHtml());}
-  $("req").hidden=st<8||st>10;$("tools").hidden=st<11;if(st>=11)$("tools").innerHTML=toolsHtml(t);if(st===8)$("req").innerHTML=pickHtml(t);if(st===9)$("req").innerHTML=formHtml(t);if(st===10)$("req").innerHTML=doneHtml(t);$("evisa").hidden=st<6||st>7;if(st===6)$("evisa").innerHTML=evListHtml();if(st===7)$("evisa").innerHTML=evDetailHtml(t);
-  $("docs").hidden=st!==4;$("help").hidden=st!==5;$("agency").hidden=true;$("refus").hidden=false;
+  $("req").hidden=st!==8;$("tools").hidden=st<11;if(st>=11)$("tools").innerHTML=toolsHtml(t);if(st===8)$("req").innerHTML=pickHtml(t);$("evisa").hidden=st<6||st>7;if(st===6)$("evisa").innerHTML=evListHtml();if(st===7)$("evisa").innerHTML=evDetailHtml(t);
+  $("docs").hidden=st!==4;$("help").hidden=st!==5;$("refus").hidden=false;
   if(st===4){
     var vis=(e==="reunion"?RITEMS:ITEMS).filter(function(i){return i.w(Object.assign({},S,{purpose:e}))});
     var req=vis.filter(function(i){return !i.opt}),doneReq=req.filter(function(i){return S.done[i.id]}).length;
@@ -2809,22 +2408,15 @@ function render(){
   prevStep=S.step;
   if(S.origin!=="tn"){["bpn","sponsors"].forEach(function(id){var x=$(id);if(x)x.hidden=true})}
 }
-function go(n){if(S.step>=11){S.step=0;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(S.step>=8){S.step=S.step===8?(S.back||0):(S.step===9?8:0);save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(S.step>=6){S.step=S.step===7?6:0;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(n<0&&S.mode==="appeal"&&S.step===5)n=-4;if(n<0&&S.mode!=="appeal"&&S.step===4)n=-3;S.step=Math.max(0,Math.min(5,S.step+n));save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}}
+function go(n){if(S.step>=11){S.step=0;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(S.step>=8){S.step=S.back||0;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(S.step>=6){S.step=S.step===7?6:0;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}if(n<0&&S.mode==="appeal"&&S.step===5)n=-4;if(n<0&&S.mode!=="appeal"&&S.step===4)n=-3;S.step=Math.max(0,Math.min(5,S.step+n));save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}}
 document.addEventListener("click",function(e){
-  if(e.target.id==="unlock"){doUnlock("advisors","code","err",e.target);return}
   if(e.target.id==="unlock2"){doUnlock("pack","code2","err2",e.target);return}
   var cb=e.target.closest(".cp");
   if(cb&&cb.dataset.pdf==null){copyLetter(cb);return}
   var nd=e.target.closest("[data-need]");
-  if(nd&&nd.dataset.need==="flight"){if(ownerFlight())location.href="./vols.html";return}
-  if(nd){S.need=nd.dataset.need;S.back=S.step;S.step=8;RQ.done=false;RQ.d1="";RQ.d2="";save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
-  var pb=e.target.closest("[data-pt]");
-  if(pb){S.pt=pb.dataset.pt;save();render();return}
-  var ab=e.target.closest("[data-agent]");
-  if(ab){S.agent=ab.dataset.agent;S.step=9;RQ.done=false;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
-  var cn=e.target.closest("[data-chan]");
-  if(cn){RQ.chan=cn.dataset.chan;document.querySelectorAll("[data-chan]").forEach(function(b){b.setAttribute("aria-pressed",b===cn)});return}
-  if(e.target.closest("[data-tgcopy]")){try{navigator.clipboard.writeText(reqText())}catch(x){}return}
+  if(nd&&nd.dataset.need==="flight"){location.href="./vols.html";return}
+  if(nd){S.need=nd.dataset.need;S.back=S.step;S.step=8;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
+  
   var gb=e.target.closest("[data-go]");
   if(gb){go(parseInt(gb.dataset.go,10));return}
   if(e.target.closest("#start")){go(1);return}
@@ -2854,10 +2446,6 @@ document.addEventListener("change",function(e){
     var again=document.querySelector('input[data-id="'+id+'"]');if(again)again.focus()}
 });
 document.addEventListener("click",function(e){var t=e.target;if(t&&t.tagName==="INPUT"&&t.type==="date"&&typeof t.showPicker==="function"){try{t.showPicker()}catch(x){}}});
-document.addEventListener("input",function(e){var f=e.target.dataset&&e.target.dataset.f;if(f){RQ[f]=e.target.type==="checkbox"?e.target.checked:e.target.value;if(f==="dest"){RQ.city="";if(RQ.er){delete RQ.er.dest;delete RQ.er.city}render();var ds=$("rq-dest");if(ds)ds.focus();return}
-  if(RQ.er&&RQ.er[f]){delete RQ.er[f];var se=$("fe-"+f);if(se)se.textContent="";e.target.setAttribute("aria-invalid","false");
-    if(!Object.keys(RQ.er).length){var fm=$("fe-form");if(fm)fm.textContent=""}}}});
-document.addEventListener("submit",function(e){if(e.target.id==="rqform"){e.preventDefault();submitReq()}});
 
 
 
@@ -2873,42 +2461,42 @@ var LGL={
 fr:{m:"Mentions légales",c:"Confidentialité",x:"Fermer",d:"Dernière mise à jour : octobre 2026. Ce texte est un modèle de bonne foi, pas un avis juridique : faites-le relire par un professionnel avant le lancement.",
  mt:[["Éditeur du site",function(){return L(["Site : "+SITE.name+(SITE.domain?" ("+SITE.domain+")":""),SITE.owner&&"Responsable : "+SITE.owner,SITE.status&&"Statut : "+SITE.status,SITE.address&&"Adresse : "+SITE.address,SITE.email&&"E-mail : "+SITE.email,SITE.phone&&"Téléphone : "+SITE.phone,SITE.host&&"Hébergeur : "+SITE.host])}],
  ["Nature du service","CheckMyVisa est un outil d'aide à la préparation des dossiers de visa. Le site n'est lié à aucune ambassade, à TLScontact ni à France-Visas. Il ne dépose pas de demande de visa et ne garantit jamais l'obtention d'un visa : la décision appartient uniquement aux autorités. Vérifiez toujours les pièces exigées sur les sites officiels."],
- ["Agences et partenaires","Les billets, réservations d'hôtel et autres documents sont fournis par des agences et des partenaires indépendants. Leurs prix, délais et prestations relèvent de leur seule responsabilité. Le paiement se fait auprès de l'agence choisie, pas auprès de CheckMyVisa. Pour un dossier de visa, demandez uniquement des réservations réellement annulables."],
+ ["Partenaires et liens","Les réservations d'hôtel et autres services sont proposés par des sites partenaires indépendants. Leurs prix, délais et prestations relèvent de leur seule responsabilité ; vous payez directement le site choisi, pas CheckMyVisa. Pour un dossier de visa, demandez uniquement des réservations réellement annulables."],
  ["Liens externes et partenaires","Le site renvoie vers des sites tiers. Certains liens peuvent être des liens partenaires : nous pouvons alors percevoir une commission, sans coût supplémentaire pour vous."],
  ["Propriété intellectuelle","Les noms, logos et marques des tiers cités appartiennent à leurs propriétaires et sont utilisés uniquement pour les identifier. Le contenu et le code du site sont protégés ; toute reprise nécessite notre accord."],
  ["Responsabilité","Les informations sont données à titre indicatif et peuvent évoluer. Nous ne pouvons être tenus responsables d'un refus de visa, d'une erreur de saisie du client ou d'un changement de règle des autorités."]],
  ct:[["Qui est responsable de vos données ?",function(){return "Le responsable est l'éditeur indiqué dans les mentions légales."+(SITE.email?" Contact : "+SITE.email+".":"")}],
- ["Quelles données collectons-nous ?","Quand vous demandez un billet d'avion ou une réservation : nom et prénom comme sur le passeport, dates de voyage, ville de destination, numéro de téléphone ou WhatsApp (avec l'indicatif du pays) et e-mail, et le canal choisi pour être prévenu(e). N'envoyez jamais de copie de passeport ni de numéro de carte bancaire par ce formulaire."],
- ["Pourquoi ?","Uniquement pour traiter votre demande, la transmettre à l'agence choisie et vous envoyer le lien de paiement puis le document. Nous ne vendons pas vos données."],
- ["Qui les reçoit ?","L'agence que vous choisissez, et les services techniques qui acheminent la demande : Cloudflare (serveur relais) puis Make (automatisation, serveurs situés dans l'Union européenne). Ces destinataires ne les utilisent que pour exécuter votre demande. Si vous utilisez le générateur de lettre, les informations saisies sont envoyées à Anthropic (service d'IA) pour rédiger le texte ; notre serveur ne les conserve pas."],
+ ["Quelles données collectons-nous ?","Si vous retenez un vol via notre service : nom et prénom comme sur le passeport, date de naissance, adresse e-mail et numéro de téléphone. N'envoyez jamais de copie de passeport ni de numéro de carte bancaire."],
+ ["Pourquoi ?","Uniquement pour créer la réservation aérienne demandée. Nous ne vendons pas vos données."],
+ ["Qui les reçoit ?","Notre fournisseur de réservation aérienne (Duffel) et les services techniques qui acheminent la demande (Cloudflare). Si vous utilisez le générateur de lettre ou l'analyseur, ce que vous saisissez est envoyé à un service d'IA (Google Gemini) pour rédiger le texte ; notre serveur ne le conserve pas."],
  ["Combien de temps ?","Le temps nécessaire au traitement de votre demande et à nos obligations légales, puis suppression. Vous pouvez demander la suppression plus tôt."],
  ["Stockage sur votre appareil et services tiers","Le site n'utilise pas de cookies publicitaires. Votre progression et, si vous les saisissez, les dates du calculateur Schengen sont enregistrées sur votre appareil (stockage local) et ne sont pas envoyées. Un code de déblocage saisi est vérifié par notre serveur, qui conserve seulement son empreinte chiffrée. Les polices et certaines icônes de partenaires sont chargées depuis des serveurs tiers (par exemple Google), qui voient alors votre adresse IP."],
  ["Vos droits","Vous pouvez demander l'accès, la rectification, la suppression de vos données ou vous opposer à leur traitement en nous écrivant"+" (voir l'e-mail dans les mentions légales). En Tunisie, ces droits sont encadrés par la loi organique n° 2004-63 du 27 juillet 2004 ; vous pouvez aussi saisir l'Instance nationale de protection des données personnelles (INPDP)."]]},
 en:{m:"Legal notice",c:"Privacy",x:"Close",d:"Last updated: October 2026. This text is a good-faith template, not legal advice: have a professional review it before launch.",
  mt:[["Site publisher",function(){return L(["Site: "+SITE.name+(SITE.domain?" ("+SITE.domain+")":""),SITE.owner&&"Responsible: "+SITE.owner,SITE.status&&"Status: "+SITE.status,SITE.address&&"Address: "+SITE.address,SITE.email&&"E-mail: "+SITE.email,SITE.phone&&"Phone: "+SITE.phone,SITE.host&&"Host: "+SITE.host])}],
  ["Nature of the service","CheckMyVisa is a tool that helps you prepare visa files. The site is not affiliated with any embassy, TLScontact or France-Visas. It does not submit visa applications and never guarantees a visa: the decision belongs solely to the authorities. Always check the required documents on official websites."],
- ["Agencies and partners","Tickets, hotel bookings and other documents are provided by independent agencies and partners. Their prices, delays and services are their sole responsibility. You pay the chosen agency, not CheckMyVisa. For a visa file, only ask for genuinely cancellable bookings."],
+ ["Partners and links","Hotel bookings and other services are offered by independent partner sites. Their prices, delays and services are their sole responsibility; you pay the chosen site directly, not CheckMyVisa. For a visa file, only ask for genuinely cancellable bookings."],
  ["External and partner links","The site links to third-party sites. Some links may be partner links: we may then earn a commission at no extra cost to you."],
  ["Intellectual property","Third-party names, logos and trademarks belong to their owners and are used only to identify them. The site's content and code are protected; any reuse needs our consent."],
  ["Liability","Information is indicative and may change. We cannot be held responsible for a visa refusal, a data-entry error by the client, or a rule change by the authorities."]],
  ct:[["Who is responsible for your data?",function(){return "The controller is the publisher named in the legal notice."+(SITE.email?" Contact: "+SITE.email+".":"")}],
- ["What data do we collect?","When you request a flight ticket or hotel booking: first and last name as in your passport, travel dates, destination city, phone or WhatsApp number and e-mail, and the channel chosen to be notified. Never send a passport copy or card number through this form."],
- ["Why?","Only to process your request, pass it to the chosen agency and send you the payment link and then the document. We do not sell your data."],
- ["Who receives it?","The agency you choose, and the technical services that route the request: Cloudflare (relay server) then Make (automation, servers in the European Union). They use it only to carry out your request. If you use the letter generator, what you type is sent to Anthropic (AI service) to write the text; our server does not keep it."],
+ ["What data do we collect?","If you hold a flight through our service: first and last name as in your passport, date of birth, e-mail and phone number. Never send a passport copy or card number."],
+ ["Why?","Only to create the flight reservation you asked for. We do not sell your data."],
+ ["Who receives it?","Our flight booking provider (Duffel) and the technical services that route the request (Cloudflare). If you use the letter generator or the analyser, what you type is sent to an AI service (Google Gemini) to write the text; our server does not keep it."],
  ["How long?","As long as needed to process your request and meet our legal duties, then deletion. You can ask for earlier deletion."],
  ["Storage on your device and third-party services","The site uses no advertising cookies. Your progress and, if you enter them, the Schengen calculator dates are saved on your device (local storage) and are never sent. An unlock code you enter is checked by our server, which keeps only its encrypted fingerprint. Fonts and some partner icons load from third-party servers (for example Google), which then see your IP address."],
  ["Your rights","You can ask for access, correction or deletion of your data, or object to its processing, by writing to us (see the e-mail in the legal notice). In Tunisia these rights are governed by Organic Law No. 2004-63 of 27 July 2004; you may also contact the national personal data protection authority (INPDP)."]]},
 ar:{m:"الإشعار القانوني",c:"الخصوصية",x:"إغلاق",d:"آخر تحديث: أكتوبر 2026. هذا النص نموذج بحسن نية وليس استشارة قانونية: اطلب من مختص مراجعته قبل الإطلاق.",
  mt:[["ناشر الموقع",function(){return L(["الموقع: "+SITE.name+(SITE.domain?" ("+SITE.domain+")":""),SITE.owner&&"المسؤول: "+SITE.owner,SITE.status&&"الصفة: "+SITE.status,SITE.address&&"العنوان: "+SITE.address,SITE.email&&"البريد الإلكتروني: "+SITE.email,SITE.phone&&"الهاتف: "+SITE.phone,SITE.host&&"الاستضافة: "+SITE.host])}],
  ["طبيعة الخدمة","CheckMyVisa أداة تساعد على تحضير ملفات التأشيرة. الموقع غير تابع لأي سفارة أو TLScontact أو France-Visas. لا يقدّم طلبات التأشيرة ولا يضمن الحصول عليها أبدًا: القرار للسلطات وحدها. تحقق دائمًا من الوثائق المطلوبة في المواقع الرسمية."],
- ["الوكالات والشركاء","تُقدَّم التذاكر وحجوزات الفنادق وغيرها من الوثائق من طرف وكالات وشركاء مستقلين. الأسعار والآجال والخدمات من مسؤوليتهم وحدهم. يتم الدفع للوكالة المختارة وليس لـ CheckMyVisa. في ملف التأشيرة، اطلب فقط حجوزات قابلة للإلغاء فعلًا."],
+ ["الشركاء والروابط","تُقدَّم حجوزات الفنادق وغيرها من الخدمات من طرف مواقع شريكة مستقلة. الأسعار والآجال والخدمات من مسؤوليتها وحدها؛ تدفع للموقع المختار مباشرة وليس لـ CheckMyVisa. في ملف التأشيرة اطلب فقط حجوزات قابلة للإلغاء فعلًا."],
  ["الروابط الخارجية والشركاء","يحيل الموقع إلى مواقع أخرى. قد تكون بعض الروابط روابط شراكة، وقد نحصل على عمولة دون أي تكلفة إضافية عليك."],
  ["الملكية الفكرية","أسماء الجهات الأخرى وشعاراتها وعلاماتها ملك لأصحابها وتُستعمل للتعريف بها فقط. محتوى الموقع وشيفرته محميان، وأي استعمال يتطلب موافقتنا."],
  ["المسؤولية","المعلومات إرشادية وقد تتغير. لا نتحمل مسؤولية رفض التأشيرة أو خطأ في إدخال بيانات العميل أو تغيير القواعد من السلطات."]],
  ct:[["من المسؤول عن بياناتك؟",function(){return "المسؤول هو ناشر الموقع المذكور في الإشعار القانوني."+(SITE.email?" للتواصل: "+SITE.email+".":"")}],
- ["ما البيانات التي نجمعها؟","عند طلب تذكرة طيران أو حجز فندق: الاسم واللقب كما في جواز السفر، وتواريخ السفر، ومدينة الوجهة، ورقم الهاتف أو واتساب والبريد الإلكتروني، والقناة المختارة لإخطارك. لا ترسل أبدًا نسخة من الجواز أو رقم بطاقة بنكية عبر هذا النموذج."],
- ["لماذا؟","فقط لمعالجة طلبك وإرساله إلى الوكالة المختارة وإرسال رابط الدفع ثم الوثيقة إليك. لا نبيع بياناتك."],
- ["من يستلمها؟","الوكالة التي تختارها، والخدمات التقنية التي تنقل الطلب: Cloudflare (خادم وسيط) ثم Make (الأتمتة، خوادم داخل الاتحاد الأوروبي). لا تستعملها إلا لتنفيذ طلبك. وإذا استعملت مولّد الرسائل فإن ما تدخله يُرسل إلى Anthropic (خدمة ذكاء اصطناعي) لكتابة النص ولا يحتفظ به خادمنا."],
+ ["ما البيانات التي نجمعها؟","إذا حجزت رحلة عبر خدمتنا: الاسم واللقب كما في جواز السفر، وتاريخ الميلاد، والبريد الإلكتروني ورقم الهاتف. لا ترسل أبدًا نسخة من جواز السفر أو رقم بطاقة بنكية."],
+ ["لماذا؟","فقط لإنشاء حجز الطيران الذي طلبته. لا نبيع بياناتك."],
+ ["من يستلمها؟","مزوّد حجوزات الطيران لدينا (Duffel) والخدمات التقنية التي تنقل الطلب (Cloudflare). إذا استعملت مولّد الرسائل أو المحلّل فما تكتبه يُرسل إلى خدمة ذكاء اصطناعي (Google Gemini) لكتابة النص؛ خادمنا لا يحتفظ به."],
  ["كم المدة؟","المدة اللازمة لمعالجة طلبك وللوفاء بالتزاماتنا القانونية، ثم تُحذف. يمكنك طلب الحذف قبل ذلك."],
  ["التخزين على جهازك والخدمات الخارجية","لا يستعمل الموقع ملفات تعريف ارتباط إعلانية. يُحفظ تقدّمك وتواريخ حاسبة شنغن (إن أدخلتها) على جهازك (التخزين المحلي) ولا تُرسل أبداً. يتحقق خادمنا من رمز الفتح الذي تدخله ولا يحتفظ إلا ببصمته المشفّرة. تُحمَّل الخطوط وبعض أيقونات الشركاء من خوادم خارجية (مثل Google) ترى عنوان IP الخاص بك."],
  ["حقوقك","يمكنك طلب الاطلاع على بياناتك أو تصحيحها أو حذفها أو الاعتراض على معالجتها بمراسلتنا (انظر البريد في الإشعار القانوني). في تونس تنظّم هذه الحقوق القانون الأساسي عدد 63 لسنة 2004 المؤرخ في 27 جويلية 2004، ويمكنك أيضًا اللجوء إلى الهيئة الوطنية لحماية المعطيات الشخصية (INPDP)."]]}
@@ -3034,7 +2622,7 @@ document.addEventListener("keydown",function(e){
 });
 ["fr","en","ar"].forEach(function(l){$("l-"+l).onclick=function(){S.lang=l;save();render()}});
 $("reset").onclick=function(){S.done={};save();render()};
-loadPartners();loadDeals();
+loadDeals();
 loadVisaEligibilityRules();
 (function(){var b=document.getElementById("totop");if(!b)return;
   function chk(){b.classList.toggle("on",(window.pageYOffset||document.documentElement.scrollTop)>400)}

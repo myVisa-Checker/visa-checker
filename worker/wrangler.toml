@@ -5,7 +5,7 @@ compatibility_date = "2026-11-11"
 [vars]
 ALLOWED_ORIGIN = "https://checkmyvisa.org,https://www.checkmyvisa.org,https://myvisa-checker.github.io"
 
-# ATTENTION : cette configuration décrit le Worker « visa-proxy » (agences, codes, pack, lettre IA, commandes).
+# ATTENTION : cette configuration décrit le Worker « visa-proxy » (codes, pack, lettre IA, analyseur, API d éligibilité ; plus d agences ni de commandes).
 # Il a besoin de la liaison KV « KV » et de secrets (MAKE_URL, SECRET, ADMIN_KEY, GEMINI_API_KEY) qui ne sont PAS déclarés ici.
 # Ne la déployez pas avec « wrangler deploy » : cela retirerait les liaisons configurées dans Cloudflare.
 # Mettez le code à jour par « Edit code » dans Cloudflare. L'API d'éligibilité se déploie avec worker/wrangler.rules.toml.

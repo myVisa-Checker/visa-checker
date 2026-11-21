@@ -342,7 +342,7 @@
       $("vl-form").scrollIntoView({ behavior: "smooth", block: "center" }); return;
     }
     if ((el = e.target.closest("[data-trip]"))) { trip = el.getAttribute("data-trip"); paintTabs(); return; }
-    if ((el = e.target.closest("[data-offer]"))) { showPassenger(el.getAttribute("data-offer")); return; }
+    if ((el = e.target.closest(".vr-sel[data-offer]"))) { showPassenger(el.getAttribute("data-offer")); return; }
     if (e.target.closest("[data-back]")) { $("vl-form").scrollIntoView({ behavior: "smooth" }); $("vl-results").innerHTML = ""; return; }
     if ((el = e.target.closest("[data-refresh]"))) {
       if (!cur) return; el.disabled = true;

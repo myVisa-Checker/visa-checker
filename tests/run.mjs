@@ -17,7 +17,7 @@ for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "vi
 }
 
 console.log("JSON");
-for (const f of ["manifest.json", "partners.json", "rdv.json", "deals.json", "version.json", "rates.json"]) {
+for (const f of ["manifest.json", "rdv.json", "deals.json", "version.json", "rates.json"]) {
   try { JSON.parse(read(f)); ok(f, true); } catch (e) { ok(f, false, e.message); }
 }
 
@@ -62,7 +62,7 @@ console.log("Réservation de vol temporaire (module flight-hold)");
   const url = (fh.match(/var FLIGHT_URL = "([^"]*)"/) || [])[1];
   ok("module désactivé tant que FLIGHT_URL est vide (ou en https)", url === "" || /^https:\/\//.test(url), String(url));
   ok("vol Duffel réservé au propriétaire (FLIGHT_LIVE false, ?fh=test mémorisé)", /var FLIGHT_LIVE = false;/.test(fh) && /vc-owner-flight/.test(fh) && /ownerFlight\(\)/.test(read("visa-app.js")));
-  ok("billet d'avion : plus d'agences ni de serveurs, uniquement vols.html (Duffel)", !/S\.need==="flight"&&window\.VCFlightHold/.test(read("visa-app.js")) && /nd\.dataset\.need==="flight"\)\{if\(ownerFlight\(\)\)location\.href="\.\/vols\.html"/.test(read("visa-app.js")));
+  ok("billet d'avion : plus d'agences ni de serveurs, uniquement vols.html (Duffel)", !/S\.need==="flight"&&window\.VCFlightHold/.test(read("visa-app.js")) && /nd\.dataset\.need==="flight"\)\{location\.href="\.\/vols\.html"/.test(read("visa-app.js")));
   ok("Worker : filtre Hold et commande de type hold", /requires_instant_payment === false/.test(fw) && /type: "hold"/.test(fw));
   ok("Worker : contrôle d'origine et clé en secret", /origin !== allowed/.test(fw) && /env\.DUFFEL_API_KEY/.test(fw) && !/duffel_(test|live)_[A-Za-z0-9]{10,}/.test(fw));
   ok("Worker : aucune donnée passager dans les journaux", !/console\.(log|error)\([^)]*(passenger|given_name|family_name|email|phone)/.test(fw));

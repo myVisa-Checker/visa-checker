@@ -47,47 +47,13 @@ const order = (over = {}) => ({
   assert.equal(form.status, 200);
   assert.ok((await form.text()).includes("Codes fabriqués"));
 }
-// corps « null » ou tableau → 400, jamais 500
-for (const raw of ["null", "[]", "42"]) {
-  const env = penv();
-  assert.equal((await call(proxy, env, "/", { raw })).status, 400, "POST / " + raw);
-}
-// champs invalides → 400
-{
-  const env = penv();
-  assert.equal((await call(proxy, env, "/", { body: order({ service: "ho tel;x" }) })).status, 400);
-  assert.equal((await call(proxy, env, "/", { body: order({ channel: "WhatsApp!" }) })).status, 400);
-  assert.equal((await call(proxy, env, "/", { body: order({ date1: "9999-99-99" }) })).status, 400);
-  assert.equal(makeCalls, 0, "rien n'est envoyé à Make quand la demande est invalide");
-}
-// demande valide : envoyée, puis limite de débit (5 par 10 min) comptée avant l'envoi
+// circuit agences supprimé : POST / et /order* n'existent plus (404), rien n'est envoyé à Make
 {
   const env = penv(); makeCalls = 0;
-  const r = await call(proxy, env, "/", { body: order() });
-  assert.equal(r.status, 200); assert.equal((await r.json()).ok, true); assert.equal(makeCalls, 1);
-  assert.equal(r.headers.get("X-Content-Type-Options"), "nosniff");
-  for (let i = 1; i < 5; i++) assert.equal((await call(proxy, env, "/", { body: order({ requestId: "REQ1234567" + i }) })).status, 200);
-  assert.equal((await call(proxy, env, "/", { body: order({ requestId: "REQ12345679" }) })).status, 429);
-}
-// les dates ne se modifient plus après « J'ai payé »
-{
-  const env = penv();
-  await call(proxy, env, "/", { body: order() });
-  const rec = JSON.parse(env.KV.m.get("ord:REQ12345678"));
-  const u = new URL((await (async () => {
-    // reconstruit le lien client : même calcul que le Worker (HMAC « ord.<id>.c »)
-    const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(env.SECRET), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-    const sig = [...new Uint8Array(await crypto.subtle.sign("HMAC", k, new TextEncoder().encode("ord.REQ12345678.c")))].map((x) => x.toString(16).padStart(2, "0")).join("").slice(0, 32);
-    return "https://x.test/?k=" + sig;
-  })())).searchParams.get("k");
-  const future = new Date(Date.now() + 40 * 864e5).toISOString().slice(0, 10), future2 = new Date(Date.now() + 44 * 864e5).toISOString().slice(0, 10);
-  const edit = (b) => call(proxy, env, "/order/edit", { body: { id: "REQ12345678", k: u, date1: future, date2: future2, ...b } });
-  assert.equal((await edit()).status, 200, "modification avant paiement");
-  assert.equal((await call(proxy, env, "/order/claim", { body: { id: "REQ12345678", k: u } })).status, 200);
-  assert.equal((await edit()).status, 409, "modification refusée après « J'ai payé »");
-  const get = await call(proxy, env, "/order?id=REQ12345678&k=" + u, { method: "GET" });
-  assert.equal((await get.json()).order.canEdit, false);
-  assert.ok(rec.status === "new");
+  assert.equal((await call(proxy, env, "/", { body: order() })).status, 404, "POST / supprimé");
+  assert.equal((await call(proxy, env, "/order?id=REQ12345678&k=" + "a".repeat(32), { method: "GET" })).status, 404, "GET /order supprimé");
+  for (const r of ["/order/edit", "/order/claim", "/order/paid", "/order/sent"]) assert.equal((await call(proxy, env, r, { body: { id: "REQ12345678", k: "a".repeat(32) } })).status, 404, r);
+  assert.equal(makeCalls, 0);
 }
 // /pack et /admin/pack : les lettres vivent dans le KV, enregistrées par le formulaire protégé par ADMIN_KEY
 {

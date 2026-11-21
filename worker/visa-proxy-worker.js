@@ -1,23 +1,19 @@
-/* CheckMyVisa : Worker « visa-proxy » (v8)
-   Rôle : demandes vers les agences (via Make), codes et jetons du pack recours, lettre de motivation IA,
-   analyseur de lettre de refus IA, liens « Confirmer et payer » / « Modifier » valables 48 h,
+/* CheckMyVisa : Worker « visa-proxy » (v9, circuit agences supprimé : les billets passent par le Worker visa-flight / Duffel)
+   Rôle : codes et jetons du pack recours, lettre de motivation IA, analyseur de lettre de refus IA,
    et API d'éligibilité (GET /v1/rules, POST /v1/check) utilisée par le contrôle de passeport du site.
    Déploiement : Cloudflare > Workers > visa-proxy > Edit code : tout remplacer par ce fichier > Deploy.
    Les liaisons KV et les secrets existants ne changent pas.
 
    Réglages (Cloudflare > Worker > Settings > Variables et secrets) :
-     MAKE_URL           (Secret)  adresse du webhook Make
      SECRET             (Secret)  longue phrase au hasard : sert à signer les jetons et à hacher les codes
      ADMIN_KEY          (Secret)  mot de passe pour fabriquer des codes
      GEMINI_API_KEY     (Secret)  clé API Gemini (lettre et analyseur)
      GEMINI_MODEL       (Texte, optionnel)  défaut : gemini-3.5-flash-lite (le même modèle que visa-chat)
-     AGENCIES           (Secret, optionnel)  JSON des agences autorisées : {"id":{"name":"","email":"","telegram":"","whatsapp":""}}
      ALLOWED_ORIGIN     (Texte, optionnel)  une ou plusieurs adresses séparées par des virgules ; défaut : https://checkmyvisa.org et https://www.checkmyvisa.org
      SITE               (Texte, optionnel)  adresse du site, défaut https://checkmyvisa.org/
    Liaison KV (Bindings) : nom de variable  KV  (obligatoire pour les codes)
 
    Routes :
-     POST /            envoi d'une demande à l'agence
      POST /unlock      {kind,code}  -> {ok,token}
      GET  /pack        Authorization: Bearer <jeton>  -> lettres du pack (lues dans le KV, clé « pack »)
      GET/POST /admin/pack   formulaire (clé ADMIN_KEY + texte JSON des lettres) : enregistre les lettres dans le KV
@@ -25,37 +21,15 @@
      POST /analyze     (jeton du pack) analyse une lettre de refus avec l'IA
      /admin/code   -> formulaire (clé ADMIN_KEY) qui fabrique n codes ; GET avec en-tête X-Admin-Key et ?kind=&n=&max=&days= pour un script (affichés une seule fois).
                        Authentification : formulaire /admin/code (navigateur) ou en-tête X-Admin-Key (script) ; la clé dans l'adresse n'est plus acceptée.
-     GET  /order?id=&k=       -> la demande du client (page « Confirmer et payer » / « Modifier »)
-     POST /order/edit  {id,k,date1,date2} -> modifie les dates (48 h max, jamais le nom) et prévient Make
-     POST /order/claim | /order/paid | /order/sent {id,k} -> « J'ai payé » (client), « Paiement reçu » (CheckMyVisa), « Document envoyé » (agence)
 */
 const MAX_BODY = 8000, RATE_MAX = 5, RATE_WINDOW = 600;
 const TOKEN_DAYS = 30, UNLOCK_TRIES = 10;
 const AI_DAILY = 6, AI_GLOBAL_DAILY = 300;
 const AN_DAILY = 4;
-const ORDER_HOURS = 48, ORDER_TTL = 30 * 86400, EDIT_MAX = 5;
 const DEFAULT_SITE = "https://checkmyvisa.org/";
 const DEFAULT_ORIGINS = "https://checkmyvisa.org,https://www.checkmyvisa.org";
 const DEFAULT_MODEL = "gemini-3.5-flash-lite";
-const ordRef = (id) => "VC-" + String(id || "").replace(/[^A-Za-z0-9]/g, "").slice(0, 6).toUpperCase();
 const isoOk = (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !isNaN(new Date(v + "T00:00:00Z")) && new Date(v + "T00:00:00Z").toISOString().slice(0, 10) === v;
-const ordSig = async (env, id, role) => (await hmac(env.SECRET, "ord." + id + "." + (role || "c"))).slice(0, 32);
-async function ordRole(env, id, k) { for (const r of ["c", "a", "v"]) if (same(k, await ordSig(env, id, r))) return r; return ""; }
-async function ordUrls(env, id) {
-  const site = (env.SITE || DEFAULT_SITE).trim(), L = async (r, a) => site + "?order=" + encodeURIComponent(id) + "&k=" + (await ordSig(env, id, r)) + "&a=" + a;
-  return { payUrl: await L("c", "pay"), editUrl: await L("c", "edit"), sentUrl: await L("a", "sent"), confirmUrl: await L("v", "confirm") };
-}
-function ordPayload(id, o, kind, message, urls) {
-  return { kind, requestId: id, ref: ordRef(id), service: o.svc, destination: o.dest, lastName: o.ln, firstName: o.fn, date1: o.d1, date2: o.d2, city: o.city,
-    phone: o.phone, telegram: o.tg, email: o.mail, channel: o.chan, lang: o.lang, sentAt: new Date().toISOString(),
-    agency: o.ag, agencyName: o.agn, agencyEmail: o.age, agencyTelegram: o.agt, agencyWhatsapp: o.agw,
-    status: o.status || "new", deadline: new Date(o.created + ORDER_HOURS * 3600e3).toISOString(), message, ...urls };
-}
-async function toMake(env, d) {
-  const body = new URLSearchParams();
-  for (const k in d) body.append(k, d[k] == null ? "" : String(d[k]));
-  try { const r = await fetch(env.MAKE_URL, { method: "POST", body, signal: AbortSignal.timeout(10000), headers: { "Content-Type": "application/x-www-form-urlencoded" } }); return r.ok; } catch { return false; }
-}
 /* Appel Gemini : renvoie une réponse au format { content: [{ type: "text", text }] } */
 async function aiFetch(env, init) {
   const b = JSON.parse(init.body);
@@ -286,7 +260,7 @@ const handler = {
       } else if (req.method !== "GET") return new Response("Method Not Allowed", { status: 405 });
       const denied = await adminGate(env, req, key);
       if (denied) return req.method === "POST" ? adminPage("<p>Clé refusée, ou trop d'essais (attendez 15 minutes).</p>", denied.status) : denied;
-      const kind = p.get("kind") === "advisors" ? "advisors" : "pack";
+      const kind = "pack";
       const n = Math.min(20, Math.max(1, parseInt(p.get("n") || "1", 10) || 1));
       const max = Math.min(20, Math.max(1, parseInt(p.get("max") || "3", 10) || 3));
       const days = Math.min(365, Math.max(1, parseInt(p.get("days") || "90", 10) || 90));
@@ -338,7 +312,7 @@ const handler = {
       if (n >= UNLOCK_TRIES) return out({ ok: false, error: "rate" }, 429);
       await env.KV.put(rk, String(n + 1), { expirationTtl: 600 });
       let b; try { b = JSON.parse(await req.text()); } catch { return out({ ok: false }, 400); }
-      const kind = b && b.kind === "advisors" ? "advisors" : "pack";
+      const kind = "pack";
       const code = String((b && b.code) || "").trim().toUpperCase();
       if (!/^[A-Z0-9-]{4,32}$/.test(code)) return out({ ok: false }, 400);
       const key = "code:" + (await sha256(env.SECRET + code));
@@ -451,76 +425,6 @@ const handler = {
       return out({ ok: true, analysis: text.slice(0, 7000) }, 200);
     }
 
-    /* ---- page client : lire la demande ---- */
-    if (path === "/order") {
-      if (req.method !== "GET") return out({ ok: false }, 405);
-      if (origin !== ALLOWED) return out({ ok: false, error: "origin" }, 403);
-      if (!env.KV || !env.SECRET) return out({ ok: false, error: "config" }, 500);
-      const id = url.searchParams.get("id") || "", k = url.searchParams.get("k") || "";
-      if (!/^[A-Za-z0-9_-]{8,64}$/.test(id)) return out({ ok: false, error: "auth" }, 401);
-      const role = await ordRole(env, id, k);
-      if (!role) return out({ ok: false, error: "auth" }, 401);
-      const o = await env.KV.get("ord:" + id, "json");
-      if (!o) return out({ ok: false, error: "gone" }, 404);
-      const left = o.created + ORDER_HOURS * 3600e3 - Date.now();
-      return out({ ok: true, role, order: { ref: ordRef(id), svc: o.svc, dest: o.dest, city: o.city, ln: o.ln, fn: o.fn, d1: o.d1, d2: o.d2, ag: o.ag, lang: o.lang, status: o.status || "new", canEdit: role === "c" && left > 0 && (o.edits || 0) < EDIT_MAX && !["claimed", "paid", "sent"].includes(o.status || "new"), hoursLeft: Math.max(0, Math.ceil(left / 3600e3)) } }, 200);
-    }
-
-    /* ---- page client : modifier les dates (48 h maximum, jamais le nom) ---- */
-    if (path === "/order/edit") {
-      if (req.method !== "POST") return out({ ok: false }, 405);
-      if (origin !== ALLOWED) return out({ ok: false, error: "origin" }, 403);
-      if (!env.KV || !env.SECRET || !env.MAKE_URL) return out({ ok: false, error: "config" }, 500);
-      const raw = await req.text();
-      if (raw.length > 1000) return out({ ok: false, error: "too_large" }, 413);
-      let b; try { b = JSON.parse(raw); } catch { return out({ ok: false, error: "json" }, 400); }
-      if (!b || typeof b !== "object" || Array.isArray(b)) return out({ ok: false, error: "json" }, 400);
-      const id = String(b.id || ""), k = String(b.k || "");
-      if (!/^[A-Za-z0-9_-]{8,64}$/.test(id) || (await ordRole(env, id, k)) !== "c") return out({ ok: false, error: "auth" }, 401);
-      const o = await env.KV.get("ord:" + id, "json");
-      if (!o) return out({ ok: false, error: "gone" }, 404);
-      if (Date.now() > o.created + ORDER_HOURS * 3600e3) return out({ ok: false, error: "expired" }, 410);
-      if (["claimed", "paid", "sent"].includes(o.status || "new")) return out({ ok: false, error: "locked" }, 409);   /* dates figées après « J'ai payé » */
-      if ((o.edits || 0) >= EDIT_MAX) return out({ ok: false, error: "limit" }, 429);
-      const d1 = String(b.date1 || ""), d2 = String(b.date2 || ""), td = new Date().toISOString().slice(0, 10);
-      const lim = new Date(Date.now() + 548 * 864e5).toISOString().slice(0, 10);
-      if (!isoOk(d1) || d1 < td || d1 > lim) return out({ ok: false, error: "date" }, 400);
-      if (o.d2 ? (!isoOk(d2) || d2 < d1 || d2 > lim || (new Date(d2) - new Date(d1)) / 864e5 > 365) : d2 !== "") return out({ ok: false, error: "date" }, 400);
-      const old1 = o.d1, old2 = o.d2;
-      const updated = { ...o, d1, d2, edits: (o.edits || 0) + 1 };
-      const msg = "MODIFICATION DES DATES (dans les 48 h) : " + ordRef(id) + "\nNom : " + o.ln + "\nPrénom(s) : " + o.fn +
-        "\nAnciennes dates : " + old1 + (old2 ? " → " + old2 : "") + "\nNOUVELLES DATES : " + d1 + (d2 ? " → " + d2 : "") +
-        "\nAgence : " + o.agn + "\nLe nom et le prénom ne sont jamais modifiables.";
-      if (!(await toMake(env, ordPayload(id, updated, "update", msg, await ordUrls(env, id))))) return out({ ok: false, error: "upstream" }, 502);
-      await env.KV.put("ord:" + id, JSON.stringify(updated), { expirationTtl: ORDER_TTL });
-      return out({ ok: true, d1, d2 }, 200);
-    }
-
-    /* ---- étapes de la commande : « J'ai payé » (client), « Paiement reçu » (CheckMyVisa), « Document envoyé » (agence) ---- */
-    const ACT = { "/order/claim": ["c", "claimed"], "/order/paid": ["v", "paid"], "/order/sent": ["a", "sent"] };
-    if (ACT[path]) {
-      if (req.method !== "POST") return out({ ok: false }, 405);
-      if (origin !== ALLOWED) return out({ ok: false, error: "origin" }, 403);
-      if (!env.KV || !env.SECRET || !env.MAKE_URL) return out({ ok: false, error: "config" }, 500);
-      let b; try { b = JSON.parse(await req.text()); } catch { return out({ ok: false, error: "json" }, 400); }
-      const id = String((b && b.id) || ""), k = String((b && b.k) || ""), [need, to] = ACT[path];
-      if (!/^[A-Za-z0-9_-]{8,64}$/.test(id) || (await ordRole(env, id, k)) !== need) return out({ ok: false, error: "auth" }, 401);
-      const o = await env.KV.get("ord:" + id, "json");
-      if (!o) return out({ ok: false, error: "gone" }, 404);
-      const RANK = { new: 0, claimed: 1, paid: 2, sent: 3 }, cur = o.status || "new";
-      if (to === "sent" && RANK[cur] < 2) return out({ ok: false, error: "not_paid" }, 409);
-      if (RANK[cur] >= RANK[to]) return out({ ok: true, status: cur }, 200);      /* déjà fait : pas de second mail */
-      const updated = { ...o, status: to, [to + "At"]: Date.now() };
-      const MSG = {
-        claimed: "LE CLIENT DIT AVOIR PAYÉ : " + ordRef(id) + ". Vérifiez dans votre app D17 (montant et référence), puis cliquez sur « Paiement reçu ».",
-        paid: "PAIEMENT CONFIRMÉ : " + ordRef(id) + ". L'agence peut émettre le document.",
-        sent: "DOCUMENT ENVOYÉ : " + ordRef(id) + "."
-      };
-      if (!(await toMake(env, ordPayload(id, updated, to, MSG[to], await ordUrls(env, id))))) return out({ ok: false, error: "upstream" }, 502);
-      await env.KV.put("ord:" + id, JSON.stringify(updated), { expirationTtl: ORDER_TTL });
-      return out({ ok: true, status: to }, 200);
-    }
-
     /* ---- API d'éligibilité : GET /v1/rules, POST /v1/check (appelées par le contrôle de passeport du site) ---- */
     if (path === "/v1/rules" || path === "/v1/check") {
       if (origin && origin !== ALLOWED) return out({ error: "origin_not_allowed" }, 403);
@@ -536,84 +440,7 @@ const handler = {
       return out(rlCheck(bodyCheck), 200);
     }
 
-    /* ---- demande vers l'agence ---- */
-    if (path !== "/") return out({ ok: false, error: "route" }, 404);
-    if (req.method !== "POST") return out({ ok: false, error: "method" }, 405);
-    if (!env.MAKE_URL) return out({ ok: false, error: "config" }, 500);
-    if (origin !== ALLOWED) return out({ ok: false, error: "origin" }, 403);
-
-    const raw = await req.text();
-    if (raw.length > MAX_BODY) return out({ ok: false, error: "too_large" }, 413);
-    let p;
-    try { p = JSON.parse(raw); } catch { return out({ ok: false, error: "json" }, 400); }
-    if (!p || typeof p !== "object" || Array.isArray(p)) return out({ ok: false, error: "json" }, 400);
-    const s = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
-    const a = p && typeof p.agency === "object" && p.agency ? p.agency : {};
-    const d = {
-      requestId: s(p.requestId, 64), service: s(p.service, 20), destination: s(p.destination, 60),
-      lastName: s(p.lastName, 60), firstName: s(p.firstName, 60), date1: s(p.date1, 10), date2: s(p.date2, 10),
-      city: s(p.city, 60), phone: s(p.phone, 30), telegram: s(p.telegram, 40), email: s(p.email, 120),
-      channel: s(p.channel, 20), lang: s(p.lang, 5), sentAt: s(p.sentAt, 40), message: s(p.message, 2000),
-      agency: s(a.id, 40), agencyName: s(a.name, 80), agencyEmail: s(a.email, 120),
-      agencyTelegram: s(a.telegram, 60), agencyWhatsapp: s(a.whatsapp, 30)
-    };
-    /* Agences : si le secret AGENCIES est défini (JSON {"id":{"name","email","telegram","whatsapp"}}), seules ces agences existent
-       et leurs coordonnées viennent d'ici, jamais du navigateur. */
-    if (env.AGENCIES) {
-      let AG = {}; try { AG = JSON.parse(env.AGENCIES); } catch {}
-      const g = Object.prototype.hasOwnProperty.call(AG, d.agency) ? AG[d.agency] : null;
-      if (!g) return out({ ok: false, error: "agency" }, 400);
-      d.agencyName = String(g.name || "").slice(0, 80); d.agencyEmail = String(g.email || "").slice(0, 120);
-      d.agencyTelegram = String(g.telegram || "").slice(0, 60); d.agencyWhatsapp = String(g.whatsapp || "").slice(0, 30);
-    }
-    /* champs transmis à Make (e-mails, messages) : une ligne, pas de caractères de contrôle ; le message garde ses retours à la ligne */
-    const one = (v) => String(v).replace(/[\u0000-\u001f\u007f\u2028\u2029]+/g, " ").trim();
-    for (const f of ["destination", "city", "telegram", "agencyName", "agencyTelegram", "agencyWhatsapp"]) d[f] = one(d[f]);
-    d.message = d.message.replace(/[\u0000-\u0008\u000b-\u001f\u007f\u2028\u2029]+/g, " ");
-    if (!/^[a-z_]{1,20}$/.test(d.service) || !/^[a-z]{0,20}$/.test(d.channel) || !/^([a-z]{2}(-[A-Za-z]{2})?)?$/.test(d.lang)) return out({ ok: false, error: "field" }, 400);
-    if ((d.date1 && !isoOk(d.date1)) || (d.date2 && !isoOk(d.date2))) return out({ ok: false, error: "date" }, 400);
-    if (!/^[A-Za-z0-9_-]{8,64}$/.test(d.requestId)) return out({ ok: false, error: "missing" }, 400);
-    if (!d.requestId || !d.lastName || !d.firstName || !d.message) return out({ ok: false, error: "missing" }, 400);
-    if (!/^[\p{L}\p{M} '.-]{1,60}$/u.test(d.lastName) || !/^[\p{L}\p{M} '.-]{1,60}$/u.test(d.firstName)) return out({ ok: false, error: "name" }, 400);
-    if (!/^\+?[0-9 ]{6,20}$/.test(d.phone)) return out({ ok: false, error: "phone" }, 400);
-    if (d.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)) return out({ ok: false, error: "email" }, 400);
-
-    let rateKey = "", rateCount = 0, duplicateKey = "";
-    if (env.KV) {
-      const ip = req.headers.get("CF-Connecting-IP") || "?";
-      rateKey = "rl:" + ip;
-      rateCount = parseInt((await env.KV.get(rateKey)) || "0", 10);
-      if (rateCount >= RATE_MAX) return out({ ok: false, error: "rate" }, 429);
-      duplicateKey = "id:" + d.requestId;
-      if (await env.KV.get(duplicateKey)) return out({ ok: true, duplicate: true }, 200);
-    }
-
-    /* prépare la demande et les liens ; aucune écriture KV avant le succès de Make */
-    d.kind = "new"; d.ref = ordRef(d.requestId); d.payUrl = ""; d.editUrl = ""; d.sentUrl = ""; d.confirmUrl = ""; d.deadline = ""; d.status = "new";
-    let orderRecord = null;
-    if (env.KV && env.SECRET) {
-      if (await env.KV.get("ord:" + d.requestId)) return out({ ok: true, duplicate: true }, 200);   /* ne jamais écraser une commande existante */
-      const created = Date.now();
-      orderRecord = {
-        ln: d.lastName, fn: d.firstName, d1: d.date1, d2: d.date2, svc: d.service, dest: d.destination, city: d.city,
-        phone: d.phone, tg: d.telegram, mail: d.email, chan: d.channel, lang: d.lang,
-        ag: d.agency, agn: d.agencyName, age: d.agencyEmail, agt: d.agencyTelegram, agw: d.agencyWhatsapp, created, edits: 0, status: "new"
-      };
-      Object.assign(d, await ordUrls(env, d.requestId)); d.deadline = new Date(created + ORDER_HOURS * 3600e3).toISOString();
-    }
-    if (rateKey) await env.KV.put(rateKey, String(rateCount + 1), { expirationTtl: RATE_WINDOW });   /* compté avant l'envoi : les rafales et les échecs comptent aussi */
-    const body = new URLSearchParams();
-    for (const k in d) body.append(k, d[k]);
-    let r;
-    try {
-      r = await fetch(env.MAKE_URL, { method: "POST", body, signal: AbortSignal.timeout(10000), headers: { "Content-Type": "application/x-www-form-urlencoded" } });
-    } catch { return out({ ok: false, error: "upstream" }, 502); }
-    if (!r.ok) return out({ ok: false, error: "upstream" }, 502);
-    try {
-      if (orderRecord) await env.KV.put("ord:" + d.requestId, JSON.stringify(orderRecord), { expirationTtl: ORDER_TTL });
-      if (duplicateKey) await env.KV.put(duplicateKey, "1", { expirationTtl: 86400 });
-    } catch (e) { console.error("proxy: write after send failed", e && e.message); }   /* le mail est déjà parti : on ne fait pas réessayer le client */
-    return out({ ok: true }, 200);
+    return out({ ok: false, error: "route" }, 404);
   }
 };
 

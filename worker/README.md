@@ -22,14 +22,13 @@ Les deux Workers historiques sont versionnés ici. Ils ne sont pas déployés pa
 
 | Fichier | Worker | Rôle | KV |
 |---|---|---|---|
-| `visa-proxy-worker.js` | `visa-proxy` | Demandes agences, codes et jetons du pack recours, lettre IA, analyseur de refus, liens de confirmation, API d'éligibilité `/v1/rules` et `/v1/check` (copie de `visa-rules-worker.js`) | `KV` |
+| `visa-proxy-worker.js` | `visa-proxy` | Codes et jetons du pack recours, lettre IA, analyseur de refus, liens de confirmation, API d'éligibilité `/v1/rules` et `/v1/check` (copie de `visa-rules-worker.js`) | `KV` |
 | `visa-chat-worker.js` | `visa-chat` | Assistants Joury et Aicha, entraînement à l'entretien, formulaire partenaires | `USAGE` |
 
 Variables/secrets utilisés par ces Workers historiques :
-- `visa-proxy` : `MAKE_URL`, `SECRET`, `ADMIN_KEY`, `GEMINI_API_KEY` (secrets) ; `GEMINI_MODEL`, `AGENCIES`, `ALLOWED_ORIGIN`, `SITE` (optionnels).
+- `visa-proxy` : `SECRET`, `ADMIN_KEY`, `GEMINI_API_KEY` (secrets) ; `GEMINI_MODEL`, `ALLOWED_ORIGIN`, `SITE` (optionnels).
 - `visa-chat` : `GEMINI_API_KEY`, `INTERVIEW_CODES`, `PARTNER_WEBHOOK` (secrets) ; liaison KV `USAGE` ; `MODEL` ou `GEMINI_MODEL` (optionnels).
 
-Recommandé : définir le secret `AGENCIES` sur `visa-proxy` (JSON `{"id":{"name","email","telegram","whatsapp"}}`). Sans lui, les coordonnées de l'agence viennent du navigateur ; avec lui, seules les agences listées existent. Les lettres payantes du pack ne sont pas dans le dépôt : elles sont dans le KV (clé `pack`), enregistrées par le formulaire `/admin/pack` de `visa-proxy` (clé `ADMIN_KEY`).
 
 Ne jamais enregistrer de secrets dans GitHub.
 
