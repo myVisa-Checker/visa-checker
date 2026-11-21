@@ -3,21 +3,6 @@
    Aucune donnée personnelle n'est conservée dans le navigateur. */
 (function () {
   "use strict";
-  /* Mode diagnostic : vols.html?debug=1 affiche en bas d'écran ce qui reçoit le doigt (aucune donnée envoyée, rien de stocké). */
-  if (/[?&]debug=1(&|$)/.test(location.search)) {
-    var dn = { pd: 0, tc: 0, ck: 0 }, dl = [], bx = document.createElement("pre");
-    bx.style.cssText = "position:fixed;left:4px;right:4px;bottom:4px;z-index:2147483647;margin:0;padding:8px;font:11px/1.3 monospace;color:#0f0;background:#000d;border-radius:8px;pointer-events:none;white-space:pre-wrap;max-height:40vh;overflow:hidden";
-    var dw = function () { bx.textContent = "pointerdown:" + dn.pd + " touchstart:" + dn.tc + " click:" + dn.ck + " | " + innerWidth + "x" + innerHeight + " dpr" + devicePixelRatio + "\n" + dl.slice(-7).join("\n"); };
-    var dt = function (e) { var t = e.target; return (t && t.tagName ? t.tagName + (t.id ? "#" + t.id : "") + (t.className && t.className.baseVal === undefined ? "." + String(t.className).split(" ")[0] : "") : "?"); };
-    var dh = function (k, e) { var pt = e.touches && e.touches[0] || e; var el = document.elementFromPoint(pt.clientX, pt.clientY); dn[k]++; dl.push(e.type + " -> " + dt(e) + " | sous le doigt: " + (el ? dt({ target: el }) : "null") + (e.defaultPrevented ? " (annulé)" : "")); dw(); };
-    window.addEventListener("pointerdown", function (e) { dh("pd", e); }, true);
-    window.addEventListener("touchstart", function (e) { dh("tc", e); }, { capture: true, passive: true });
-    window.addEventListener("click", function (e) { dh("ck", e); }, true);
-    window.addEventListener("error", function (e) { dl.push("ERREUR: " + e.message + " (" + (e.lineno || "?") + ")"); dw(); });
-    window.addEventListener("unhandledrejection", function (e) { dl.push("PROMESSE: " + (e.reason && e.reason.message || e.reason)); dw(); });
-    document.addEventListener("DOMContentLoaded", function () { document.body.appendChild(bx); dl.push("diagnostic actif"); dw(); });
-    if (document.body) { document.body.appendChild(bx); dw(); }
-  }
   var FH = window.VCFlightHold;
   if (!FH || !FH.enabled()) { location.replace("./?accueil=1"); return; }
   var URL_ = FH.url;
