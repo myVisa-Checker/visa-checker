@@ -98,7 +98,11 @@ function validateSearch(b) {
   }
   const cabin_class = b?.cabin_class == null || b.cabin_class === "" ? "economy" : String(b.cabin_class);
   if (!CABINS.includes(cabin_class)) throw new HttpError(422, "Classe invalide.", "cabin");
-  return { origin, destination, departure_date: b.departure_date, return_date: ret ? b.return_date : null, cabin_class };
+  const int = (v, d) => (v == null || v === "" ? d : Number.isInteger(+v) ? +v : NaN);
+  const adults = int(b?.adults, 1), children = int(b?.children, 0), infants = int(b?.infants, 0);
+  if (![adults, children, infants].every((n) => n >= 0 && n <= 9) || adults < 1 || adults + children > 9 || infants > adults)
+    throw new HttpError(422, "Nombre de voyageurs invalide.", "passengers");
+  return { origin, destination, departure_date: b.departure_date, return_date: ret ? b.return_date : null, cabin_class, adults, children, infants };
 }
 
 function validatePassenger(p) {
@@ -186,7 +190,17 @@ async function search(req, env) {
 
   const data = await duffel(env, "/air/offer_requests?return_offers=true&supplier_timeout=15000", {
     method: "POST",
-    body: { data: { slices, passengers: [{ type: "adult" }], cabin_class: q.cabin_class } },
+    body: {
+      data: {
+        slices,
+        passengers: [
+          ...Array(q.adults).fill({ type: "adult" }),
+          ...Array(q.children).fill({ type: "child" }),
+          ...Array(q.infants).fill({ type: "infant_without_seat" }),
+        ],
+        cabin_class: q.cabin_class,
+      },
+    },
   });
   const all = data.offers ?? [];
   const offers = all
@@ -221,12 +235,35 @@ async function places(req, env) {
   return { ok: true, places: out };
 }
 
+/** Associe chaque passager saisi à un passager de l'offre (même type) ; chaque bébé est rattaché à un adulte. */
+function assignPassengers(offer, list) {
+  const pool = { adult: [], child: [], infant: [] };
+  for (const op of offer.passengers ?? []) {
+    const k = String(op.type).startsWith("infant") ? "infant" : op.type;
+    if (pool[k]) pool[k].push(op.id);
+  }
+  if (list.length !== (offer.passengers ?? []).length) throw new HttpError(422, "Le nombre de passagers ne correspond pas à la recherche.", "passengers");
+  const out = list.map(({ type, ...p }) => {
+    const id = pool[type].shift();
+    if (!id) throw new HttpError(422, "Le nombre de passagers ne correspond pas à la recherche.", "passengers");
+    return { type, id, ...p };
+  });
+  const adults = out.filter((p) => p.type === "adult"), infants = out.filter((p) => p.type === "infant");
+  if (infants.length > adults.length) throw new HttpError(422, "Un bébé par adulte au maximum.", "passengers");
+  infants.forEach((b, i) => { adults[i].infant_passenger_id = b.id; });
+  return out.map(({ type, ...p }) => p);
+}
+
 async function book(req, env) {
   if (await limited(env, req, "book", 4, 3600)) throw new HttpError(429, "Trop de réservations. Réessayez plus tard.", "rate");
   const body = await req.json().catch(() => null);
   const offerId = String(body?.offer_id ?? "");
   if (!/^off_[A-Za-z0-9]+$/.test(offerId)) throw new HttpError(422, "Offre invalide.", "offer");
-  const passenger = validatePassenger(body?.passenger);
+  // Plusieurs passagers : body.passengers [{type: adult|child|infant, ...}] ; ancien format : body.passenger (un adulte).
+  const raw = Array.isArray(body?.passengers) ? body.passengers : [body?.passenger];
+  if (raw.length < 1 || raw.length > 18) throw new HttpError(422, "Nombre de passagers invalide.", "passengers");
+  const list = raw.map((p) => ({ type: ["adult", "child", "infant"].includes(p?.type) ? p.type : "adult", ...validatePassenger(p) }));
+  const passenger = list[0];
 
   const offer = await duffel(env, `/air/offers/${offerId}`); // re-vérification : disponibilité + Hold + id passager
   if (!isHoldable(offer)) throw new HttpError(409, "Cette offre n'est plus réservable sans paiement.", "not_holdable");
@@ -237,7 +274,7 @@ async function book(req, env) {
       data: {
         type: "hold",
         selected_offers: [offerId],
-        passengers: [{ id: offer.passengers[0].id, ...passenger }],
+        passengers: assignPassengers(offer, list),
       },
     },
   });
@@ -263,6 +300,7 @@ async function book(req, env) {
     total_amount: order.total_amount,
     total_currency: order.total_currency,
     passenger: { given_name: passenger.given_name, family_name: passenger.family_name },
+    passengers: list.map((p) => ({ type: p.type, given_name: p.given_name, family_name: p.family_name })),
     slices: summarizeSlices(order.slices),
   };
 }

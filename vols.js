@@ -121,7 +121,7 @@
     $("vl-h1").innerHTML = esc(t.h1[0]) + " <em>" + esc(t.h1[1]) + "</em>";
     $("vl-sub").textContent = t.sub;
     lab("vl-l-from", "plane", t.from); lab("vl-l-to", "pin", t.to); lab("vl-l-d1", "cal", t.d1); lab("vl-l-d2", "cal", t.d2);
-    lab("vl-l-pax", "user", t.pax); $("vl-pax").textContent = t.adult; lab("vl-l-cabin", "seat", t.cabin);
+    lab("vl-l-pax", "user", t.pax); paintPax(); lab("vl-l-cabin", "seat", t.cabin);
     $("vl-from").placeholder = t.ph; $("vl-to").placeholder = t.ph;
     $("vl-cabin").innerHTML = Object.keys(t.cabins).map(function (k) { return '<option value="' + k + '">' + esc(t.cabins[k]) + "</option>"; }).join("");
     setGo(t.search, true); $("vl-legal").textContent = t.legal;
@@ -207,6 +207,31 @@
     en: { sel: "Select", det: "View details", direct: "Direct", stops: function (n) { return n + " stop" + (n > 1 ? "s" : ""); } },
     ar: { sel: "اختيار", det: "عرض التفاصيل", direct: "مباشر", stops: function (n) { return n + (n > 1 ? " توقفات" : " توقف"); } }
   }[L];
+  var XP = {
+    fr: { lab: ["Adulte", "Enfant (2-11 ans)", "Bébé (moins de 2 ans)"], one: ["Adulte", "Enfant", "Bébé"], sum: function (a, c, i) { return a + " Adulte" + (a > 1 ? "s" : "") + ", " + c + " Enfant" + (c > 1 ? "s" : "") + ", " + i + " Bébé" + (i > 1 ? "s" : ""); },
+      svc: function (n, tot) { return "Tarif du service : 15 TND × " + n + " passager" + (n > 1 ? "s" : "") + " = " + tot + " TND"; }, babyMax: "Un bébé par adulte au maximum.", born: "Date de naissance", email: "E-mail (la réservation sera envoyée à cette adresse)" },
+    en: { lab: ["Adult", "Child (2-11 years)", "Infant (under 2)"], one: ["Adult", "Child", "Infant"], sum: function (a, c, i) { return a + " Adult" + (a > 1 ? "s" : "") + ", " + c + " Child" + (c > 1 ? "ren" : "") + ", " + i + " Infant" + (i > 1 ? "s" : ""); },
+      svc: function (n, tot) { return "Service fee: 15 TND × " + n + " passenger" + (n > 1 ? "s" : "") + " = " + tot + " TND"; }, babyMax: "One infant per adult at most.", born: "Date of birth", email: "Email (your booking will be sent here)" },
+    ar: { lab: ["بالغ", "طفل (2-11 سنة)", "رضيع (أقل من سنتين)"], one: ["بالغ", "طفل", "رضيع"], sum: function (a, c, i) { return a + " بالغ، " + c + " طفل، " + i + " رضيع"; },
+      svc: function (n, tot) { return "رسوم الخدمة: 15 دينار × " + n + " مسافر = " + tot + " دينار"; }, babyMax: "رضيع واحد لكل بالغ كحد أقصى.", born: "تاريخ الميلاد", email: "البريد الإلكتروني (سيُرسل الحجز إليه)" }
+  }[L];
+  var cnt = { a: 1, c: 0, i: 0 }, lastCnt = { a: 1, c: 0, i: 0 };
+  var SVC = 15;
+  function nPax(c) { return c.a + c.c + c.i; }
+  function paintPax() {
+    $("vl-pax").textContent = XP.sum(cnt.a, cnt.c, cnt.i);
+    $("vl-paxp").innerHTML = [["a", 0, 1], ["c", 1, 0], ["i", 2, 0]].map(function (r) {
+      return '<div class="vl-pr"><span>' + esc(XP.lab[r[1]]) + '</span><span class="vl-ps"><button type="button" data-pax="' + r[0] + '-1" aria-label="-">−</button><b>' + cnt[r[0]] + '</b><button type="button" data-pax="' + r[0] + '+1" aria-label="+">+</button></span></div>';
+    }).join("");
+  }
+  function movePax(code) {
+    var k = code.charAt(0), d = code.charAt(1) === "+" ? 1 : -1, n = cnt[k] + d;
+    if (k === "a") { if (n < 1 || n + cnt.c > 9) return; cnt.a = n; if (cnt.i > cnt.a) cnt.i = cnt.a; }
+    else if (k === "c") { if (n < 0 || cnt.a + n > 9) return; cnt.c = n; }
+    else { if (n < 0 || n > cnt.a) return; cnt.i = n; }
+    paintPax();
+  }
+  function svcLine(c) { var n = nPax(c); return XP.svc(n, n * SVC); }
   function hm(iso) { return /T(\d\d:\d\d)/.test(iso || "") ? RegExp.$1 : "—"; }
   function dmy(iso) { try { return new Date(String(iso).slice(0, 10) + "T12:00:00").toLocaleDateString(locale, { dateStyle: "medium" }); } catch (e) { return ""; } }
   function dur(d) { var m = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?$/.exec(d || ""); if (!m) return ""; var h = (+m[1] || 0) * 24 + (+m[2] || 0); return (h ? h + "h" : "") + (m[3] ? String(+m[3]).padStart(h ? 2 : 1, "0") + (h ? "" : "min") : ""); }
@@ -218,7 +243,7 @@
         '<p class="vr-m">' + (d ? esc(d) + " · " : "") + esc(g.length > 1 ? X.stops(g.length - 1) : X.direct) + "</p></div>";
     }).join("");
     return '<div class="vr-card"><div class="vr-air">' + (/^https:\/\//.test(o.owner_logo || "") ? '<img src="' + esc(o.owner_logo) + '" alt="" width="40" height="40" loading="lazy">' : "") + "<b>" + esc(o.owner) + "</b></div>" + sl +
-      '<p class="vr-pr" dir="ltr">' + esc(o.total_amount) + " " + esc(o.total_currency) + "</p>" +
+      '<p class="vr-pr" dir="ltr">' + esc(nPax(lastCnt) * SVC) + " TND</p><p class=\"vr-m\">" + esc(svcLine(lastCnt)) + "</p>" +
       '<button type="button" class="pay wide vr-sel" data-offer="' + esc(o.id) + '">' + esc(X.sel) + '<i class="vl-ic">' + IC.arrow + "</i></button>" +
       '<details class="vr-det"><summary>' + esc(X.det) + "</summary><p class=\"fh-row\"><span>" + esc(t.expires) + " " + fmt(o.payment_required_by) + "</span></p>" + segs(o.slices) + "</details></div>";
   }
@@ -229,8 +254,9 @@
     if (!/^[A-Z]{3}$/.test(pick.from) || !/^[A-Z]{3}$/.test(pick.to)) return showErr(t.pick);
     if (!d1 || (trip === "rt" && !d2)) return showErr(t.dates);
     var btn = $("vl-go"); btn.disabled = true; setGo(t.searching, false);
-    post("/flight/search", { origin: pick.from, destination: pick.to, departure_date: d1, return_date: d2 || null, cabin_class: $("vl-cabin").value })
+    post("/flight/search", { origin: pick.from, destination: pick.to, departure_date: d1, return_date: d2 || null, cabin_class: $("vl-cabin").value, adults: cnt.a, children: cnt.c, infants: cnt.i })
       .then(function (r) {
+        lastCnt = { a: cnt.a, c: cnt.c, i: cnt.i };
         offers = r.offers || [];
         var box = $("vl-results");
         if (!offers.length) { box.innerHTML = ""; return showErr(t.none); }
@@ -243,13 +269,22 @@
 
   /* ---------- passager ---------- */
   function field(id, label, type, extra) { return '<label class="fh-f" for="vp-' + id + '">' + esc(label) + '<input class="sel" id="vp-' + id + '" name="' + id + '" type="' + type + '" ' + (extra || "") + "></label>"; }
+  function blocks() {
+    var out = [], types = [["a", 0, "adult"], ["c", 1, "child"], ["i", 2, "infant"]];
+    types.forEach(function (ty) { for (var k = 1; k <= lastCnt[ty[0]]; k++) out.push({ type: ty[2], label: XP.one[ty[1]] + (lastCnt[ty[0]] > 1 ? " " + k : "") }); });
+    return out;
+  }
   function showPassenger(id) {
     var o = offers.filter(function (x) { return x.id === id; })[0]; if (!o) return;
-    $("vl-results").innerHTML = '<button type="button" class="chip vl-back" data-back="1">' + esc(t.back) + '</button><div class="fh-offer"><div class="fh-row"><b>' + esc(o.owner) + '</b><span dir="ltr">' + esc(o.total_amount) + " " + esc(o.total_currency) + "</span></div>" + segs(o.slices) + "</div>" +
-      '<form id="vp-form" novalidate data-offer="' + esc(id) + '"><h2>' + esc(t.pax2) + '</h2><div class="fh-grid">' +
-      field("given_name", t.given, "text", 'autocomplete="given-name" style="text-transform:uppercase" required') + field("family_name", t.family, "text", 'autocomplete="family-name" style="text-transform:uppercase" required') +
-      '<label class="fh-f" for="vp-gender">' + esc(t.gender) + '<select class="sel" id="vp-gender" name="gender" required><option value="">—</option><option value="m">' + esc(t.m) + '</option><option value="f">' + esc(t.f) + "</option></select></label>" +
-      field("born_on", t.born, "date", "required") + field("email", t.mail, "email", 'autocomplete="email" dir="ltr" required') + field("phone_number", t.phone, "tel", 'autocomplete="tel" dir="ltr" placeholder="+216" required') + field("appointment_date", t.rdv, "date") +
+    var bl = blocks().map(function (p, n) {
+      return '<fieldset class="vp-blk"><legend>' + esc(p.label) + '</legend><div class="fh-grid">' +
+        '<label class="fh-f" for="vp-g' + n + '">' + esc(t.gender) + '<select class="sel" id="vp-g' + n + '" name="g' + n + '" required><option value="">—</option><option value="m">' + esc(t.m) + '</option><option value="f">' + esc(t.f) + "</option></select></label>" +
+        field("n" + n + "-given", t.given, "text", 'autocomplete="off" style="text-transform:uppercase" required') + field("n" + n + "-family", t.family, "text", 'autocomplete="off" style="text-transform:uppercase" required') +
+        field("n" + n + "-born", XP.born, "date", "required") + "</div></fieldset>";
+    }).join("");
+    $("vl-results").innerHTML = '<button type="button" class="chip vl-back" data-back="1">' + esc(t.back) + '</button><div class="fh-offer"><div class="fh-row"><b>' + esc(o.owner) + '</b><span dir="ltr">' + esc(nPax(lastCnt) * SVC) + " TND</span></div><p class=\"vr-m\">" + esc(svcLine(lastCnt)) + "</p>" + segs(o.slices) + "</div>" +
+      '<form id="vp-form" novalidate data-offer="' + esc(id) + '"><h2>' + esc(t.pax2) + "</h2>" + bl + '<div class="fh-grid">' +
+      field("email", XP.email, "email", 'autocomplete="email" dir="ltr" required') + field("phone_number", t.phone, "tel", 'autocomplete="tel" dir="ltr" placeholder="+216" required') + field("appointment_date", t.rdv, "date") +
       '</div><p class="fe fh-err" id="vp-err" role="alert" hidden></p><button type="submit" class="pay wide" id="vp-go">' + esc(t.confirm) + "</button></form>";
     $("vl-results").scrollIntoView({ behavior: "smooth", block: "start" });
   }
@@ -257,13 +292,16 @@
     e.preventDefault();
     var f = Object.fromEntries(new FormData(e.target)), err = $("vp-err"), btn = $("vp-go");
     err.hidden = true;
-    var need = ["given_name", "family_name", "gender", "born_on", "email", "phone_number"];
-    for (var i = 0; i < need.length; i++) if (!String(f[need[i]] || "").trim()) { err.textContent = t.fill; err.hidden = false; return; }
+    var email = String(f.email || "").trim(), phone = String(f.phone_number || "").trim();
+    var list = blocks().map(function (p, n) { return { type: p.type, gender: f["g" + n], given_name: f["n" + n + "-given"], family_name: f["n" + n + "-family"], born_on: f["n" + n + "-born"], email: email, phone_number: phone }; });
+    for (var i = 0; i < list.length; i++) {
+      var q = list[i];
+      if (!q.gender || !String(q.given_name || "").trim() || !String(q.family_name || "").trim() || !q.born_on || !email || !phone) { err.textContent = t.fill; err.hidden = false; return; }
+    }
     appt = f.appointment_date || "";
-    pax = { given_name: f.given_name, family_name: f.family_name, gender: f.gender, born_on: f.born_on, email: f.email, phone_number: f.phone_number };
     btn.disabled = true; btn.textContent = t.booking;
-    post("/flight/book", { offer_id: e.target.getAttribute("data-offer"), passenger: pax })
-      .then(function (o) { pax = null; showReceipt(o); })
+    post("/flight/book", { offer_id: e.target.getAttribute("data-offer"), passengers: list })
+      .then(function (o) { showReceipt(o); })
       .catch(function (er) { btn.disabled = false; btn.textContent = t.confirm; err.textContent = msg(er); err.hidden = false; });
   }
 
@@ -287,7 +325,7 @@
     cur = { pnr: o.pnr, status: o.status || "hold", payment_required_by: o.payment_required_by };
     $("vl-results").innerHTML = '<section class="fh-receipt" id="fh-receipt"><p class="fh-badge">' + esc(t.badge) + '</p><p class="fh-k">' + esc(t.pnr) + '</p><p class="fh-pnr" dir="ltr">' + esc(o.pnr) + "</p>" +
       '<div class="fh-exp" id="fh-exp" data-state="hold" aria-live="polite"><p class="fh-k">' + esc(t.untilT) + '</p><p class="fh-until">' + fmt(o.payment_required_by) + '</p><p class="fh-left" id="fh-left"></p><p class="fh-state" id="fh-state"></p><p class="fh-note" id="fh-note"></p></div>' +
-      '<dl class="fh-dl"><dt>' + esc(t.passenger) + '</dt><dd dir="ltr">' + esc(o.passenger.family_name) + " / " + esc(o.passenger.given_name) + "</dd><dt>" + esc(t.price) + '</dt><dd dir="ltr">' + esc(o.total_amount) + " " + esc(o.total_currency) + "</dd></dl>" + segs(o.slices) +
+      '<dl class="fh-dl"><dt>' + esc(t.passenger) + '</dt><dd dir="ltr">' + (o.passengers || [o.passenger]).map(function (x) { return esc(x.family_name) + " / " + esc(x.given_name); }).join("<br>") + "</dd><dt>" + esc(t.price) + '</dt><dd dir="ltr">' + esc(o.total_amount) + " " + esc(o.total_currency) + "</dd></dl>" + segs(o.slices) +
       (late ? '<p class="fh-warn fh-noprint">' + esc(t.warn(appt)) + "</p>" : "") + '<p class="fh-doc">' + esc(t.doc) + "</p></section>" +
       '<button type="button" class="pay wide fh-noprint" data-print="1">' + esc(t.print) + '</button> <button type="button" class="chip fh-noprint" data-refresh="1">' + esc(t.refresh) + '</button> <button type="button" class="chip fh-noprint" data-again="1">' + esc(t.again) + "</button>";
     paint(); clearInterval(tick); tick = setInterval(paint, 30000);
@@ -297,6 +335,9 @@
   /* ---------- événements ---------- */
   document.addEventListener("click", function (e) {
     var el;
+    if ((el = e.target.closest("[data-pax]"))) { movePax(el.getAttribute("data-pax")); return; }
+    if ((el = e.target.closest("#vl-pax"))) { var pp = $("vl-paxp"); pp.hidden = !pp.hidden; el.setAttribute("aria-expanded", String(!pp.hidden)); return; }
+    if (!e.target.closest("#vl-paxp") && !$("vl-paxp").hidden) { $("vl-paxp").hidden = true; $("vl-pax").setAttribute("aria-expanded", "false"); }
     if ((el = e.target.closest("[data-dest]"))) {
       var c = el.getAttribute("data-dest"); pick.to = c; notes.to = ""; showNotes(); $("vl-to").value = t.dest[c] + " (" + c + ")";
       $("vl-form").scrollIntoView({ behavior: "smooth", block: "center" }); return;

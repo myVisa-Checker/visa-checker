@@ -290,3 +290,14 @@ html[dir="rtl"] .vr-sel .vl-ic,html[dir="rtl"] .vr-cd .vl-ic{transform:scaleX(-1
 .vr-det{margin-top:10px;text-align:center}
 .vr-det summary{cursor:pointer;color:#0b2a6b;font-size:16px;padding:8px}
 .vr-det .fh-sl,.vr-det .fh-row{text-align:start}
+
+/* Voyageurs (adultes / enfants / bébés) et blocs passagers */
+.vl-paxb{display:flex;align-items:center;width:100%;min-height:44px;text-align:start;cursor:pointer;font:inherit;font-weight:700;color:#0b1f4b;background:transparent}
+.vl-paxp{position:absolute;inset-inline:0;top:100%;z-index:25;margin-top:4px;padding:10px 12px;background:#fff;color:#0b1f4b;border:1px solid var(--line,#d6e2f7);border-radius:14px;box-shadow:0 14px 30px -12px #0a1a4066;min-width:min(300px,86vw)}
+.vl-paxp[hidden]{display:none}
+.vl-pr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;font-size:15px}
+.vl-ps{display:inline-flex;align-items:center;gap:12px}
+.vl-ps button{width:36px;height:36px;border:2px solid #2f4f8f;border-radius:50%;background:#fff;color:#1d4ed8;font-size:20px;line-height:1;cursor:pointer}
+.vl-ps b{min-width:18px;text-align:center}
+.vp-blk{margin:12px 0;padding:12px;border:1px solid var(--line,#d6e2f7);border-radius:14px}
+.vp-blk legend{padding:0 8px;font-weight:700}
