@@ -402,6 +402,8 @@
     inp.parentNode.appendChild(ph);
     var sync = function () { if (inp.value) inp.removeAttribute("data-empty"); else inp.setAttribute("data-empty", "1"); ph.hidden = !!inp.value; };
     inp.addEventListener("input", sync); inp.addEventListener("change", sync); sync();
+    /* Certains Chrome Android n'ouvrent pas le calendrier au toucher : on l'ouvre explicitement (sans effet s'il est déjà ouvert). */
+    inp.addEventListener("click", function () { try { if (typeof inp.showPicker === "function") inp.showPicker(); } catch (e) { /* déjà ouvert ou refusé */ } });
   });
   var lg = $("vl-lang"); lg.value = L;
   lg.addEventListener("change", function () { try { localStorage.setItem("vc_lang", lg.value); } catch (e) { /* ignore */ } location.reload(); });
