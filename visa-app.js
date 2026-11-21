@@ -2415,6 +2415,7 @@ document.addEventListener("click",function(e){
   if(cb&&cb.dataset.pdf==null){copyLetter(cb);return}
   var nd=e.target.closest("[data-need]");
   if(nd&&nd.dataset.need==="flight"){location.href="./vols.html";return}
+  if(nd&&nd.dataset.need==="hotel"&&ownerFlight()){location.href="./hotels.html";return}
   if(nd){S.need=nd.dataset.need;S.back=S.step;S.step=8;save();render();window.scrollTo(0,0);try{$("h1").focus({preventScroll:true})}catch(x){}return}
   
   var gb=e.target.closest("[data-go]");

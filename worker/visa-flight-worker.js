@@ -6,10 +6,15 @@
  *   /flight/search  -> offres compatibles Hold pour l'itinéraire demandé (classe de cabine au choix)
  *   /flight/book    -> crée la commande Hold ; renvoie PNR + date limite de paiement + statut
  *   /flight/status  -> {pnr} : statut hold / expired / issued (échéance sauvegardée en KV, sans donnée personnelle)
+ *   /hotel/places   -> {query} : villes pour la page hotels.html (avec coordonnées)
+ *   /hotel/search   -> hôtels autour d'un point pour des dates données (Duffel Stays)
+ *   /hotel/rates    -> {search_result_id} : chambres à annulation gratuite d'un hôtel
+ *   /hotel/book     -> devis + réservation CONFIRMÉE (débite le solde Duffel) : désactivée tant que HOTEL_BOOKING n'est pas « 1 »
  *
  * Secret (Cloudflare > Settings > Variables and secrets) :
  *   DUFFEL_API_KEY   duffel_test_... (Sandbox) puis duffel_live_... (production)
- * Variable optionnelle :
+ * Variables optionnelles :
+ *   HOTEL_BOOKING    « 1 » pour autoriser /hotel/book (réservation réelle, payée par le solde Duffel). Absent = recherche seulement.
  *   ALLOWED_ORIGIN   adresses séparées par des virgules (défaut : checkmyvisa.org et www)
  * Liaison KV optionnelle « KV » : limite de débit par IP et sauvegarde des échéances (sans elle, pas de limite ni de suivi /flight/status).
  *
@@ -324,6 +329,198 @@ async function status(req, env) {
   return { ok: true, pnr, status: holdStatus(rec.payment_required_by, paidAt), payment_required_by: rec.payment_required_by };
 }
 
+/* ------------------------------ Hôtels (Duffel Stays) --------------------- */
+
+const STAY_ID = /^[a-z]{2,4}_[A-Za-z0-9]{8,}$/;
+
+const kmBetween = (a, b, c, d) => {
+  const r = (x) => (x * Math.PI) / 180;
+  const h = Math.sin(r(c - a) / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(r(d - b) / 2) ** 2;
+  return 6371 * 2 * Math.asin(Math.sqrt(h));
+};
+
+function validateStay(b) {
+  const lat = Number(b?.lat), lng = Number(b?.lng);
+  if (b?.lat == null || b?.lng == null || !Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180)
+    throw new HttpError(422, "Destination invalide.", "location");
+  const inD = parseDate(b?.check_in), outD = parseDate(b?.check_out);
+  if (!inD || !outD) throw new HttpError(422, "Dates invalides.", "date");
+  if (inD.getTime() < Date.now() - 86400000) throw new HttpError(422, "La date d'arrivée est passée.", "date");
+  const nights = Math.round((outD.getTime() - inD.getTime()) / 86400000);
+  if (nights < 1 || nights > 28) throw new HttpError(422, "Le séjour doit durer de 1 à 28 nuits.", "date");
+  const adults = Number.isInteger(Number(b?.adults)) && b?.adults !== "" && b?.adults != null ? Number(b.adults) : NaN;
+  const ages = Array.isArray(b?.children) ? b.children.map(Number) : [];
+  if (!(adults >= 1 && adults <= 6) || ages.length > 4 || ages.some((a) => !Number.isInteger(a) || a < 0 || a > 17))
+    throw new HttpError(422, "Nombre de voyageurs invalide.", "guests");
+  return { lat, lng, check_in: b.check_in, check_out: b.check_out, nights, adults, ages };
+}
+
+/** Date limite d'annulation gratuite (remboursement total) encore à venir, sinon null. */
+function freeUntil(rate, now = Date.now()) {
+  const total = parseFloat(rate?.total_amount);
+  let best = null;
+  for (const c of rate?.cancellation_timeline ?? []) {
+    const t = new Date(c.before).getTime();
+    if (parseFloat(c.refund_amount) + 0.005 >= total && t > now && (best === null || t > best)) best = t;
+  }
+  return best === null ? null : new Date(best).toISOString();
+}
+
+const httpsUrl = (u) => (typeof u === "string" && u.startsWith("https://") ? u : null);
+
+async function hotelPlaces(req, env) {
+  if (await limited(env, req, "hplaces", 120, 600)) throw new HttpError(429, "Trop de recherches. Réessayez dans un instant.", "rate");
+  const b = await req.json().catch(() => null);
+  const query = String(b?.query ?? "").trim().slice(0, 40);
+  if (query.length < 2) return { ok: true, places: [] };
+  const data = await duffel(env, `/places/suggestions?query=${encodeURIComponent(query)}`);
+  const out = [], seen = new Set();
+  for (const p of data ?? []) {
+    const lat = Number(p.latitude), lng = Number(p.longitude);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng) || p.latitude == null) continue;
+    const city = p.type === "city" ? p.name : p.city_name ?? p.city?.name ?? p.name;
+    const key = `${city}|${p.iata_country_code}`;
+    if (seen.has(key) || out.length >= 8) continue;
+    seen.add(key);
+    out.push({ city, country: p.iata_country_code ?? null, lat, lng });
+  }
+  return { ok: true, places: out };
+}
+
+async function hotelSearch(req, env) {
+  if (await limited(env, req, "hsearch", 12, 600)) throw new HttpError(429, "Trop de recherches. Réessayez dans quelques minutes.", "rate");
+  const q = validateStay(await req.json().catch(() => null));
+  const data = await duffel(env, "/stays/search", {
+    method: "POST",
+    body: {
+      data: {
+        rooms: 1,
+        location: { radius: 10, geographic_coordinates: { latitude: q.lat, longitude: q.lng } },
+        check_in_date: q.check_in,
+        check_out_date: q.check_out,
+        guests: [...Array(q.adults).fill({ type: "adult" }), ...q.ages.map((age) => ({ type: "child", age }))],
+      },
+    },
+  });
+  const list = Array.isArray(data) ? data : data?.results ?? [];
+  const hotels = list
+    .filter((r) => r?.id && r.accommodation?.name && parseFloat(r.cheapest_rate_total_amount) > 0)
+    .sort((a, b) => parseFloat(a.cheapest_rate_total_amount) - parseFloat(b.cheapest_rate_total_amount))
+    .slice(0, 24)
+    .map((r) => {
+      const a = r.accommodation, g = a.location?.geographic_coordinates;
+      const stars = Number(a.rating), score = Number(a.review_score);
+      return {
+        id: r.id,
+        name: a.name,
+        stars: Number.isFinite(stars) && stars > 0 ? stars : null,
+        review_score: Number.isFinite(score) && score > 0 ? score : null,
+        review_count: Number.isInteger(a.review_count) ? a.review_count : null,
+        photo: httpsUrl(a.photos?.[0]?.url),
+        city: a.location?.address?.city_name ?? null,
+        address: a.location?.address?.line_one ?? null,
+        distance_km: g && Number.isFinite(+g.latitude) ? Math.round(kmBetween(q.lat, q.lng, +g.latitude, +g.longitude) * 10) / 10 : null,
+        total_amount: r.cheapest_rate_total_amount,
+        total_currency: r.cheapest_rate_currency,
+        nights: q.nights,
+      };
+    });
+  return { ok: true, count: hotels.length, hotels };
+}
+
+async function hotelRates(req, env) {
+  if (await limited(env, req, "hrates", 30, 600)) throw new HttpError(429, "Trop de demandes. Réessayez dans quelques minutes.", "rate");
+  const b = await req.json().catch(() => null);
+  const id = String(b?.search_result_id ?? "");
+  if (!STAY_ID.test(id)) throw new HttpError(422, "Hôtel invalide.", "hotel");
+  const r = await duffel(env, `/stays/search_results/${id}/actions/fetch_all_rates`, { method: "POST" });
+  const a = r?.accommodation ?? {};
+  const rates = [];
+  for (const room of a.rooms ?? []) {
+    for (const rt of room.rates ?? []) {
+      const until = freeUntil(rt);
+      if (!until || !rt.id) continue; // seules les chambres annulables sans frais sont proposées
+      rates.push({
+        rate_id: rt.id,
+        room: room.name ?? rt.name ?? null,
+        photo: httpsUrl(room.photos?.[0]?.url),
+        beds: (room.beds ?? []).map((x) => ({ type: x.type, count: x.count })),
+        board_type: rt.board_type ?? null,
+        payment_type: rt.payment_type ?? null,
+        total_amount: rt.total_amount,
+        total_currency: rt.total_currency,
+        due_at_accommodation_amount: parseFloat(rt.due_at_accommodation_amount) > 0 ? rt.due_at_accommodation_amount : null,
+        due_at_accommodation_currency: rt.due_at_accommodation_currency ?? null,
+        free_until: until,
+      });
+    }
+  }
+  rates.sort((x, y) => parseFloat(x.total_amount) - parseFloat(y.total_amount));
+  const addr = a.location?.address ?? {};
+  return {
+    ok: true,
+    hotel: {
+      name: a.name,
+      stars: Number(a.rating) > 0 ? Number(a.rating) : null,
+      address: [addr.line_one, addr.postal_code, addr.city_name].filter(Boolean).join(", "),
+      amenities: (a.amenities ?? []).map((x) => x.type).filter(Boolean).slice(0, 40),
+      check_in_after: a.check_in_information?.check_in_after_time ?? null,
+      check_out_before: a.check_in_information?.check_out_before_time ?? null,
+    },
+    rates: rates.slice(0, 12),
+  };
+}
+
+function validateGuest(g, i) {
+  const given_name = normName(g?.given_name), family_name = normName(g?.family_name);
+  if (!NAME.test(given_name) || !NAME.test(family_name)) throw new HttpError(422, "Nom ou prénom invalide.", "name");
+  const out = { given_name, family_name };
+  if (g?.born_on) {
+    const born = parseDate(g.born_on);
+    if (!born || born > new Date()) throw new HttpError(422, "Date de naissance invalide.", "born_on");
+    out.born_on = g.born_on;
+  }
+  return out;
+}
+
+async function hotelBook(req, env) {
+  // Réservation réelle : Duffel Stays confirme et débite le solde Duffel. Fermée tant que HOTEL_BOOKING n'est pas « 1 ».
+  if (env.HOTEL_BOOKING !== "1") throw new HttpError(503, "La réservation d'hôtel ouvrira bientôt.", "booking_disabled");
+  if (await limited(env, req, "hbook", 4, 3600)) throw new HttpError(429, "Trop de réservations. Réessayez plus tard.", "rate");
+  const b = await req.json().catch(() => null);
+  const rateId = String(b?.rate_id ?? "");
+  if (!STAY_ID.test(rateId)) throw new HttpError(422, "Chambre invalide.", "rate");
+  const raw = Array.isArray(b?.guests) ? b.guests : [];
+  if (raw.length < 1 || raw.length > 10) throw new HttpError(422, "Nombre de voyageurs invalide.", "guests");
+  const guests = raw.map(validateGuest);
+  const email = String(b?.email ?? "").trim();
+  if (!EMAIL.test(email)) throw new HttpError(422, "E-mail invalide.", "email");
+  const phone_number = String(b?.phone_number ?? "").replace(/[\s.-]/g, "");
+  if (!PHONE_E164.test(phone_number)) throw new HttpError(422, "Téléphone invalide.", "phone");
+
+  const quote = await duffel(env, "/stays/quotes", { method: "POST", body: { data: { rate_id: rateId } } }); // re-vérifie la disponibilité et le prix
+  const until = freeUntil({ total_amount: quote.total_amount, cancellation_timeline: quote.cancellation_timeline ?? quote.accommodation?.rooms?.[0]?.rates?.[0]?.cancellation_timeline });
+  if (!until) throw new HttpError(409, "Cette chambre n'est plus annulable sans frais.", "not_refundable");
+  const booking = await duffel(env, "/stays/bookings", {
+    method: "POST",
+    body: { data: { quote_id: quote.id, email, phone_number, guests } },
+  });
+  const a = booking.accommodation ?? quote.accommodation ?? {};
+  const addr = a.location?.address ?? {};
+  return {
+    ok: true,
+    reference: booking.reference ?? null,
+    status: booking.status ?? "confirmed",
+    check_in_date: booking.check_in_date ?? quote.check_in_date,
+    check_out_date: booking.check_out_date ?? quote.check_out_date,
+    total_amount: quote.total_amount,
+    total_currency: quote.total_currency,
+    free_until: until,
+    hotel: { name: a.name, address: [addr.line_one, addr.postal_code, addr.city_name].filter(Boolean).join(", "), phone: a.phone_number ?? null },
+    guests: guests.map((g) => ({ given_name: g.given_name, family_name: g.family_name })),
+  };
+}
+
 /* ------------------------------ Routeur ----------------------------------- */
 
 export default {
@@ -354,6 +551,10 @@ export default {
       if (pathname === "/flight/search") return out(await search(req, env));
       if (pathname === "/flight/book") return out(await book(req, env));
       if (pathname === "/flight/status") return out(await status(req, env));
+      if (pathname === "/hotel/places") return out(await hotelPlaces(req, env));
+      if (pathname === "/hotel/search") return out(await hotelSearch(req, env));
+      if (pathname === "/hotel/rates") return out(await hotelRates(req, env));
+      if (pathname === "/hotel/book") return out(await hotelBook(req, env));
       return out({ ok: false, error: "not_found" }, 404);
     } catch (e) {
       if (e instanceof HttpError) return out({ ok: false, error: e.message, code: e.code }, e.status);

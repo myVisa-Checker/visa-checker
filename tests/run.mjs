@@ -12,7 +12,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs"]) {
+for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -220,6 +220,22 @@ try {
   ok("rdv-worker : signalements, confirmation à 3 appareils, délais, limites", false, String(e.stderr || e.message).split("\n")[0]);
 }
 ok("rdv-direct.html : CSP, script externe et lien sitemap", /script-src 'self'/.test(readFileSync("rdv-direct.html", "utf8")) && !/<script>[^<]/.test(readFileSync("rdv-direct.html", "utf8")) && /rdv-direct\.html/.test(readFileSync("sitemap.xml", "utf8")) && /rdv-direct\.html/.test(readFileSync("sw.js", "utf8")));
+
+console.log("Worker visa-flight : routes hôtels (exécution)");
+try {
+  execFileSync(process.execPath, ["tests/hotels-worker.test.mjs"], { stdio: "inherit" });
+  ok("hotels-worker : villes, recherche, chambres annulables, réservation fermée par défaut", true);
+} catch (e) {
+  ok("hotels-worker : villes, recherche, chambres annulables, réservation fermée par défaut", false, String(e.stderr || e.message).split("\n")[0]);
+}
+{
+  const hh = read("hotels.html"), hj = read("hotels.js"), swc = read("sw.js");
+  ok("hotels.html : CSP autorise le Worker visa-flight, scripts locaux seulement", /connect-src[^"]*visa-flight\.rabehfly\.workers\.dev/.test(hh) && !/<script(?![^>]*src=)/.test(hh));
+  ok("hotels.js : FR/EN/AR et page inactive tant que le module est caché", (hj.match(/confirm:/g) || []).length === 3 && (hj.match(/whyT:/g) || []).length === 3 && /FH\.enabled\(\)/.test(hj));
+  ok("hotels.js : réservation d'hôtel annoncée « bientôt » si le Worker la ferme", /booking_disabled/.test(hj) && (hj.match(/soon:/g) || []).length === 3);
+  ok("hotels : fichiers dans le cache hors ligne", ["hotels.html", "hotels.js", "hotels.css", "images/hero-hotels.jpg"].every((f) => swc.includes('"' + f + '"') && existsSync(f)));
+  ok("« Réservation d'hôtel » ouvre hotels.html seulement pour le propriétaire", /need==="hotel"&&ownerFlight\(\)\)\{location\.href="\.\/hotels\.html"/.test(read("visa-app.js")));
+}
 
 console.log("\n" + pass + " réussis, " + fail + " échoués");
 

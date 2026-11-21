@@ -1,0 +1,76 @@
+/* Page « Réserver un hôtel » (hotels.html). S'appuie sur vols.css (en-tête, bandeau, barre de recherche) et flight-hold.css (.fh-*). */
+body.hotels .vl-art{background-image:url(./images/hero-hotels.jpg);background-position:right top}
+body.hotels .vl-hero{min-height:500px}
+body.hotels .vl-hero h1{max-width:11em;font-size:clamp(34px,4.6vw,54px)}
+body.hotels .vl-sub{max-width:27em}
+body.hotels .vl-art{width:54%;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 34%),linear-gradient(to bottom,#000 70%,transparent);mask-image:linear-gradient(to right,transparent 0,#000 34%),linear-gradient(to bottom,#000 70%,transparent)}
+@media (max-width:899px){body.hotels .vl-art{width:100%}}
+@media (min-width:900px){body.hotels .vl-joury{display:none}}
+body.hotels .vl-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.hotels .vl-row .vl-ac{grid-column:1/-1}
+body.hotels .vl-row .vl-f:has(#vl-pax){grid-column:1/-1}
+@media (min-width:900px){body.hotels .vl-row{grid-template-columns:2fr 1.5fr 1.5fr 1.5fr auto}body.hotels .vl-row .vl-ac,body.hotels .vl-row .vl-f:has(#vl-pax){grid-column:auto}}
+
+/* Onglet unique « Hôtels Visa-Friendly » */
+#vols .vl-card .vl-tabs .vh-tab{display:inline-flex;align-items:center;gap:10px;min-height:54px;padding:0 28px;border-radius:28px 24px 0 0;background:#1d4ed8;color:#fff;font-size:18px;font-weight:700}
+#vols .vl-card .vl-tabs .vh-tab .vl-ic{color:#fff;width:22px;height:22px;margin:0}
+@media (max-width:700px){#vols .vl-card .vl-tabs .vh-tab{min-height:46px;padding:0 16px;font-size:15px;border-radius:22px 22px 0 0}}
+
+/* Cartes d'hôtels et de chambres */
+#vl-results{padding-top:24px;padding-bottom:10px}
+#vl-results:empty{padding:0}
+.vh-card{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr) minmax(0,190px);gap:16px;margin:14px 0;padding:14px;background:#fff;color:#0b1f4b;border:1px solid var(--line,#d6e2f7);border-radius:22px;box-shadow:0 12px 28px -18px #0a1a40}
+.vh-ph{position:relative;min-height:170px;border-radius:16px;overflow:hidden;background:#e6efff}
+.vh-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.vh-nophoto{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#1d4ed8}
+.vh-nophoto .vl-ic{width:64px;height:64px;margin:0}
+.vh-vf{position:absolute;inset-block-start:10px;inset-inline-start:10px;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#16a34a;color:#fff;font-size:14px;font-weight:700}
+.vh-vf .vl-ic{width:18px;height:18px;margin:0;color:#fff}
+.vh-in h3{margin:2px 0 6px;font-size:21px;line-height:1.2}
+.vh-st{margin-inline-start:6px;color:#f59e0b;font-size:16px;letter-spacing:1px}
+.vh-loc{display:flex;align-items:center;gap:6px;margin:4px 0;color:#4a5f86;font-size:15px}
+.vh-loc .vl-ic{width:18px;height:18px;margin:0;color:#1d4ed8}
+.vh-rev{margin:4px 0;font-size:14px;font-weight:700;color:#0b2a6b}
+.vh-ck{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:6px;color:#157347;font-weight:600;font-size:15px}
+.vh-ck li::before{content:"✓";display:inline-grid;place-items:center;width:20px;height:20px;margin-inline-end:8px;border-radius:50%;background:#16a34a;color:#fff;font-size:12px}
+.vh-pr{display:flex;flex-direction:column;justify-content:center;align-items:stretch;text-align:center;gap:2px;padding-inline-start:14px;border-inline-start:1px solid var(--line,#d6e2f7)}
+.vh-pr b{font-size:30px;font-weight:800}
+.vh-pr span{color:#4a5f86;font-size:15px}
+#vols .vh-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;margin-top:12px;border-radius:999px;font-size:17px}
+.vh-btn .vl-ic{width:18px;height:18px;margin:0;color:#fff}
+html[dir="rtl"] .vh-btn .vl-ic{transform:scaleX(-1)}
+.vh-hd{margin:6px 0 4px}
+.vh-hd h2{margin:6px 0 4px}
+.vh-hd p{margin:2px 0;color:#4a5f86}
+.vh-free{margin:4px 0 0;color:#157347;font-weight:700}
+.vh-none{margin-top:12px;color:#b42318}
+@media (max-width:760px){
+  .vh-card{grid-template-columns:1fr}
+  .vh-ph{min-height:190px}
+  .vh-pr{padding-inline-start:0;border-inline-start:0;border-top:1px dashed var(--line,#d6e2f7);padding-top:12px}
+}
+
+/* Bas de page : pourquoi choisir + Joury */
+.vh-low{position:relative;z-index:2;padding:26px 0 30px;background:linear-gradient(#eef4ff,#f8fbff);border-radius:36px 36px 0 0}
+#vl-results:empty + .vh-low{margin-top:-36px}
+.vh-low-in{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;max-width:1040px;margin:0 auto;padding:0 12px}
+.vh-why,.vh-jo{background:#fff;color:#0b1f4b;border:1px solid var(--line,#d6e2f7);border-radius:22px;padding:18px;box-shadow:0 12px 28px -20px #0a1a40}
+.vh-why h2,.vh-jo h2{margin:0 0 12px;font-size:22px}
+.vh-why ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0;padding:0;list-style:none}
+.vh-why li{display:flex;align-items:center;gap:12px;min-width:0}
+.vh-why .vl-ic{width:38px;height:38px;margin:0;flex:none;color:#1d4ed8}
+.vh-why span{display:flex;flex-direction:column;font-size:14px;line-height:1.3;color:#4a5f86}
+.vh-why b{font-size:16px;color:#0b1f4b}
+.vh-jo{display:flex;gap:14px;align-items:flex-start}
+.vh-jo img{width:96px;height:96px;border-radius:50%;object-fit:cover;flex:none;background:#e6efff}
+.vh-jo p{margin:0 0 8px;color:#4a5f86;font-size:15px}
+.vh-jo ul{margin:0 0 12px;padding:0;list-style:none;display:grid;gap:4px;font-size:15px}
+.vh-jo li::before{content:"✓";color:#1d4ed8;font-weight:800;margin-inline-end:8px}
+.vh-jo-b{display:inline-flex;align-items:center;min-height:44px;padding:0 20px;border-radius:999px;background:#1d4ed8;color:#fff;font-weight:700;text-decoration:none}
+@media (max-width:820px){
+  .vh-low-in{grid-template-columns:1fr}
+  .vh-why ul{grid-template-columns:1fr}
+  .vh-low{padding-bottom:110px}
+}
+.vh-age{min-height:40px;max-width:120px}
+@media print{.vh-low,.vh-card .vh-btn{display:none!important}}
