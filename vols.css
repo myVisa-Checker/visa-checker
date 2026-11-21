@@ -140,3 +140,120 @@ body.vols .sitenav .sn-logo b{color:#38bdf8!important}
 .vl-upd[hidden]{display:none}
 .vl-upd button{font:inherit;font-weight:700;min-height:40px;padding:0 18px;border:0;border-radius:999px;background:#1d4ed8;color:#fff;cursor:pointer}
 @media print{.vl-upd,.vl-ver{display:none!important}}
+
+/* ===== Maquette fidèle (2026-11-21) : en-tête, bannière, barre de recherche, réassurance, destinations ===== */
+body.vols .sitenav.vl-nav{height:78px;overflow:visible;gap:14px;padding-inline:max(16px,calc(50% - 520px));background:#061330!important;border:0!important}
+body.vols .sitenav .vl-logo{display:flex;align-items:center;gap:10px;color:#fff!important;border:0!important}
+.vl-logo-i{width:54px;height:46px;flex:none}
+.vl-logo-t{display:flex;flex-direction:column;gap:3px;line-height:1}
+.vl-logo-t>span{font-size:31px;font-weight:800;letter-spacing:-.8px;color:#fff}
+body.vols .sitenav .vl-logo .vl-logo-t b{color:#fff!important}
+.vl-logo-t i{font-style:normal;color:#38bdf8}
+.vl-logo-t small{font-size:11px;font-weight:500;color:#cfe0ff;letter-spacing:.2px}
+.vl-nav ul{margin-inline-start:auto;gap:6px 10px}
+body.vols .sitenav.vl-nav a{font-size:16px;padding:9px 12px;border-bottom:0;border-radius:999px}
+body.vols .sitenav.vl-nav a:hover{background:#ffffff1f;color:#fff!important}
+body.vols .sitenav .vl-home{display:inline-flex;align-items:center;justify-content:center;width:62px;height:44px;padding:0;background:#1d4ed8;color:#fff!important}
+.vl-home svg{width:24px;height:24px}
+.vl-langw{display:flex;align-items:center;gap:6px;margin-inline-start:6px;padding:4px 12px;border:1px solid #3b82f6;border-radius:999px;color:#fff}
+.vl-langw svg{width:20px;height:20px;flex:none}
+.vl-langw .vl-lang{border:0;padding:4px 0}
+
+.vl-hero{padding-top:6px;padding-bottom:50px;min-height:0}
+.vl-hero h1{font-size:clamp(38px,6.2vw,66px);font-weight:800;letter-spacing:-1px;line-height:1.04;max-width:none;margin-bottom:12px}
+.vl-hero h1 em{display:block;color:#2fd0ee}
+.vl-sub{font-size:clamp(17px,2.2vw,24px);font-weight:600;margin-bottom:18px}
+.vl-trust{gap:10px 26px;margin-bottom:34px}
+.vl-trust li{display:flex;align-items:center;gap:8px;font-size:15px}
+.vl-trust li::before{content:none}
+.vl-trust .vl-ic{width:26px;height:26px;margin:0;color:#38bdf8}
+.vl-hero{min-height:560px}
+
+.vl-card{padding:0 0 14px;background:#ffffff1f;border:1px solid #ffffff59;border-radius:0 28px 28px 28px;backdrop-filter:blur(10px)}
+.vl-tabs{display:flex;gap:2px;margin:0 0 12px;padding:0}
+#vols .vl-card .vl-tabs .chip{min-height:54px;padding:0 30px;border:0;border-radius:24px 24px 0 0;background:#ffffff1a;color:#fff;font-size:18px;font-weight:700}
+#vols .vl-card .vl-tabs .chip .vl-ic{color:#fff;width:22px;height:22px}
+#vols .vl-card .vl-tabs .chip[aria-pressed="true"]{background:#1d4ed8;color:#fff}
+#vols .vl-card .vl-tabs .chip:first-child{border-radius:28px 24px 0 0}
+.vl-row{margin-inline:14px;padding:12px 12px 12px 16px;background:#fff;border-radius:18px;box-shadow:0 14px 34px -16px #000b}
+.vl-f label{font-size:13px;color:#4a5f86}
+.vl-f label .vl-ic{color:#1d4ed8}
+.vl-f .sel,.vl-static{font-size:17px;font-weight:700;color:#0b1f4b}
+#vols select#vl-cabin{appearance:none;-webkit-appearance:none;padding-inline-end:22px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231d4ed8' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 4px center/12px}
+html[dir="rtl"] #vols select#vl-cabin{background-position:left 4px center}
+.vl-go{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:58px;min-width:190px;border-radius:16px;font-size:19px;box-shadow:0 12px 26px -12px #1d4ed8}
+.vl-go .vl-ic{width:24px;height:24px;margin:0;color:#fff}
+.vl-card .fe{margin:10px 16px 0;color:#fff}
+
+.vl-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:26px 0 0;padding:0;list-style:none}
+.vl-stats li{display:flex;align-items:center;gap:12px;padding:6px 14px;border-inline-start:1px solid #ffffff2e;min-width:0}
+.vl-stats li:first-child{border-inline-start:0;padding-inline-start:0}
+.vl-stats .vl-ic{width:40px;height:40px;margin:0;flex:none;color:#9ec5ff}
+.vl-stats span{display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:1.3;color:#cfe0ff}
+.vl-stats b{font-size:15px;color:#fff}
+
+.vl-dest{position:relative;z-index:2;padding:26px 0 34px;background:linear-gradient(#eef4ff,#f8fbff);border-radius:36px 36px 0 0}
+#vl-results:empty + .vl-dest{margin-top:-36px}
+#vl-results:not(:empty){padding-top:24px;padding-bottom:10px}
+.vl-dest-in{max-width:1040px;margin:0 auto;padding:0 12px}
+.vl-dest h2{display:flex;align-items:center;gap:10px;margin:0 0 16px;font-size:26px;color:#0b1f4b}
+.vl-dest h2 .vl-ic{width:28px;height:28px;margin:0;color:#1d4ed8}
+.vl-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin:0;padding:0;list-style:none}
+.vl-dc{position:relative;display:block;width:100%;height:158px;padding:0;border:0;border-radius:16px;overflow:hidden;background:#0b2a6b;color:#fff;text-align:start;cursor:pointer;font:inherit;box-shadow:0 12px 26px -16px #0a1a40}
+.vl-dc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.vl-dc:hover img{transform:scale(1.05)}
+.vl-dc::after{content:"";position:absolute;inset:auto 0 0 0;height:70%;background:linear-gradient(to top,#061330d9,transparent)}
+.vl-dn,.vl-dg{position:absolute;inset-inline:12px;z-index:1}
+.vl-dn{bottom:34px;font-size:19px;font-weight:800}
+.vl-dg{bottom:11px;display:flex;align-items:center;justify-content:space-between;font-size:12.5px}
+.vl-dg .vl-ic{width:24px;height:24px;margin:0;padding:4px;box-sizing:border-box;border-radius:50%;background:#ffffffeb;color:#1d4ed8}
+html[dir="rtl"] .vl-dg .vl-ic{transform:scaleX(-1)}
+.vl-dc:focus-visible{outline:3px solid #93b4ff;outline-offset:3px}
+
+.vl-joury img{width:84px;height:84px}
+.vl-foot{margin-top:0;padding-top:18px}
+.vl-foot-t{margin:0 12px;text-align:center;color:#c7d8ff;font-size:14px}
+
+@media (max-width:899px){.vl-row{padding:12px}.vl-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 0}.vl-stats li:nth-child(odd){border-inline-start:0;padding-inline-start:0}}
+@media (max-width:700px){
+  body.vols .sitenav.vl-nav{height:auto;flex-wrap:wrap;row-gap:6px;padding:10px 14px}
+  .vl-logo-i{width:42px;height:36px}.vl-logo-t>span{font-size:25px}.vl-logo-t small{display:none}
+  .vl-nav ul{width:100%;margin:0;justify-content:space-between}
+  body.vols .sitenav.vl-nav a{font-size:14px;padding:8px 8px}
+  body.vols .sitenav .vl-home{width:48px;height:38px}
+  .vl-langw{margin:0;padding:2px 8px}
+  .vl-hero{min-height:0;padding-bottom:44px}
+  .vl-hero h1{font-size:38px}
+  .vl-trust{flex-direction:column;gap:8px;margin-bottom:22px}
+  .vl-card{border-radius:0 22px 22px 22px}
+  #vols .vl-card .vl-tabs .chip{min-height:46px;padding:0 16px;font-size:15px}
+  .vl-row{margin-inline:10px}
+  .vl-go{width:100%}
+  .vl-stats li{flex-direction:column;align-items:flex-start;gap:6px}
+  .vl-stats .vl-ic{width:30px;height:30px}
+  .vl-cards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;gap:12px}
+  .vl-cards li{flex:0 0 62%;scroll-snap-align:start}
+  .vl-dest{padding-bottom:110px}
+}
+
+/* Réglages après relecture visuelle */
+.vl-art{width:58%;height:470px;background-position:right top;
+  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 24%),linear-gradient(to bottom,#000 70%,transparent);mask-image:linear-gradient(to right,transparent 0,#000 24%),linear-gradient(to bottom,#000 70%,transparent);
+  -webkit-mask-composite:source-in;mask-composite:intersect}
+.vl-art::after{display:none}
+.vl-hero h1{font-size:clamp(36px,5.2vw,58px)}
+#vols .vl-row .sel{border:0;background:transparent;padding-inline:0;font-size:16px}
+#vols .vl-row select#vl-cabin{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231d4ed8' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 2px center/12px}
+html[dir="rtl"] #vols .vl-row select#vl-cabin{background-position:left 2px center}
+.vl-static{white-space:nowrap;border:0;padding-inline:0}
+@media (min-width:900px){.vl-row{grid-template-columns:1.45fr 1.45fr 1.4fr 1.4fr 1.15fr 1.25fr auto;gap:8px}.vl-f{padding-inline:6px 8px}}
+@media (max-width:899px){.vl-art{width:100%}}
+@media (max-width:700px){
+  .vl-art{top:150px;height:250px;opacity:.5;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 30%,#000 60%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 30%,#000 60%,transparent);-webkit-mask-composite:source-over;mask-composite:add}
+  #vols .vl-row .sel{border:1px solid var(--line,#d6e2f7);background:#fff;padding-inline:10px}
+  .vl-static{border:1px solid var(--line,#d6e2f7);padding-inline:10px}
+  .vl-dest{padding-bottom:26px}
+}
+.vl-f label{white-space:nowrap;font-size:12.5px}
+.vl-sub{font-size:clamp(16px,1.9vw,22px)}
+@media (min-width:900px){.vl-row{grid-template-columns:1.35fr 1.35fr 1.55fr 1.55fr 1.15fr 1.25fr auto}}
