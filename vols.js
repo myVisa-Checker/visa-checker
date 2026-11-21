@@ -10,10 +10,13 @@
   var T = {
     fr: {
       h1: ["Réservez votre vol", "en toute confiance"], sub: "Cherchez. Réservez. Obtenez un code PNR vérifiable.",
-      allAp: "Tous les aéroports", upd: ["Nouvelle version disponible", "Mettre à jour"], trust: ["Sans payer le billet", "Code PNR vérifiable auprès de la compagnie", "Annulation automatique à l'échéance"],
+      allAp: "Tous les aéroports", upd: ["Nouvelle version disponible", "Mettre à jour"], trust: ["Code PNR vérifiable", "Réservation immédiate", "Sans payer le billet"],
+      nav: ["Guide Visa", "À propos", "Contact"], destT: "Destinations populaires", destGo: "Chercher un vol",
+      stats: [["FR · EN · AR", "Interface en 3 langues"], ["Réservation vérifiable", "Code PNR contrôlable chez la compagnie"], ["Compagnies aériennes", "Vols proposés via Duffel"], ["Assistante IA Joury", "Pour vous guider dans votre dossier"]],
+      dest: { PAR: "Paris", DXB: "Dubaï", NYC: "New York", IST: "Istanbul", LON: "Londres" }, footT: "Réservation en attente : billet non émis, annulée automatiquement à l'échéance.",
       one: "Aller simple", rt: "Aller-retour", from: "Départ", to: "Destination", d1: "Date de départ", d2: "Date de retour", pax: "Voyageurs", adult: "1 Adulte", cabin: "Classe",
       cabins: { economy: "Économique", premium_economy: "Premium éco", business: "Affaires", first: "Première" }, search: "Rechercher", searching: "Recherche en cours…",
-      ph: "Ville ou code (ex. TUN)", pick: "Choisissez un aéroport dans la liste.", dates: "Indiquez la date de départ (et de retour pour un aller-retour).",
+      ph: "Ville ou code", pick: "Choisissez un aéroport dans la liste.", dates: "Indiquez la date de départ (et de retour pour un aller-retour).",
       found: function (n) { return n + " vol(s) réservable(s) sans paiement"; }, none: "Aucun vol réservable sans paiement sur ces dates. Essayez d'autres dates ou un aéroport proche.",
       net: "Connexion impossible. Réessayez dans un instant.", expires: "Valable jusqu'au", price: "Prix si vous confirmez", book: "Réserver ce vol (attente)", booking: "Réservation en cours…",
       back: "← Modifier la recherche", pax2: "Passager (comme sur le passeport)", given: "Prénom(s)", family: "Nom", gender: "Genre", m: "Masculin", f: "Féminin", born: "Date de naissance", mail: "E-mail", phone: "Téléphone (avec indicatif, ex. +216…)",
@@ -28,10 +31,13 @@
     },
     en: {
       h1: ["Book your flight", "with confidence"], sub: "Search. Hold. Get a verifiable PNR code.",
-      allAp: "All airports", upd: ["New version available", "Update"], trust: ["No need to pay for the ticket", "PNR code you can check with the airline", "Automatic cancellation at the deadline"],
+      allAp: "All airports", upd: ["New version available", "Update"], trust: ["Verifiable PNR code", "Instant booking", "No need to pay for the ticket"],
+      nav: ["Visa Guide", "About", "Contact"], destT: "Popular destinations", destGo: "Search a flight",
+      stats: [["FR · EN · AR", "Interface in 3 languages"], ["Verifiable booking", "PNR code you can check with the airline"], ["Airlines", "Flights offered through Duffel"], ["Joury AI assistant", "To guide you through your file"]],
+      dest: { PAR: "Paris", DXB: "Dubai", NYC: "New York", IST: "Istanbul", LON: "London" }, footT: "Booking on hold: ticket not issued, automatically cancelled at the deadline.",
       one: "One way", rt: "Round trip", from: "From", to: "To", d1: "Departure date", d2: "Return date", pax: "Travellers", adult: "1 Adult", cabin: "Class",
       cabins: { economy: "Economy", premium_economy: "Premium economy", business: "Business", first: "First" }, search: "Search", searching: "Searching…",
-      ph: "City or code (e.g. TUN)", pick: "Pick an airport from the list.", dates: "Enter the departure date (and the return date for a round trip).",
+      ph: "City or code", pick: "Pick an airport from the list.", dates: "Enter the departure date (and the return date for a round trip).",
       found: function (n) { return n + " flight(s) bookable without payment"; }, none: "No flight can be held without payment on these dates. Try other dates or a nearby airport.",
       net: "Connection failed. Please try again in a moment.", expires: "Valid until", price: "Price if you confirm", book: "Hold this flight", booking: "Booking…",
       back: "← Change search", pax2: "Passenger (as on the passport)", given: "Given name(s)", family: "Family name", gender: "Gender", m: "Male", f: "Female", born: "Date of birth", mail: "Email", phone: "Phone (with country code, e.g. +216…)",
@@ -46,10 +52,13 @@
     },
     ar: {
       h1: ["احجز رحلتك", "بثقة"], sub: "ابحث. احجز. واحصل على رمز PNR قابل للتحقق.",
-      allAp: "كل المطارات", upd: ["إصدار جديد متاح", "تحديث"], trust: ["دون دفع ثمن التذكرة", "رمز PNR يمكن التحقق منه لدى الشركة", "إلغاء تلقائي عند انتهاء المهلة"],
+      allAp: "كل المطارات", upd: ["إصدار جديد متاح", "تحديث"], trust: ["رمز PNR قابل للتحقق", "حجز فوري", "دون دفع ثمن التذكرة"],
+      nav: ["دليل التأشيرة", "من نحن", "اتصل بنا"], destT: "وجهات شائعة", destGo: "ابحث عن رحلة",
+      stats: [["FR · EN · AR", "واجهة بثلاث لغات"], ["حجز قابل للتحقق", "رمز PNR يمكنك التحقق منه لدى الشركة"], ["شركات الطيران", "رحلات عبر Duffel"], ["المساعدة الذكية جوري", "لمرافقتك في ملفك"]],
+      dest: { PAR: "باريس", DXB: "دبي", NYC: "نيويورك", IST: "إسطنبول", LON: "لندن" }, footT: "حجز معلّق: التذكرة غير مُصدرة، ويُلغى تلقائيًا عند انتهاء المهلة.",
       one: "ذهاب فقط", rt: "ذهاب وإياب", from: "من", to: "إلى", d1: "تاريخ الذهاب", d2: "تاريخ العودة", pax: "المسافرون", adult: "بالغ واحد", cabin: "الدرجة",
       cabins: { economy: "اقتصادية", premium_economy: "اقتصادية مميزة", business: "رجال الأعمال", first: "الأولى" }, search: "بحث", searching: "جارٍ البحث…",
-      ph: "مدينة أو رمز (مثل TUN)", pick: "اختر مطارًا من القائمة.", dates: "أدخل تاريخ الذهاب (وتاريخ العودة للذهاب والإياب).",
+      ph: "مدينة أو رمز", pick: "اختر مطارًا من القائمة.", dates: "أدخل تاريخ الذهاب (وتاريخ العودة للذهاب والإياب).",
       found: function (n) { return n + " رحلة قابلة للحجز دون دفع"; }, none: "لا توجد رحلة قابلة للحجز دون دفع في هذه التواريخ. جرّب تواريخ أخرى أو مطارًا قريبًا.",
       net: "تعذّر الاتصال. حاول مرة أخرى بعد قليل.", expires: "صالح حتى", price: "السعر عند التأكيد", book: "احجز هذه الرحلة (معلّق)", booking: "جارٍ الحجز…",
       back: "→ تعديل البحث", pax2: "المسافر (كما في جواز السفر)", given: "الاسم الشخصي", family: "اللقب", gender: "الجنس", m: "ذكر", f: "أنثى", born: "تاريخ الميلاد", mail: "البريد الإلكتروني", phone: "الهاتف (مع رمز الدولة، مثل +216…)",
@@ -92,23 +101,37 @@
     cal: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2zM5 9h14v11H5z"/></svg>',
     user: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4 0-8 2-8 5v3h16v-3c0-3-4-5-8-5z"/></svg>',
     seat: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h7l3 5h2.500l-3-5.500A2 2 0 0 0 17 11V4a2 2 0 0 0-2-2zM4 17v2h9v-2z"/></svg>',
+    shield: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3 8.500-7 10-4-1.500-7-5-7-10V6z" fill="none" stroke="currentColor" stroke-width="1.900" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.900" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    bolt: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L5 14h6l-1 8 8-12h-6z" fill="none" stroke="currentColor" stroke-width="1.900" stroke-linejoin="round"/></svg>',
+    wallet: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2.500" fill="none" stroke="currentColor" stroke-width="1.900"/><path d="M3 10h18M16 14.500h2" fill="none" stroke="currentColor" stroke-width="1.900" stroke-linecap="round"/></svg>',
+    globe: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.700"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" fill="none" stroke="currentColor" stroke-width="1.700"/></svg>',
+    headset: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2" fill="none" stroke="currentColor" stroke-width="1.800"/><rect x="3" y="14" width="4" height="6" rx="1.500" fill="none" stroke="currentColor" stroke-width="1.800"/><rect x="17" y="14" width="4" height="6" rx="1.500" fill="none" stroke="currentColor" stroke-width="1.800"/><path d="M19 20c0 1.500-2 2-5 2" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linecap="round"/></svg>',
+    search: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.200"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"/></svg>',
+    arrow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     swap: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h11l-3-3 1.400-1.400L22 8l-5.600 5.400L15 12l3-3H7zm10 10H6l3 3-1.400 1.400L2 16l5.600-5.400L9 12l-3 3h11z"/></svg>'
   };
+  function setGo(txt, icon) { $("vl-go").innerHTML = (icon ? '<i class="vl-ic">' + IC.search + "</i>" : "") + esc(txt); }
   function lab(id, ic, text) { $(id).innerHTML = '<i class="vl-ic">' + IC[ic] + "</i>" + esc(text); }
   /* ---------- texte statique ---------- */
   function paintStatic() {
     $("vl-h1").innerHTML = esc(t.h1[0]) + " <em>" + esc(t.h1[1]) + "</em>";
     $("vl-sub").textContent = t.sub;
-    $("vl-trust").innerHTML = t.trust.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
     lab("vl-l-from", "plane", t.from); lab("vl-l-to", "pin", t.to); lab("vl-l-d1", "cal", t.d1); lab("vl-l-d2", "cal", t.d2);
     lab("vl-l-pax", "user", t.pax); $("vl-pax").textContent = t.adult; lab("vl-l-cabin", "seat", t.cabin);
     $("vl-from").placeholder = t.ph; $("vl-to").placeholder = t.ph;
     $("vl-cabin").innerHTML = Object.keys(t.cabins).map(function (k) { return '<option value="' + k + '">' + esc(t.cabins[k]) + "</option>"; }).join("");
-    $("vl-go").textContent = t.search; $("vl-legal").textContent = t.legal;
+    setGo(t.search, true); $("vl-legal").textContent = t.legal;
     $("vl-d1").min = $("vl-d2").min = today();
-    var konnect = '<svg viewBox="0 0 172 44" role="img" aria-label="Konnect"><g fill="none" stroke="#9bdc36" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"><path d="M8 7h12v12H8zM25 7h12v12H25zM8 24h12v12H8z"/><path d="M25 24l12 12M37 24L25 36"/></g><text x="48" y="30" fill="#12334a" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="-1">konnect</text></svg>';
-    var flouci = '<svg viewBox="0 0 172 44" role="img" aria-label="Flouci"><g transform="translate(4 5)"><path d="M4 7c8-7 18-5 22 2 4 8-2 18-12 19-5 1-10-1-13-5 9 2 16-3 16-9 0-5-5-8-13-7z" fill="#ef8b47"/><path d="M12 25c8 2 15-3 15-10 0-4-2-7-6-9 10 3 14 14 7 22-7 8-20 6-25-1 3 0 6-1 9-2z" fill="#0eaa7e"/></g><text x="43" y="30" fill="#153b43" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="-1">flouci</text></svg>';
-    $("vl-pay").innerHTML = "<li>" + flouci + "</li><li>" + konnect + "</li><li><span>Visa</span></li><li><span>Mastercard</span></li>";
+    var tIc = ["shield", "bolt", "wallet"];
+    $("vl-trust").innerHTML = t.trust.map(function (x, i) { return '<li><i class="vl-ic">' + IC[tIc[i]] + "</i>" + esc(x) + "</li>"; }).join("");
+    var sIc = ["globe", "shield", "plane", "headset"];
+    $("vl-stats").innerHTML = t.stats.map(function (x, i) { return '<li><i class="vl-ic">' + IC[sIc[i]] + "</i><span><b>" + esc(x[0]) + "</b>" + esc(x[1]) + "</span></li>"; }).join("");
+    $("vl-dest-h").innerHTML = '<i class="vl-ic">' + IC.pin + "</i>" + esc(t.destT);
+    $("vl-cards").innerHTML = [["PAR", "paris"], ["DXB", "dubai"], ["NYC", "newyork"], ["IST", "istanbul"], ["LON", "london"]].map(function (d) {
+      return '<li><button type="button" class="vl-dc" data-dest="' + d[0] + '"><img src="./images/dest-' + d[1] + '.webp" alt="" width="221" height="110" loading="lazy"><span class="vl-dn">' + esc(t.dest[d[0]]) + '</span><span class="vl-dg">' + esc(t.destGo) + '<i class="vl-ic">' + IC.arrow + "</i></span></button></li>";
+    }).join("");
+    $("vl-n-guide").textContent = t.nav[0]; $("vl-n-about").textContent = t.nav[1]; $("vl-n-contact").textContent = t.nav[2];
+    $("vl-foot-t").textContent = t.footT;
     paintTabs();
   }
   function paintTabs() {
@@ -167,7 +190,7 @@
     var d1 = $("vl-d1").value, d2 = trip === "rt" ? $("vl-d2").value : "";
     if (!/^[A-Z]{3}$/.test(pick.from) || !/^[A-Z]{3}$/.test(pick.to)) return showErr(t.pick);
     if (!d1 || (trip === "rt" && !d2)) return showErr(t.dates);
-    var btn = $("vl-go"); btn.disabled = true; btn.textContent = t.searching;
+    var btn = $("vl-go"); btn.disabled = true; setGo(t.searching, false);
     post("/flight/search", { origin: pick.from, destination: pick.to, departure_date: d1, return_date: d2 || null, cabin_class: $("vl-cabin").value })
       .then(function (r) {
         offers = r.offers || [];
@@ -180,7 +203,7 @@
         box.scrollIntoView({ behavior: "smooth", block: "start" });
       })
       .catch(function (er) { showErr(msg(er)); })
-      .then(function () { btn.disabled = false; btn.textContent = t.search; });
+      .then(function () { btn.disabled = false; setGo(t.search, true); });
   }
 
   /* ---------- passager ---------- */
@@ -239,6 +262,10 @@
   /* ---------- événements ---------- */
   document.addEventListener("click", function (e) {
     var el;
+    if ((el = e.target.closest("[data-dest]"))) {
+      var c = el.getAttribute("data-dest"); pick.to = c; $("vl-to").value = t.dest[c] + " (" + c + ")";
+      $("vl-form").scrollIntoView({ behavior: "smooth", block: "center" }); return;
+    }
     if ((el = e.target.closest("[data-trip]"))) { trip = el.getAttribute("data-trip"); paintTabs(); return; }
     if ((el = e.target.closest("[data-offer]"))) { showPassenger(el.getAttribute("data-offer")); return; }
     if (e.target.closest("[data-back]")) { $("vl-form").scrollIntoView({ behavior: "smooth" }); $("vl-results").innerHTML = ""; return; }
@@ -276,6 +303,8 @@
   setInterval(checkVersion, 5 * 60e3);
 
   paintStatic();
+  function plus(n) { var d = new Date(); d.setDate(d.getDate() + n); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  $("vl-d1").value = plus(30); $("vl-d2").value = plus(37);
   var phTxt = { fr: "jj/mm/aaaa", en: "dd/mm/yyyy", ar: "يوم/شهر/سنة" }[L];
   ["vl-d1", "vl-d2"].forEach(function (id) {
     var inp = $(id), ph = document.createElement("span");
