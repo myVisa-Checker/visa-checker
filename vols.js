@@ -10,7 +10,7 @@
   var T = {
     fr: {
       h1: ["Réservez votre vol", "en toute confiance"], sub: "Cherchez. Réservez. Obtenez un code PNR vérifiable.",
-      allAp: "Tous les aéroports", trust: ["Sans payer le billet", "Code PNR vérifiable auprès de la compagnie", "Annulation automatique à l'échéance"],
+      allAp: "Tous les aéroports", upd: ["Nouvelle version disponible", "Mettre à jour"], trust: ["Sans payer le billet", "Code PNR vérifiable auprès de la compagnie", "Annulation automatique à l'échéance"],
       one: "Aller simple", rt: "Aller-retour", from: "Départ", to: "Destination", d1: "Date de départ", d2: "Date de retour", pax: "Voyageurs", adult: "1 Adulte", cabin: "Classe",
       cabins: { economy: "Économique", premium_economy: "Premium éco", business: "Affaires", first: "Première" }, search: "Rechercher", searching: "Recherche en cours…",
       ph: "Ville ou code (ex. TUN)", pick: "Choisissez un aéroport dans la liste.", dates: "Indiquez la date de départ (et de retour pour un aller-retour).",
@@ -28,7 +28,7 @@
     },
     en: {
       h1: ["Book your flight", "with confidence"], sub: "Search. Hold. Get a verifiable PNR code.",
-      allAp: "All airports", trust: ["No need to pay for the ticket", "PNR code you can check with the airline", "Automatic cancellation at the deadline"],
+      allAp: "All airports", upd: ["New version available", "Update"], trust: ["No need to pay for the ticket", "PNR code you can check with the airline", "Automatic cancellation at the deadline"],
       one: "One way", rt: "Round trip", from: "From", to: "To", d1: "Departure date", d2: "Return date", pax: "Travellers", adult: "1 Adult", cabin: "Class",
       cabins: { economy: "Economy", premium_economy: "Premium economy", business: "Business", first: "First" }, search: "Search", searching: "Searching…",
       ph: "City or code (e.g. TUN)", pick: "Pick an airport from the list.", dates: "Enter the departure date (and the return date for a round trip).",
@@ -46,7 +46,7 @@
     },
     ar: {
       h1: ["احجز رحلتك", "بثقة"], sub: "ابحث. احجز. واحصل على رمز PNR قابل للتحقق.",
-      allAp: "كل المطارات", trust: ["دون دفع ثمن التذكرة", "رمز PNR يمكن التحقق منه لدى الشركة", "إلغاء تلقائي عند انتهاء المهلة"],
+      allAp: "كل المطارات", upd: ["إصدار جديد متاح", "تحديث"], trust: ["دون دفع ثمن التذكرة", "رمز PNR يمكن التحقق منه لدى الشركة", "إلغاء تلقائي عند انتهاء المهلة"],
       one: "ذهاب فقط", rt: "ذهاب وإياب", from: "من", to: "إلى", d1: "تاريخ الذهاب", d2: "تاريخ العودة", pax: "المسافرون", adult: "بالغ واحد", cabin: "الدرجة",
       cabins: { economy: "اقتصادية", premium_economy: "اقتصادية مميزة", business: "رجال الأعمال", first: "الأولى" }, search: "بحث", searching: "جارٍ البحث…",
       ph: "مدينة أو رمز (مثل TUN)", pick: "اختر مطارًا من القائمة.", dates: "أدخل تاريخ الذهاب (وتاريخ العودة للذهاب والإياب).",
@@ -254,6 +254,27 @@
 
   var jt = { fr: ["Bonjour !", "Je suis Joury, votre assistante voyage."], en: ["Hello!", "I am Joury, your travel assistant."], ar: ["مرحبًا!", "أنا جوري، مساعدتك في السفر."] }[L];
   $("vl-joury-t").innerHTML = "<b>" + esc(jt[0]) + "</b> " + esc(jt[1]);
+  /* Nouvelle version : compare la version de cette page à version.json (jamais mis en cache) ; le bouton vide le cache puis recharge. */
+  function checkVersion() {
+    var mine = document.body.getAttribute("data-version");
+    fetch("./version.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (j) {
+      if (!j || !j.version || j.version === mine) return;
+      $("vl-upd-t").textContent = t.upd[0]; $("vl-upd-b").textContent = t.upd[1]; $("vl-upd").hidden = false;
+    }).catch(function () { /* hors ligne : rien */ });
+  }
+  $("vl-upd-b").addEventListener("click", function () {
+    var done = function () { location.reload(); };
+    try {
+      Promise.all([
+        window.caches ? caches.keys().then(function (k) { return Promise.all(k.map(function (n) { return caches.delete(n); })); }) : 0,
+        navigator.serviceWorker ? navigator.serviceWorker.getRegistrations().then(function (rs) { return Promise.all(rs.map(function (r) { return r.update(); })); }) : 0
+      ]).then(done, done);
+    } catch (e) { done(); }
+  });
+  checkVersion();
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") checkVersion(); });
+  setInterval(checkVersion, 5 * 60e3);
+
   paintStatic();
   var phTxt = { fr: "jj/mm/aaaa", en: "dd/mm/yyyy", ar: "يوم/شهر/سنة" }[L];
   ["vl-d1", "vl-d2"].forEach(function (id) {

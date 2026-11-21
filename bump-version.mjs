@@ -14,5 +14,6 @@ stamp("sw.js", (s) => s.replace(/(const VERSION = ")[^"]*(";\s*\/\*@version\*\/)
 stamp("index.html", (s) => s
   .replace(/(window\.APP_VERSION=")[^"]*(";\s*\/\*@version\*\/)/, `$1${v}$2`)
   .replace(/((?:manifest\.json|apple-touch-icon\.png|icon-192\.png)\?v=)[^"]*/g, `$1${v}`), false);
+stamp("vols.html", (s) => s.replace(/(data-version=")[^"]*"/, `$1${v}"`).replace(/(<p class="vl-ver" id="vl-ver">v )[^<]*/, `$1${v}`), false);
 writeFileSync("version.json", JSON.stringify({ version: v }) + "\n");
 console.log("Version estampillée :", v);

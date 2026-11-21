@@ -134,3 +134,9 @@ body.vols .sitenav .sn-logo b{color:#38bdf8!important}
 #vols .vl-tabs .chip[aria-pressed="true"]{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
 #vols .vl-tabs .chip[aria-pressed="true"] .vl-ic{color:#fff}
 .vl-ic{flex:none;min-width:18px}
+
+.vl-ver{margin:14px 0 0;text-align:center;color:#9db3dc;font-size:12px;direction:ltr}
+.vl-upd{position:fixed;inset-inline:12px;top:60px;z-index:40;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;max-width:520px;margin-inline:auto;padding:12px 16px;border-radius:14px;background:#fff;color:#0b1f4b;box-shadow:0 16px 40px -12px #0a1a40aa;font-weight:600}
+.vl-upd[hidden]{display:none}
+.vl-upd button{font:inherit;font-weight:700;min-height:40px;padding:0 18px;border:0;border-radius:999px;background:#1d4ed8;color:#fff;cursor:pointer}
+@media print{.vl-upd,.vl-ver{display:none!important}}
