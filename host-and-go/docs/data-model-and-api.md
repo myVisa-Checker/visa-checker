@@ -15,6 +15,7 @@
 - `moderation_reviews`
 - `applications`
 - `application_terms_versions`
+- `application_acceptances`
 - `consents`
 - `contact_shares`
 - `reports`
@@ -36,119 +37,29 @@
 - Transactions pour les opérations atomiques.
 - Historique conservé.
 
-## 3. Schéma SQL de base
+## 3. Schéma SQL
 
-```sql
-PRAGMA foreign_keys = ON;
+Le schéma complet (21 tables prévues + `application_acceptances`) est dans :
 
-CREATE TABLE offers (
-    id TEXT PRIMARY KEY,
-    host_user_id TEXT NOT NULL,
-    current_version INTEGER NOT NULL DEFAULT 1,
-    moderation_status TEXT NOT NULL DEFAULT 'PENDING'
-      CHECK (moderation_status IN ('PENDING','APPROVED','REJECTED')),
-    compliance_status TEXT NOT NULL DEFAULT 'UNKNOWN'
-      CHECK (compliance_status IN ('UNKNOWN','CLEARED','BLOCKED')),
-    publication_status TEXT NOT NULL DEFAULT 'INACTIVE'
-      CHECK (publication_status IN ('INACTIVE','ACTIVE','SUSPENDED')),
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL,
-    FOREIGN KEY (host_user_id) REFERENCES users(id) ON DELETE RESTRICT,
-    CHECK (current_version >= 1)
-);
+- `migrations/0001_foundation.sql` : tables, contraintes, index, triggers d'immutabilité ;
+- `migrations/0002_seed_countries.sql` : les 7 pays initiaux, tous en `RESEARCH`.
 
-CREATE TABLE offer_versions (
-    offer_id TEXT NOT NULL,
-    version INTEGER NOT NULL,
-    terms_json TEXT NOT NULL,
-    terms_hash TEXT NOT NULL,
-    created_at TEXT NOT NULL,
-    PRIMARY KEY (offer_id, version),
-    FOREIGN KEY (offer_id) REFERENCES offers(id) ON DELETE RESTRICT,
-    CHECK (version >= 1)
-);
+Garanties portées par le schéma :
+- clés étrangères en `ON DELETE RESTRICT` ;
+- `offer_versions`, `application_terms_versions`, `application_acceptances`
+  et `audit_events` immuables (triggers) ;
+- une règle pays ne peut être `VERIFIED` sans source officielle, dates
+  et responsable ;
+- une seule candidature active par voyageur et par offre ;
+- acceptations, consentements et partages liés à une version précise
+  des conditions ;
+- un signalement clos exige un motif.
 
-CREATE TABLE applications (
-    id TEXT PRIMARY KEY,
-    offer_id TEXT NOT NULL,
-    traveler_user_id TEXT NOT NULL,
-    offer_version INTEGER NOT NULL,
-    status TEXT NOT NULL DEFAULT 'PENDING'
-      CHECK (status IN (
-        'PENDING','ACCEPTED','REJECTED','WITHDRAWN','CANCELLED'
-      )),
-    created_at TEXT NOT NULL,
-    FOREIGN KEY (offer_id, offer_version)
-      REFERENCES offer_versions(offer_id, version),
-    FOREIGN KEY (traveler_user_id)
-      REFERENCES users(id) ON DELETE RESTRICT
-);
-
-CREATE UNIQUE INDEX uq_application_active
-ON applications(offer_id, traveler_user_id)
-WHERE status IN ('PENDING','ACCEPTED');
-
-CREATE TABLE application_acceptances (
-    application_id TEXT NOT NULL,
-    terms_version INTEGER NOT NULL,
-    actor_user_id TEXT NOT NULL,
-    accepted_at TEXT NOT NULL,
-    PRIMARY KEY (application_id, terms_version, actor_user_id),
-    FOREIGN KEY (application_id)
-      REFERENCES applications(id) ON DELETE RESTRICT,
-    FOREIGN KEY (actor_user_id)
-      REFERENCES users(id) ON DELETE RESTRICT
-);
-
-CREATE TABLE idempotency_keys (
-    scope TEXT NOT NULL,
-    idempotency_key TEXT NOT NULL,
-    request_hash TEXT NOT NULL,
-    response_json TEXT,
-    created_at TEXT NOT NULL,
-    PRIMARY KEY (scope, idempotency_key)
-);
-
-CREATE TABLE notification_outbox (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    event_type TEXT NOT NULL,
-    payload_json TEXT NOT NULL,
-    status TEXT NOT NULL DEFAULT 'PENDING'
-      CHECK (status IN ('PENDING','PROCESSING','SENT','FAILED','DEAD')),
-    attempts INTEGER NOT NULL DEFAULT 0 CHECK (attempts >= 0),
-    available_at TEXT NOT NULL,
-    created_at TEXT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT
-);
-
-CREATE TABLE notification_deliveries (
-    id TEXT PRIMARY KEY,
-    outbox_id TEXT NOT NULL,
-    channel TEXT NOT NULL CHECK (channel IN ('EMAIL','IN_APP','SMS')),
-    provider_reference TEXT,
-    status TEXT NOT NULL CHECK (status IN ('PENDING','SENT','FAILED')),
-    delivered_at TEXT,
-    FOREIGN KEY (outbox_id)
-      REFERENCES notification_outbox(id) ON DELETE RESTRICT
-);
-
-CREATE TABLE notification_preferences (
-    user_id TEXT NOT NULL,
-    channel TEXT NOT NULL,
-    enabled INTEGER NOT NULL CHECK (enabled IN (0,1)),
-    updated_at TEXT NOT NULL,
-    PRIMARY KEY (user_id, channel),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT
-);
-
-CREATE INDEX idx_outbox_pending
-ON notification_outbox(status, available_at);
-```
-
-Ce SQL constitue un socle partiel de conception. Il dépend notamment
-de la création préalable de la table `users` et ne représente pas
-l'ensemble des migrations de production.
+Limites connues :
+- `offers.current_version` est un invariant applicatif, non une clé étrangère ;
+- pas de table pour les jetons à usage unique (vérification email,
+  réinitialisation de mot de passe) : à ajouter avec la phase Identité ;
+- schéma testé sous SQLite, pas encore sous D1.
 
 ## 4. API envisagée
 

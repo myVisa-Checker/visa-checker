@@ -20,7 +20,7 @@
     },
     {
       "path": "docs/data-model-and-api.md",
-      "sha256": "c52858eadb6bf5a86113324a41633f44074aee24d692cd988119a051dd13942f"
+      "sha256": "edb4112500be405f4f79cceff75455abed9ff936f59a4f831d54c3a72f3643d1"
     },
     {
       "path": "docs/implementation-plan.md",
@@ -45,6 +45,14 @@
     {
       "path": "examples/publication-eligibility.ts",
       "sha256": "3a42513b36642f4edfce0588df6d48dbfa84f2a4e1dbea5a4e4b8621e068412c"
+    },
+    {
+      "path": "migrations/0001_foundation.sql",
+      "sha256": "e93202ce04257ea14edb062f36ad4c6c5aa82bc08cf398830969a62f03c902e8"
+    },
+    {
+      "path": "migrations/0002_seed_countries.sql",
+      "sha256": "9d1f00c79eb235d9ef3bc167597dec08bb87b5a11a3d351697297e14c4c74a6c"
     }
   ]
 }
