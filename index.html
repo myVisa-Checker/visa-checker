@@ -94,7 +94,8 @@
 
   <div class="hero" id="home"></div>
 
-  <!-- Teaser Ausbildung : accueil uniquement, aucun lien ni bouton (parcours à venir). Langue = celle de la page ; l'arabe affiche la version anglaise. -->
+  <!-- Teaser Ausbildung : accueil uniquement, aucun lien ni bouton (parcours à venir). Gabarit inerte : visa-app.js l'insère dans le hero, juste après la carte « Où partez-vous ? ». Langue = celle de la page (FR, EN, AR). -->
+  <template id="aus-tpl">
   <section class="aus-teaser" id="ausbildung-teaser" aria-label="Ausbildung">
     <div class="aus-card">
       <div class="aus-in" lang="fr">
@@ -123,8 +124,22 @@
           <li><span class="aus-n" aria-hidden="true">03</span><b>PREPARE</b><span>Prepare your move</span></li>
         </ol>
       </div>
+      <div class="aus-in" lang="ar" dir="rtl">
+        <div class="aus-main">
+          <p class="aus-status"><span class="aus-dot" aria-hidden="true"></span>قريباً</p>
+          <p class="aus-word">AUSBILDUNG</p>
+          <h2 class="aus-h">مستقبلك في ألمانيا يبدأ من هنا.</h2>
+          <p class="aus-p">مسار Ausbildung قادم قريباً: اكتشف التكوين المهني بالتناوب في ألمانيا، واعثر على ما يناسبك، وحضّر لانتقالك.</p>
+        </div>
+        <ol class="aus-steps">
+          <li><span class="aus-n" aria-hidden="true">01</span><b>الاكتشاف</b><span>استكشف المسارات</span></li>
+          <li><span class="aus-n" aria-hidden="true">02</span><b>المطابقة</b><span>اعثر على ما يناسبك</span></li>
+          <li><span class="aus-n" aria-hidden="true">03</span><b>التحضير</b><span>حضّر لانتقالك</span></li>
+        </ol>
+      </div>
     </div>
   </section>
+  </template>
 
   <div class="panel" id="mode"></div>
 

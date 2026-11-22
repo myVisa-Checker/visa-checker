@@ -1147,6 +1147,7 @@ function homeHtml(t){
   if(!cur.ready){h+='<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+(S.origin==='tn'?t.soonText:ORI_SOON[S.origin][L])+'</p></div>'}
   h+=evCardHtml();
   h+='</div>';
+  var aus=document.getElementById("aus-tpl");if(aus)h+=aus.innerHTML;
   h+='<div class="side">'+(S.origin==='tn'?needsHtml(t):'')+photoHtml()+'</div>';
   h+=hfaqHtml();
   var whyIcons=["✦","◎","文","↗","✓"];
