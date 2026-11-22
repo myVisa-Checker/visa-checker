@@ -1,0 +1,50 @@
+{
+  "archive": "archive_complete.zip",
+  "root": "host-and-go",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "2341c31eb0c7b04b085ca98d94feb910448a693ce511a3d022997107a63e6f86"
+    },
+    {
+      "path": "config/project-decisions.json",
+      "sha256": "0c7871a4b0ee20f4615a528709e72dcbce500c298c3b03216b863740ae5d5e1a"
+    },
+    {
+      "path": "docs/architecture-foundation.md",
+      "sha256": "7a0bf6c3fbf72ba8d31d1c2a440929c07f3799e07a41006f9c785a869e22fa81"
+    },
+    {
+      "path": "docs/build-index.md",
+      "sha256": "af736ea859db5a275b3c92c9d64d25cbac8512eb6d6e243ef6d9433568c85c3f"
+    },
+    {
+      "path": "docs/data-model-and-api.md",
+      "sha256": "c52858eadb6bf5a86113324a41633f44074aee24d692cd988119a051dd13942f"
+    },
+    {
+      "path": "docs/implementation-plan.md",
+      "sha256": "af0d95b7b2d2e143bc223b8a00bc0f7c2de6c1eadaf927dfb461e32d7539acd1"
+    },
+    {
+      "path": "docs/limitations-and-provenance.md",
+      "sha256": "b111a791df4d55f37f5280b127425b116b9bb36953505762aa4631c2eecc3742"
+    },
+    {
+      "path": "docs/security-and-compliance.md",
+      "sha256": "caf3a7eb9909fb5523a6bb61a9b7eecc244312c71e00ae9bc76850380ad0754e"
+    },
+    {
+      "path": "examples/compliance-decision.ts",
+      "sha256": "309850d815a33ddcda016f2c8f9d9ab05f4f3561063205d20f9c2ce62fd1a4b7"
+    },
+    {
+      "path": "examples/offer-eligibility.ts",
+      "sha256": "8aa5521c18883194800cd30934ea691158e7ba86c653d068e925beafd1b306e3"
+    },
+    {
+      "path": "examples/publication-eligibility.ts",
+      "sha256": "3a42513b36642f4edfce0588df6d48dbfa84f2a4e1dbea5a4e4b8621e068412c"
+    }
+  ]
+}

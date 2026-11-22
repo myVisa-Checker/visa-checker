@@ -1,0 +1,25 @@
+{
+  "project": "Host & Go",
+  "parent_product": "CheckMyVisa.org",
+  "language": "fr",
+  "architecture": "modular_monolith",
+  "backend_candidate": "Cloudflare Workers",
+  "database_candidate": "Cloudflare D1 / SQLite - provisional",
+  "host_publication_price_at_launch": 0,
+  "traveler_search_price_at_launch": 0,
+  "internal_messaging_in_mvp": false,
+  "internal_payments_in_mvp": false,
+  "passport_collection_during_discovery": false,
+  "country_statuses": {
+    "Rwanda": "RESEARCH",
+    "Afrique du Sud": "RESEARCH",
+    "Kenya": "RESEARCH",
+    "Tanzanie": "RESEARCH",
+    "Ouganda": "RESEARCH",
+    "Sénégal": "RESEARCH",
+    "Ghana": "RESEARCH"
+  },
+  "deployment": "manual",
+  "github_actions": false,
+  "source_status": "reconstructed_from_available_session_context"
+}
