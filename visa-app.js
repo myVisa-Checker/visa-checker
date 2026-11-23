@@ -1148,6 +1148,7 @@ function homeHtml(t){
   h+=evCardHtml();
   h+='</div>';
   var aus=document.getElementById("aus-tpl");if(aus)h+=aus.innerHTML;
+  var hg=document.getElementById("hg-tpl");if(hg)h+=hg.innerHTML;
   h+='<div class="side">'+(S.origin==='tn'?needsHtml(t):'')+photoHtml()+'</div>';
   h+=hfaqHtml();
   var whyIcons=["✦","◎","文","↗","✓"];
