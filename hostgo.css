@@ -63,3 +63,8 @@
 .hg-form-ok{margin:12px 0 0;color:#0a6b3d;font-weight:700;font-size:15px}
 .hg-form .hg-main-cta{border:0;cursor:pointer;margin-top:14px;font:inherit;font-weight:850}
 .hg-form .hg-main-cta[disabled]{opacity:.6;cursor:wait}
+/* Photos des thèmes (extraits de la maquette), fondues sous la couleur du thème ; sans photo : couleur seule. */
+.hg-media{position:relative;overflow:hidden}
+.hg-media:before{content:"";position:absolute;inset:0;background:var(--img,none) center/cover no-repeat;opacity:.58}
+.hg-media svg{position:relative;z-index:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
+.t-family{--img:url('./images/hostgo/t-family.webp')}.t-farm{--img:url('./images/hostgo/t-farm.webp')}.t-guesthouse{--img:url('./images/hostgo/t-guesthouse.webp')}.t-exchange{--img:url('./images/hostgo/t-exchange.webp')}
