@@ -96,53 +96,12 @@
 
   <div class="hero" id="home"></div>
 
-  <!-- Carte Ausbildung : accueil uniquement, lien vers ./ausbildung/ (questionnaire en français). Gabarit inerte : visa-app.js l'insère dans le hero, juste après la carte « Où partez-vous ? ». Langue = celle de la page (FR, EN, AR). -->
+  <!-- Carte Ausbildung : accueil uniquement. Visuel compact (images/ausbildung-card-*.webp) dont la carte entière est un lien vers ./ausbildung/ (sélection des métiers). Gabarit inerte : visa-app.js l'insère dans le hero, juste après la carte « Où partez-vous ? ». Langue = celle de la page (FR, EN, AR) ; le visuel est en français, seul le texte alternatif change. -->
   <template id="aus-tpl">
   <section class="aus-teaser" id="ausbildung-teaser" aria-label="Ausbildung">
-    <div class="aus-card">
-      <div class="aus-in" lang="fr">
-        <div class="aus-main">
-          <p class="aus-status"><span class="aus-dot" aria-hidden="true"></span>NOUVEAU</p>
-          <p class="aus-word">AUSBILDUNG</p>
-          <h2 class="aus-h">Votre avenir en Allemagne commence ici.</h2>
-          <p class="aus-p">Découvrez la formation professionnelle en alternance en Allemagne : répondez à quelques questions et trouvez les métiers qui vous correspondent.</p>
-          <a class="aus-cta" href="./ausbildung/">Trouver mon métier<span aria-hidden="true"> →</span></a>
-        </div>
-        <ol class="aus-steps">
-          <li><span class="aus-n" aria-hidden="true">01</span><b>DÉCOUVRIR</b><span>Explorez les filières</span></li>
-          <li><span class="aus-n" aria-hidden="true">02</span><b>MATCHER</b><span>Trouvez le bon profil</span></li>
-          <li><span class="aus-n" aria-hidden="true">03</span><b>PRÉPARER</b><span>Préparez votre départ</span></li>
-        </ol>
-      </div>
-      <div class="aus-in" lang="en" dir="ltr">
-        <div class="aus-main">
-          <p class="aus-status"><span class="aus-dot" aria-hidden="true"></span>NEW</p>
-          <p class="aus-word">AUSBILDUNG</p>
-          <h2 class="aus-h">Your future in Germany starts here.</h2>
-          <p class="aus-p">Explore dual vocational training in Germany: answer a few questions and find the trades that fit you. The questionnaire is currently in French only.</p>
-          <a class="aus-cta" href="./ausbildung/">Find my trade<span aria-hidden="true"> →</span></a>
-        </div>
-        <ol class="aus-steps">
-          <li><span class="aus-n" aria-hidden="true">01</span><b>DISCOVER</b><span>Explore the options</span></li>
-          <li><span class="aus-n" aria-hidden="true">02</span><b>MATCH</b><span>Find the right fit</span></li>
-          <li><span class="aus-n" aria-hidden="true">03</span><b>PREPARE</b><span>Prepare your move</span></li>
-        </ol>
-      </div>
-      <div class="aus-in" lang="ar" dir="rtl">
-        <div class="aus-main">
-          <p class="aus-status"><span class="aus-dot" aria-hidden="true"></span>جديد</p>
-          <p class="aus-word">AUSBILDUNG</p>
-          <h2 class="aus-h">مستقبلك في ألمانيا يبدأ من هنا.</h2>
-          <p class="aus-p">اكتشف التكوين المهني بالتناوب في ألمانيا: أجب عن بضعة أسئلة واعثر على المهن التي تناسبك. الاستبيان متاح حالياً بالفرنسية فقط.</p>
-          <a class="aus-cta" href="./ausbildung/">اعثر على مهنتي<span aria-hidden="true"> ←</span></a>
-        </div>
-        <ol class="aus-steps">
-          <li><span class="aus-n" aria-hidden="true">01</span><b>الاكتشاف</b><span>استكشف المسارات</span></li>
-          <li><span class="aus-n" aria-hidden="true">02</span><b>المطابقة</b><span>اعثر على ما يناسبك</span></li>
-          <li><span class="aus-n" aria-hidden="true">03</span><b>التحضير</b><span>حضّر لانتقالك</span></li>
-        </ol>
-      </div>
-    </div>
+    <a class="aus-in aus-link" lang="fr" href="./ausbildung/"><img src="./images/ausbildung-card-480.webp" srcset="./images/ausbildung-card-480.webp 480w, ./images/ausbildung-card-800.webp 800w" sizes="(min-width:900px) 340px, 85vw" width="480" height="691" loading="lazy" decoding="async" alt="Ausbildung : plus de 10 métiers disponibles. Choisissez votre métier et commencez votre parcours en Allemagne. Découvrir mon métier."></a>
+    <a class="aus-in aus-link" lang="en" dir="ltr" href="./ausbildung/"><img src="./images/ausbildung-card-480.webp" srcset="./images/ausbildung-card-480.webp 480w, ./images/ausbildung-card-800.webp 800w" sizes="(min-width:900px) 340px, 85vw" width="480" height="691" loading="lazy" decoding="async" alt="Ausbildung: more than 10 trades available. Choose your trade and start your path in Germany. Find my trade (the questionnaire is in French only)."></a>
+    <a class="aus-in aus-link" lang="ar" dir="rtl" href="./ausbildung/"><img src="./images/ausbildung-card-480.webp" srcset="./images/ausbildung-card-480.webp 480w, ./images/ausbildung-card-800.webp 800w" sizes="(min-width:900px) 340px, 85vw" width="480" height="691" loading="lazy" decoding="async" alt="Ausbildung: أكثر من 10 مهن متاحة. اختر مهنتك وابدأ مسارك في ألمانيا. اعثر على مهنتي (الاستبيان بالفرنسية فقط)."></a>
   </section>
   </template>
 

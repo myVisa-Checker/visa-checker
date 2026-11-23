@@ -37,6 +37,8 @@ const PRECACHE = [
   "images/aicha-avatar.webp",
   "images/joury-avatar.webp",
   "images/saden-avatar.webp",
+  "images/ausbildung-card-480.webp",
+  "images/ausbildung-card-800.webp",
   "joury.css",
   "joury.js",
   "redact.js",
