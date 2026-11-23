@@ -445,5 +445,13 @@ SI.add({
  "Passeport de l'enfant, acte de naissance, autorisation des parents, voyage avec un seul parent ou un tiers : les documents à prévoir pour déposer et voyager sereinement.": [
   "Child's passport, birth certificate, parental consent, travelling with one parent or a third party: the documents to prepare to apply and travel with peace of mind.",
   "جواز الطفل وعقد الازدياد وإذن الوالدين والسفر مع أحد الوالدين أو شخص آخر: المستندات التي ينبغي تحضيرها للتقديم والسفر بطمأنينة."
+ ],
+ "Ausbildung en Allemagne : comprendre la formation en alternance avant de partir": [
+  "Ausbildung in Germany: understanding dual vocational training before you leave",
+  "التكوين المهني بالتناوب في ألمانيا (Ausbildung): افهمه جيداً قبل السفر"
+ ],
+ "Contrat, langue, démarches de séjour et erreurs à éviter, avec les sources officielles à consulter.": [
+  "Contract, language, residence steps and mistakes to avoid, with the official sources to consult.",
+  "العقد واللغة وإجراءات الإقامة والأخطاء الواجب تفاديها، مع المصادر الرسمية التي ينبغي الرجوع إليها."
  ]
 });

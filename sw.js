@@ -104,6 +104,7 @@ const PRECACHE = [
   "i18n/guide-lettre-invitation.js",
   "i18n/guide-justificatifs-professionnels.js",
   "i18n/guide-visa-etudiant.js",
+  "i18n/guide-ausbildung.js",
   "i18n/guide-visite-familiale.js",
   "i18n/guide-visa-affaires.js",
   "i18n/guide-traduction-legalisation.js",
