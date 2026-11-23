@@ -13,7 +13,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
+for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js","hostgo.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -221,6 +221,9 @@ try {
   ok("rdv-worker : signalements, confirmation à 3 appareils, délais, limites", false, String(e.stderr || e.message).split("\n")[0]);
 }
 ok("rdv-direct.html : CSP, script externe et lien sitemap", /script-src 'self'/.test(readFileSync("rdv-direct.html", "utf8")) && !/<script>[^<]/.test(readFileSync("rdv-direct.html", "utf8")) && /rdv-direct\.html/.test(readFileSync("sitemap.xml", "utf8")) && /rdv-direct\.html/.test(readFileSync("sw.js", "utf8")));
+ok("hostgo.html : CSP, script externe, sitemap et cache hors ligne", /script-src 'self'/.test(read("hostgo.html")) && !/<script>[^<]/.test(read("hostgo.html")) && /hostgo\.html/.test(read("sitemap.xml")) && /hostgo\.html/.test(read("sw.js")) && /hostgo\.css/.test(read("sw.js")));
+ok("vitrine Host & Go : modèle d'accueil branché, sans les six profils", /id="hg-tpl"/.test(read("index.html")) && /getElementById\("hg-tpl"\)/.test(read("visa-app.js")) && !/Host &amp; Work|Étudiant/.test(read("index.html").split('id="hg-tpl"')[1].split("</template>")[0]));
+ok("images Host & Go présentes et listées dans le cache hors ligne", ["hero","voyageur","hote","work","etudiant","pro","famille"].every((n) => existsSync("images/hostgo/" + n + ".webp") && read("sw.js").includes("images/hostgo/" + n + ".webp")));
 
 console.log("Worker visa-flight : routes hôtels (exécution)");
 try {
