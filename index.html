@@ -68,7 +68,6 @@
     <li><a href="./?accueil=1" aria-current="page">Accueil</a></li>
     <li><a href="./partenaires.html">Partenaires</a></li>
     <li><a href="./guide-visa.html">Guide</a></li>
-    <li><a href="./ausbildung/">Ausbildung</a></li>
     <li><a href="./a-propos.html">À propos</a></li>
     <li><a href="./contact.html">Contact</a></li>
   </ul>
@@ -96,7 +95,7 @@
 
   <div class="hero" id="home"></div>
 
-  <!-- Carte Ausbildung : accueil uniquement. Visuel compact (images/ausbildung-card-*.webp) dont la carte entière est un lien vers ./ausbildung/ (sélection des métiers). Gabarit inerte : visa-app.js l'insère dans le hero, juste après la carte « Où partez-vous ? ». Langue = celle de la page (FR, EN, AR) ; le visuel est en français, seul le texte alternatif change. -->
+  <!-- Carte Ausbildung : accueil uniquement. Visuel compact (images/ausbildung-card-*.webp) dont la carte entière est un lien vers ./ausbildung/ (sélection des métiers). Gabarit inerte : visa-app.js l'insère dans la rangée .vc-more, sous la zone principale et avant la FAQ. Langue = celle de la page (FR, EN, AR) ; le visuel est en français, seul le texte alternatif change. -->
   <template id="aus-tpl">
   <section class="aus-teaser" id="ausbildung-teaser" aria-label="Ausbildung">
     <a class="aus-in aus-link" lang="fr" href="./ausbildung/"><img src="./images/ausbildung-card-480.webp" srcset="./images/ausbildung-card-480.webp 480w, ./images/ausbildung-card-800.webp 800w" sizes="(min-width:900px) 340px, 85vw" width="480" height="691" loading="lazy" decoding="async" alt="Ausbildung : plus de 10 métiers disponibles. Choisissez votre métier et commencez votre parcours en Allemagne. Découvrir mon métier."></a>
@@ -105,7 +104,7 @@
   </section>
   </template>
 
-  <!-- Vitrine Host & Go : accueil uniquement, lien vers ./hostgo.html (page « Join As… », où se trouvent les six profils). Gabarit inerte : visa-app.js l'insère dans le hero, après la carte Ausbildung. Langue = celle de la page (FR, EN, AR). -->
+  <!-- Vitrine Host & Go : accueil uniquement, lien vers ./hostgo.html (page « Join As… », où se trouvent les six profils). Gabarit inerte : visa-app.js l'insère dans la rangée .vc-more, à côté de la carte Ausbildung. Langue = celle de la page (FR, EN, AR). -->
   <template id="hg-tpl">
   <section class="hg-teaser" id="hostgo-teaser" aria-label="Host &amp; Go">
     <div class="hg-card">

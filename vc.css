@@ -1140,7 +1140,7 @@ html[lang="ar"] .hfaq,html[lang="ar"] .hfaq summary{font-family:var(--f-ar)}
 :root[data-theme="dark"] .hfaq-i p{color:#b8c9e6}
 @media (min-width:900px){
 .hfaq-list{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
-body[data-step="0"] .hfaq{grid-column:1/-1;grid-row:3}
+body[data-step="0"] .hfaq{grid-column:1/-1;grid-row:4}
 }
 
 /* Required-document detection: explicit live list, independent of completion counters. */
@@ -1364,7 +1364,7 @@ body[data-step="0"] .vc-intro{grid-column:1/-1}
 #gr-buy{margin-top:.6rem}.gr-link{margin:.9rem 0 0;font-size:.8rem}
 @media(max-width:600px){.gr-figures{grid-template-columns:1fr}}
 
-/* Carte Ausbildung (accueil uniquement, rendue dans le hero après la carte « Où partez-vous ? ») : visuel compact, carte entière cliquable vers ./ausbildung/. Même rendu en thème clair et sombre. */
+/* Carte Ausbildung (accueil uniquement, rendue dans la rangée .vc-more, avant la FAQ) : visuel compact, carte entière cliquable vers ./ausbildung/. Même rendu en thème clair et sombre. */
 .aus-teaser .aus-in{display:none}
 html[lang="fr"] .aus-teaser .aus-in[lang="fr"],html[lang="en"] .aus-teaser .aus-in[lang="en"],html[lang="ar"] .aus-teaser .aus-in[lang="ar"]{display:block}
 body[data-step]:not([data-step="0"]) .aus-teaser{display:none}
@@ -1372,9 +1372,11 @@ body[data-step]:not([data-step="0"]) .aus-teaser{display:none}
 .aus-teaser .aus-link img{display:block;width:100%;height:auto;border-radius:inherit}
 .aus-teaser .aus-link:hover{transform:translateY(-2px);box-shadow:0 26px 48px -26px rgba(5,13,34,.95)}
 .aus-teaser .aus-link:focus-visible{outline:3px solid #ffce00;outline-offset:4px}
+.vc-more{display:flex;flex-direction:column;gap:22px;margin-top:26px}
+body[data-step]:not([data-step="0"]) .vc-more{display:none}
 @media (min-width:900px){
- body[data-step="0"] .aus-teaser{grid-column:1/-1;margin-top:40px}
- .aus-teaser .aus-link{width:340px}
+ body[data-step="0"] .vc-more{grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px;align-items:stretch;width:100%;max-width:1080px;margin:40px auto 0}
+ .vc-more .aus-teaser .aus-link{width:300px;margin:0}
 }
 @media (prefers-reduced-motion:reduce){.aus-teaser .aus-link{transition:none}.aus-teaser .aus-link:hover{transform:none}}
 
