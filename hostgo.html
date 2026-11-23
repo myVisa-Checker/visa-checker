@@ -33,18 +33,17 @@
     </div>
   </section>
   <section class="hg-join" id="join" aria-labelledby="hg-join-title">
+    <div class="hg-roles" role="group" aria-labelledby="hg-roles-label">
+      <p class="hg-roles-label" id="hg-roles-label" data-i="rolesLabel">Je suis…</p>
+      <div class="hg-roles-row">
+        <button type="button" class="hg-role" data-role="host" aria-pressed="false"><span class="hg-role-ico" aria-hidden="true"></span><strong data-i="host">Host</strong><small data-i="hostDesc"></small></button>
+        <button type="button" class="hg-role" data-role="traveler-worker" aria-pressed="false"><span class="hg-role-ico" aria-hidden="true"></span><strong data-i="traveller">Traveller / Worker</strong><small data-i="travellerDesc"></small></button>
+      </div>
+    </div>
     <h2 id="hg-join-title"><span data-i="join">Join As...</span></h2>
     <p class="hg-sub" data-i="sub">Choose how you want to be part of the Host &amp; Go community</p>
-    <div class="hg-grid">
-      <a class="hg-card" href="?role=host" aria-label="Join as Host">
-        <img src="./images/hostgo/hote.webp" alt="Host welcoming a traveller" width="240" height="255" loading="lazy">
-        <span class="hg-card-content"><span class="hg-icon" aria-hidden="true">⌂</span><strong data-i="host">Host</strong><small data-i="hostDesc">Welcome travellers and share your home</small></span><span class="hg-arrow" aria-hidden="true">→</span>
-      </a>
-      <a class="hg-card" href="?role=traveler-worker" aria-label="Join as Traveller or Worker">
-        <img src="./images/hostgo/voyageur.webp" alt="Traveller exploring a new place" width="240" height="255" loading="lazy">
-        <span class="hg-card-content"><span class="hg-icon" aria-hidden="true">✈</span><strong data-i="traveller">Traveller / Worker</strong><small data-i="travellerDesc">Discover places, share your skills and experience local life</small></span><span class="hg-arrow" aria-hidden="true">→</span>
-      </a>
-    </div>
+    <div class="hg-grid" id="hg-grid" role="group" aria-labelledby="hg-join-title"></div>
+    <p class="hg-status" id="hg-status" role="status" aria-live="polite"></p>
   </section>
   <section class="hg-trust" id="safety" aria-label="Community values">
     <div><b aria-hidden="true">✓</b><span data-i="secure">Safe &amp; Secure<br>Community</span></div>
