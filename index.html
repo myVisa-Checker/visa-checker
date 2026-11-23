@@ -67,6 +67,7 @@
     <li><a href="./?accueil=1" aria-current="page">Accueil</a></li>
     <li><a href="./partenaires.html">Partenaires</a></li>
     <li><a href="./guide-visa.html">Guide</a></li>
+    <li><a href="./ausbildung/">Ausbildung</a></li>
     <li><a href="./a-propos.html">À propos</a></li>
     <li><a href="./contact.html">Contact</a></li>
   </ul>
@@ -94,16 +95,17 @@
 
   <div class="hero" id="home"></div>
 
-  <!-- Teaser Ausbildung : accueil uniquement, aucun lien ni bouton (parcours à venir). Gabarit inerte : visa-app.js l'insère dans le hero, juste après la carte « Où partez-vous ? ». Langue = celle de la page (FR, EN, AR). -->
+  <!-- Carte Ausbildung : accueil uniquement, lien vers ./ausbildung/ (questionnaire en français). Gabarit inerte : visa-app.js l'insère dans le hero, juste après la carte « Où partez-vous ? ». Langue = celle de la page (FR, EN, AR). -->
   <template id="aus-tpl">
   <section class="aus-teaser" id="ausbildung-teaser" aria-label="Ausbildung">
     <div class="aus-card">
       <div class="aus-in" lang="fr">
         <div class="aus-main">
-          <p class="aus-status"><span class="aus-dot" aria-hidden="true"></span>BIENTÔT</p>
+          <p class="aus-status"><span class="aus-dot" aria-hidden="true"></span>NOUVEAU</p>
           <p class="aus-word">AUSBILDUNG</p>
           <h2 class="aus-h">Votre avenir en Allemagne commence ici.</h2>
-          <p class="aus-p">Le parcours Ausbildung arrive : découvrez la formation professionnelle en alternance en Allemagne, trouvez le bon match et préparez votre départ.</p>
+          <p class="aus-p">Découvrez la formation professionnelle en alternance en Allemagne : répondez à quelques questions et trouvez les métiers qui vous correspondent.</p>
+          <a class="aus-cta" href="./ausbildung/">Trouver mon métier<span aria-hidden="true"> →</span></a>
         </div>
         <ol class="aus-steps">
           <li><span class="aus-n" aria-hidden="true">01</span><b>DÉCOUVRIR</b><span>Explorez les filières</span></li>
@@ -113,10 +115,11 @@
       </div>
       <div class="aus-in" lang="en" dir="ltr">
         <div class="aus-main">
-          <p class="aus-status"><span class="aus-dot" aria-hidden="true"></span>COMING SOON</p>
+          <p class="aus-status"><span class="aus-dot" aria-hidden="true"></span>NEW</p>
           <p class="aus-word">AUSBILDUNG</p>
           <h2 class="aus-h">Your future in Germany starts here.</h2>
-          <p class="aus-p">The Ausbildung pathway is on its way: explore dual vocational training in Germany, find the right match and prepare your move.</p>
+          <p class="aus-p">Explore dual vocational training in Germany: answer a few questions and find the trades that fit you. The questionnaire is currently in French only.</p>
+          <a class="aus-cta" href="./ausbildung/">Find my trade<span aria-hidden="true"> →</span></a>
         </div>
         <ol class="aus-steps">
           <li><span class="aus-n" aria-hidden="true">01</span><b>DISCOVER</b><span>Explore the options</span></li>
@@ -126,10 +129,11 @@
       </div>
       <div class="aus-in" lang="ar" dir="rtl">
         <div class="aus-main">
-          <p class="aus-status"><span class="aus-dot" aria-hidden="true"></span>قريباً</p>
+          <p class="aus-status"><span class="aus-dot" aria-hidden="true"></span>جديد</p>
           <p class="aus-word">AUSBILDUNG</p>
           <h2 class="aus-h">مستقبلك في ألمانيا يبدأ من هنا.</h2>
-          <p class="aus-p">مسار Ausbildung قادم قريباً: اكتشف التكوين المهني بالتناوب في ألمانيا، واعثر على ما يناسبك، وحضّر لانتقالك.</p>
+          <p class="aus-p">اكتشف التكوين المهني بالتناوب في ألمانيا: أجب عن بضعة أسئلة واعثر على المهن التي تناسبك. الاستبيان متاح حالياً بالفرنسية فقط.</p>
+          <a class="aus-cta" href="./ausbildung/">اعثر على مهنتي<span aria-hidden="true"> ←</span></a>
         </div>
         <ol class="aus-steps">
           <li><span class="aus-n" aria-hidden="true">01</span><b>الاكتشاف</b><span>استكشف المسارات</span></li>
@@ -241,7 +245,7 @@
   <section class="bpn" id="bpn" aria-label="Bons plans" hidden></section>
   <section class="trd" id="trans" aria-label="Traducteurs assermentés" hidden></section>
   <footer>
-    <div class="links"><a href="./partenaires.html">Partenaires</a><a href="./guide-visa.html">Guide</a><a href="./a-propos.html">À propos</a><a href="./faq.html">FAQ</a><a href="./contact.html">Contact</a><a href="./confidentialite.html">Confidentialité</a><a href="./conditions.html">Conditions d'utilisation</a><a href="./mentions-legales.html">Mentions légales</a><a href="./cookies.html">Cookies</a><a href="./garantie.html">Garantie</a>
+    <div class="links"><a href="./partenaires.html">Partenaires</a><a href="./guide-visa.html">Guide</a><a href="./ausbildung/">Ausbildung</a><a href="./a-propos.html">À propos</a><a href="./faq.html">FAQ</a><a href="./contact.html">Contact</a><a href="./confidentialite.html">Confidentialité</a><a href="./conditions.html">Conditions d'utilisation</a><a href="./mentions-legales.html">Mentions légales</a><a href="./cookies.html">Cookies</a><a href="./garantie.html">Garantie</a>
 <a href="./rdv-direct.html">Rendez-vous en direct</a></div>
     <div class="links" id="links"></div>
     <p id="disc"></p>

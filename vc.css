@@ -1364,7 +1364,7 @@ body[data-step="0"] .vc-intro{grid-column:1/-1}
 #gr-buy{margin-top:.6rem}.gr-link{margin:.9rem 0 0;font-size:.8rem}
 @media(max-width:600px){.gr-figures{grid-template-columns:1fr}}
 
-/* Teaser Ausbildung (accueil uniquement, rendu dans le hero après la carte « Où partez-vous ? ») : couleurs propres au bloc, identiques en thème clair et sombre */
+/* Carte Ausbildung (accueil uniquement, rendue dans le hero après la carte « Où partez-vous ? », avec bouton vers ./ausbildung/) : couleurs propres au bloc, identiques en thème clair et sombre */
 .aus-teaser{--aus-n0:#050d22;--aus-n1:#0a1a3f;--aus-n2:#10295c;--aus-tx:#eef3ff;--aus-mu:#a9b8da;--aus-gold:#ffce00;--aus-red:#dd0000}
 .aus-teaser .aus-card{position:relative;overflow:hidden;isolation:isolate;padding:30px 20px 24px;border:1px solid rgba(255,255,255,.12);border-radius:24px;color:var(--aus-tx);background:radial-gradient(120% 80% at 100% 0%,rgba(74,126,236,.28),transparent 58%),linear-gradient(160deg,var(--aus-n2) 0%,var(--aus-n1) 48%,var(--aus-n0) 100%);box-shadow:0 28px 60px -34px rgba(5,13,34,.9)}
 .aus-teaser .aus-card:before{content:"";position:absolute;top:0;inset-inline-start:20px;width:84px;height:4px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,#000 0 33.34%,var(--aus-red) 33.34% 66.67%,var(--aus-gold) 66.67% 100%)}
@@ -1380,6 +1380,11 @@ body[data-step]:not([data-step="0"]) .aus-teaser{display:none}
 .aus-teaser .aus-word:after{content:"";display:block;width:56px;height:3px;margin-top:14px;border-radius:2px;background:var(--aus-gold)}
 .aus-teaser .aus-h{margin-top:16px;color:#fff;font:700 clamp(1.15rem,4.8vw,1.65rem)/1.25 var(--f-display);letter-spacing:-.01em;text-wrap:balance}
 .aus-teaser .aus-p{margin-top:10px;max-width:46ch;color:var(--aus-mu);font:400 15px/1.6 var(--f-body)}
+.aus-teaser .aus-cta{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:48px;margin-top:18px;padding:0 24px;border-radius:999px;background:var(--aus-gold);color:var(--aus-n0);font:700 15px/1 var(--f-body);text-decoration:none;box-shadow:0 10px 24px -12px rgba(255,206,0,.55);transition:transform .15s,background .15s}
+.aus-teaser .aus-cta:hover{background:#ffd934;transform:translateY(-1px)}
+.aus-teaser .aus-cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
+html[dir="rtl"] .aus-teaser .aus-cta{font-family:var(--f-ar)}
+@media (max-width:400px){.aus-teaser .aus-cta{display:flex;width:100%}}
 .aus-teaser .aus-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:26px;padding:0;list-style:none}
 .aus-teaser .aus-steps li{position:relative;display:flex;flex-direction:column;gap:3px;padding-top:24px;min-width:0}
 .aus-teaser .aus-steps li:before{content:"";position:absolute;top:0;inset-inline-start:0;width:12px;height:12px;box-sizing:border-box;border:2px solid var(--aus-gold);border-radius:50%;background:var(--aus-n1)}

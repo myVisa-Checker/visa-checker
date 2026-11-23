@@ -66,6 +66,7 @@ GitHub Actions conserve uniquement le déclenchement manuel (`workflow_dispatch`
 - `index.html` + `visa-app.js` : application principale.
 - `joury.html`, `aicha.html` + scripts associés : assistants.
 - `partenaires.html` + `partner-form.js` : espace partenaires.
+- `ausbildung/` : module Ausbildung Career Matcher (questionnaire d'orientation, catalogue, moteur, tests).
 - `sw.js`, `visa-pwa.js`, `manifest.json` : PWA.
 - `worker/visa-rules-worker.js` : API indicative d'éligibilité et contrôles passeport.
 - `worker/visa-proxy-worker.js`, `worker/visa-chat-worker.js` : Workers existants pour les fonctions proxy et assistants.

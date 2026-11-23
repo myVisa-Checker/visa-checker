@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ausbildung en Allemagne : trouvez votre métier | CheckMyVisa</title>
+<meta name="description" content="Répondez à quelques questions pour découvrir les métiers de l'Ausbildung (formation en alternance en Allemagne) qui correspondent à vos intérêts et à vos compétences. Orientation indicative, gratuite et sans document personnel.">
+<meta name="theme-color" content="#1d4ed8">
+<link rel="canonical" href="https://checkmyvisa.org/ausbildung/">
+<link rel="icon" href="../icons/icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CheckMyVisa">
+<meta property="og:title" content="Ausbildung en Allemagne : trouvez votre métier | CheckMyVisa">
+<meta property="og:description" content="Un questionnaire de 3 à 4 minutes pour découvrir les métiers de l'Ausbildung qui vous correspondent.">
+<meta property="og:url" content="https://checkmyvisa.org/ausbildung/">
+<meta property="og:image" content="https://checkmyvisa.org/hero-voyage.jpg">
+<link rel="stylesheet" href="../nav.css">
+<link rel="stylesheet" href="../site.css">
+<link rel="stylesheet" href="../brand.css">
+<link rel="stylesheet" href="./ausbildung.css">
+<script src="../site-i18n.js"></script>
+<script src="../i18n/common.js"></script>
+</head>
+<body>
+
+<nav class="sitenav" aria-label="Navigation principale">
+  <a class="sn-logo" href="../?accueil=1"><b>Check</b>MyVisa</a>
+  <ul>
+    <li><a href="../?accueil=1">Accueil</a></li>
+    <li><a href="../guide-visa.html">Guide</a></li>
+    <li><a href="./" aria-current="page">Ausbildung</a></li>
+    <li><a href="../a-propos.html">À propos</a></li>
+    <li><a href="../contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="aus" lang="fr" dir="ltr" data-no-i18n>
+  <nav class="crumbs" aria-label="Fil d'Ariane"><a href="../?accueil=1">Accueil</a> › <span>Ausbildung</span></nav>
+  <p id="langNote" class="lang-note" role="note" hidden></p>
+  <section class="hero">
+    <p class="eyebrow">VOTRE PROJET · ALLEMAGNE</p>
+    <h1>Trouvez une Ausbildung qui vous correspond.</h1>
+    <p>Quelques questions pour découvrir les métiers de la formation en alternance en Allemagne qui correspondent à vos intérêts, à vos compétences et à votre façon de travailler.</p>
+    <div class="trust"><span>✓ Gratuit</span><span>✓ 3–4 minutes</span><span>✓ Sans document personnel</span></div>
+  </section>
+
+  <noscript><p class="panel">Ce questionnaire nécessite JavaScript. Activez-le dans votre navigateur puis rechargez la page.</p></noscript>
+  <section id="loading" class="panel" role="status" aria-live="polite">Chargement du catalogue…</section>
+
+  <section id="quiz" class="panel" aria-label="Questionnaire" hidden>
+    <div class="progress-row"><span id="progress" aria-live="polite">Étape 1 sur 6</span><div class="track" id="progresstrack" role="progressbar" aria-label="Progression" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1"><i id="progressbar"></i></div></div>
+    <h2 id="questionTitle" tabindex="-1"></h2>
+    <p id="questionHint" class="muted"></p>
+    <div id="answers" class="options" role="group"></div>
+    <div id="skillArea" hidden></div>
+    <div id="mobilityArea" hidden>
+      <h3 id="mobilityTitle">Êtes-vous prêt(e) à déménager en Allemagne ?</h3>
+      <div class="options" role="radiogroup" aria-labelledby="mobilityTitle">
+        <label class="option"><input type="radio" name="mobility" value="yes"><span>Oui</span></label>
+        <label class="option"><input type="radio" name="mobility" value="no"><span>Non</span></label>
+        <label class="option"><input type="radio" name="mobility" value="consider"><span>Je dois encore réfléchir</span></label>
+      </div>
+    </div>
+    <p id="error" class="error" role="alert"></p>
+    <div class="actions"><button id="back" class="btn secondary" type="button" disabled>Retour</button><button id="next" class="btn primary" type="button">Continuer</button></div>
+  </section>
+
+  <section id="results" class="panel" aria-label="Résultats" hidden>
+    <p class="eyebrow">VOTRE ORIENTATION</p>
+    <h2 id="resultsTitle" tabindex="-1">Les métiers qui vous correspondent</h2>
+    <p class="muted">Ce classement est une première orientation, pas une promesse d'embauche.</p>
+    <div id="resultList"></div>
+    <div id="readiness" class="readiness"></div>
+    <div class="next-steps">
+      <h3>Et ensuite ?</h3>
+      <p>Une formation en Allemagne suppose aussi un dossier de séjour solide. Préparez vos pièces avec CheckMyVisa, puis vérifiez les règles sur les sites officiels.</p>
+      <a class="btn primary" id="toVisa" href="../?accueil=1">Préparer mon dossier de visa</a>
+      <p class="guide-link"><a href="../guide-ausbildung.html">Lire notre guide Ausbildung</a></p>
+    </div>
+    <div class="actions result-actions"><button id="restart" class="btn secondary" type="button">Recommencer</button><button id="print" class="btn secondary" type="button">Imprimer / enregistrer en PDF</button></div>
+  </section>
+
+  <p class="legal">Les durées et descriptions du catalogue sont des données de travail à vérifier auprès des sources officielles avant publication. Les exigences peuvent varier selon la formation, l'employeur et le lieu. Le résultat ne prédit ni l'obtention d'un contrat ni celle d'un visa. Aucune de vos réponses n'est envoyée ni enregistrée.</p>
+</main>
+
+<footer class="site">
+  <div class="inner">
+    <div class="fl">
+      <a href="../?accueil=1">Accueil</a>
+      <a href="../guide-visa.html">Guide</a>
+      <a href="./">Ausbildung</a>
+      <a href="../a-propos.html">À propos</a>
+      <a href="../faq.html">FAQ</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../confidentialite.html">Confidentialité</a>
+      <a href="../conditions.html">Conditions d'utilisation</a>
+      <a href="../mentions-legales.html">Mentions légales</a>
+      <a href="../cookies.html">Cookies</a>
+      <a href="../garantie.html">Garantie</a>
+      <a href="../rdv-direct.html">Rendez-vous en direct</a>
+    </div>
+    <p>Avertissement : CheckMyVisa est une plateforme privée et indépendante d'aide à la préparation administrative. Nous ne sommes affiliés à aucun gouvernement, ambassade, consulat, ni à aucun prestataire externe officiel (TLScontact, VFS Global, BLS International, etc.).</p>
+    <p>© 2026 CheckMyVisa.</p>
+  </div>
+</footer>
+<script src="./career-matcher.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>

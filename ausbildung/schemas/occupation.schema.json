@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ausbildung occupation catalogue",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "catalogue_status",
+    "occupations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "catalogue_status": {
+      "enum": [
+        "development_draft",
+        "verified_for_publication"
+      ]
+    },
+    "occupations": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title_de",
+          "title_fr",
+          "category",
+          "training_type",
+          "duration_months",
+          "interests",
+          "skills",
+          "environments",
+          "experience_domains",
+          "language_guidance"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "title_de": {
+            "type": "string",
+            "minLength": 3
+          },
+          "title_fr": {
+            "type": "string",
+            "minLength": 3
+          },
+          "category": {
+            "type": "string"
+          },
+          "training_type": {
+            "enum": [
+              "dual",
+              "regulated_school_based",
+              "school_based",
+              "other"
+            ]
+          },
+          "duration_months": {
+            "type": "integer",
+            "minimum": 12,
+            "maximum": 60
+          },
+          "interests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "environments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "experience_domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "language_guidance": {
+            "type": "object",
+            "required": [
+              "level",
+              "status"
+            ],
+            "properties": {
+              "level": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

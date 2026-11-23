@@ -6,18 +6,19 @@ import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import vm from "node:vm";
+import { posix } from "node:path";
 
 let pass = 0, fail = 0;
 const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok   " + name); } else { fail++; console.log("  FAIL " + name + (detail ? " : " + detail : "")); } };
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs"]) {
+for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
 console.log("JSON");
-for (const f of ["manifest.json", "rdv.json", "deals.json", "version.json", "rates.json"]) {
+for (const f of ["manifest.json", "rdv.json", "deals.json", "version.json", "rates.json", "ausbildung/data/occupations.json", "ausbildung/schemas/occupation.schema.json"]) {
   try { JSON.parse(read(f)); ok(f, true); } catch (e) { ok(f, false, e.message); }
 }
 
@@ -235,6 +236,32 @@ try {
   ok("hotels.js : réservation d'hôtel annoncée « bientôt » si le Worker la ferme", /booking_disabled/.test(hj) && (hj.match(/soon:/g) || []).length === 3);
   ok("hotels : fichiers dans le cache hors ligne", ["hotels.html", "hotels.js", "hotels.css", "images/hero-hotels.jpg"].every((f) => swc.includes('"' + f + '"') && existsSync(f)));
   ok("« Réservation d'hôtel » ouvre hotels.html seulement pour le propriétaire", /need==="hotel"&&ownerFlight\(\)\)\{location\.href="\.\/hotels\.html"/.test(read("visa-app.js")));
+}
+
+console.log("Ausbildung Career Matcher (module intégré dans /ausbildung/)");
+try {
+  execFileSync(process.execPath, ["ausbildung/tests/matcher.test.js"], { stdio: "inherit" });
+  ok("ausbildung : moteur, catalogue, schéma et vocabulaire du questionnaire", true);
+} catch (e) {
+  ok("ausbildung : moteur, catalogue, schéma et vocabulaire du questionnaire", false, String(e.stderr || e.message).split("\n")[0]);
+}
+{
+  const ah = read("ausbildung/index.html"), aa = read("ausbildung/app.js"), swa = read("sw.js"), idx = read("index.html"), cmn = read("visa-app.js");
+  const csp = (ah.match(/http-equiv="Content-Security-Policy" content="([^"]*)"/) || [])[1] || "";
+  ok("ausbildung/index.html : CSP stricte, aucun script inline, aucune ressource externe", /script-src 'self'/.test(csp) && /object-src 'none'/.test(csp) && /form-action 'none'/.test(csp) && !/script-src[^;]*'unsafe-inline'/.test(csp) && !/<script(?![^>]*\bsrc=)/.test(ah) && !/(?:src|href)="https?:\/\/(?!checkmyvisa\.org)/.test(ah.replace(/<link rel="canonical"[^>]*>/, "")));
+  ok("ausbildung/index.html : aucune requête réseau vers un tiers (connect-src 'self')", /connect-src 'self'(;|")/.test(csp));
+  const aref = [...ah.matchAll(/(?:src|href)="(\.{1,2}\/[^"#?]*)(?:\?[^"]*)?"/g)].map((m) => m[1]);
+  const missingA = [...new Set(aref)].filter((r) => !existsSync(posix.normalize("ausbildung/" + r)));
+  ok("ausbildung/index.html : fichiers référencés présents", missingA.length === 0, missingA.join(", "));
+  ok("ausbildung/app.js : catalogue chargé en relatif, aucun envoi de données", /fetch\("\.\/data\/occupations\.json"\)/.test(aa) && !/method\s*:\s*["']POST|sendBeacon|XMLHttpRequest|localStorage|sessionStorage|document\.cookie/.test(aa));
+  ok("ausbildung : accès visible dans la navigation de l'accueil et des pages de contenu", /<li><a href="\.\/ausbildung\/">Ausbildung<\/a><\/li>/.test(idx) && ["a-propos.html", "contact.html", "faq.html", "guide-visa.html", "partenaires.html"].every((f) => /<li><a href="\.\/ausbildung\/">Ausbildung<\/a><\/li>/.test(read(f))));
+  ok("ausbildung : libellés de navigation FR/EN/AR de l'accueil", (cmn.match(/"\.\/ausbildung\/":"Ausbildung"/g) || []).length === 3);
+  ok("accueil : carte Ausbildung active (lien en FR, EN et AR, plus de « bientôt »)", (idx.match(/class="aus-cta" href="\.\/ausbildung\/"/g) || []).length === 3 && !/BIENTÔT|COMING SOON|قريباً<\/p>/.test(idx.slice(idx.indexOf('<template id="aus-tpl">'), idx.indexOf("</template>"))));
+  ok("ausbildung : fichiers du module dans le cache hors ligne", ["ausbildung/", "ausbildung/ausbildung.css", "ausbildung/career-matcher.js", "ausbildung/app.js", "ausbildung/data/occupations.json"].every((f) => swa.includes('"' + f + '"')));
+  ok("service worker : catalogue Ausbildung servi hors ligne (règle JSON dédiée)", /isAusbildungData/.test(swa) && /ausbildung\\\/data/.test(swa));
+  ok("ausbildung : passerelle vers le dossier visa et impression du résultat", /id="toVisa" href="\.\.\/\?accueil=1"/.test(ah) && /id="print"/.test(ah) && /window\.print\(\)/.test(aa) && /@media print/.test(read("ausbildung/ausbildung.css")));
+  ok("guide Ausbildung : page, carte dans Guide, précache, sitemap, CSP", existsSync("guide-ausbildung.html") && /guide-ausbildung\.html/.test(read("guide-visa.html")) && /"guide-ausbildung\.html"/.test(swa) && /guide-ausbildung\.html/.test(read("sitemap.xml")) && /script-src 'self'/.test(read("guide-ausbildung.html")));
+  ok("ausbildung : page dans le sitemap", /checkmyvisa\.org\/ausbildung\//.test(read("sitemap.xml")));
 }
 
 console.log("\n" + pass + " réussis, " + fail + " échoués");

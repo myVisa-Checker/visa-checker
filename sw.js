@@ -1,6 +1,6 @@
 /* CheckMyVisa – cache limité au shell et aux assets statiques.
    Aucune API, donnée utilisateur ou requête POST n'est mise en cache. */
-const VERSION = "2026.11.22.1210"; /*@version*/
+const VERSION = "2026.11.23.1000"; /*@version*/
 const SHELL = "vc-shell-" + VERSION;
 const PRECACHE = [
   "./",
@@ -59,6 +59,7 @@ const PRECACHE = [
   "guide-lettre-invitation.html",
   "guide-justificatifs-professionnels.html",
   "guide-visa-etudiant.html",
+  "guide-ausbildung.html",
   "guide-visite-familiale.html",
   "guide-visa-affaires.html",
   "guide-traduction-legalisation.html",
@@ -76,6 +77,11 @@ const PRECACHE = [
   "rdv-direct.html",
   "rdv-direct.js",
   "rdv-direct.css",
+  "ausbildung/",
+  "ausbildung/ausbildung.css",
+  "ausbildung/career-matcher.js",
+  "ausbildung/app.js",
+  "ausbildung/data/occupations.json",
   "confidentialite.html",
   "partner-form.css",
   "partner-form.js",
@@ -214,7 +220,9 @@ self.addEventListener("fetch", (event) => {
 
   const isNavigation = request.mode === "navigate";
   const path = url.pathname;
-  const isShellPage = isNavigation || /\.(?:html|css|js|mjs|png|jpe?g|webp|svg|ico|woff2?|ttf|otf|manifest)$/i.test(path);
+  // Catalogue des métiers Ausbildung : donnée statique publique (aucune donnée utilisateur), disponible hors ligne.
+  const isAusbildungData = /\/ausbildung\/data\/[a-z0-9_-]+\.json$/i.test(path);
+  const isShellPage = isNavigation || isAusbildungData || /\.(?:html|css|js|mjs|png|jpe?g|webp|svg|ico|woff2?|ttf|otf|manifest)$/i.test(path);
   if (!isShellPage) return;
   event.respondWith(isNavigation ? networkFirst(request) : staleWhileRevalidate(request, event));
 });

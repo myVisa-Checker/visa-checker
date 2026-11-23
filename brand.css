@@ -264,6 +264,12 @@ h1,h2,h3{letter-spacing:-.025em}
   .sitenav.in-app>ul a{font-size:12.5px!important;padding:6px 2px!important}
 }
 
+/* Barre à six liens (accueil, FAQ, guides) sur mobile : grille 3 × 2 plutôt qu'une ligne orpheline en bas.
+   Les barres à cinq liens ou moins gardent la disposition ci-dessus. */
+@media(max-width:700px){
+  .sitenav ul:has(>li:nth-child(6)),.sitenav.in-app>ul:has(>li:nth-child(6)){display:grid!important;grid-template-columns:repeat(3,auto)!important;justify-content:space-around!important;justify-items:center;row-gap:0!important}
+}
+
 /* Carte « Rendez-vous en direct » sous les assistants IA */
 .vc-rdv-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin-top:12px;padding:18px 14px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(160deg,var(--surface),var(--accent-soft));color:var(--ink);text-decoration:none;box-shadow:0 10px 26px -20px rgba(11,36,82,.5)}
 .vc-rdv-card:hover{border-color:var(--accent)}

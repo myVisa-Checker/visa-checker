@@ -1,0 +1,405 @@
+{
+  "schema_version": 1,
+  "catalogue_status": "development_draft",
+  "occupations": [
+    {
+      "id": "pflegefachkraft",
+      "title_de": "Pflegefachfrau / Pflegefachmann",
+      "title_fr": "Professionnel(le) infirmier(ère)",
+      "category": "health",
+      "training_type": "regulated_school_based",
+      "duration_months": 36,
+      "interests": [
+        "health",
+        "helping_people",
+        "care"
+      ],
+      "skills": [
+        "empathy",
+        "communication",
+        "organization",
+        "responsibility",
+        "observation"
+      ],
+      "environments": [
+        "hospital",
+        "clinic",
+        "care_home",
+        "people_facing"
+      ],
+      "experience_domains": [
+        "health",
+        "care",
+        "volunteering",
+        "social"
+      ],
+      "specializations": [],
+      "language_guidance": {
+        "level": null,
+        "status": "verify_by_training_provider"
+      },
+      "notes_fr": "Formation réglementée avec enseignement et pratique clinique. Ne pas la présenter comme une Ausbildung duale classique."
+    },
+    {
+      "id": "fachinformatiker",
+      "title_de": "Fachinformatiker/in",
+      "title_fr": "Spécialiste en informatique",
+      "category": "it",
+      "training_type": "dual",
+      "duration_months": 36,
+      "interests": [
+        "technology",
+        "programming",
+        "computers",
+        "problem_solving"
+      ],
+      "skills": [
+        "logic",
+        "analytical_thinking",
+        "programming",
+        "troubleshooting",
+        "attention_to_detail"
+      ],
+      "environments": [
+        "office",
+        "computer",
+        "hybrid",
+        "technical_team"
+      ],
+      "experience_domains": [
+        "it",
+        "software",
+        "web",
+        "networking",
+        "data",
+        "personal_projects"
+      ],
+      "specializations": [
+        "Anwendungsentwicklung",
+        "Systemintegration",
+        "Daten- und Prozessanalyse",
+        "Digitale Vernetzung"
+      ],
+      "language_guidance": {
+        "level": null,
+        "status": "verify_by_training_provider"
+      },
+      "notes_fr": "Quatre spécialisations sont proposées ; elles sont conservées comme spécialisations d'un même métier."
+    },
+    {
+      "id": "kfz_mechatroniker",
+      "title_de": "Kraftfahrzeugmechatroniker/in",
+      "title_fr": "Mécatronicien(ne) automobile",
+      "category": "automotive",
+      "training_type": "dual",
+      "duration_months": 42,
+      "interests": [
+        "automotive",
+        "mechanics",
+        "technology",
+        "vehicles"
+      ],
+      "skills": [
+        "mechanical_reasoning",
+        "diagnostics",
+        "manual_precision",
+        "troubleshooting",
+        "attention_to_detail"
+      ],
+      "environments": [
+        "workshop",
+        "garage",
+        "hands_on",
+        "technical_team"
+      ],
+      "experience_domains": [
+        "automotive",
+        "mechanics",
+        "maintenance",
+        "repair"
+      ],
+      "specializations": [],
+      "language_guidance": {
+        "level": null,
+        "status": "verify_by_training_provider"
+      },
+      "notes_fr": "Intitulé officiel utilisé dans le registre des formations."
+    },
+    {
+      "id": "elektroniker_betrieb",
+      "title_de": "Elektroniker/in für Betriebstechnik",
+      "title_fr": "Électronicien(ne) en systèmes industriels",
+      "category": "electrical_industry",
+      "training_type": "dual",
+      "duration_months": 42,
+      "interests": [
+        "electronics",
+        "electricity",
+        "energy",
+        "technology",
+        "industrial_systems"
+      ],
+      "skills": [
+        "logic",
+        "electrical_reasoning",
+        "troubleshooting",
+        "precision",
+        "safety_awareness"
+      ],
+      "environments": [
+        "industrial_site",
+        "factory",
+        "field_work",
+        "technical_team"
+      ],
+      "experience_domains": [
+        "electrical",
+        "electronics",
+        "industrial_maintenance",
+        "automation"
+      ],
+      "specializations": [],
+      "language_guidance": {
+        "level": null,
+        "status": "verify_by_training_provider"
+      },
+      "notes_fr": "Les exigences de sécurité et les tâches concrètes dépendent du poste et de l'entreprise."
+    },
+    {
+      "id": "industriemechaniker",
+      "title_de": "Industriemechaniker/in",
+      "title_fr": "Mécanicien(ne) industriel(le)",
+      "category": "industry",
+      "training_type": "dual",
+      "duration_months": 42,
+      "interests": [
+        "industry",
+        "machines",
+        "mechanics",
+        "manufacturing"
+      ],
+      "skills": [
+        "mechanical_reasoning",
+        "manual_precision",
+        "technical_drawing",
+        "troubleshooting",
+        "attention_to_detail"
+      ],
+      "environments": [
+        "factory",
+        "workshop",
+        "production",
+        "hands_on"
+      ],
+      "experience_domains": [
+        "mechanics",
+        "manufacturing",
+        "maintenance",
+        "metalwork"
+      ],
+      "specializations": [],
+      "language_guidance": {
+        "level": null,
+        "status": "verify_by_training_provider"
+      },
+      "notes_fr": "Métier orienté fabrication, montage, maintenance et systèmes mécaniques."
+    },
+    {
+      "id": "lagerlogistik",
+      "title_de": "Fachkraft für Lagerlogistik",
+      "title_fr": "Spécialiste en logistique d'entrepôt",
+      "category": "logistics",
+      "training_type": "dual",
+      "duration_months": 36,
+      "interests": [
+        "logistics",
+        "transport",
+        "organization",
+        "supply_chain"
+      ],
+      "skills": [
+        "organization",
+        "planning",
+        "reliability",
+        "numeracy",
+        "teamwork"
+      ],
+      "environments": [
+        "warehouse",
+        "logistics_center",
+        "active_work",
+        "team"
+      ],
+      "experience_domains": [
+        "logistics",
+        "warehouse",
+        "transport",
+        "stock_management"
+      ],
+      "specializations": [],
+      "language_guidance": {
+        "level": null,
+        "status": "verify_by_training_provider"
+      },
+      "notes_fr": "Les tâches peuvent combiner réception, stockage, préparation et coordination des flux."
+    },
+    {
+      "id": "hotelfach",
+      "title_de": "Hotelfachmann / Hotelfachfrau",
+      "title_fr": "Employé(e) polyvalent(e) d'hôtel",
+      "category": "hospitality",
+      "training_type": "dual",
+      "duration_months": 36,
+      "interests": [
+        "hospitality",
+        "tourism",
+        "languages",
+        "customer_service"
+      ],
+      "skills": [
+        "communication",
+        "organization",
+        "service_mindset",
+        "multitasking",
+        "teamwork"
+      ],
+      "environments": [
+        "hotel",
+        "reception",
+        "people_facing",
+        "shift_work"
+      ],
+      "experience_domains": [
+        "hospitality",
+        "tourism",
+        "customer_service",
+        "events"
+      ],
+      "specializations": [],
+      "language_guidance": {
+        "level": null,
+        "status": "verify_by_training_provider"
+      },
+      "notes_fr": "Formation polyvalente dans les différents services d'un établissement hôtelier."
+    },
+    {
+      "id": "koch",
+      "title_de": "Koch / Köchin",
+      "title_fr": "Cuisinier / Cuisinière",
+      "category": "gastronomy",
+      "training_type": "dual",
+      "duration_months": 36,
+      "interests": [
+        "cooking",
+        "gastronomy",
+        "food",
+        "creativity"
+      ],
+      "skills": [
+        "discipline",
+        "manual_precision",
+        "time_management",
+        "teamwork",
+        "creativity"
+      ],
+      "environments": [
+        "professional_kitchen",
+        "restaurant",
+        "hands_on",
+        "shift_work"
+      ],
+      "experience_domains": [
+        "cooking",
+        "food_service",
+        "restaurant",
+        "bakery"
+      ],
+      "specializations": [],
+      "language_guidance": {
+        "level": null,
+        "status": "verify_by_training_provider"
+      },
+      "notes_fr": "Le rythme, les horaires et l'organisation varient selon l'établissement."
+    },
+    {
+      "id": "verkaeufer",
+      "title_de": "Verkäufer / Verkäuferin",
+      "title_fr": "Vendeur / Vendeuse",
+      "category": "retail",
+      "training_type": "dual",
+      "duration_months": 24,
+      "interests": [
+        "sales",
+        "commerce",
+        "customer_service",
+        "products"
+      ],
+      "skills": [
+        "communication",
+        "listening",
+        "reliability",
+        "numeracy",
+        "persuasion"
+      ],
+      "environments": [
+        "shop",
+        "retail_store",
+        "people_facing",
+        "team"
+      ],
+      "experience_domains": [
+        "retail",
+        "sales",
+        "cashier",
+        "customer_service"
+      ],
+      "specializations": [],
+      "language_guidance": {
+        "level": null,
+        "status": "verify_by_training_provider"
+      },
+      "notes_fr": "Formation de deux ans ; des possibilités de poursuite de formation peuvent exister."
+    },
+    {
+      "id": "anlagenmechaniker_shk",
+      "title_de": "Anlagenmechaniker/in für Sanitär-, Heizungs- und Klimatechnik",
+      "title_fr": "Installateur(trice) en sanitaire, chauffage et climatisation",
+      "category": "building_services",
+      "training_type": "dual",
+      "duration_months": 42,
+      "interests": [
+        "construction",
+        "installation",
+        "heating",
+        "water",
+        "climate_technology"
+      ],
+      "skills": [
+        "mechanical_reasoning",
+        "manual_precision",
+        "troubleshooting",
+        "spatial_reasoning",
+        "safety_awareness"
+      ],
+      "environments": [
+        "construction_site",
+        "workshop",
+        "field_work",
+        "hands_on"
+      ],
+      "experience_domains": [
+        "plumbing",
+        "heating",
+        "construction",
+        "maintenance",
+        "installation"
+      ],
+      "specializations": [],
+      "language_guidance": {
+        "level": null,
+        "status": "verify_by_training_provider"
+      },
+      "notes_fr": "Métier technique exercé en atelier et sur chantier selon les missions."
+    }
+  ]
+}
