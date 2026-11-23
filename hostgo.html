@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://visa-chat.rabehfly.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Host &amp; Go — Travel · Exchange · Belong</title>
 <meta name="description" content="Host &amp; Go connecte les voyageurs et les hôtes pour des séjours authentiques et des échanges culturels.">
@@ -44,6 +44,22 @@
     <p class="hg-sub" data-i="sub">Choose how you want to be part of the Host &amp; Go community</p>
     <div class="hg-grid" id="hg-grid" role="group" aria-labelledby="hg-join-title"></div>
     <p class="hg-status" id="hg-status" role="status" aria-live="polite"></p>
+    <form class="hg-form" id="hg-form" hidden novalidate aria-labelledby="hg-form-h">
+      <h3 id="hg-form-h"></h3>
+      <p class="hg-form-intro" id="hg-form-intro"></p>
+      <div class="hg-form-row">
+        <div class="hg-ff"><label for="hf-name" id="hl-name"></label><input id="hf-name" type="text" maxlength="100" autocomplete="name" required></div>
+        <div class="hg-ff"><label for="hf-mail" id="hl-mail"></label><input id="hf-mail" type="email" maxlength="254" autocomplete="email" required></div>
+        <div class="hg-ff"><label for="hf-country" id="hl-country"></label><input id="hf-country" type="text" maxlength="60" autocomplete="country-name" required></div>
+        <div class="hg-ff"><label for="hf-city" id="hl-city"></label><input id="hf-city" type="text" maxlength="80" autocomplete="address-level2" required></div>
+        <div class="hg-ff hg-wide"><label for="hf-msg" id="hl-msg"></label><textarea id="hf-msg" rows="4" maxlength="1200"></textarea></div>
+      </div>
+      <div class="hg-hp" aria-hidden="true"><label>Ne pas remplir<input type="text" id="hf-hp" tabindex="-1" autocomplete="off"></label></div>
+      <label class="hg-consent"><input type="checkbox" id="hf-consent" required><span id="hl-consent"></span></label>
+      <p class="hg-form-err" id="hf-err" role="alert" hidden></p>
+      <button type="submit" class="hg-main-cta" id="hf-send"></button>
+      <p class="hg-form-ok" id="hf-ok" role="status" hidden></p>
+    </form>
   </section>
   <section class="hg-trust" id="safety" aria-label="Community values">
     <div><b aria-hidden="true">✓</b><span data-i="secure">Safe &amp; Secure<br>Community</span></div>

@@ -78,6 +78,56 @@
   roleBtns.forEach(function (b) { b.addEventListener("click", function () { pick(roleBtns, b); }); });
   themeBtns.forEach(function (b) { b.addEventListener("click", function () { pick(themeBtns, b); }); });
 
+
+  /* ---------- Liste d'attente : envoi via la route /contact existante du Worker (aucune donnée stockée ici) ---------- */
+  var ENDPOINT = "https://visa-chat.rabehfly.workers.dev/contact", TO = "contact@checkmyvisa.org", SUBJECT = "Partenariat / Autre demande";
+  var F = {
+    h: ["Rejoindre la liste d’attente", "Join the waiting list", "انضم إلى قائمة الانتظار"],
+    intro: ["Ce parcours n’est pas encore ouvert. Laissez vos coordonnées : nous vous écrivons dès son ouverture.", "This journey is not open yet. Leave your details and we will write to you as soon as it opens.", "هذا المسار لم يُفتح بعد. اترك بياناتك وسنكتب إليك فور افتتاحه."],
+    name: ["Nom et prénom", "Full name", "الاسم الكامل"], mail: ["E-mail", "E-mail", "البريد الإلكتروني"],
+    country: ["Pays", "Country", "البلد"], city: ["Ville", "City", "المدينة"],
+    msg: ["Parlez-nous de vous (facultatif)", "Tell us about yourself (optional)", "حدّثنا عن نفسك (اختياري)"],
+    consent: ["J’accepte que CheckMyVisa me contacte au sujet de Host & Go.", "I agree that CheckMyVisa may contact me about Host & Go.", "أوافق على أن يتواصل معي CheckMyVisa بخصوص Host & Go."],
+    send: ["Envoyer ma demande", "Send my request", "أرسل طلبي"],
+    pickRole: ["Choisissez d’abord votre rôle : Hôte ou Voyageur / Worker.", "Please choose your role first: Host or Traveller / Worker.", "اختر دورك أولاً: مضيف أو مسافر / عامل."],
+    bad: ["Merci de remplir votre nom, une adresse e-mail valide, votre pays et votre ville.", "Please enter your name, a valid e-mail address, your country and your city.", "يرجى إدخال اسمك وبريد إلكتروني صالح وبلدك ومدينتك."],
+    rgpd: ["Merci d’accepter d’être contacté.", "Please agree to be contacted.", "يرجى الموافقة على التواصل معك."],
+    ok: ["Merci ! Votre demande est enregistrée. Nous vous écrivons dès l’ouverture.", "Thank you! Your request is in. We will write to you when it opens.", "شكراً! تم تسجيل طلبك. سنكتب إليك عند الافتتاح."],
+    fb: ["L’envoi direct n’est pas disponible : votre messagerie s’ouvre avec le message prêt. Vous pouvez aussi écrire à ", "Direct sending is not available: your e-mail app opens with the message ready. You can also write to ", "الإرسال المباشر غير متاح: سيُفتح تطبيق البريد والرسالة جاهزة. يمكنك أيضاً الكتابة إلى "]
+  };
+  var ROLE_FR = { host: "Hôte", "traveler-worker": "Voyageur / Worker" };
+  var form = $("hg-form");
+  var FIELDS = { "hg-form-h": "h", "hg-form-intro": "intro", "hl-name": "name", "hl-mail": "mail", "hl-country": "country", "hl-city": "city", "hl-msg": "msg", "hl-consent": "consent", "hf-send": "send" };
+  Object.keys(FIELDS).forEach(function (id) { $(id).textContent = t(F[FIELDS[id]]); });
+  function selected(list, attr) { var r = list.filter(function (b) { return b.getAttribute("aria-pressed") === "true"; })[0]; return r ? r.getAttribute(attr) : ""; }
+  function syncForm() { form.hidden = !selected(roleBtns, "data-role"); }
+  var baseStatus = status;
+  status = function () { baseStatus(); syncForm(); };
+  syncForm();
+  function themeFr(id) { var r = THEMES.filter(function (x) { return x.id === id; })[0]; return r ? r.t[0] : ""; }
+  function fail(msg) { var e = $("hf-err"); e.textContent = msg; e.hidden = false; }
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var ok = $("hf-ok"); ok.hidden = true; $("hf-err").hidden = true;
+    var role = selected(roleBtns, "data-role"), theme = selected(themeBtns, "data-theme");
+    var name = $("hf-name").value.trim(), mail = $("hf-mail").value.trim(), country = $("hf-country").value.trim(), city = $("hf-city").value.trim(), note = $("hf-msg").value.trim();
+    if (!role) return fail(t(F.pickRole));
+    if (!name || !country || !city || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return fail(t(F.bad));
+    if (!$("hf-consent").checked) return fail(t(F.rgpd));
+    var msg = ["[Host & Go — liste d'attente]", "Rôle : " + ROLE_FR[role], "Thème : " + (themeFr(theme) || "non précisé"), "Pays : " + country, "Ville : " + city, "Langue de la page : " + lang, "", note || "(pas de message)"].join("\n");
+    var btn = $("hf-send"); btn.disabled = true;
+    var ctl = typeof AbortController === "function" ? new AbortController() : null, timer = ctl ? setTimeout(function () { ctl.abort(); }, 12000) : null;
+    fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name, email: mail, subject: SUBJECT, message: msg, consent: true, hp: $("hf-hp").value || "" }), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
+      .catch(function () { return false; })
+      .then(function (sent) {
+        if (timer) clearTimeout(timer); btn.disabled = false;
+        if (sent) { form.reset(); ok.textContent = t(F.ok); ok.hidden = false; return; }
+        ok.textContent = t(F.fb) + TO + "."; ok.hidden = false;
+        window.location.href = "mailto:" + TO + "?subject=" + encodeURIComponent("[Host & Go] " + ROLE_FR[role]) + "&body=" + encodeURIComponent(msg + "\n\n--\n" + name + "\n" + mail);
+      });
+  });
+
   var role = new URLSearchParams(window.location.search).get("role");
   roleBtns.forEach(function (b) { if (b.getAttribute("data-role") === role) pick(roleBtns, b); });
 })();
