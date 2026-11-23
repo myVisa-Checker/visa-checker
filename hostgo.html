@@ -3,13 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Host &amp; Go : Join As… | CheckMyVisa</title>
-<meta name="description" content="Host &amp; Go : choisissez votre profil (voyageur, hôte, Host &amp; Work, étudiant, professionnel, famille) pour commencer votre aventure.">
+<title>Host &amp; Go — Travel · Exchange · Belong</title>
+<meta name="description" content="Host &amp; Go connecte les voyageurs et les hôtes pour des séjours authentiques et des échanges culturels.">
 <meta name="theme-color" content="#0b2257">
 <link rel="canonical" href="https://checkmyvisa.org/hostgo.html">
-<link rel="icon" href="./icons/icon-192.png">
 <link rel="stylesheet" href="./nav.css">
 <link rel="stylesheet" href="./site.css">
 <link rel="stylesheet" href="./brand.css">
@@ -18,57 +17,47 @@
 <script src="./i18n/common.js"></script>
 </head>
 <body>
-
-<nav class="sitenav" aria-label="Navigation principale">
-  <a class="sn-logo" href="./?accueil=1"><b>Check</b>MyVisa</a>
-  <ul>
-    <li><a href="./?accueil=1">Accueil</a></li>
-    <li><a href="./guide-visa.html">Guide</a></li>
-    <li><a href="./ausbildung/">Ausbildung</a></li>
-    <li><a href="./a-propos.html">À propos</a></li>
-    <li><a href="./contact.html">Contact</a></li>
-  </ul>
-</nav>
-
 <main id="hostgo" data-no-i18n>
-  <nav class="crumbs" aria-label="Fil d'Ariane"><a href="./?accueil=1" id="hg-crumb-home">Accueil</a> › <span id="hg-crumb">Host &amp; Go</span></nav>
-  <header class="hg-hero">
-    <span class="hg-brand">Host <b>&amp;</b> Go</span>
-    <h1 id="hg-title"></h1>
-    <p class="lead" id="hg-lead"></p>
-  </header>
-  <section class="hg-join" aria-labelledby="hg-join-h">
-    <h2 id="hg-join-h">Join As…</h2>
-    <p class="hg-sub" id="hg-sub"></p>
-    <ul class="hg-grid" id="hg-grid"></ul>
-    <p class="hg-note" id="hg-note"></p>
-  </section>
-  <section class="hg-end" aria-label="Host &amp; Go">
-    <p>Host <b>&amp;</b> Go</p>
-    <span id="hg-end-t"></span>
-    <a class="hg-cta" id="hg-end-btn" href="./?accueil=1"></a>
-  </section>
-</main>
-
-<footer class="site">
-  <div class="inner">
-    <div class="fl">
-      <a href="./?accueil=1">Accueil</a>
-      <a href="./guide-visa.html">Guide</a>
-      <a href="./a-propos.html">À propos</a>
-      <a href="./faq.html">FAQ</a>
-      <a href="./contact.html">Contact</a>
-      <a href="./confidentialite.html">Confidentialité</a>
-      <a href="./conditions.html">Conditions d'utilisation</a>
-      <a href="./mentions-legales.html">Mentions légales</a>
-      <a href="./cookies.html">Cookies</a>
-      <a href="./garantie.html">Garantie</a>
-      <a href="./rdv-direct.html">Rendez-vous en direct</a>
+  <nav class="hg-nav" aria-label="Host &amp; Go">
+    <a class="hg-logo" href="./?accueil=1" aria-label="Host &amp; Go — accueil"><span class="hg-logo-mark">⌂</span><span><b>Host <em>&amp; Go</em></b><small>Travel · Exchange · Belong</small></span></a>
+    <div class="hg-navlinks"><a href="./hostgo.html" data-i="home">Home</a><a href="#about" data-i="about">About</a><a href="#join" data-i="how">How It Works</a><a href="#safety" data-i="safety">Safety</a><a href="#faq" data-i="faq">FAQ</a></div>
+    <a class="hg-sign" href="#join" data-i="signin">Sign In</a>
+  </nav>
+  <section class="hg-hero" id="about">
+    <div class="hg-hero-copy">
+      <p class="hg-kicker">HOST &amp; GO</p>
+      <h1><span>Host &amp;</span> <em>Go</em></h1>
+      <h2 data-i="headline">Travel differently.<br>Experience more.</h2>
+      <p class="hg-lead" data-i="lead">Connect with locals, share cultures, and make your journey unforgettable.</p>
+      <a class="hg-main-cta" href="#join"><span aria-hidden="true">⌕</span> <span data-i="start">Start your journey</span> <span aria-hidden="true">→</span></a>
     </div>
-    <p>Avertissement : CheckMyVisa est une plateforme privée et indépendante d'aide à la préparation administrative. Nous ne sommes affiliés à aucun gouvernement, ambassade, consulat, ni à aucun prestataire externe officiel (TLScontact, VFS Global, BLS International, etc.).</p>
-    <p>© 2026 CheckMyVisa.</p>
-  </div>
-</footer>
+  </section>
+  <section class="hg-join" id="join" aria-labelledby="hg-join-title">
+    <h2 id="hg-join-title"><span data-i="join">Join As...</span></h2>
+    <p class="hg-sub" data-i="sub">Choose how you want to be part of the Host &amp; Go community</p>
+    <div class="hg-grid">
+      <a class="hg-card" href="?role=host" aria-label="Join as Host">
+        <img src="./images/hostgo/hote.webp" alt="Host welcoming a traveller" width="240" height="255" loading="lazy">
+        <span class="hg-card-content"><span class="hg-icon" aria-hidden="true">⌂</span><strong data-i="host">Host</strong><small data-i="hostDesc">Welcome travellers and share your home</small></span><span class="hg-arrow" aria-hidden="true">→</span>
+      </a>
+      <a class="hg-card" href="?role=traveler-worker" aria-label="Join as Traveller or Worker">
+        <img src="./images/hostgo/voyageur.webp" alt="Traveller exploring a new place" width="240" height="255" loading="lazy">
+        <span class="hg-card-content"><span class="hg-icon" aria-hidden="true">✈</span><strong data-i="traveller">Traveller / Worker</strong><small data-i="travellerDesc">Discover places, share your skills and experience local life</small></span><span class="hg-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+  <section class="hg-trust" id="safety" aria-label="Community values">
+    <div><b aria-hidden="true">✓</b><span data-i="secure">Safe &amp; Secure<br>Community</span></div>
+    <div><b aria-hidden="true">◎</b><span data-i="global">Global Network<br>Worldwide</span></div>
+    <div><b aria-hidden="true">♥</b><span data-i="human">Real Human<br>Connections</span></div>
+  </section>
+  <section class="hg-bottom" id="faq">
+    <div class="hg-map" aria-hidden="true">✈</div>
+    <div><h2 data-i="together"><em>Together,</em> let’s explore the world.</h2><p data-i="tagline">Host &amp; Go — More than a trip, a human exchange.</p></div>
+    <a href="#join" class="hg-main-cta" data-i="joinNow">Join Now →</a>
+  </section>
+  <footer class="hg-footer"><a href="./?accueil=1">CheckMyVisa</a> · <span>Host &amp; Go</span> · <a href="./confidentialite.html">Privacy</a> · <a href="./conditions.html">Terms</a></footer>
+</main>
 <script src="./hostgo.js"></script>
 </body>
 </html>
