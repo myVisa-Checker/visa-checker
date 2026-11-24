@@ -51,7 +51,7 @@
 
   /* Thèmes */
   var grid = $("hg-grid");
-  THEMES.forEach(function (th) {
+  (grid ? THEMES : []).forEach(function (th) {
     var b = document.createElement("button");
     b.type = "button"; b.className = "hg-card t-" + th.id; b.setAttribute("data-theme", th.id); b.setAttribute("aria-pressed", "false");
     var m = document.createElement("span"); m.className = "hg-media"; m.setAttribute("aria-hidden", "true"); m.innerHTML = svg(th.icon);
@@ -61,7 +61,7 @@
     var a = document.createElement("span"); a.className = "hg-arrow"; a.setAttribute("aria-hidden", "true"); a.textContent = lang === "ar" ? "←" : "→";
     c.appendChild(s); c.appendChild(d); b.appendChild(m); b.appendChild(c); b.appendChild(a); grid.appendChild(b);
   });
-  var themeBtns = [].slice.call(grid.querySelectorAll(".hg-card"));
+  var themeBtns = grid ? [].slice.call(grid.querySelectorAll(".hg-card")) : [];
 
   function pick(list, btn) {
     var was = btn.getAttribute("aria-pressed") === "true";
