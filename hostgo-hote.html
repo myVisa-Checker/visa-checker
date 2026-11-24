@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://visa-chat.rabehfly.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Host &amp; Go — Devenir hôte</title>
+<meta name="description" content="Devenez hôte Host &amp; Go : accueillez des voyageurs, partagez votre culture et créez des rencontres enrichissantes.">
+<meta name="theme-color" content="#0b2257">
+<link rel="canonical" href="https://checkmyvisa.org/hostgo-hote.html">
+<link rel="stylesheet" href="./nav.css">
+<link rel="stylesheet" href="./site.css">
+<link rel="stylesheet" href="./brand.css">
+<link rel="stylesheet" href="./hostgo-hote.css">
+<script src="./site-i18n.js"></script>
+<script src="./i18n/common.js"></script>
+</head>
+<body>
+<main id="hgh" data-no-i18n>
+  <header class="hgh-top">
+    <a class="hgh-brand" href="./hostgo.html" aria-label="Host &amp; Go"><span class="hgh-mark" aria-hidden="true">⌂</span><span>Host <em>&amp;</em> Go</span></a>
+    <a class="hgh-back-link" href="./hostgo.html" data-i="backHome">Retour à Host &amp; Go</a>
+  </header>
+
+  <div class="hgh-wrap">
+    <div class="hgh-progress" role="img" aria-label="" id="hgh-progress"></div>
+
+    <section class="hgh-step" id="st1" aria-labelledby="h-st1">
+      <div class="hgh-hero">
+        <div class="hgh-hero-copy">
+          <p class="hgh-eyebrow" data-i="eyebrow">DEVENEZ HÔTE HOST &amp; GO</p>
+          <h1 id="h-st1"><span data-i="h1a">Ouvrez votre porte.</span><br><em data-i="h1b">Partagez votre monde.</em></h1>
+          <p data-i="lead">Accueillez des voyageurs, partagez votre culture et créez des rencontres enrichissantes.</p>
+        </div>
+        <div class="hgh-art" aria-hidden="true"><i class="sun"></i><i class="hill h1"></i><i class="hill h2"></i><div class="house"><i class="roof"></i><i class="door"></i><i class="win"></i></div></div>
+      </div>
+
+      <div class="hgh-card">
+        <label class="hgh-label" for="country" data-i="countryQ">Dans quel pays souhaitez-vous accueillir ?</label>
+        <select id="country" required></select>
+      </div>
+
+      <div class="hgh-card">
+        <p class="hgh-eyebrow" data-i="before">AVANT DE CONTINUER</p>
+        <h2 data-i="verify">Vérifiez vos informations</h2>
+        <div class="hgh-summary">
+          <div><small data-i="accType">Type de compte</small><strong data-i="accHost">Hôte</strong></div>
+          <div><small data-i="yourCountry">Votre pays</small><strong id="countrySummary"></strong></div>
+        </div>
+        <h3 data-i="confirm">Je confirme que :</h3>
+        <div class="hgh-checks" id="decls"></div>
+        <p class="hgh-note" data-i="noAccount">Les comptes ne sont pas encore ouverts : votre demande rejoint la liste d’attente et nous vous écrivons dès l’ouverture.</p>
+      </div>
+
+      <div class="hgh-actions">
+        <a class="hgh-btn ghost" href="./hostgo.html" data-i="back">← Retour</a>
+        <button class="hgh-btn" id="continue1" type="button" data-go="next" data-i="next">Continuer →</button>
+      </div>
+      <p class="hgh-err" id="error1" role="alert"></p>
+    </section>
+
+    <section class="hgh-step" id="st2" hidden aria-labelledby="h-st2">
+      <div class="hgh-head">
+        <p class="hgh-eyebrow" data-i="eb_st2"></p>
+        <h1 id="h-st2" data-i="h_st2"></h1>
+      </div>
+      <div class="hgh-card">
+        <label class="hgh-label sr-lbl" for="ta-st2" data-i="h_st2"></label>
+        <textarea id="ta-st2" rows="7" maxlength="700" data-min="20"></textarea>
+        <p class="hgh-count" id="ct-st2" aria-live="off"></p>
+      </div>
+      <aside class="hgh-tips" aria-labelledby="tt-st2">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>
+        <p id="tt-st2" data-i="tipsT"></p>
+        <ul id="tl-st2"></ul>
+      </aside>
+      <div class="hgh-actions">
+        <button class="hgh-btn ghost" type="button" data-go="prev" data-i="back"></button>
+        <button class="hgh-btn" type="button" data-go="next" data-i="next"></button>
+      </div>
+      <p class="hgh-err" id="err-st2" role="alert"></p>
+    </section>
+
+    <section class="hgh-step" id="ty" hidden aria-labelledby="h-ty">
+      <div class="hgh-head">
+        <p class="hgh-eyebrow"></p>
+        <h1 id="h-ty" data-i="h_ty"></h1>
+        <p data-i="ty_lead"></p>
+      </div>
+      <div class="hgh-types" id="types" role="group" aria-labelledby="h-ty"></div>
+      <div class="hgh-actions">
+        <button class="hgh-btn ghost" type="button" data-go="prev" data-i="back"></button>
+        <button class="hgh-btn" type="button" data-go="next" data-i="next"></button>
+      </div>
+      <p class="hgh-err" id="err-ty" role="alert"></p>
+    </section>
+
+    <section class="hgh-step" id="pl" hidden aria-labelledby="h-pl">
+      <div class="hgh-head">
+        <p class="hgh-eyebrow"></p>
+        <h1 id="h-pl" data-i="h_pl"></h1>
+      </div>
+      <div class="hgh-card">
+        <label class="hgh-label" for="pl-hours" data-i="pl_hours"></label><select id="pl-hours"></select>
+        <label class="hgh-label" for="pl-days" data-i="pl_days"></label><select id="pl-days"></select>
+        <label class="hgh-label" for="pl-stay" data-i="pl_stay"></label><select id="pl-stay"></select>
+      </div>
+      <aside class="hgh-tips"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><p data-i="pl_tip"></p></aside>
+      <div class="hgh-actions">
+        <button class="hgh-btn ghost" type="button" data-go="prev" data-i="back"></button>
+        <button class="hgh-btn" type="button" data-go="next" data-i="next"></button>
+      </div>
+    </section>
+
+    <section class="hgh-step" id="st3" hidden aria-labelledby="h-st3">
+      <div class="hgh-head">
+        <p class="hgh-eyebrow" data-i="eb_st3"></p>
+        <h1 id="h-st3" data-i="h_st3"></h1>
+      </div>
+      <div class="hgh-card">
+        <label class="hgh-label sr-lbl" for="ta-st3" data-i="h_st3"></label>
+        <textarea id="ta-st3" rows="7" maxlength="700" data-min="20"></textarea>
+        <p class="hgh-count" id="ct-st3" aria-live="off"></p>
+      </div>
+      <aside class="hgh-tips" aria-labelledby="tt-st3">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>
+        <p id="tt-st3" data-i="tipsT"></p>
+        <ul id="tl-st3"></ul>
+      </aside>
+      <div class="hgh-actions">
+        <button class="hgh-btn ghost" type="button" data-go="prev" data-i="back"></button>
+        <button class="hgh-btn" type="button" data-go="next" data-i="next"></button>
+      </div>
+      <p class="hgh-err" id="err-st3" role="alert"></p>
+    </section>
+
+    <section class="hgh-step" id="st4" hidden aria-labelledby="h-st4">
+      <div class="hgh-head">
+        <p class="hgh-eyebrow" data-i="eb_st4"></p>
+        <h1 id="h-st4" data-i="h_st4"></h1>
+      </div>
+      <div class="hgh-card">
+        <label class="hgh-label sr-lbl" for="ta-st4" data-i="h_st4"></label>
+        <textarea id="ta-st4" rows="7" maxlength="700" data-min="20"></textarea>
+        <p class="hgh-count" id="ct-st4" aria-live="off"></p>
+      </div>
+      <aside class="hgh-tips" aria-labelledby="tt-st4">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>
+        <p id="tt-st4" data-i="tipsT"></p>
+        <ul id="tl-st4"></ul>
+      </aside>
+      <div class="hgh-actions">
+        <button class="hgh-btn ghost" type="button" data-go="prev" data-i="back"></button>
+        <button class="hgh-btn" type="button" data-go="next" data-i="next"></button>
+      </div>
+      <p class="hgh-err" id="err-st4" role="alert"></p>
+    </section>
+
+    <section class="hgh-step" id="st5" hidden aria-labelledby="h-st5">
+      <div class="hgh-head">
+        <p class="hgh-eyebrow" data-i="eyebrow2">VOTRE DEMANDE</p>
+        <h1 id="h-st5" data-i="h2">Vos coordonnées</h1>
+        <p data-i="privacyLead">Seul votre prénom pourra être affiché sur votre futur profil public. Vos coordonnées ne seront jamais affichées.</p>
+      </div>
+
+      <div class="hgh-card hgh-form">
+        <label class="hgh-label" for="firstName" data-i="firstName">Votre prénom</label>
+        <input id="firstName" name="firstName" autocomplete="given-name" maxlength="60" required>
+        <label class="hgh-label" for="email" data-i="email">Votre adresse e-mail</label>
+        <input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="nom@exemple.com" dir="ltr" required>
+        <label class="hgh-label" for="city" data-i="city">Votre ville</label>
+        <input id="city" name="city" autocomplete="address-level2" maxlength="80" required>
+        <div class="hgh-hp" aria-hidden="true"><label>Ne pas remplir<input type="text" id="hp" tabindex="-1" autocomplete="off"></label></div>
+        <div class="hgh-checks consent">
+          <label><input type="checkbox" id="terms"><span><span data-i="termsPre">J’ai lu et j’accepte les</span> <a href="./conditions.html" target="_blank" rel="noopener" data-i="termsLink">conditions générales</a> <span data-i="termsMid">et la</span> <a href="./confidentialite.html" target="_blank" rel="noopener" data-i="privLink">politique de confidentialité</a>.</span></label>
+          <label><input type="checkbox" id="marketing"><span data-i="marketing">J’accepte de recevoir des e-mails sur les nouveautés de Host &amp; Go (facultatif).</span></label>
+        </div>
+      </div>
+
+      <div class="hgh-actions">
+        <button class="hgh-btn ghost" id="back2" type="button" data-go="prev" data-i="back">← Retour</button>
+        <button class="hgh-btn" id="finish" type="button" data-i="send">Envoyer ma demande</button>
+      </div>
+      <p class="hgh-err" id="error2" role="alert"></p>
+    </section>
+
+    <section class="hgh-step hgh-done" id="done" hidden aria-live="polite" tabindex="-1">
+      <h1 data-i="doneH">Merci !</h1>
+      <p id="doneMsg"></p>
+      <a class="hgh-btn" href="./hostgo.html" data-i="backHome">Retour à Host &amp; Go</a>
+    </section>
+  </div>
+  <footer class="hgh-foot"><a href="./?accueil=1">CheckMyVisa</a> · <span>Host &amp; Go</span> · <a href="./confidentialite.html" data-i="fPriv">Confidentialité</a> · <a href="./conditions.html" data-i="fTerms">Conditions</a></footer>
+</main>
+<script src="./hostgo-hote.js"></script>
+</body>
+</html>

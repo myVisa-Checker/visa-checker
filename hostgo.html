@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://visa-chat.rabehfly.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Host &amp; Go — Travel · Exchange · Belong</title>
 <meta name="description" content="Host &amp; Go connecte les voyageurs et les hôtes pour des séjours authentiques et des échanges culturels.">
@@ -33,18 +33,34 @@
     </div>
   </section>
   <section class="hg-join" id="join" aria-labelledby="hg-join-title">
+    <div class="hg-roles" role="group" aria-labelledby="hg-roles-label">
+      <p class="hg-roles-label" id="hg-roles-label" data-i="rolesLabel">Je suis…</p>
+      <div class="hg-roles-row">
+        <button type="button" class="hg-role" data-role="host" aria-pressed="false"><span class="hg-role-ico" aria-hidden="true"></span><strong data-i="host">Host</strong><small data-i="hostDesc"></small></button>
+        <button type="button" class="hg-role" data-role="traveler-worker" aria-pressed="false"><span class="hg-role-ico" aria-hidden="true"></span><strong data-i="traveller">Traveller / Worker</strong><small data-i="travellerDesc"></small></button>
+      </div>
+    </div>
     <h2 id="hg-join-title"><span data-i="join">Join As...</span></h2>
     <p class="hg-sub" data-i="sub">Choose how you want to be part of the Host &amp; Go community</p>
-    <div class="hg-grid">
-      <a class="hg-card" href="?role=host" aria-label="Join as Host">
-        <img src="./images/hostgo/hote.webp" alt="Host welcoming a traveller" width="240" height="255" loading="lazy">
-        <span class="hg-card-content"><span class="hg-icon" aria-hidden="true">⌂</span><strong data-i="host">Host</strong><small data-i="hostDesc">Welcome travellers and share your home</small></span><span class="hg-arrow" aria-hidden="true">→</span>
-      </a>
-      <a class="hg-card" href="?role=traveler-worker" aria-label="Join as Traveller or Worker">
-        <img src="./images/hostgo/voyageur.webp" alt="Traveller exploring a new place" width="240" height="255" loading="lazy">
-        <span class="hg-card-content"><span class="hg-icon" aria-hidden="true">✈</span><strong data-i="traveller">Traveller / Worker</strong><small data-i="travellerDesc">Discover places, share your skills and experience local life</small></span><span class="hg-arrow" aria-hidden="true">→</span>
-      </a>
-    </div>
+    <div class="hg-grid" id="hg-grid" role="group" aria-labelledby="hg-join-title"></div>
+    <p class="hg-status" id="hg-status" role="status" aria-live="polite"></p>
+    <p class="hg-host-cta" id="hg-host-cta" hidden><a class="hg-main-cta" href="./hostgo-hote.html" id="hg-host-link"></a></p>
+    <form class="hg-form" id="hg-form" hidden novalidate aria-labelledby="hg-form-h">
+      <h3 id="hg-form-h"></h3>
+      <p class="hg-form-intro" id="hg-form-intro"></p>
+      <div class="hg-form-row">
+        <div class="hg-ff"><label for="hf-name" id="hl-name"></label><input id="hf-name" type="text" maxlength="100" autocomplete="name" required></div>
+        <div class="hg-ff"><label for="hf-mail" id="hl-mail"></label><input id="hf-mail" type="email" maxlength="254" autocomplete="email" required></div>
+        <div class="hg-ff"><label for="hf-country" id="hl-country"></label><input id="hf-country" type="text" maxlength="60" autocomplete="country-name" required></div>
+        <div class="hg-ff"><label for="hf-city" id="hl-city"></label><input id="hf-city" type="text" maxlength="80" autocomplete="address-level2" required></div>
+        <div class="hg-ff hg-wide"><label for="hf-msg" id="hl-msg"></label><textarea id="hf-msg" rows="4" maxlength="1200"></textarea></div>
+      </div>
+      <div class="hg-hp" aria-hidden="true"><label>Ne pas remplir<input type="text" id="hf-hp" tabindex="-1" autocomplete="off"></label></div>
+      <label class="hg-consent"><input type="checkbox" id="hf-consent" required><span id="hl-consent"></span></label>
+      <p class="hg-form-err" id="hf-err" role="alert" hidden></p>
+      <button type="submit" class="hg-main-cta" id="hf-send"></button>
+      <p class="hg-form-ok" id="hf-ok" role="status" hidden></p>
+    </form>
   </section>
   <section class="hg-trust" id="safety" aria-label="Community values">
     <div><b aria-hidden="true">✓</b><span data-i="secure">Safe &amp; Secure<br>Community</span></div>
