@@ -38,7 +38,48 @@
 <main id="aus" lang="fr" dir="ltr" data-no-i18n>
   <nav class="crumbs" aria-label="Fil d'Ariane"><a href="../?accueil=1">Accueil</a> › <span>Ausbildung</span></nav>
   <p id="langNote" class="lang-note" role="note" hidden></p>
-  <section class="hero">
+  <div id="introwrap">
+  <section id="pickhero" class="pickhero" aria-labelledby="pickTitle">
+    <p class="eyebrow">VOTRE PROJET · ALLEMAGNE</p>
+    <h1 id="pickTitle"><span id="pickCount">10</span> métiers disponibles&nbsp;!</h1>
+    <p>Choisissez votre profession pour une orientation plus précise. Vous pouvez en choisir plusieurs.</p>
+    <span class="pickline" aria-hidden="true"></span>
+  </section>
+  <ol id="stages" class="stages" aria-label="Étapes du parcours">
+    <li class="done"><span class="n" aria-hidden="true">✓</span><span>Pays</span><small>Allemagne</small></li>
+    <li class="cur" aria-current="step"><span class="n" aria-hidden="true">2</span><span>Métier</span></li>
+    <li><span class="n" aria-hidden="true">3</span><span>Profil</span></li>
+    <li><span class="n" aria-hidden="true">4</span><span>Résultat</span></li>
+  </ol>
+  </div>
+  <section id="pick" class="panel pick" aria-labelledby="pickH" hidden>
+    <div class="pick-head">
+      <div><h2 id="pickH" tabindex="-1">Votre profession</h2><p class="muted">Sélectionnez un ou plusieurs métiers, ou continuez sans choisir : le questionnaire vous aidera.</p></div>
+      <p class="pick-info" role="note">Vous pouvez choisir plusieurs métiers</p>
+    </div>
+    <label class="pick-search"><span class="sr">Rechercher un métier</span><input id="pickSearch" type="search" placeholder="Rechercher un métier…" autocomplete="off" maxlength="60"></label>
+    <div id="pickGrid" class="pick-grid" role="group" aria-labelledby="pickH"></div>
+    <p id="pickNone" class="muted" hidden>Aucun métier ne correspond à cette recherche.</p>
+    <div class="pick-sum" id="pickSum" aria-live="polite"><span class="chk" aria-hidden="true">✓</span><div><strong id="pickSumT">Aucun métier sélectionné</strong><span id="pickSumL"></span></div><button type="button" id="pickClear" class="btn secondary small" hidden>Tout effacer</button></div>
+    <div class="actions"><a class="btn secondary" id="pickBack" href="../?accueil=1">← Retour</a><button id="pickNext" class="btn primary" type="button">Suivant →</button></div>
+  </section>
+
+  <section id="pickmore" class="pickmore" aria-label="Pourquoi l'Ausbildung" hidden>
+    <h2>L'Ausbildung, en bref</h2>
+    <ul class="why">
+      <li><b>Apprendre en travaillant</b><span>Une formation en alternance : des cours en école professionnelle et de la pratique en entreprise.</span></li>
+      <li><b>Un métier concret</b><span>Chaque formation débouche sur un métier reconnu, avec une durée de 2 à 3,5 ans selon le cas.</span></li>
+      <li><b>Un parcours guidé</b><span>Quelques questions, un classement explicable, puis les points à préparer pour votre projet.</span></li>
+    </ul>
+    <ol class="how">
+      <li><b>1. Choisissez</b><span>un ou plusieurs métiers qui vous attirent.</span></li>
+      <li><b>2. Répondez</b><span>à 6 questions courtes sur votre profil (3 à 4 minutes).</span></li>
+      <li><b>3. Découvrez</b><span>vos pistes, ce qu'il faut préparer, puis votre dossier de visa.</span></li>
+    </ol>
+    <p class="guide-link"><a href="../guide-ausbildung.html">Lire notre guide Ausbildung</a></p>
+  </section>
+
+  <section class="hero" id="quizhero" hidden>
     <p class="eyebrow">VOTRE PROJET · ALLEMAGNE</p>
     <h1>Trouvez une Ausbildung qui vous correspond.</h1>
     <p>Quelques questions pour découvrir les métiers de la formation en alternance en Allemagne qui correspondent à vos intérêts, à vos compétences et à votre façon de travailler.</p>
@@ -71,6 +112,7 @@
     <h2 id="resultsTitle" tabindex="-1">Les métiers qui vous correspondent</h2>
     <p class="muted">Ce classement est une première orientation, pas une promesse d'embauche.</p>
     <div id="resultList"></div>
+    <div id="chosenWrap" hidden><h3>Les métiers que vous avez choisis</h3><p class="muted">Voici leur compatibilité avec vos réponses. Ce n'est pas un critère d'admission.</p><div id="chosenList"></div></div>
     <div id="readiness" class="readiness"></div>
     <div class="next-steps">
       <h3>Et ensuite ?</h3>
