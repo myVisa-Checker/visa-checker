@@ -81,3 +81,13 @@
 .hgh-tips p{margin:0 0 8px;font-weight:800;color:var(--ink)}
 .hgh-tips ul{margin:0;padding-inline-start:20px;display:grid;gap:8px;font-size:15px;line-height:1.45}
 .hgh-progress[hidden]{display:none}
+/* Boutons Retour / Continuer toujours visibles en bas, sur mobile comme sur ordinateur */
+.hgh-actions{position:sticky;bottom:0;z-index:4;margin:14px 0 0;padding:12px 0 calc(12px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}
+.hgh-actions .hgh-btn{min-width:150px}
+.hgh-types{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:620px){.hgh-types{grid-template-columns:1fr 1fr}}
+.hgh-type{display:flex;align-items:center;gap:12px;padding:16px;border:2px solid var(--line);border-radius:16px;background:#fff;color:var(--ink);font-weight:650;cursor:pointer}
+.hgh-type input{flex:none;width:20px;height:20px;accent-color:#0b2c59}
+.hgh-type.on{border-color:var(--yellow);background:#fff8dd}
+.hgh-type:focus-within{outline:3px solid #1d4ed8;outline-offset:2px}
+a.hgh-btn.ghost{color:var(--ink)}

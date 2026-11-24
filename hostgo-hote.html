@@ -24,7 +24,7 @@
   </header>
 
   <div class="hgh-wrap">
-    <div class="hgh-progress" role="img" aria-label="" id="hgh-progress"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+    <div class="hgh-progress" role="img" aria-label="" id="hgh-progress"></div>
 
     <section class="hgh-step" id="st1" aria-labelledby="h-st1">
       <div class="hgh-hero">
@@ -54,7 +54,7 @@
       </div>
 
       <div class="hgh-actions">
-        <button class="hgh-btn ghost" type="button" disabled data-i="back">← Retour</button>
+        <a class="hgh-btn ghost" href="./hostgo.html" data-i="back">← Retour</a>
         <button class="hgh-btn" id="continue1" type="button" data-go="next" data-i="next">Continuer →</button>
       </div>
       <p class="hgh-err" id="error1" role="alert"></p>
@@ -80,6 +80,37 @@
         <button class="hgh-btn" type="button" data-go="next" data-i="next"></button>
       </div>
       <p class="hgh-err" id="err-st2" role="alert"></p>
+    </section>
+
+    <section class="hgh-step" id="ty" hidden aria-labelledby="h-ty">
+      <div class="hgh-head">
+        <p class="hgh-eyebrow"></p>
+        <h1 id="h-ty" data-i="h_ty"></h1>
+        <p data-i="ty_lead"></p>
+      </div>
+      <div class="hgh-types" id="types" role="group" aria-labelledby="h-ty"></div>
+      <div class="hgh-actions">
+        <button class="hgh-btn ghost" type="button" data-go="prev" data-i="back"></button>
+        <button class="hgh-btn" type="button" data-go="next" data-i="next"></button>
+      </div>
+      <p class="hgh-err" id="err-ty" role="alert"></p>
+    </section>
+
+    <section class="hgh-step" id="pl" hidden aria-labelledby="h-pl">
+      <div class="hgh-head">
+        <p class="hgh-eyebrow"></p>
+        <h1 id="h-pl" data-i="h_pl"></h1>
+      </div>
+      <div class="hgh-card">
+        <label class="hgh-label" for="pl-hours" data-i="pl_hours"></label><select id="pl-hours"></select>
+        <label class="hgh-label" for="pl-days" data-i="pl_days"></label><select id="pl-days"></select>
+        <label class="hgh-label" for="pl-stay" data-i="pl_stay"></label><select id="pl-stay"></select>
+      </div>
+      <aside class="hgh-tips"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><p data-i="pl_tip"></p></aside>
+      <div class="hgh-actions">
+        <button class="hgh-btn ghost" type="button" data-go="prev" data-i="back"></button>
+        <button class="hgh-btn" type="button" data-go="next" data-i="next"></button>
+      </div>
     </section>
 
     <section class="hgh-step" id="st3" hidden aria-labelledby="h-st3">
