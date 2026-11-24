@@ -127,7 +127,7 @@
     var msg = ["[Host & Go — liste d'attente]", "Rôle : " + ROLE_FR[role], "Thème : " + (themeFr(theme) || "non précisé"), "Pays : " + country, "Ville : " + city, "Langue de la page : " + lang, "", note || "(pas de message)"].join("\n");
     var btn = $("hf-send"); btn.disabled = true;
     var ctl = typeof AbortController === "function" ? new AbortController() : null, timer = ctl ? setTimeout(function () { ctl.abort(); }, 12000) : null;
-    fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name, email: mail, subject: SUBJECT, message: msg, consent: true, hp: $("hf-hp").value || "" }), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
+    (window.CMV_TS?window.CMV_TS.fetch:function(u,o){return fetch(u,o)})(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name, email: mail, subject: SUBJECT, message: msg, consent: true, hp: $("hf-hp").value || "" }), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
       .catch(function () { return false; })
       .then(function (sent) {

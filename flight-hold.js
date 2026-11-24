@@ -21,7 +21,7 @@
       none: "Aucun vol réservable sans paiement sur ces dates. Essayez d'autres dates ou un aéroport proche.", fill: "Merci de remplir tous les champs obligatoires.", net: "Connexion impossible. Réessayez dans un instant.",
       badge: "Réservation temporaire — billet non émis", pnr: "Référence de réservation (PNR)", passenger: "Passager", price: "Prix si vous confirmez", print: "Télécharger en PDF / Imprimer", again: "Nouvelle recherche",
       warn: function (d) { return "Attention : cette réservation expire avant votre rendez-vous consulaire (" + d + "). Refaites-la plus près de la date."; },
-      legal: "Il s'agit d'une réservation temporaire (mode attente), non émise et à validité limitée, destinée aux démarches de visa. Elle s'annule automatiquement à la date limite fixée par la compagnie si elle n'est pas payée. Nous vous conseillons de la commander à l'approche de votre rendez-vous consulaire. Ce document n'est pas un billet d'avion.",
+      legal: "Il s'agit d'une réservation temporaire (mode attente), non émise et à validité limitée, destinée aux démarches de visa. Elle s'annule automatiquement à la date limite fixée par la compagnie si elle n'est pas payée. Nous vous conseillons de la commander à l'approche de votre rendez-vous consulaire. Ce document n'est pas un billet d'avion. Vérifiez auprès du consulat qu'une réservation en attente est acceptée pour votre dossier.",
       doc: "Réservation en attente de paiement, annulée automatiquement à l'échéance. Ce document n'est pas un billet."
     },
     en: {
@@ -34,7 +34,7 @@
       none: "No flight can be held without payment on these dates. Try other dates or a nearby airport.", fill: "Please fill in all required fields.", net: "Connection failed. Please try again in a moment.",
       badge: "Temporary reservation — ticket not issued", pnr: "Booking reference (PNR)", passenger: "Passenger", price: "Price if you confirm", print: "Download as PDF / Print", again: "New search",
       warn: function (d) { return "Warning: this reservation expires before your consular appointment (" + d + "). Book it again closer to the date."; },
-      legal: "This is a temporary reservation (on hold), not ticketed and valid for a limited time, intended for visa applications. It is cancelled automatically at the airline's deadline if it is not paid. We advise ordering it close to your consular appointment. This document is not a flight ticket.",
+      legal: "This is a temporary reservation (on hold), not ticketed and valid for a limited time, intended for visa applications. It is cancelled automatically at the airline's deadline if it is not paid. We advise ordering it close to your consular appointment. This document is not a flight ticket. Check with the consulate that an on-hold reservation is accepted for your application.",
       doc: "Reservation awaiting payment, automatically cancelled at the deadline. This document is not a ticket."
     },
     ar: {
@@ -47,7 +47,7 @@
       none: "لا توجد رحلة قابلة للحجز دون دفع في هذه التواريخ. جرّب تواريخ أخرى أو مطارًا قريبًا.", fill: "يرجى ملء جميع الحقول الإلزامية.", net: "تعذّر الاتصال. أعد المحاولة بعد قليل.",
       badge: "حجز مؤقت — التذكرة غير مُصدرة", pnr: "مرجع الحجز (PNR)", passenger: "المسافر", price: "السعر عند التأكيد", print: "تنزيل PDF / طباعة", again: "بحث جديد",
       warn: function (d) { return "تنبيه: ينتهي هذا الحجز قبل موعد القنصلية (" + d + "). أعد الحجز قرب الموعد."; },
-      legal: "هذا حجز مؤقت (معلّق)، غير مُصدر وصالح لمدة محدودة، مخصص لإجراءات التأشيرة. يُلغى تلقائيًا في الموعد الذي تحدده الشركة إذا لم يُدفع. ننصحك بطلبه قرب موعد القنصلية. هذه الوثيقة ليست تذكرة طيران.",
+      legal: "هذا حجز مؤقت (معلّق)، غير مُصدر وصالح لمدة محدودة، مخصص لإجراءات التأشيرة. يُلغى تلقائيًا في الموعد الذي تحدده الشركة إذا لم يُدفع. ننصحك بطلبه قرب موعد القنصلية. هذه الوثيقة ليست تذكرة طيران. تحقق لدى القنصلية من قبول الحجز المعلّق ضمن ملفك.",
       doc: "حجز في انتظار الدفع، يُلغى تلقائيًا عند انتهاء المهلة. هذه الوثيقة ليست تذكرة."
     }
   };
@@ -73,7 +73,8 @@
   }
 
   function post(path, payload) {
-    return fetch(FLIGHT_URL + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+    var ts = path === "/flight/book" && window.CMV_TS ? window.CMV_TS.token() : Promise.resolve("");
+    return ts.then(function (tk) { if (tk) payload.turnstile = tk; return fetch(FLIGHT_URL + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok || d.ok === false) throw new Error(d.error || ""); return d; }); });
   }
 

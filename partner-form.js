@@ -306,7 +306,7 @@
   function send(payload) {
     var ctl = typeof AbortController === "function" ? new AbortController() : null;
     var timer = ctl ? setTimeout(function () { ctl.abort(); }, TIMEOUT_MS) : null;
-    return fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
+    return (window.CMV_TS?window.CMV_TS.fetch:function(u,o){return fetch(u,o)})(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
       .then(function (r) { if (timer) clearTimeout(timer); return r.json().then(function (j) { return { ok: r.ok, j: j }; }, function () { return { ok: false, j: null }; }); })
       .then(function (r) { if (r.ok && r.j && r.j.ok === true && r.j.partner === true) return { sent: true }; return { sent: false, invalid: !!(r.j && r.j.error === "invalid"), rate: !!(r.j && r.j.error === "rate") }; },
         function () { if (timer) clearTimeout(timer); return { sent: false }; });

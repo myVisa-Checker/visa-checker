@@ -36,9 +36,9 @@ SI.add({
   "<strong>Publisher and director of publication:</strong> Rabeh Tlili",
   "<strong>الناشر ومدير النشر:</strong> Rabeh Tlili"
  ],
- "Localisation : Tunis, Tunisie": [
-  "<strong>Location:</strong> Tunis, Tunisia",
-  "<strong>المقر:</strong> تونس العاصمة، تونس"
+ "Localisation : Tunisie": [
+  "<strong>Location:</strong> Tunisia",
+  "<strong>المقر:</strong> تونس"
  ],
  "Contact : contact@checkmyvisa.org": [
   "<strong>Contact:</strong> <a href=\"mailto:contact@checkmyvisa.org\">contact@checkmyvisa.org</a>",
@@ -48,9 +48,9 @@ SI.add({
   "<strong>Website:</strong> <a href=\"https://checkmyvisa.org\">https://checkmyvisa.org</a>",
   "<strong>الموقع الإلكتروني:</strong> <a href=\"https://checkmyvisa.org\">https://checkmyvisa.org</a>"
  ],
- "Ces informations seront mises à jour dès qu'une structure professionnelle et une adresse e-mail propre au nom de domaine seront en place.": [
-  "This information will be updated as soon as a business structure and an email address on the domain name are in place.",
-  "سيجري تحديث هذه المعلومات فور اعتماد هيكل مهني وعنوان بريد إلكتروني خاص باسم النطاق."
+ "Ces informations seront complétées dès qu'une structure professionnelle sera en place.": [
+  "This information will be completed as soon as a business structure is in place.",
+  "سيجري استكمال هذه المعلومات فور اعتماد هيكل مهني."
  ],
  "Hébergement": [
   "Hosting",

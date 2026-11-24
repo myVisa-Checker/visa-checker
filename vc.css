@@ -1355,15 +1355,6 @@ body[data-step="0"] .vc-intro{grid-column:1/-1}
  .pwa .pwa-go{flex:1 1 auto}
 }
 
-/* Carte Garantie (Aïcha) */
-.gr-msg{margin:.9rem 0 .2rem;font-size:.85rem;line-height:1.55;color:#344256}
-.gr-note{margin:.35rem 0;font-size:.72rem;line-height:1.5;color:#8993a4}
-.gr-cur{display:block;margin:.8rem 0;font-size:.74rem;font-weight:650;color:#657187}.gr-cur .vc-input{display:block;margin-top:.3rem;max-width:18rem}
-.gr-figures{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin:.6rem 0}
-.gr-fig{padding:.8rem .9rem;border:1px solid #e7eaf0;border-radius:12px;background:#fbfcfe}.gr-fig small{display:block;font-size:.68rem;color:#6f7b8e}.gr-fig strong{direction:ltr;unicode-bidi:isolate;text-align:start;display:block;margin-top:.25rem;font-size:1.35rem;letter-spacing:-.02em;color:#1e293b}
-#gr-buy{margin-top:.6rem}.gr-link{margin:.9rem 0 0;font-size:.8rem}
-@media(max-width:600px){.gr-figures{grid-template-columns:1fr}}
-
 /* Carte Ausbildung (accueil uniquement, rendue dans la rangée .vc-more, avant la FAQ) : visuel compact, carte entière cliquable vers ./ausbildung/. Même rendu en thème clair et sombre. */
 .aus-teaser .aus-in{display:none}
 html[lang="fr"] .aus-teaser .aus-in[lang="fr"],html[lang="en"] .aus-teaser .aus-in[lang="en"],html[lang="ar"] .aus-teaser .aus-in[lang="ar"]{display:block}

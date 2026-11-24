@@ -32,10 +32,6 @@ SI.add({
   "Live appointments",
   "مواعيد مباشرة"
  ],
- "Garantie": [
-  "Guarantee",
-  "الضمان"
- ],
  "Cookies": [
   "Cookies",
   "ملفات تعريف الارتباط"

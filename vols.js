@@ -25,7 +25,7 @@
       expiredNote: "La date limite est dépassée : la compagnie annule automatiquement une réservation non émise. Elle n'est plus valable pour un dossier de visa.", noDeadline: "La compagnie n'a pas communiqué de date limite. Vérifiez-la auprès d'elle avec le code PNR.",
       badge: "Réservation temporaire — billet non émis", pnr: "Référence de réservation (PNR)", passenger: "Passager", print: "Télécharger en PDF / Imprimer", again: "Nouvelle recherche",
       warn: function (d) { return "Attention : cette réservation expire avant votre rendez-vous consulaire (" + d + "). Refaites-la plus près de la date."; },
-      legal: "Il s'agit d'une réservation temporaire (mode attente), non émise et à validité limitée, destinée aux démarches de visa. Elle s'annule automatiquement à la date limite fixée par la compagnie si elle n'est pas payée. Ce n'est pas un billet.",
+      legal: "Il s'agit d'une réservation temporaire (mode attente), non émise et à validité limitée, destinée aux démarches de visa. Elle s'annule automatiquement à la date limite fixée par la compagnie si elle n'est pas payée. Ce n'est pas un billet. Vérifiez auprès du consulat qu'une réservation en attente est acceptée pour votre dossier.",
       doc: "Réservation en attente de paiement, annulée automatiquement à l'échéance. Ce document n'est pas un billet.",
       d: ["j", "h", "min"]
     },
@@ -46,7 +46,7 @@
       expiredNote: "The deadline has passed: the airline automatically cancels a reservation that has not been ticketed. It is no longer valid for a visa file.", noDeadline: "The airline has not given a deadline. Check it with them using the PNR code.",
       badge: "Temporary reservation — ticket not issued", pnr: "Booking reference (PNR)", passenger: "Passenger", print: "Download as PDF / Print", again: "New search",
       warn: function (d) { return "Warning: this reservation expires before your consular appointment (" + d + "). Book it again closer to the date."; },
-      legal: "This is a temporary reservation (on hold), not ticketed and valid for a limited time, intended for visa applications. It is cancelled automatically at the airline's deadline if it is not paid. It is not a ticket.",
+      legal: "This is a temporary reservation (on hold), not ticketed and valid for a limited time, intended for visa applications. It is cancelled automatically at the airline's deadline if it is not paid. It is not a ticket. Check with the consulate that an on-hold reservation is accepted for your application.",
       doc: "Reservation awaiting payment, automatically cancelled at the deadline. This document is not a ticket.",
       d: ["d", "h", "min"]
     },
@@ -67,7 +67,7 @@
       expiredNote: "انتهت المهلة: تلغي شركة الطيران تلقائيًا الحجز غير المُصدر. لم يعد صالحًا لملف التأشيرة.", noDeadline: "لم تحدد شركة الطيران مهلة. تحقق منها لديها برمز PNR.",
       badge: "حجز مؤقت — التذكرة غير مُصدرة", pnr: "مرجع الحجز (PNR)", passenger: "المسافر", print: "تنزيل PDF / طباعة", again: "بحث جديد",
       warn: function (d) { return "تنبيه: ينتهي هذا الحجز قبل موعد القنصلية (" + d + "). أعد الحجز قرب الموعد."; },
-      legal: "هذا حجز مؤقت (معلّق)، غير مُصدر وصالح لمدة محدودة، مخصص لإجراءات التأشيرة. يُلغى تلقائيًا في الموعد الذي تحدده الشركة إذا لم يُدفع. هذه ليست تذكرة.",
+      legal: "هذا حجز مؤقت (معلّق)، غير مُصدر وصالح لمدة محدودة، مخصص لإجراءات التأشيرة. يُلغى تلقائيًا في الموعد الذي تحدده الشركة إذا لم يُدفع. هذه ليست تذكرة. تحقق لدى القنصلية من قبول الحجز المعلّق ضمن ملفك.",
       doc: "حجز في انتظار الدفع، يُلغى تلقائيًا عند انتهاء المهلة. هذه الوثيقة ليست تذكرة.",
       d: ["ي", "س", "د"]
     }
@@ -93,7 +93,8 @@
   }
 
   function post(path, payload) {
-    return fetch(URL_ + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+    var ts = path === "/flight/book" && window.CMV_TS ? window.CMV_TS.token() : Promise.resolve("");
+    return ts.then(function (tk) { if (tk) payload.turnstile = tk; return fetch(URL_ + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok || d.ok === false) throw new Error(d.error || ""); return d; }); });
   }
   var msg = function (e) { return e && e.message && e.message !== "Failed to fetch" ? e.message : t.net; };

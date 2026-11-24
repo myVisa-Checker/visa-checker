@@ -273,7 +273,7 @@
       options.headers = { 'Content-Type': 'application/json' };
       options.body = JSON.stringify(body || {});
     }
-    return fetch(VC.api.base.replace(/\/$/, '') + path, options).then(function (r) {
+    return (window.CMV_TS?window.CMV_TS.fetch:function(u,o){return fetch(u,o)})(VC.api.base.replace(/\/$/, '') + path, options).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (data) {
         if (!r.ok) {
           var err = new Error(data.error || ('http-' + r.status));

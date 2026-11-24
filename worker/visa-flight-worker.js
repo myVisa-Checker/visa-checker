@@ -259,9 +259,31 @@ function assignPassengers(offer, list) {
   return out.map(({ type, ...p }) => p);
 }
 
+/** Cloudflare Turnstile : actif seulement si le secret TURNSTILE_SECRET existe (sinon sans effet, pour ne pas casser le site avant la mise en place côté page). */
+async function turnstileOk(env, req, token) {
+  if (!env.TURNSTILE_SECRET) return true;
+  if (!token || typeof token !== "string" || token.length > 2048) return false;
+  try {
+    const fd = new FormData();
+    fd.append("secret", env.TURNSTILE_SECRET);
+    fd.append("response", token);
+    const ip = req.headers.get("CF-Connecting-IP");
+    if (ip) fd.append("remoteip", ip);
+    const r = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: fd });
+    const j = await r.json().catch(() => null);
+    return !!(j && j.success === true);
+  } catch (e) {
+    console.error("turnstile", e?.message);
+    return false;
+  }
+}
+
 async function book(req, env) {
+  // Interrupteur d'urgence : BOOK_DISABLED=1 (variable Cloudflare) coupe les nouvelles réservations sans redéployer.
+  if (env.BOOK_DISABLED === "1") throw new HttpError(503, "Les réservations sont momentanément suspendues.", "disabled");
   if (await limited(env, req, "book", 4, 3600)) throw new HttpError(429, "Trop de réservations. Réessayez plus tard.", "rate");
   const body = await req.json().catch(() => null);
+  if (!(await turnstileOk(env, req, body?.turnstile))) throw new HttpError(403, "Vérification anti-robot requise.", "captcha");
   const offerId = String(body?.offer_id ?? "");
   if (!/^off_[A-Za-z0-9]+$/.test(offerId)) throw new HttpError(422, "Offre invalide.", "offer");
   // Plusieurs passagers : body.passengers [{type: adult|child|infant, ...}] ; ancien format : body.passenger (un adulte).

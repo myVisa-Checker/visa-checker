@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script>(function(){try{var h=location.hostname;if(location.protocol==='http:'&&h!=='localhost'&&h!=='127.0.0.1'&&h!=='[::1]'){location.replace('https://'+location.host+location.pathname+location.search+location.hash)}}catch(e){}})();</script>
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; default-src 'self'; script-src 'self' 'sha256-/Ubt3glbwnFC41S1wneNvjX7/Beg/yqFOhr2Pvfw5Hg='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://visa-proxy.rabehfly.workers.dev https://visa-chat.rabehfly.workers.dev https://visa-flight.rabehfly.workers.dev; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; default-src 'self'; script-src 'self' 'sha256-/Ubt3glbwnFC41S1wneNvjX7/Beg/yqFOhr2Pvfw5Hg=' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://visa-proxy.rabehfly.workers.dev https://visa-chat.rabehfly.workers.dev https://visa-flight.rabehfly.workers.dev https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="stylesheet" href="vc.css">
 <title>CheckMyVisa : votre dossier visa vérifié avant le dépôt</title>
@@ -242,7 +242,7 @@
   <section class="bpn" id="bpn" aria-label="Bons plans" hidden></section>
   <section class="trd" id="trans" aria-label="Traducteurs assermentés" hidden></section>
   <footer>
-    <div class="links"><a href="./partenaires.html">Partenaires</a><a href="./guide-visa.html">Guide</a><a href="./ausbildung/">Ausbildung</a><a href="./a-propos.html">À propos</a><a href="./faq.html">FAQ</a><a href="./contact.html">Contact</a><a href="./confidentialite.html">Confidentialité</a><a href="./conditions.html">Conditions d'utilisation</a><a href="./mentions-legales.html">Mentions légales</a><a href="./cookies.html">Cookies</a><a href="./garantie.html">Garantie</a>
+    <div class="links"><a href="./partenaires.html">Partenaires</a><a href="./guide-visa.html">Guide</a><a href="./ausbildung/">Ausbildung</a><a href="./a-propos.html">À propos</a><a href="./faq.html">FAQ</a><a href="./contact.html">Contact</a><a href="./confidentialite.html">Confidentialité</a><a href="./conditions.html">Conditions d'utilisation</a><a href="./mentions-legales.html">Mentions légales</a><a href="./cookies.html">Cookies</a>
 <a href="./rdv-direct.html">Rendez-vous en direct</a></div>
     <div class="links" id="links"></div>
     <p id="disc"></p>
@@ -258,6 +258,7 @@
 </div>
 <dialog id="lg" aria-labelledby="lg-t" aria-modal="true" aria-hidden="true"><div class="lg-in"><div class="lg-top"><h2 id="lg-t"></h2><button type="button" class="lg-x" id="lg-x"></button></div><div id="lg-b"></div></div></dialog>
 
+<script src="turnstile.js" defer></script>
 <script src="flight-hold.js" defer></script>
 <script src="visa-app.js" defer></script>
 

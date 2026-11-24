@@ -7,5 +7,6 @@ ALLOWED_ORIGIN = "https://checkmyvisa.org,https://www.checkmyvisa.org"
 
 # Secret à créer (jamais dans ce fichier) : DUFFEL_API_KEY  (duffel_test_... en Sandbox, duffel_live_... en production)
 #   npx wrangler secret put DUFFEL_API_KEY --config worker/wrangler.flight.toml
+# Optionnel : secret TURNSTILE_SECRET (active le contrôle anti-robot sur /flight/book) et variable BOOK_DISABLED="1" (coupe les réservations en urgence).
 # Liaison KV « KV » optionnelle pour la limite de débit par IP (sinon aucune limite).
 # Ce Worker est autonome : il peut se déployer avec « wrangler deploy --config worker/wrangler.flight.toml ».

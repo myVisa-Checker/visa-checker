@@ -308,7 +308,7 @@
     var texts = parts.map(function (p, i) { return (i ? "[Host & Go — suite " + (i + 1) + "/" + parts.length + " — " + mail + "]\n" : "") + p.join("\n"); });
     function post(text) {
       var ctl = typeof AbortController === "function" ? new AbortController() : null, timer = ctl ? setTimeout(function () { ctl.abort(); }, 12000) : null;
-      return fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name, email: mail, subject: SUBJECT, message: text, consent: true, hp: $("hp").value || "" }), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
+      return (window.CMV_TS?window.CMV_TS.fetch:function(u,o){return fetch(u,o)})(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name, email: mail, subject: SUBJECT, message: text, consent: true, hp: $("hp").value || "" }), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
         .catch(function () { return false; })
         .then(function (ok) { if (timer) clearTimeout(timer); return ok; });

@@ -261,7 +261,9 @@ async function apiReadPayload(request) {
     try { body = raw ? JSON.parse(String(raw)) : {}; } catch { return { error: "invalid_payload", status: 400 }; }
     rawFiles = form.getAll("files").concat(form.getAll("file")).filter((f) => f && typeof f.arrayBuffer === "function");
   } else if (/^application\/json\b/i.test(type)) {
-    try { body = await request.json(); } catch { return { error: "invalid_payload", status: 400 }; }
+    let rawJson; try { rawJson = await request.text(); } catch { return { error: "invalid_payload", status: 400 }; }
+    if (rawJson.length > Math.ceil(API_TOTAL_MAX * 4 / 3) + 4096) return { error: "payload_too_large", status: 413 };
+    try { body = JSON.parse(rawJson); } catch { return { error: "invalid_payload", status: 400 }; }
     rawFiles = Array.isArray(body && body.attachments) ? body.attachments : [];
   } else {
     return { error: "unsupported_content_type", status: 415 };
@@ -421,13 +423,33 @@ async function handleVisaApi(request, env, out, pathname) {
   return out({ error: "not_found" }, 404);
 }
 
+/** Cloudflare Turnstile : actif seulement si le secret TURNSTILE_SECRET existe. Le jeton arrive dans l'en-tête X-Turnstile. */
+async function turnstileOk(env, request) {
+  if (!env.TURNSTILE_SECRET) return true;
+  const token = request.headers.get("X-Turnstile") || "";
+  if (!token || token.length > 2048) return false;
+  try {
+    const fd = new FormData();
+    fd.append("secret", env.TURNSTILE_SECRET);
+    fd.append("response", token);
+    const ip = request.headers.get("CF-Connecting-IP");
+    if (ip) fd.append("remoteip", ip);
+    const r = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: fd });
+    const j = await r.json().catch(() => null);
+    return !!(j && j.success === true);
+  } catch (e) {
+    console.log("turnstile", e && e.message);
+    return false;
+  }
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
     const cors = {
       "Access-Control-Allow-Origin": ORIGINS.includes(origin) ? origin : ORIGINS[0],
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Headers": "Content-Type, X-Turnstile",
       "Vary": "Origin",
     };
     const out = (obj, status = 200) =>
@@ -441,6 +463,7 @@ export default {
     if (origin && !ORIGINS.includes(origin)) return out({ error: "forbidden" }, 403);
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
     const pathname = new URL(request.url).pathname;
+    if (request.method === "POST" && !(await turnstileOk(env, request))) return out({ error: "captcha" }, 403);
     if (pathname === "/api/analyze-refusal" || pathname === "/api/analyze-dossier" || pathname === "/api/generate-appeal" || pathname === "/api/interview-feedback") {
       if (request.method !== "POST") return out({ error: "POST only" }, 405);
       try { return await handleVisaApi(request, env, out, pathname); }

@@ -56,7 +56,7 @@
     var payload = { name: name, email: mail, subject: $("cf-subj").value, message: msg, consent: true, hp: ($("cf-hp") || {}).value || "" };
     var ctl = typeof AbortController === "function" ? new AbortController() : null;
     var timer = ctl ? setTimeout(function () { ctl.abort(); }, 12000) : null;
-    fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
+    (window.CMV_TS?window.CMV_TS.fetch:function(u,o){return fetch(u,o)})(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
       .catch(function () { return false; })
       .then(function (sent) {

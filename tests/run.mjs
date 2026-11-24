@@ -18,7 +18,7 @@ for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "vi
 }
 
 console.log("JSON");
-for (const f of ["manifest.json", "rdv.json", "deals.json", "version.json", "rates.json", "ausbildung/data/occupations.json", "ausbildung/schemas/occupation.schema.json"]) {
+for (const f of ["manifest.json", "rdv.json", "deals.json", "version.json", "ausbildung/data/occupations.json", "ausbildung/schemas/occupation.schema.json"]) {
   try { JSON.parse(read(f)); ok(f, true); } catch (e) { ok(f, false, e.message); }
 }
 
@@ -235,6 +235,18 @@ try {
   ok("hotels-worker : villes, recherche, chambres annulables, réservation fermée par défaut", true);
 } catch (e) {
   ok("hotels-worker : villes, recherche, chambres annulables, réservation fermée par défaut", false, String(e.stderr || e.message).split("\n")[0]);
+}
+try {
+  execFileSync(process.execPath, ["tests/flight-book-guard.test.mjs"], { stdio: "inherit" });
+  ok("flight-book-guard : interrupteur d'urgence et Turnstile sur /flight/book", true);
+} catch (e) {
+  ok("flight-book-guard : interrupteur d'urgence et Turnstile sur /flight/book", false, String(e.stderr || e.message).split("\n")[0]);
+}
+try {
+  execFileSync(process.execPath, ["tests/chat-worker-guard.test.mjs"], { stdio: "inherit" });
+  ok("chat-worker-guard : Turnstile sur assistants IA, /partner et /contact", true);
+} catch (e) {
+  ok("chat-worker-guard : Turnstile sur assistants IA, /partner et /contact", false, String(e.stderr || e.message).split("\n")[0]);
 }
 {
   const hh = read("hotels.html"), hj = read("hotels.js"), swc = read("sw.js");

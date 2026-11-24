@@ -310,7 +310,7 @@ const handler = {
       const ip = req.headers.get("CF-Connecting-IP") || "?", rk = "ul:" + ip;
       const n = parseInt((await env.KV.get(rk)) || "0", 10);
       if (n >= UNLOCK_TRIES) return out({ ok: false, error: "rate" }, 429);
-      await env.KV.put(rk, String(n + 1), { expirationTtl: 600 });
+      try { await env.KV.put(rk, String(n + 1), { expirationTtl: 600 }); } catch (e) { console.error("unlock rate counter", e && e.message); }
       let b; try { b = JSON.parse(await req.text()); } catch { return out({ ok: false }, 400); }
       const kind = "pack";
       const code = String((b && b.code) || "").trim().toUpperCase();
@@ -319,7 +319,7 @@ const handler = {
       const rec = await env.KV.get(key, "json");
       if (!rec || rec.kind !== kind || rec.uses >= rec.max || Date.now() > rec.exp) return out({ ok: false, error: "bad" }, 401);
       rec.uses++;
-      await env.KV.put(key, JSON.stringify(rec), { expirationTtl: Math.max(60, Math.ceil((rec.exp - Date.now()) / 1000)) + 86400 });
+      try { await env.KV.put(key, JSON.stringify(rec), { expirationTtl: Math.max(60, Math.ceil((rec.exp - Date.now()) / 1000)) + 86400 }); } catch (e) { console.error("unlock use counter", e && e.message); }
       const exp = Date.now() + TOKEN_DAYS * 864e5;
       return out({ ok: true, token: await makeToken(env, kind, exp) }, 200);
     }
@@ -377,8 +377,7 @@ const handler = {
       let j; try { j = await r.json(); } catch { return out({ ok: false, error: "upstream" }, 502); }
       const text = (j.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n").trim();
       if (!text) return out({ ok: false, error: "empty" }, 502);
-      await env.KV.put(uk, String(un + 1), { expirationTtl: 90000 });
-      await env.KV.put(gk, String(gn + 1), { expirationTtl: 90000 });
+      try { await env.KV.put(uk, String(un + 1), { expirationTtl: 90000 }); await env.KV.put(gk, String(gn + 1), { expirationTtl: 90000 }); } catch (e) { console.error("ai quota counter", e && e.message); }
       return out({ ok: true, letter: text.slice(0, 6000) }, 200);
     }
 
@@ -420,8 +419,7 @@ const handler = {
       let j; try { j = await r.json(); } catch { return out({ ok: false, error: "upstream" }, 502); }
       const text = (j.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n").trim();
       if (!text) return out({ ok: false, error: "empty" }, 502);
-      await env.KV.put(uk, String(un + 1), { expirationTtl: 90000 });
-      await env.KV.put(gk, String(gn + 1), { expirationTtl: 90000 });
+      try { await env.KV.put(uk, String(un + 1), { expirationTtl: 90000 }); await env.KV.put(gk, String(gn + 1), { expirationTtl: 90000 }); } catch (e) { console.error("ai quota counter", e && e.message); }
       return out({ ok: true, analysis: text.slice(0, 7000) }, 200);
     }
 

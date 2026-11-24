@@ -3,7 +3,7 @@ main = "visa-proxy-worker.js"
 compatibility_date = "2026-11-11"
 
 [vars]
-ALLOWED_ORIGIN = "https://checkmyvisa.org,https://www.checkmyvisa.org,https://myvisa-checker.github.io"
+ALLOWED_ORIGIN = "https://checkmyvisa.org,https://www.checkmyvisa.org"
 
 # ATTENTION : cette configuration décrit le Worker « visa-proxy » (codes, pack, lettre IA, analyseur, API d éligibilité ; plus d agences ni de commandes).
 # Il a besoin de la liaison KV « KV » et de secrets (MAKE_URL, SECRET, ADMIN_KEY, GEMINI_API_KEY) qui ne sont PAS déclarés ici.
