@@ -72,3 +72,12 @@
 .hgh-hero h1{color:#fff}
 #hgh [tabindex="-1"]:focus{outline:none}
 .hgh-foot{background:var(--navy);color:#c9d6ee}
+/* Écrans de description (une question par écran) */
+.sr-lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.hgh-card textarea{min-height:170px}
+.hgh-count{margin:6px 0 0;color:var(--muted);font-size:12px;text-align:end}
+.hgh-tips{margin:0 0 14px;padding:22px;border:2px dashed #8fc1e8;border-radius:20px;background:#f2f9ff;color:#26364f}
+.hgh-tips svg{display:block;width:34px;height:34px;margin:0 auto 10px;fill:none;stroke:#2f9bd6;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hgh-tips p{margin:0 0 8px;font-weight:800;color:var(--ink)}
+.hgh-tips ul{margin:0;padding-inline-start:20px;display:grid;gap:8px;font-size:15px;line-height:1.45}
+.hgh-progress[hidden]{display:none}
