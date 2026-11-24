@@ -3,7 +3,7 @@
    Pour l'activer : coller ici la clé PUBLIQUE du widget (Cloudflare > Turnstile), puis créer le secret TURNSTILE_SECRET sur le Worker concerné. */
 (function () {
   "use strict";
-  var SITEKEY = "0x4AAAAAAGRTIznFtJln3rit";
+  var SITEKEY = "";
   var API = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
   var loading = null, wid = null, box = null, pending = null;
 
