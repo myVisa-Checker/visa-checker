@@ -11,7 +11,7 @@
     ]},
     {id:"experience",title:"Votre expérience",hint:"Qu'avez-vous déjà fait ? Plusieurs réponses possibles.",options:[
       ["professional","Expérience professionnelle"],["internship","Stage"],["personal_projects","Projets personnels"],["none","Aucune expérience"]
-    ]},
+    ],multi:true},
     {id:"german",title:"Vos langues",hint:"Quel est votre niveau actuel en allemand ?",options:[
       ["A0","Aucun"],["A1","A1 — débutant"],["A2","A2 — élémentaire"],["B1","B1 — intermédiaire"],["B2","B2 — indépendant"],["C1","C1 ou plus"]
     ]},
@@ -129,6 +129,14 @@
     $("resultsTitle").focus();
   }
 
+  // Question « expérience » : plusieurs cases possibles ; « Aucune expérience » est exclusive (cocher l'une décoche les autres).
+  $("answers").addEventListener("change", (e) => {
+    const t = e.target;
+    if (!t || t.name !== "experience" || t.type !== "checkbox") return;
+    const boxes = [...document.querySelectorAll('input[name="experience"]')];
+    if (t.checked && t.value === "none") boxes.forEach((x) => { if (x !== t) x.checked = false; });
+    else if (t.checked) boxes.forEach((x) => { if (x.value === "none") x.checked = false; });
+  });
   $("back").addEventListener("click", () => { collect(); step = Math.max(0, step - 1); render(true); });
   $("next").addEventListener("click", () => { collect(); if (step < steps.length - 1) { step++; render(true); } else showResults(); });
   $("restart").addEventListener("click", () => { step = 0; answers = emptyAnswers(); $("results").hidden = true; $("quiz").hidden = false; render(true); });

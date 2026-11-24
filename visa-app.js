@@ -1147,9 +1147,10 @@ function homeHtml(t){
   if(!cur.ready){h+='<div class="book"><span class="slot">'+t.cSoon+'</span><b>'+nm(cur)+'</b><p>'+(S.origin==='tn'?t.soonText:ORI_SOON[S.origin][L])+'</p></div>'}
   h+=evCardHtml();
   h+='</div>';
-  var aus=document.getElementById("aus-tpl");if(aus)h+=aus.innerHTML;
-  var hg=document.getElementById("hg-tpl");if(hg)h+=hg.innerHTML;
   h+='<div class="side">'+(S.origin==='tn'?needsHtml(t):'')+photoHtml()+'</div>';
+  /* Rangée « à découvrir » : cartes Ausbildung et Host & Go côte à côte (desktop) ou l'une sous l'autre (mobile), juste sous la zone principale et avant la FAQ. */
+  var aus=document.getElementById("aus-tpl"),hg=document.getElementById("hg-tpl");
+  if(aus||hg)h+='<div class="vc-more">'+(aus?aus.innerHTML:'')+(hg?hg.innerHTML:'')+'</div>';
   h+=hfaqHtml();
   var whyIcons=["✦","◎","文","↗","✓"];
   h+='<section class="why why-showcase" aria-labelledby="why-title"><div class="why-head"><span class="why-eyebrow">'+(L==="ar"?"لماذا نحن؟":L==="en"?"THE CHECKMYVISA ADVANTAGE":"L’AVANTAGE CHECKMYVISA")+'</span><h2 id="why-title">'+t.whyTitle+'</h2><p class="why-lead">'+(L==="ar"?"مرافقة أوضح لتحضير ملف تأشيرتك بثقة.":L==="en"?"A clearer way to prepare your visa file with confidence.":"Une façon plus claire de préparer votre dossier visa, en toute confiance.")+'</p></div><ul class="why-grid">'+t.why.map(function(x,i){return '<li class="why-card"><span class="why-icon" aria-hidden="true">'+whyIcons[i%whyIcons.length]+'</span><span class="why-copy">'+x+'</span><span class="why-check" aria-hidden="true">✓</span></li>'}).join("")+'</ul><p class="why-note">'+t.whyNote+'</p></section>';

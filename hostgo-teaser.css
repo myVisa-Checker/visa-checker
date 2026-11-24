@@ -32,4 +32,5 @@ html[dir="rtl"] .hg-teaser .hg-h em{font-style:normal}
   .hg-teaser .hg-photo{height:100%;min-height:260px}
 }
 
-.hg-teaser{grid-column:1/-1}
+/* Accueil desktop : la vitrine occupe le reste de la rangée .vc-more, à hauteur de la carte Ausbildung. */
+@media(min-width:900px){.vc-more .hg-teaser,.vc-more .hg-teaser .hg-in,.vc-more .hg-teaser .hg-card{height:100%}}
