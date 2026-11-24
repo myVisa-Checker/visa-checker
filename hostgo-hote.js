@@ -20,6 +20,7 @@
       fPriv: "Confidentialité", fTerms: "Conditions", doneH: "Merci !",
       doneOk: "Votre demande est enregistrée. Nous vous écrivons dès l’ouverture.",
       doneFb: "L’envoi direct n’est pas disponible : votre messagerie s’ouvre avec le message prêt. Vous pouvez aussi écrire à ",
+      roleNotice: "Cet e-mail est déjà enregistré ici comme compte Voyageur. Un compte Voyageur ne peut pas servir de compte Hôte : utilisez une autre adresse e-mail pour ce rôle. Votre demande a tout de même été envoyée.",
       progress: "Étape {n} sur {t}",
       eCountry: "Veuillez choisir votre pays.", eChecks: "Veuillez confirmer chaque déclaration pour continuer.",
       eFields: "Merci de renseigner votre prénom, une adresse e-mail valide et votre ville.", eTerms: "Vous devez accepter les conditions et la politique de confidentialité.",
@@ -49,6 +50,7 @@
       fPriv: "Privacy", fTerms: "Terms", doneH: "Thank you!",
       doneOk: "Your request is in. We will write to you when it opens.",
       doneFb: "Direct sending is not available: your e-mail app opens with the message ready. You can also write to ",
+      roleNotice: "This e-mail is already registered here as a Traveller account. A Traveller account cannot be used as a Host account: please use another e-mail address for this role. Your request has still been sent.",
       progress: "Step {n} of {t}",
       eCountry: "Please choose your country.", eChecks: "Please confirm every statement to continue.",
       eFields: "Please enter your first name, a valid e-mail address and your city.", eTerms: "You must accept the terms and the privacy policy.",
@@ -78,6 +80,7 @@
       fPriv: "الخصوصية", fTerms: "الشروط", doneH: "شكراً!",
       doneOk: "تم تسجيل طلبك. سنكتب إليك عند الافتتاح.",
       doneFb: "الإرسال المباشر غير متاح: سيُفتح تطبيق البريد والرسالة جاهزة. يمكنك أيضاً الكتابة إلى ",
+      roleNotice: "هذا البريد مسجّل هنا كحساب مسافر. لا يمكن استخدام حساب المسافر كحساب مضيف: استخدم بريداً آخر لهذا الدور. وقد أُرسل طلبك مع ذلك.",
       progress: "الخطوة {n} من {t}",
       eCountry: "يرجى اختيار بلدك.", eChecks: "يرجى تأكيد كل إقرار للمتابعة.",
       eFields: "يرجى إدخال اسمك الأول وبريد إلكتروني صالح ومدينتك.", eTerms: "يجب قبول الشروط وسياسة الخصوصية.",
@@ -316,6 +319,8 @@
     texts.reduce(function (chain, t) { return chain.then(function (ok) { return ok ? post(t) : false; }); }, Promise.resolve(true))
       .then(function (sent) {
         btn.disabled = false;
+        var other = false; try { var rl = JSON.parse(localStorage.getItem("hg_roles") || "{}"); other = rl[mail.toLowerCase()] === "traveler"; if (sent && !other) { rl[mail.toLowerCase()] = "host"; localStorage.setItem("hg_roles", JSON.stringify(rl)); } } catch (e) { /* stockage indisponible */ }
+        $("roleNotice").textContent = other ? T.roleNotice : "";
         if (sent) { $("doneMsg").textContent = T.doneOk; show(IDS.length); } else fallback(msg, name, mail);
       });
   });

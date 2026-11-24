@@ -1,0 +1,22 @@
+/* Host & Go : parcours voyageur (formules, compte, étapes) — complète hostgo-hote.css */
+.hgv-toggle{display:flex;gap:8px;margin:0 0 14px;padding:6px;border-radius:999px;background:#e8edf6}
+.hgv-opt{flex:1;min-height:46px;border:0;border-radius:999px;background:transparent;color:var(--ink);font:inherit;font-weight:800;cursor:pointer}
+.hgv-opt[aria-pressed="true"]{background:var(--yellow);color:#1b1b1b;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.hgv-opt:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
+.hgv-plan h2{margin:0 0 6px;font-size:22px;color:var(--ink)}
+.hgv-price{margin:0 0 4px;color:var(--ink)}.hgv-price strong{font-size:38px;font-weight:900}
+.hgv-plan h3{margin:18px 0 10px;font-size:17px;color:var(--ink)}
+.hgv-feat{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:10px}
+.hgv-feat li{display:flex;gap:10px;align-items:flex-start;line-height:1.45;color:#26364f}
+.hgv-feat li:before{content:"✓";flex:none;color:#6c8f12;font-weight:900}
+.hgv-chosen{margin:0 0 6px;padding:10px 14px;border-radius:12px;background:#fff8dd;font-weight:800;color:var(--ink)}
+.hgv-bar{height:26px;margin:12px 0 18px;border-radius:999px;background:#e8edf1;overflow:hidden}
+.hgv-bar span{display:flex;align-items:center;height:100%;padding:0 12px;background:#b5d333;color:#1c2a05;font-size:13px;font-weight:800;white-space:nowrap}
+.hgv-steps{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.hgv-steps li{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start}
+.hgv-steps .n{display:grid;place-items:center;width:40px;height:40px;border:3px solid #cfd6e4;border-radius:50%;font-weight:800;color:var(--ink);background:#fff}
+.hgv-steps .ok .n{border-color:#b5d333;background:#eef7c8}
+.hgv-steps .lock .n{border-style:dashed}
+.hgv-steps b{display:block;color:var(--ink)}.hgv-steps span.d{color:#4b5b75;font-size:15px;line-height:1.4}
+.hgv-steps .soon{display:inline-block;margin-inline-start:8px;padding:2px 8px;border-radius:999px;background:#eef2fb;color:#34507d;font-size:12px;font-weight:800}
+.hgh-done .hgh-card{text-align:start}.hgh-done .hgh-card h2{text-align:center}.hgv-steps li{text-align:start}
