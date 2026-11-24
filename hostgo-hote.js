@@ -155,6 +155,7 @@
   document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   document.querySelectorAll("[data-i]").forEach(function (el) { var k = el.getAttribute("data-i"); if (T[k] != null) el.textContent = T[k]; });
   document.title = "Host & Go — " + ({ fr: "Devenir hôte", en: "Become a host", ar: "كن مضيفاً" }[lang]);
+  if (lang === "fr") { var hi = $("hero-img"), hr = $("hero"); if (hi && hr) { hi.hidden = false; hr.classList.add("hgh-hero--img"); } }
   var EB = { st2: T.eb_st2, ac: T.eb_ac, ty: T.eb_ty, pl: T.eb_pl, av: T.eb_av, st3: T.eb_st3, cx: T.eb_cx, lg: T.eb_lg, st4: T.eb_st4, am: T.eb_am, ad: T.eb_ad, oi: T.eb_oi, st5: T.eyebrow2 };
   Object.keys(EB).forEach(function (id) {
     var e = $(id).querySelector(".hgh-eyebrow"); if (e) e.textContent = T.stepOf.replace("{n}", IDS.indexOf(id) + 1).replace("{t}", IDS.length) + " · " + EB[id];
