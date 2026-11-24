@@ -100,7 +100,9 @@
   var FIELDS = { "hg-form-h": "h", "hg-form-intro": "intro", "hl-name": "name", "hl-mail": "mail", "hl-country": "country", "hl-city": "city", "hl-msg": "msg", "hl-consent": "consent", "hf-send": "send" };
   Object.keys(FIELDS).forEach(function (id) { $(id).textContent = t(F[FIELDS[id]]); });
   function selected(list, attr) { var r = list.filter(function (b) { return b.getAttribute("aria-pressed") === "true"; })[0]; return r ? r.getAttribute(attr) : ""; }
-  function syncForm() { form.hidden = !selected(roleBtns, "data-role"); }
+  var HOST_CTA = ["Devenir hôte : commencer mon inscription →", "Become a host: start my sign-up →", "كن مضيفاً: ابدأ تسجيلي ←"];
+  $("hg-host-link").textContent = t(HOST_CTA);
+  function syncForm() { var r = selected(roleBtns, "data-role"); $("hg-host-cta").hidden = r !== "host"; form.hidden = !r || r === "host"; }
   var baseStatus = status;
   status = function () { baseStatus(); syncForm(); };
   syncForm();

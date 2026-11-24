@@ -68,3 +68,4 @@
 .hg-media:before{content:"";position:absolute;inset:0;background:var(--img,none) center/cover no-repeat;opacity:.58}
 .hg-media svg{position:relative;z-index:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
 .t-family{--img:url('./images/hostgo/t-family.webp')}.t-farm{--img:url('./images/hostgo/t-farm.webp')}.t-guesthouse{--img:url('./images/hostgo/t-guesthouse.webp')}.t-exchange{--img:url('./images/hostgo/t-exchange.webp')}
+.hg-host-cta{margin:22px 0 4px;text-align:center}.hg-host-cta[hidden]{display:none}.hg-host-cta a{display:inline-flex;text-decoration:none}

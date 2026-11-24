@@ -1,0 +1,74 @@
+/* Host & Go : inscription hôte (hostgo-hote.html). Identité bleu nuit / jaune, mobile d'abord, compatible RTL. */
+#hgh{--navy:#061b3b;--blue:#0b2c59;--yellow:#ffc928;--ink:#0b1f42;--muted:#52627a;--line:#dce5f1;--bg:#f6f9fe;position:relative;max-width:none;margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--f-body,system-ui,sans-serif);min-height:100vh}
+#hgh *{box-sizing:border-box}
+#hgh .sn-lang{position:absolute;top:14px;inset-inline-end:clamp(14px,3vw,40px);z-index:6;margin:0}
+.hgh-top{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:76px;padding:12px clamp(16px,4vw,48px);padding-inline-end:clamp(150px,18vw,200px);background:var(--navy);color:#fff}
+.hgh-brand{display:flex;align-items:center;gap:10px;color:#fff;font-size:1.35rem;font-weight:850;text-decoration:none}
+.hgh-brand em{color:var(--yellow);font-style:normal}
+.hgh-mark{display:grid;place-items:center;width:40px;height:36px;border:3px solid var(--yellow);border-radius:11px 11px 6px 6px;font-size:22px;line-height:1}
+.hgh-back-link{color:#dbe6ff;font-size:14px;font-weight:650;text-decoration:underline}
+.hgh-wrap{max-width:820px;margin:0 auto;padding:22px 16px 8px}
+.hgh-progress{display:flex;gap:8px;margin:0 0 18px}
+.hgh-progress span{flex:1;height:7px;border-radius:99px;background:#cdd8ea}
+.hgh-progress span.on{background:var(--yellow)}
+.hgh-step[hidden]{display:none}
+.hgh-hero{display:grid;grid-template-columns:1.15fr 1fr;overflow:hidden;margin-bottom:16px;border-radius:24px;background:linear-gradient(120deg,#041832,#0b2c59);color:#fff}
+.hgh-hero-copy{padding:34px 30px}
+.hgh-eyebrow{margin:0 0 8px;color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.14em}
+.hgh-card .hgh-eyebrow{color:var(--muted)}
+.hgh-hero h1{margin:0 0 12px;font-size:clamp(1.9rem,5vw,2.8rem);line-height:1.08;font-weight:850}
+.hgh-hero h1 em{color:var(--yellow);font-style:normal}
+.hgh-hero p:last-child{margin:0;color:#d5e1fb;line-height:1.5}
+.hgh-art{position:relative;min-height:210px;overflow:hidden;background:linear-gradient(#f9c76a,#f4a261 60%,#e76f51)}
+.hgh-art i,.hgh-art .house{position:absolute;display:block}
+.hgh-art .sun{width:70px;height:70px;border-radius:50%;background:#fff3c4;inset-inline-end:18%;top:16%}
+.hgh-art .hill{border-radius:50% 50% 0 0}
+.hgh-art .h1{inset-inline-start:-15%;bottom:-30%;width:75%;height:62%;background:#1f6f5c}
+.hgh-art .h2{inset-inline-end:-18%;bottom:-34%;width:80%;height:58%;background:#2a9d8f}
+.hgh-art .house{inset-inline-start:30%;bottom:14%;width:40%;height:52%;background:#fff;border-radius:6px 6px 0 0}
+.hgh-art .roof{left:-8%;right:-8%;top:-26%;height:30%;background:var(--navy);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.hgh-art .door{inset-inline-start:18%;bottom:0;width:24%;height:52%;background:var(--yellow);border-radius:4px 4px 0 0}
+.hgh-art .win{inset-inline-end:16%;top:26%;width:24%;height:24%;background:#8fc1ff;border-radius:3px}
+.hgh-card{margin-bottom:14px;padding:22px;border:1px solid var(--line);border-radius:20px;background:#fff}
+.hgh-card h2{margin:0 0 14px;font-size:1.35rem;font-weight:850}
+.hgh-card h3{margin:18px 0 8px;font-size:1rem;font-weight:800}
+.hgh-label{display:block;margin:14px 0 6px;font-weight:750;font-size:15px}
+.hgh-label:first-child{margin-top:0}
+#hgh select,#hgh input[type=text],#hgh input:not([type]),#hgh input[type=email],#hgh textarea{width:100%;padding:13px 14px;border:1px solid #b9c6da;border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:16px}
+#hgh textarea{resize:vertical}
+#hgh :is(select,input,textarea,button,a):focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
+.hgh-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hgh-summary>div{padding:12px 14px;border-radius:14px;background:var(--bg)}
+.hgh-summary small{display:block;color:var(--muted);font-size:12px;font-weight:700}
+.hgh-summary strong{font-size:1.05rem}
+.hgh-checks{display:grid;gap:10px}
+.hgh-checks label{display:flex;gap:10px;align-items:flex-start;color:#26364f;font-size:15px;line-height:1.45;cursor:pointer}
+.hgh-checks input{flex:none;width:20px;height:20px;margin-top:2px;accent-color:#0b2c59}
+.hgh-checks.consent{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.hgh-checks a,.hgh-note a{color:#0b3f9e;font-weight:700}
+.hgh-note{margin:16px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
+.hgh-head{margin:6px 0 16px}
+.hgh-head h1{margin:0 0 8px;font-size:clamp(1.7rem,5vw,2.3rem);font-weight:850}
+.hgh-head p:last-child{margin:0;color:var(--muted);line-height:1.5}
+.hgh-actions{display:flex;gap:12px;justify-content:space-between;margin:16px 0 0}
+.hgh-btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 26px;border:0;border-radius:99px;background:var(--yellow);color:#0b1f42;font:inherit;font-weight:850;text-decoration:none;cursor:pointer;box-shadow:0 10px 22px -10px rgba(255,201,40,.9)}
+.hgh-btn.ghost{background:#fff;border:1px solid #b9c6da;box-shadow:none;color:var(--ink)}
+.hgh-btn[disabled]{opacity:.45;cursor:not-allowed}
+.hgh-err{min-height:1.4em;margin:10px 0 0;color:#b42318;font-weight:700;font-size:15px}
+.hgh-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.hgh-done{padding:40px 8px;text-align:center}
+.hgh-done h1{margin:0 0 10px;font-size:2rem}
+.hgh-done p{margin:0 0 22px;color:var(--muted);font-size:1.05rem;line-height:1.5}
+.hgh-foot{padding:22px 16px 34px;text-align:center;color:#52627a;font-size:13px}
+.hgh-foot a{color:inherit}
+@media(max-width:650px){
+  .hgh-top{min-height:64px;padding-inline-end:150px}.hgh-back-link{display:none}
+  .hgh-hero{grid-template-columns:1fr}.hgh-hero-copy{padding:26px 22px 14px}.hgh-art{min-height:150px}
+  .hgh-card{padding:18px}.hgh-summary{grid-template-columns:1fr}
+  .hgh-actions{position:sticky;bottom:0;margin-top:12px;padding:12px 0;background:var(--bg)}
+  .hgh-actions .hgh-btn{flex:1;padding:0 10px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.hgh-hero h1{color:#fff}
+#hgh [tabindex="-1"]:focus{outline:none}
+.hgh-foot{background:var(--navy);color:#c9d6ee}
