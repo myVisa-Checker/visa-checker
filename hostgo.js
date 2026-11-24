@@ -75,7 +75,15 @@
     roleBtns.concat(themeBtns).forEach(function (b) { if (b.getAttribute("aria-pressed") === "true") parts.push(label(b)); });
     $("hg-status").textContent = parts.length ? t(UI.sel) + " : " + parts.join(" · ") + " — " + t(UI.soon) : "";
   }
-  roleBtns.forEach(function (b) { b.addEventListener("click", function () { pick(roleBtns, b); }); });
+  roleBtns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      pick(roleBtns, b);
+      if (b.getAttribute("aria-pressed") !== "true") return;
+      /* Hôte : on ouvre directement l'inscription. Voyageur : on amène au formulaire de liste d'attente. */
+      if (b.getAttribute("data-role") === "host") { window.location.href = "./hostgo-hote.html"; return; }
+      var f = $("hg-form"); if (f && !f.hidden) { var rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; f.scrollIntoView({ behavior: rm ? "auto" : "smooth", block: "start" }); }
+    });
+  });
   themeBtns.forEach(function (b) { b.addEventListener("click", function () { pick(themeBtns, b); }); });
 
 
