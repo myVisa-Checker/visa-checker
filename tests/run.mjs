@@ -220,7 +220,6 @@ try {
 } catch (e) {
   ok("rdv-worker : signalements, confirmation à 3 appareils, délais, limites", false, String(e.stderr || e.message).split("\n")[0]);
 }
-ok("rdv-direct.html : CSP, script externe et lien sitemap", /script-src 'self'/.test(readFileSync("rdv-direct.html", "utf8")) && !/<script>[^<]/.test(readFileSync("rdv-direct.html", "utf8")) && /rdv-direct\.html/.test(readFileSync("sitemap.xml", "utf8")) && /rdv-direct\.html/.test(readFileSync("sw.js", "utf8")));
 ok("hostgo.html : CSP, script externe, sitemap et cache hors ligne", /script-src 'self'/.test(read("hostgo.html")) && !/<script>[^<]/.test(read("hostgo.html")) && /hostgo\.html/.test(read("sitemap.xml")) && /hostgo\.html/.test(read("sw.js")) && /hostgo\.css/.test(read("sw.js")) && /hostgo-teaser\.css/.test(read("sw.js")) && /hostgo-teaser\.css/.test(read("index.html")));
 ok("vitrine Host & Go : modèle d'accueil branché, sans les six profils", /id="hg-tpl"/.test(read("index.html")) && /getElementById\("hg-tpl"\)/.test(read("visa-app.js")) && !/Host &amp; Work|Étudiant/.test(read("index.html").split('id="hg-tpl"')[1].split("</template>")[0]));
 ok("Host & Go : deux rôles (Hôte, Voyageur / Worker) puis six thèmes d'échange", /data-role="host"/.test(read("hostgo.html")) && /data-role="traveler-worker"/.test(read("hostgo.html")) && ["family","farm","garden","guesthouse","exchange","pets"].every((id) => read("hostgo.js").includes('id: "' + id + '"')) && !/Étudiant|Professionnel/i.test(read("hostgo.html") + read("hostgo.js")));
