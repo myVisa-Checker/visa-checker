@@ -94,9 +94,56 @@
       countries: ["تونس", "المغرب", "الجزائر", "فرنسا", "ألمانيا", "إيطاليا", "إسبانيا", "البرتغال", "بلجيكا", "هولندا", "إيرلندا", "أخرى"]
     }
   }[lang];
+
+  var X = {
+    fr: {
+      eb_ac: "VOTRE HÉBERGEMENT", h_ac: "Décrivez l’hébergement que vous proposez", eb_cx: "ÉCHANGE CULTUREL", h_cx: "Décrivez l’échange culturel possible chez vous", eb_oi: "INFORMATIONS UTILES", h_oi: "Ajoutez toute autre information utile aux voyageurs (facultatif)",
+      tips: { ac: ["Assurez-vous de proposer un endroit propre et sûr pour dormir.", "Si c’est du camping, prévoyez la tente et la literie.", "C’est le bon endroit pour expliquer comment les repas fonctionnent."], cx: ["Des activités où les voyageurs rencontrent votre famille, votre équipe et les habitants.", "Les compétences et connaissances que vous pouvez partager.", "Ce que vous espérez apprendre en accueillant des personnes d’autres cultures."], oi: ["Idées de sorties pendant le temps libre et transports autour de chez vous.", "Ce qu’ils doivent savoir sur votre mode de vie ou les règles de la maison.", "N’ajoutez PAS de site web, d’e-mail ni de numéro de téléphone ici."] },
+      eb_av: "DISPONIBILITÉS", h_av: "Indiquez vos disponibilités", lead_av: "Touchez un mois pour changer son état. Ce champ est facultatif.", prevYear: "Année précédente", nextYear: "Année suivante", calHelp: "Mois de l’année",
+      months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+      states: ["Non précisé", "Voyageurs recherchés : demandes très bienvenues", "Disponibilité partielle", "Pas de disponibilité"],
+      eb_lg: "LANGUES", h_lg: "Parlez des langues que vous parlez ou apprenez", lead_lg: "Facultatif.", addLang: "+ Ajouter une langue", lxOn: "Oui, je souhaite être présenté(e) comme hôte intéressé(e) par l’échange linguistique.", lxNote: "Autre chose à dire sur l’échange linguistique ? (facultatif)", langLbl: "Langue", levelLbl: "Niveau", rmLang: "Retirer cette langue",
+      langs: ["Arabe", "Français", "Anglais", "Allemand", "Italien", "Espagnol", "Portugais", "Turc", "Russe", "Autre"], levels: ["Débutant", "Intermédiaire", "Courant", "Langue maternelle"],
+      eb_am: "ÉQUIPEMENTS", h_am: "Cochez ce qui s’applique à vous et à votre lieu", lead_am: "Facultatif.", amH: "Votre lieu", trH: "Pouvez-vous accueillir ces types de voyageurs ?",
+      amen: ["Accès à internet", "Animaux à la maison", "Fumeurs", "Internet limité"], trav: ["Nomades numériques", "Familles", "Campeurs / camping-cars", "Voyageurs avec animaux"],
+      eb_ad: "ADRESSE", h_ad: "Indiquez l’adresse où vous accueillerez", addrL: "Adresse (rue et numéro)", zipL: "Code postal (facultatif)", ad_tip: "Votre adresse exacte ne sera jamais affichée en ligne : seule notre équipe la voit pour vérifier votre demande.", eAddr: "Merci d’indiquer l’adresse où vous accueillerez.",
+      pvL: "Message privé pour l’équipe (facultatif)"
+    },
+    en: {
+      eb_ac: "YOUR ACCOMMODATION", h_ac: "Describe the accommodation you offer", eb_cx: "CULTURAL EXCHANGE", h_cx: "Describe the cultural exchange available at your place", eb_oi: "USEFUL INFORMATION", h_oi: "Add any other relevant information for travellers (optional)",
+      tips: { ac: ["Make sure you can provide a clean and secure place to sleep.", "If camping, you will need to provide tents and bedding.", "This is a good place to explain how meals will work."], cx: ["Social activities where travellers can meet your family, your team and the local community.", "The skills and knowledge you can share.", "What you hope to learn by hosting people from different cultures."], oi: ["Ideas for what they can do in their time off and transport around your area.", "Anything they should know about how you live or your house rules.", "Please do NOT add a website, e-mail or phone number here."] },
+      eb_av: "AVAILABILITY", h_av: "Set your availability", lead_av: "Tap a month to change its status. This is optional.", prevYear: "Previous year", nextYear: "Next year", calHelp: "Months of the year",
+      months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      states: ["Not specified", "Travellers needed: enquiries very welcome", "Partial availability", "No availability"],
+      eb_lg: "LANGUAGES", h_lg: "Tell us about the languages you speak or are learning", lead_lg: "Optional.", addLang: "+ Add a language", lxOn: "Yes, please show me as a host interested in language exchange.", lxNote: "More to say about the language exchange? (optional)", langLbl: "Language", levelLbl: "Level", rmLang: "Remove this language",
+      langs: ["Arabic", "French", "English", "German", "Italian", "Spanish", "Portuguese", "Turkish", "Russian", "Other"], levels: ["Beginner", "Intermediate", "Fluent", "Native"],
+      eb_am: "FACILITIES", h_am: "Select those that apply to you and your place", lead_am: "Optional.", amH: "Your place", trH: "Are you able to accept these types of traveller?",
+      amen: ["Internet access", "Pets/animals at home", "Smokers", "Limited internet"], trav: ["Digital nomads", "Families", "Campers/motorhomes", "Travelling with pets"],
+      eb_ad: "ADDRESS", h_ad: "Enter the address where you’ll be hosting", addrL: "Address (street and house/flat number)", zipL: "Postal code (optional)", ad_tip: "Your exact address will never be shown online: only our team sees it to check your request.", eAddr: "Please enter the address where you will host.",
+      pvL: "Private message for the team (optional)"
+    },
+    ar: {
+      eb_ac: "مكان الإقامة", h_ac: "صِف مكان الإقامة الذي تعرضه", eb_cx: "التبادل الثقافي", h_cx: "صِف التبادل الثقافي المتاح عندك", eb_oi: "معلومات مفيدة", h_oi: "أضف أي معلومات أخرى مفيدة للمسافرين (اختياري)",
+      tips: { ac: ["تأكد من توفير مكان نظيف وآمن للنوم.", "إن كان التخييم فعليك توفير الخيمة والفراش.", "هذا مكان مناسب لشرح كيفية تدبير الوجبات."], cx: ["أنشطة اجتماعية يلتقي فيها المسافرون بعائلتك وفريقك وأهل المنطقة.", "المهارات والمعارف التي يمكنك مشاركتها.", "ما تأمل تعلّمه باستضافة أشخاص من ثقافات مختلفة."], oi: ["أفكار لما يمكنهم فعله في وقت فراغهم ووسائل النقل حول منطقتك.", "ما ينبغي أن يعرفوه عن أسلوب حياتك أو قواعد المنزل.", "لا تضف موقعاً إلكترونياً أو بريداً أو رقم هاتف هنا."] },
+      eb_av: "التوفر", h_av: "حدّد أوقات توفرك", lead_av: "المس شهراً لتغيير حالته. هذا الحقل اختياري.", prevYear: "السنة السابقة", nextYear: "السنة التالية", calHelp: "أشهر السنة",
+      months: ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"],
+      states: ["غير محدد", "المسافرون مطلوبون: الطلبات مرحَّب بها جداً", "توفر جزئي", "لا يوجد توفر"],
+      eb_lg: "اللغات", h_lg: "حدّثنا عن اللغات التي تتحدثها أو تتعلمها", lead_lg: "اختياري.", addLang: "+ إضافة لغة", lxOn: "نعم، أودّ الظهور كمضيف مهتم بتبادل اللغات.", lxNote: "هل من شيء آخر عن تبادل اللغات؟ (اختياري)", langLbl: "اللغة", levelLbl: "المستوى", rmLang: "إزالة هذه اللغة",
+      langs: ["العربية", "الفرنسية", "الإنجليزية", "الألمانية", "الإيطالية", "الإسبانية", "البرتغالية", "التركية", "الروسية", "أخرى"], levels: ["مبتدئ", "متوسط", "طليق", "لغة أم"],
+      eb_am: "المرافق", h_am: "حدّد ما ينطبق عليك وعلى مكانك", lead_am: "اختياري.", amH: "مكانك", trH: "هل يمكنك استقبال هذه الفئات من المسافرين؟",
+      amen: ["الإنترنت", "حيوانات في المنزل", "مدخّنون", "إنترنت محدود"], trav: ["الرحّالة الرقميون", "العائلات", "المخيّمون / المنازل المتنقلة", "مسافرون مع حيواناتهم"],
+      eb_ad: "العنوان", h_ad: "أدخل العنوان الذي ستستضيف فيه", addrL: "العنوان (الشارع والرقم)", zipL: "الرمز البريدي (اختياري)", ad_tip: "لن يُعرض عنوانك الدقيق على الإنترنت أبداً: فريقنا وحده يراه للتحقق من طلبك.", eAddr: "يرجى إدخال العنوان الذي ستستضيف فيه.",
+      pvL: "رسالة خاصة للفريق (اختياري)"
+    }
+  }[lang];
+  Object.keys(X).forEach(function (k) { if (k === "tips") Object.keys(X.tips).forEach(function (t) { T.tips[t] = X.tips[t]; }); else T[k] = X[k]; });
+  var SHORT = { fr: ["Janv", "Févr", "Mars", "Avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"], en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], ar: [] }[lang];
+  var MONTHS_FR = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"], STATES_FR = ["", "Besoin", "Partiel", "Indisponible"];
+  var LANGS_FR = ["Arabe", "Français", "Anglais", "Allemand", "Italien", "Espagnol", "Portugais", "Turc", "Russe", "Autre"], LEVELS_FR = ["Débutant", "Intermédiaire", "Courant", "Langue maternelle"];
+  var AMEN_FR = ["Accès à internet", "Animaux à la maison", "Fumeurs", "Internet limité"], TRAV_FR = ["Nomades numériques", "Familles", "Campeurs / camping-cars", "Voyageurs avec animaux"];
   var COUNTRIES_FR = ["Tunisie", "Maroc", "Algérie", "France", "Allemagne", "Italie", "Espagne", "Portugal", "Belgique", "Pays-Bas", "Irlande", "Autre"];
   function $(id) { return document.getElementById(id); }
-  var IDS = ["st1", "st2", "ty", "pl", "st3", "st4", "st5"], LAST = IDS.length - 1, done = $("done"), country = $("country"), MIN = 20, cur = 0;
+  var IDS = ["st1", "st2", "ac", "ty", "pl", "av", "st3", "cx", "lg", "st4", "am", "ad", "oi", "st5"], TXT = ["st2", "ac", "st3", "cx", "st4", "oi"], REQ = ["st2", "ac", "st3", "cx", "st4"], LAST = IDS.length - 1, done = $("done"), country = $("country"), MIN = 20, cur = 0;
   var HOURS_FR = ["Jusqu'à 2 h par jour", "3 à 4 h par jour", "Maximum 4 à 5 h par jour"], DAYS_FR = ["3 jours par semaine", "4 jours par semaine", "5 jours par semaine"], STAYS_FR = ["Aucun minimum", "1 semaine ou moins", "Au moins 1 semaine", "Au moins 2 semaines", "Au moins 3 semaines", "Au moins 1 mois"];
   var TYPES_FR = ["Jardinage léger", "Aide à la ferme", "Soin des animaux", "Cuisine en famille", "Aide à la maison", "Enseignement et langues", "Accueil et tourisme", "Petits travaux et bricolage", "Informatique et internet", "Garde d'enfants et jeux", "Compagnie aux personnes âgées", "Garde de maison et d'animaux"];
   if (!done || !country || IDS.some(function (i) { return !$(i); })) return;
@@ -105,7 +152,7 @@
   document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   document.querySelectorAll("[data-i]").forEach(function (el) { var k = el.getAttribute("data-i"); if (T[k] != null) el.textContent = T[k]; });
   document.title = "Host & Go — " + ({ fr: "Devenir hôte", en: "Become a host", ar: "كن مضيفاً" }[lang]);
-  var EB = { st2: T.eb_st2, ty: T.eb_ty, pl: T.eb_pl, st3: T.eb_st3, st4: T.eb_st4, st5: T.eyebrow2 };
+  var EB = { st2: T.eb_st2, ac: T.eb_ac, ty: T.eb_ty, pl: T.eb_pl, av: T.eb_av, st3: T.eb_st3, cx: T.eb_cx, lg: T.eb_lg, st4: T.eb_st4, am: T.eb_am, ad: T.eb_ad, oi: T.eb_oi, st5: T.eyebrow2 };
   Object.keys(EB).forEach(function (id) {
     var e = $(id).querySelector(".hgh-eyebrow"); if (e) e.textContent = T.stepOf.replace("{n}", IDS.indexOf(id) + 1).replace("{t}", IDS.length) + " · " + EB[id];
   });
@@ -124,11 +171,71 @@
   });
   function fillSel(id, list, def) { var el = $(id); list.forEach(function (t, i) { var o = document.createElement("option"); o.value = String(i); o.textContent = t; el.appendChild(o); }); el.selectedIndex = def; }
   fillSel("pl-hours", T.hours, 2); fillSel("pl-days", T.days, 2); fillSel("pl-stay", T.stays, 0);
-  ["st2", "st3", "st4"].forEach(function (id) {
-    var ul = $("tl-" + id); T.tips[id].forEach(function (x) { var li = document.createElement("li"); li.textContent = x; ul.appendChild(li); });
+  TXT.forEach(function (id) {
+    var ul = $("tl-" + id); T.tips[id].forEach(function (x, i, a) { var li = document.createElement("li"); li.textContent = x; if (id === "oi" && i === a.length - 1) li.style.fontWeight = "800"; ul.appendChild(li); });
     var ta = $("ta-" + id), ct = $("ct-" + id);
     function upd() { ct.textContent = ta.value.length + " / " + ta.maxLength + " " + T.chars; } ta.addEventListener("input", upd); upd();
   });
+
+  /* Calendrier : 4 états par mois (non précisé, besoin, partiel, indisponible), pour l'année en cours et la suivante */
+  var Y0 = new Date().getFullYear(), year = Y0, cal = {}, SYM = ["", "✓", "~", "✕"];
+  $("yr-prev").setAttribute("aria-label", T.prevYear); $("yr-next").setAttribute("aria-label", T.nextYear); $("months").setAttribute("aria-label", T.calHelp);
+  function monthLabel(b, m, y) { return T.months[m] + " " + y + " : " + T.states[(cal[y] && cal[y][m]) || 0]; }
+  function drawCal() {
+    $("yr-lbl").textContent = year; $("yr-prev").disabled = year <= Y0; $("yr-next").disabled = year >= Y0 + 1;
+    var box = $("months"); box.innerHTML = "";
+    T.months.forEach(function (name, m) {
+      var st = (cal[year] && cal[year][m]) || 0, b = document.createElement("button");
+      b.type = "button"; b.className = "hgh-mo m" + st; b.setAttribute("aria-label", monthLabel(b, m, year));
+      b.innerHTML = '<span class="mn"></span><span class="ms" aria-hidden="true"></span>'; b.firstChild.textContent = SHORT[m] || name; b.lastChild.textContent = SYM[st];
+      b.addEventListener("click", function () { cal[year] = cal[year] || {}; cal[year][m] = ((cal[year][m] || 0) + 1) % 4; drawCal(); var again = $("months").children[m]; if (again) again.focus(); });
+      box.appendChild(b);
+    });
+  }
+  $("yr-prev").addEventListener("click", function () { if (year > Y0) { year--; drawCal(); } });
+  $("yr-next").addEventListener("click", function () { if (year < Y0 + 1) { year++; drawCal(); } });
+  var lg = $("legend");
+  [1, 2, 3].forEach(function (i) { var li = document.createElement("li"); li.innerHTML = '<i class="sw m' + i + '" aria-hidden="true"></i><span></span>'; li.lastChild.textContent = SYM[i] + " " + T.states[i]; lg.appendChild(li); });
+  drawCal();
+
+  /* Langues : lignes ajoutables (langue + niveau) */
+  var langsBox = $("langs");
+  function addLang() {
+    var row = document.createElement("div"), n = langsBox.children.length + 1; row.className = "hgh-lrow";
+    function sel(label, list, idp) {
+      var w = document.createElement("div"), l = document.createElement("label"), s = document.createElement("select"); l.className = "hgh-label"; l.textContent = label; l.htmlFor = idp + n; s.id = idp + n;
+      list.forEach(function (t, i) { var o = document.createElement("option"); o.value = String(i); o.textContent = t; s.appendChild(o); }); w.appendChild(l); w.appendChild(s); return w;
+    }
+    row.appendChild(sel(T.langLbl, T.langs, "lg-l")); var lv = sel(T.levelLbl, T.levels, "lg-v"); lv.lastChild.selectedIndex = 2; row.appendChild(lv);
+    var rm = document.createElement("button"); rm.type = "button"; rm.className = "hgh-rm"; rm.textContent = "✕"; rm.setAttribute("aria-label", T.rmLang);
+    rm.addEventListener("click", function () { row.remove(); $("add-lang").focus(); }); row.appendChild(rm); langsBox.appendChild(row); row.querySelector("select").focus();
+  }
+  $("add-lang").addEventListener("click", addLang);
+
+  /* Équipements et voyageurs acceptés : cartes à cocher */
+  function cards(boxId, list) {
+    var box = $(boxId);
+    list.forEach(function (txt, i) {
+      var l = document.createElement("label"), c = document.createElement("input"), s = document.createElement("span");
+      l.className = "hgh-type"; c.type = "checkbox"; c.value = String(i); c.addEventListener("change", function () { l.classList.toggle("on", c.checked); }); s.textContent = txt; l.appendChild(c); l.appendChild(s); box.appendChild(l);
+    });
+  }
+  cards("amen", T.amen); cards("trav", T.trav);
+  function picked(boxId, fr) { return [].slice.call($(boxId).querySelectorAll("input:checked")).map(function (c) { return fr[+c.value]; }).join(", "); }
+  function calText() {
+    var out = [];
+    Object.keys(cal).sort().forEach(function (y) {
+      [1, 2, 3].forEach(function (st) {
+        var ms = []; for (var m = 0; m < 12; m++) if (cal[y][m] === st) ms.push(MONTHS_FR[m]);
+        if (ms.length) out.push(y + " — " + STATES_FR[st] + " : " + ms.join(", "));
+      });
+    });
+    return out.join(" | ");
+  }
+  function langText() {
+    var out = [].slice.call(langsBox.children).map(function (r) { var sl = r.querySelectorAll("select"); return LANGS_FR[+sl[0].value] + " (" + LEVELS_FR[+sl[1].value] + ")"; });
+    return out.join(", ");
+  }
   function sum() { var o = country.options[country.selectedIndex]; $("countrySummary").textContent = country.value ? o.textContent : T.none; }
   country.addEventListener("change", sum); sum();
 
@@ -163,7 +270,8 @@
       $("err-ty").textContent = ""; return true;
     }
   };
-  ["st2", "st3", "st4"].forEach(function (id) {
+  validators.ad = function () { var a = $("addr"); if (a.value.trim().length < 5) return err("err-ad", T.eAddr, a); $("err-ad").textContent = ""; return true; };
+  REQ.forEach(function (id) {
     validators[id] = function () { var ta = $("ta-" + id); if (ta.value.trim().length < MIN) return err("err-" + id, T.min, ta); $("err-" + id).textContent = ""; return true; };
   });
   document.querySelectorAll("[data-go]").forEach(function (b) {
@@ -184,16 +292,30 @@
     if (!$("terms").checked) return err("error2", T.eTerms, $("terms"));
     $("error2").textContent = "";
     var types = [].slice.call(typesBox.querySelectorAll("input:checked")).map(function (c) { return TYPES_FR[+c.value]; }).join(", ");
-    var msg = ["[Host & Go — inscription hôte]", "Pays d'accueil : " + country.value, "Ville : " + city, "Déclarations : 6/6 confirmées", "E-mails d'information : " + ($("marketing").checked ? "oui" : "non"), "Langue de la page : " + lang, "",
-      "TYPES D'AIDE : " + types, "HEURES : " + HOURS_FR[+$("pl-hours").value], "JOURS : " + DAYS_FR[+$("pl-days").value], "SÉJOUR MINIMUM : " + STAYS_FR[+$("pl-stay").value], "",
-      "LIEU D'ACCUEIL :", $("ta-st2").value.trim(), "", "AIDE SOUHAITÉE :", $("ta-st3").value.trim(), "", "PRÉSENTATION :", $("ta-st4").value.trim()].join("\n");
+    var lines = ["[Host & Go — inscription hôte]", "Pays d'accueil : " + country.value, "Ville : " + city, "Déclarations : 6/6 confirmées", "E-mails d'information : " + ($("marketing").checked ? "oui" : "non"), "Langue de la page : " + lang, "",
+      "TYPES D'AIDE : " + types, "HEURES : " + HOURS_FR[+$("pl-hours").value], "JOURS : " + DAYS_FR[+$("pl-days").value], "SÉJOUR MINIMUM : " + STAYS_FR[+$("pl-stay").value],
+      "DISPONIBILITÉS : " + (calText() || "non précisées"), "LANGUES : " + (langText() || "non précisées") + " | Échange linguistique : " + ($("lx-on").checked ? "oui" : "non") + ($("lx-note").value.trim() ? " | " + $("lx-note").value.trim() : ""),
+      "ÉQUIPEMENTS : " + (picked("amen", AMEN_FR) || "aucun"), "VOYAGEURS ACCEPTÉS : " + (picked("trav", TRAV_FR) || "non précisé"), "ADRESSE : " + $("addr").value.trim() + ($("zip").value.trim() ? ", " + $("zip").value.trim() : ""), "",
+      "LIEU D'ACCUEIL :", $("ta-st2").value.trim(), "", "HÉBERGEMENT :", $("ta-ac").value.trim(), "", "AIDE SOUHAITÉE :", $("ta-st3").value.trim(), "", "ÉCHANGE CULTUREL :", $("ta-cx").value.trim(), "", "PRÉSENTATION :", $("ta-st4").value.trim()];
+    if ($("ta-oi").value.trim()) lines.push("", "INFOS UTILES :", $("ta-oi").value.trim());
+    if ($("pv").value.trim()) lines.push("", "NOTE PRIVÉE POUR L'ÉQUIPE :", $("pv").value.trim());
+    var msg = lines.join("\n");
     var btn = $("finish"); btn.disabled = true;
-    var ctl = typeof AbortController === "function" ? new AbortController() : null, timer = ctl ? setTimeout(function () { ctl.abort(); }, 12000) : null;
-    fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name, email: mail, subject: SUBJECT, message: msg, consent: true, hp: $("hp").value || "" }), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
-      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
-      .catch(function () { return false; })
+    /* Le Worker garde 3000 caractères par message : au-delà, la demande part en plusieurs messages (suite 2/2…). */
+    var parts = [], cur2 = [], size = 0;
+    lines.forEach(function (ln) { if (size + ln.length + 1 > 2800 && cur2.length) { parts.push(cur2); cur2 = []; size = 0; } cur2.push(ln); size += ln.length + 1; });
+    parts.push(cur2);
+    var texts = parts.map(function (p, i) { return (i ? "[Host & Go — suite " + (i + 1) + "/" + parts.length + " — " + mail + "]\n" : "") + p.join("\n"); });
+    function post(text) {
+      var ctl = typeof AbortController === "function" ? new AbortController() : null, timer = ctl ? setTimeout(function () { ctl.abort(); }, 12000) : null;
+      return fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name, email: mail, subject: SUBJECT, message: text, consent: true, hp: $("hp").value || "" }), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
+        .catch(function () { return false; })
+        .then(function (ok) { if (timer) clearTimeout(timer); return ok; });
+    }
+    texts.reduce(function (chain, t) { return chain.then(function (ok) { return ok ? post(t) : false; }); }, Promise.resolve(true))
       .then(function (sent) {
-        if (timer) clearTimeout(timer); btn.disabled = false;
+        btn.disabled = false;
         if (sent) { $("doneMsg").textContent = T.doneOk; show(IDS.length); } else fallback(msg, name, mail);
       });
   });
