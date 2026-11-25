@@ -44,7 +44,39 @@
   };
   const emptyAnswers = () => ({education:"",experience:[],experienceDomains:[],german:"",interests:[],environment:"",project:"",mobility:"",skills:[]});
   let step = 0, answers = emptyAnswers(), catalogue = null;
+  const chosen = new Set();
+  const ICONS = {pflegefachkraft:"🩺",fachinformatiker:"💻",kfz_mechatroniker:"🚗",elektroniker_betrieb:"⚡",industriemechaniker:"⚙️",lagerlogistik:"📦",hotelfach:"🏨",koch:"🍳",verkaeufer:"🛍️",anlagenmechaniker_shk:"🔧"};
+  function setStage(n) { // 1 = Métier, 2 = Profil, 3 = Résultat
+    document.querySelectorAll("#stages li").forEach((li, i) => {
+      li.classList.toggle("done", i < n); li.classList.toggle("cur", i === n);
+      if (i === n) li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current");
+      const num = li.querySelector(".n"); if (num) num.textContent = i < n ? "✓" : String(i + 1);
+    });
+  }
 
+  function norm(t) { return String(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+  function renderPick() {
+    const q = norm($("pickSearch").value.trim());
+    const list = catalogue.occupations.filter((o) => !q || norm(o.title_fr + " " + o.title_de).includes(q));
+    $("pickGrid").innerHTML = list.map((o) => {
+      const on = chosen.has(o.id), reg = o.training_type !== "dual";
+      return `<button type="button" class="pick-card${on ? " on" : ""}" data-id="${escapeHtml(o.id)}" aria-pressed="${on}"><span class="pi" aria-hidden="true">${ICONS[o.id] || "🎓"}</span><span class="pt"><strong>${escapeHtml(o.title_fr)}</strong><small>${escapeHtml(o.title_de)}${reg ? " · formation réglementée" : ""}</small></span><span class="pc" aria-hidden="true">${on ? "✓" : ""}</span></button>`;
+    }).join("");
+    $("pickNone").hidden = list.length > 0;
+    const names = catalogue.occupations.filter((o) => chosen.has(o.id)).map((o) => o.title_fr);
+    $("pickSumT").textContent = names.length ? `${names.length} métier${names.length > 1 ? "s" : ""} sélectionné${names.length > 1 ? "s" : ""}` : "Aucun métier sélectionné";
+    $("pickSumL").textContent = names.length ? names.join(", ") : "";
+    $("pickClear").hidden = !names.length;
+    $("pickSum").classList.toggle("has", names.length > 0);
+  }
+  function showPick() {
+    $("introwrap").hidden = false; $("pick").hidden = false; $("pickmore").hidden = false; $("quizhero").hidden = true; $("quiz").hidden = true; $("results").hidden = true;
+    setStage(1); renderPick();
+  }
+  function showQuiz(focus) {
+    $("introwrap").hidden = true; $("pick").hidden = true; $("pickmore").hidden = true; $("quizhero").hidden = false; $("quiz").hidden = false; $("results").hidden = true;
+    setStage(2); step = 0; render(!!focus);
+  }
   function escapeHtml(s) { return String(s).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
   function durationFr(months) {
     const y = Math.floor(months / 12), m = months % 12;
@@ -76,7 +108,7 @@
     }
     $("mobilityArea").hidden = step !== 5;
     if (step === 5) document.querySelectorAll('input[name="mobility"]').forEach((x) => { x.checked = x.value === answers.mobility; });
-    $("back").disabled = step === 0;
+    $("back").disabled = false;
     $("next").textContent = step === steps.length - 1 ? "Voir mes résultats" : "Continuer";
     $("error").textContent = "";
     if (focusTitle) { $("questionTitle").focus(); }
@@ -118,9 +150,13 @@
 
   function showResults() {
     const result = window.AusbildungMatcher.match(profile(), catalogue, 3);
+    const full = window.AusbildungMatcher.match(profile(), catalogue, catalogue.occupations.length);
     // Un score de 0 signifie « aucune correspondance » : on ne le présente pas comme une piste.
     const useful = result.results.filter((r) => r.score > 0);
-    $("quiz").hidden = true; $("results").hidden = false;
+    $("quiz").hidden = true; $("results").hidden = false; setStage(3);
+    const mine = full.results.map((r, i) => [r, i]).filter(([r]) => chosen.has(r.occupation.id));
+    $("chosenWrap").hidden = !mine.length;
+    $("chosenList").innerHTML = mine.map(([r, i]) => r.score > 0 ? resultCard(r, i) : `<article class="result-card"><strong>${escapeHtml(r.occupation.title_de)}</strong><p>${escapeHtml(r.occupation.title_fr)} : pas assez de réponses concordantes pour ce métier à ce stade.</p></article>`).join("");
     $("resultList").innerHTML = useful.map(resultCard).join("")
       || "<p>Nous n'avons pas assez de réponses concordantes pour proposer un classement utile. Recommencez en sélectionnant au moins un domaine, une compétence ou un environnement.</p>";
     $("readiness").innerHTML = `<h3>À préparer</h3><p>${escapeHtml(result.readiness.german_note_fr)}</p><p>${escapeHtml(result.readiness.school_note_fr)}</p><p>${escapeHtml(result.readiness.project_note_fr)}</p><p>${escapeHtml(result.readiness.mobility_note_fr)}</p><p>${escapeHtml(result.readiness.visa_note_fr)}</p><small>${escapeHtml(result.disclaimer_fr)}</small>`;
@@ -137,10 +173,18 @@
     if (t.checked && t.value === "none") boxes.forEach((x) => { if (x !== t) x.checked = false; });
     else if (t.checked) boxes.forEach((x) => { if (x.value === "none") x.checked = false; });
   });
-  $("back").addEventListener("click", () => { collect(); step = Math.max(0, step - 1); render(true); });
+  $("back").addEventListener("click", () => { collect(); if (step === 0) { showPick(); $("pickH").focus(); return; } step = Math.max(0, step - 1); render(true); });
   $("next").addEventListener("click", () => { collect(); if (step < steps.length - 1) { step++; render(true); } else showResults(); });
-  $("restart").addEventListener("click", () => { step = 0; answers = emptyAnswers(); $("results").hidden = true; $("quiz").hidden = false; render(true); });
+  $("restart").addEventListener("click", () => { step = 0; answers = emptyAnswers(); chosen.clear(); $("pickSearch").value = ""; showPick(); $("pickH").focus(); });
 
+  $("pickGrid").addEventListener("click", (e) => {
+    const b = e.target.closest && e.target.closest(".pick-card"); if (!b) return;
+    const id = b.getAttribute("data-id"); if (chosen.has(id)) chosen.delete(id); else chosen.add(id);
+    renderPick(); const again = $("pickGrid").querySelector(`[data-id="${id}"]`); if (again) again.focus();
+  });
+  $("pickSearch").addEventListener("input", renderPick);
+  $("pickClear").addEventListener("click", () => { chosen.clear(); renderPick(); $("pickSearch").focus(); });
+  $("pickNext").addEventListener("click", () => { showQuiz(true); window.scrollTo({top:0,behavior:"auto"}); });
   $("print").addEventListener("click", () => window.print());
 
   const lang = (window.SI && window.SI.lang) || "fr";
@@ -148,7 +192,7 @@
 
   fetch("./data/occupations.json").then((r) => { if (!r.ok) throw new Error("catalogue"); return r.json(); }).then((data) => {
     if (!data || !Array.isArray(data.occupations) || !data.occupations.length) throw new Error("catalogue");
-    catalogue = data; render(false); $("loading").hidden = true; $("quiz").hidden = false;
+    catalogue = data; $("pickCount").textContent = String(data.occupations.length); $("loading").hidden = true; showPick();
   }).catch(() => {
     $("loading").textContent = "Le catalogue est momentanément indisponible. Vérifiez votre connexion puis réessayez.";
   });
