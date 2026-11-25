@@ -52,14 +52,31 @@
   </section>
   <section class="hg-themes" id="themes" aria-labelledby="hg-themes-title">
     <h2 id="hg-themes-title" data-i="themesTitle">Choose your experience</h2>
-    <ul class="hg-theme-grid">
-      <li class="hg-theme"><img src="./images/hostgo/theme-famille.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t1">Family life</span></li>
-      <li class="hg-theme"><img src="./images/hostgo/theme-ferme.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t2">Farms &amp; agriculture</span></li>
-      <li class="hg-theme"><img src="./images/hostgo/theme-jardin.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t3">Gardening &amp; nature</span></li>
-      <li class="hg-theme"><img src="./images/hostgo/theme-hotes.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t4">Guesthouses</span></li>
-      <li class="hg-theme"><img src="./images/hostgo/theme-echange.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t5">Cultural &amp; language exchange</span></li>
-      <li class="hg-theme"><img src="./images/hostgo/theme-animaux.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t6">Animals &amp; pet-sitting</span></li>
-    </ul>
+    <div class="hg-car" id="hg-car" role="group" aria-roledescription="carousel" data-ia="carA">
+      <button type="button" class="hg-arr prev" id="hg-prev" data-ia="prevL"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <ul class="hg-track" id="hg-track" tabindex="0">
+        <li class="hg-theme"><img src="./images/hostgo/theme-famille.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t1">Family life</span></li>
+        <li class="hg-theme"><img src="./images/hostgo/theme-ferme.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t2">Farms &amp; agriculture</span></li>
+        <li class="hg-theme"><img src="./images/hostgo/theme-jardin.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t3">Gardening &amp; nature</span></li>
+        <li class="hg-theme"><img src="./images/hostgo/theme-hotes.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t4">Guesthouses</span></li>
+        <li class="hg-theme"><img src="./images/hostgo/theme-echange.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t5">Cultural &amp; language exchange</span></li>
+        <li class="hg-theme"><img src="./images/hostgo/theme-animaux.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><span data-i="t6">Animals &amp; pet-sitting</span></li>
+      </ul>
+      <button type="button" class="hg-arr next" id="hg-next" data-ia="nextL"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="hg-dots" id="hg-dots"></div>
+  </section>
+  <section class="hg-find" id="hg-find" aria-labelledby="hg-find-t">
+    <h2 id="hg-find-t"><span data-i="findA">Find your</span> <em data-i="findB">perfect host</em></h2>
+    <p data-i="findP">Host &amp; Go opens soon. Sign up to be among the first.</p>
+    <div class="hg-btnrow"><a class="hg-main-cta" href="./hostgo-hote.html" data-i="ctaHost">Become a host →</a></div>
+    <h3 data-i="destT">Countries where you can become a host</h3>
+    <ul class="hg-chips" id="hg-chips"></ul>
+  </section>
+  <section class="hg-connect" id="hg-connect" aria-labelledby="hg-connect-t">
+    <h2 id="hg-connect-t"><em data-i="conA">Connect</em> <span data-i="conB">with travellers</span></h2>
+    <p data-i="conP">Planning a trip and want to share your adventure? Join the traveller waiting list.</p>
+    <div class="hg-btnrow"><a class="hg-main-cta" href="./hostgo-voyageur.html" data-i="ctaTrav">Join as a traveller →</a></div>
   </section>
   <section class="hg-bottom" id="faq">
     <div class="hg-map" aria-hidden="true">✈</div>
@@ -67,6 +84,12 @@
     <a href="#join" class="hg-main-cta" data-i="joinNow">Join Now →</a>
   </section>
   <footer class="hg-footer"><a href="./?accueil=1">CheckMyVisa</a> · <span>Host &amp; Go</span> · <a href="./confidentialite.html">Privacy</a> · <a href="./conditions.html">Terms</a></footer>
+  <nav class="hg-tabbar" id="hg-tabbar" data-ia="barL">
+    <a href="#themes" data-ti="0"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg><span data-i="tabFind">Discover</span></a>
+    <a href="./hostgo-hote.html" data-ti="1"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M10 20v-6h4v6"/></svg><span data-i="tabHost">Host</span></a>
+    <a href="./hostgo-voyageur.html" data-ti="2"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg><span data-i="tabTrav">Traveller</span></a>
+    <a href="./?accueil=1" data-ti="3"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6zM8.5 12l2.5 2.5 4.5-5"/></svg><span data-i="tabVisa">CheckMyVisa</span></a>
+  </nav>
 </main>
 <script src="./turnstile.js"></script>
 <script src="./hostgo.js"></script>
