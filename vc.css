@@ -1366,8 +1366,8 @@ body[data-step]:not([data-step="0"]) .aus-teaser{display:none}
 .vc-more{display:flex;flex-direction:column;gap:22px;margin-top:26px}
 body[data-step]:not([data-step="0"]) .vc-more{display:none}
 @media (min-width:900px){
- body[data-step="0"] .vc-more{grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px;align-items:stretch;width:100%;max-width:1080px;margin:40px auto 0}
- .vc-more .aus-teaser .aus-link{width:300px;margin:0}
+ body[data-step="0"] .vc-more{grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:minmax(0,640px);justify-content:center;gap:28px;align-items:stretch;width:100%;max-width:1080px;margin:40px auto 0}
+ .vc-more .aus-teaser .aus-link{width:100%;margin:0}
 }
 @media (prefers-reduced-motion:reduce){.aus-teaser .aus-link{transition:none}.aus-teaser .aus-link:hover{transform:none}}
 

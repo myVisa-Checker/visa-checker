@@ -522,6 +522,10 @@ export default {
         if (!["application/pdf", "image/jpeg", "image/png"].includes(mime) || !/^[A-Za-z0-9+/]+={0,2}$/.test(data)) {
           return out({ error: "attachments" }, 400);
         }
+        // Le contenu réel doit correspondre au type annoncé (signature du fichier).
+        let head;
+        try { head = Uint8Array.from(atob(data.slice(0, 24)), (c) => c.charCodeAt(0)); } catch { return out({ error: "attachments" }, 400); }
+        if (!apiFileSignature(head, mime)) return out({ error: "attachments" }, 400);
         attachmentBytes += Math.floor(data.length * 3 / 4);
       }
       if (attachmentBytes > 15 * 1024 * 1024) return out({ error: "attachments" }, 413);
