@@ -290,6 +290,7 @@
     IDS.forEach(function (id, i) { $(id).hidden = i !== n; });
     done.hidden = n !== IDS.length;
     bars.forEach(function (b, i) { b.className = i <= Math.min(n, LAST) ? "on" : ""; });
+    bar.setAttribute("aria-valuemax", IDS.length); bar.setAttribute("aria-valuenow", Math.min(n, LAST) + 1);
     bar.setAttribute("aria-label", T.progress.replace("{n}", Math.min(n, LAST) + 1).replace("{t}", IDS.length));
     bar.hidden = n === IDS.length;
     if (focus === false) return;
