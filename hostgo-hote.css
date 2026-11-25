@@ -120,3 +120,14 @@ a.hgh-btn.ghost{color:var(--ink)}
 .hgh-hero-img{display:block;width:100%;height:auto}.hgh-hero-img[hidden]{display:none}
 .hgh-hero--img{display:block;background:#0b2c59}
 .hgh-hero--img .hgh-hero-copy,.hgh-hero--img .hgh-art{position:absolute;width:1px;height:1px;min-height:0;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Photos de l'hôte */
+.hgh-drop{display:grid;gap:12px;justify-items:center;padding:22px 14px;border:2px dashed #b6c2d9;border-radius:16px;background:#f7f9fd;text-align:center}
+.hgh-drop p{margin:0;color:#44526b}.hgh-drop.over{border-color:#1d4ed8;background:#eaf1ff}
+.hgh-photos{list-style:none;margin:14px 0;padding:0;display:grid;gap:12px}
+.hgh-photo{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:center;padding:10px;border:1px solid #dbe5f5;border-radius:14px;background:#fff}
+.hgh-photo img{width:96px;height:96px;object-fit:cover;border-radius:10px}
+.hgh-pbody select{width:100%}
+.hgh-photo .hgh-rm{width:40px;height:40px;min-width:0;padding:0;border-radius:50%;align-self:start}
+.hgh-photo .hgh-pbody{min-width:0}
+.hgh-photo .hgh-rm{grid-row:auto;grid-column:auto}
