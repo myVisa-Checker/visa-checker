@@ -4,7 +4,7 @@
   "use strict";
   var lang = (window.SI && SI.lang) || document.documentElement.lang || "fr";
   if (["fr", "en", "ar"].indexOf(lang) < 0) lang = "fr";
-  var ENDPOINT = "https://visa-chat.rabehfly.workers.dev/contact", TO = "contact@checkmyvisa.org", SUBJECT = "Partenariat / Autre demande";
+  var ENDPOINT = "https://visa-chat.rabehfly.workers.dev/contact", TO = "hostandgo@checkmyvisa.org", SUBJECT = "Partenariat / Autre demande";
   var PRICES = { solo: 100, couple: 180 }; /* dinars par an : exemples, à confirmer */
   var T = {
     fr: {

@@ -94,6 +94,7 @@ function limited(ip) {
 // Sans cette variable, la route répond 503 « partner_unavailable » et la page propose l'envoi par e-mail (secours).
 // Le Worker ne stocke rien : il contrôle la demande, vérifie le logo puis la transmet au webhook.
 const PARTNER_TO = "partnership@checkmyvisa.org";   // demandes de partenariat
+const HOSTGO_TO = "hostandgo@checkmyvisa.org";       // inscriptions Host & Go
 const CONTACT_TO = "contact@checkmyvisa.org";       // formulaire de contact
 const PARTNER_MAX_BODY = 450000;      // octets de la requête
 const PARTNER_LOGO_MAX = 300000;      // caractères de la data URL du logo
@@ -198,7 +199,7 @@ async function handleContact(request, env, out) {
   const r = await fetch(env.PARTNER_WEBHOOK, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ to: CONTACT_TO, replyTo: email, subject: "[Contact] " + subject + " - " + name, text, logo: null, data: { kind: "contact", name, email, subject, message } }),
+    body: JSON.stringify({ to: /^\[Host & Go/.test(message) ? HOSTGO_TO : CONTACT_TO, replyTo: email, subject: "[Contact] " + subject + " - " + name, text, logo: null, data: { kind: "contact", name, email, subject, message } }),
   });
   if (!r.ok) return out({ error: "contact_unavailable" }, 502);
   return out({ ok: true });

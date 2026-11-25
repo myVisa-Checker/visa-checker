@@ -4,7 +4,7 @@
   "use strict";
   var lang = (window.SI && SI.lang) || document.documentElement.lang || "fr";
   if (["fr", "en", "ar"].indexOf(lang) < 0) lang = "fr";
-  var ENDPOINT = "https://visa-chat.rabehfly.workers.dev/contact", TO = "contact@checkmyvisa.org", SUBJECT = "Partenariat / Autre demande";
+  var ENDPOINT = "https://visa-chat.rabehfly.workers.dev/contact", TO = "hostandgo@checkmyvisa.org", SUBJECT = "Partenariat / Autre demande";
   var T = {
     fr: {
       backHome: "Retour à Host & Go", eyebrow: "DEVENEZ HÔTE HOST & GO", h1a: "Ouvrez votre porte.", h1b: "Partagez votre monde.",
@@ -100,8 +100,11 @@
 
   var X = {
     fr: {
+      eb_ph: "PHOTOS", h_ph: "Ajoutez au minimum 3 photos", phDrop: "Glissez-déposez des photos ou…", phAdd: "Ajouter des photos…", phCount: "{n} photo(s) ajoutée(s) · 3 conseillées, 10 au maximum", phCat: "Catégorie", phRemove: "Retirer cette photo",
+      phNotice: "Pour l’instant, vos photos restent sur votre appareil : l’envoi n’est pas encore ouvert. Nous vous les demanderons par e-mail à l’ouverture.", phErr: "Seules les images JPG, PNG ou WebP de 10 Mo maximum sont acceptées (10 photos au plus).",
+      phCats: ["Choisir une catégorie", "La photo nous montre", "Espace de couchage", "Espace de vie", "Tâches / projets", "Échange culturel / loisirs", "Animaux", "Extérieur / jardin", "Nourriture", "Paysage", "Autre"],
       eb_ac: "VOTRE HÉBERGEMENT", h_ac: "Décrivez l’hébergement que vous proposez", eb_cx: "ÉCHANGE CULTUREL", h_cx: "Décrivez l’échange culturel possible chez vous", eb_oi: "INFORMATIONS UTILES", h_oi: "Ajoutez toute autre information utile aux voyageurs (facultatif)",
-      tips: { ac: ["Assurez-vous de proposer un endroit propre et sûr pour dormir.", "Si c’est du camping, prévoyez la tente et la literie.", "C’est le bon endroit pour expliquer comment les repas fonctionnent."], cx: ["Des activités où les voyageurs rencontrent votre famille, votre équipe et les habitants.", "Les compétences et connaissances que vous pouvez partager.", "Ce que vous espérez apprendre en accueillant des personnes d’autres cultures."], oi: ["Idées de sorties pendant le temps libre et transports autour de chez vous.", "Ce qu’ils doivent savoir sur votre mode de vie ou les règles de la maison.", "N’ajoutez PAS de site web, d’e-mail ni de numéro de téléphone ici."] },
+      tips: { ph: ["Ajoutez uniquement des images qui ne sont pas déjà en ligne ailleurs (comme votre site).", "Une photo de vous et de votre famille ou équipe aide à créer la confiance.", "Nous conseillons des photos de l’hébergement pour montrer clairement ce que vous offrez."], ac: ["Assurez-vous de proposer un endroit propre et sûr pour dormir.", "Si c’est du camping, prévoyez la tente et la literie.", "C’est le bon endroit pour expliquer comment les repas fonctionnent."], cx: ["Des activités où les voyageurs rencontrent votre famille, votre équipe et les habitants.", "Les compétences et connaissances que vous pouvez partager.", "Ce que vous espérez apprendre en accueillant des personnes d’autres cultures."], oi: ["Idées de sorties pendant le temps libre et transports autour de chez vous.", "Ce qu’ils doivent savoir sur votre mode de vie ou les règles de la maison.", "N’ajoutez PAS de site web, d’e-mail ni de numéro de téléphone ici."] },
       eb_av: "DISPONIBILITÉS", h_av: "Indiquez vos disponibilités", lead_av: "Touchez un mois pour changer son état. Ce champ est facultatif.", prevYear: "Année précédente", nextYear: "Année suivante", calHelp: "Mois de l’année",
       months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
       states: ["Non précisé", "Voyageurs recherchés : demandes très bienvenues", "Disponibilité partielle", "Pas de disponibilité"],
@@ -113,8 +116,11 @@
       pvL: "Message privé pour l’équipe (facultatif)"
     },
     en: {
+      eb_ph: "PHOTOS", h_ph: "Add a minimum of 3 photos", phDrop: "Drag and drop photos or…", phAdd: "Add photos…", phCount: "{n} photo(s) added · 3 recommended, 10 at most", phCat: "Category", phRemove: "Remove this photo",
+      phNotice: "For now your photos stay on your device: uploading is not open yet. We will ask you to send them by e-mail when we open.", phErr: "Only JPG, PNG or WebP images up to 10 MB are accepted (10 photos at most).",
+      phCats: ["Choose a category", "Photo shows us/me", "Sleeping area", "Living space", "Tasks/projects", "Cultural exchange/free time", "Pets", "Outdoor space/garden", "Food", "Scenery", "Other"],
       eb_ac: "YOUR ACCOMMODATION", h_ac: "Describe the accommodation you offer", eb_cx: "CULTURAL EXCHANGE", h_cx: "Describe the cultural exchange available at your place", eb_oi: "USEFUL INFORMATION", h_oi: "Add any other relevant information for travellers (optional)",
-      tips: { ac: ["Make sure you can provide a clean and secure place to sleep.", "If camping, you will need to provide tents and bedding.", "This is a good place to explain how meals will work."], cx: ["Social activities where travellers can meet your family, your team and the local community.", "The skills and knowledge you can share.", "What you hope to learn by hosting people from different cultures."], oi: ["Ideas for what they can do in their time off and transport around your area.", "Anything they should know about how you live or your house rules.", "Please do NOT add a website, e-mail or phone number here."] },
+      tips: { ph: ["Please only add images that are not already online elsewhere (like your website).", "A photo of you and your family or team helps build trust.", "We recommend accommodation photos, so it is clear what you offer."], ac: ["Make sure you can provide a clean and secure place to sleep.", "If camping, you will need to provide tents and bedding.", "This is a good place to explain how meals will work."], cx: ["Social activities where travellers can meet your family, your team and the local community.", "The skills and knowledge you can share.", "What you hope to learn by hosting people from different cultures."], oi: ["Ideas for what they can do in their time off and transport around your area.", "Anything they should know about how you live or your house rules.", "Please do NOT add a website, e-mail or phone number here."] },
       eb_av: "AVAILABILITY", h_av: "Set your availability", lead_av: "Tap a month to change its status. This is optional.", prevYear: "Previous year", nextYear: "Next year", calHelp: "Months of the year",
       months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
       states: ["Not specified", "Travellers needed: enquiries very welcome", "Partial availability", "No availability"],
@@ -126,8 +132,11 @@
       pvL: "Private message for the team (optional)"
     },
     ar: {
+      eb_ph: "الصور", h_ph: "أضف 3 صور على الأقل", phDrop: "اسحب الصور وأفلتها أو…", phAdd: "إضافة صور…", phCount: "تمت إضافة {n} صورة · يُنصح بـ 3 وبحد أقصى 10", phCat: "الفئة", phRemove: "إزالة هذه الصورة",
+      phNotice: "في الوقت الحالي تبقى صورك على جهازك: الرفع غير متاح بعد. سنطلب منك إرسالها بالبريد عند الافتتاح.", phErr: "تُقبل فقط صور JPG أو PNG أو WebP حتى 10 ميغابايت (10 صور كحد أقصى).",
+      phCats: ["اختر فئة", "الصورة تُظهرنا", "مكان النوم", "مكان المعيشة", "المهام / المشاريع", "التبادل الثقافي / وقت الفراغ", "الحيوانات", "الخارج / الحديقة", "الطعام", "المناظر", "أخرى"],
       eb_ac: "مكان الإقامة", h_ac: "صِف مكان الإقامة الذي تعرضه", eb_cx: "التبادل الثقافي", h_cx: "صِف التبادل الثقافي المتاح عندك", eb_oi: "معلومات مفيدة", h_oi: "أضف أي معلومات أخرى مفيدة للمسافرين (اختياري)",
-      tips: { ac: ["تأكد من توفير مكان نظيف وآمن للنوم.", "إن كان التخييم فعليك توفير الخيمة والفراش.", "هذا مكان مناسب لشرح كيفية تدبير الوجبات."], cx: ["أنشطة اجتماعية يلتقي فيها المسافرون بعائلتك وفريقك وأهل المنطقة.", "المهارات والمعارف التي يمكنك مشاركتها.", "ما تأمل تعلّمه باستضافة أشخاص من ثقافات مختلفة."], oi: ["أفكار لما يمكنهم فعله في وقت فراغهم ووسائل النقل حول منطقتك.", "ما ينبغي أن يعرفوه عن أسلوب حياتك أو قواعد المنزل.", "لا تضف موقعاً إلكترونياً أو بريداً أو رقم هاتف هنا."] },
+      tips: { ph: ["أضف فقط صوراً غير منشورة في مكان آخر (مثل موقعك).", "صورة لك ولعائلتك أو فريقك تساعد على بناء الثقة.", "نوصي بإضافة صور مكان الإقامة ليتضح ما تعرضه."], ac: ["تأكد من توفير مكان نظيف وآمن للنوم.", "إن كان التخييم فعليك توفير الخيمة والفراش.", "هذا مكان مناسب لشرح كيفية تدبير الوجبات."], cx: ["أنشطة اجتماعية يلتقي فيها المسافرون بعائلتك وفريقك وأهل المنطقة.", "المهارات والمعارف التي يمكنك مشاركتها.", "ما تأمل تعلّمه باستضافة أشخاص من ثقافات مختلفة."], oi: ["أفكار لما يمكنهم فعله في وقت فراغهم ووسائل النقل حول منطقتك.", "ما ينبغي أن يعرفوه عن أسلوب حياتك أو قواعد المنزل.", "لا تضف موقعاً إلكترونياً أو بريداً أو رقم هاتف هنا."] },
       eb_av: "التوفر", h_av: "حدّد أوقات توفرك", lead_av: "المس شهراً لتغيير حالته. هذا الحقل اختياري.", prevYear: "السنة السابقة", nextYear: "السنة التالية", calHelp: "أشهر السنة",
       months: ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"],
       states: ["غير محدد", "المسافرون مطلوبون: الطلبات مرحَّب بها جداً", "توفر جزئي", "لا يوجد توفر"],
@@ -141,12 +150,13 @@
   }[lang];
   Object.keys(X).forEach(function (k) { if (k === "tips") Object.keys(X.tips).forEach(function (t) { T.tips[t] = X.tips[t]; }); else T[k] = X[k]; });
   var SHORT = { fr: ["Janv", "Févr", "Mars", "Avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"], en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], ar: [] }[lang];
+  var LABELS_PH = ["", "Photo de nous", "Couchage", "Espace de vie", "Tâches / projets", "Échange culturel / loisirs", "Animaux", "Extérieur / jardin", "Nourriture", "Paysage", "Autre"];
   var MONTHS_FR = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"], STATES_FR = ["", "Besoin", "Partiel", "Indisponible"];
   var LANGS_FR = ["Arabe", "Français", "Anglais", "Allemand", "Italien", "Espagnol", "Portugais", "Turc", "Russe", "Autre"], LEVELS_FR = ["Débutant", "Intermédiaire", "Courant", "Langue maternelle"];
   var AMEN_FR = ["Accès à internet", "Animaux à la maison", "Fumeurs", "Internet limité"], TRAV_FR = ["Nomades numériques", "Familles", "Campeurs / camping-cars", "Voyageurs avec animaux"];
   var COUNTRIES_FR = ["Tunisie", "Maroc", "Algérie", "France", "Allemagne", "Italie", "Espagne", "Portugal", "Belgique", "Pays-Bas", "Irlande", "Autre"];
   function $(id) { return document.getElementById(id); }
-  var IDS = ["st1", "st2", "ac", "ty", "pl", "av", "st3", "cx", "lg", "st4", "am", "ad", "oi", "st5"], TXT = ["st2", "ac", "st3", "cx", "st4", "oi"], REQ = ["st2", "ac", "st3", "cx", "st4"], LAST = IDS.length - 1, done = $("done"), country = $("country"), MIN = 20, cur = 0;
+  var IDS = ["st1", "st2", "ac", "ty", "pl", "av", "st3", "cx", "lg", "st4", "am", "ad", "oi", "ph", "st5"], TXT = ["st2", "ac", "st3", "cx", "st4", "oi"], REQ = ["st2", "ac", "st3", "cx", "st4"], LAST = IDS.length - 1, done = $("done"), country = $("country"), MIN = 20, cur = 0;
   var HOURS_FR = ["Jusqu'à 2 h par jour", "3 à 4 h par jour", "Maximum 4 à 5 h par jour"], DAYS_FR = ["3 jours par semaine", "4 jours par semaine", "5 jours par semaine"], STAYS_FR = ["Aucun minimum", "1 semaine ou moins", "Au moins 1 semaine", "Au moins 2 semaines", "Au moins 3 semaines", "Au moins 1 mois"];
   var TYPES_FR = ["Jardinage léger", "Aide à la ferme", "Soin des animaux", "Cuisine en famille", "Aide à la maison", "Enseignement et langues", "Accueil et tourisme", "Petits travaux et bricolage", "Informatique et internet", "Garde d'enfants et jeux", "Compagnie aux personnes âgées", "Garde de maison et d'animaux"];
   if (!done || !country || IDS.some(function (i) { return !$(i); })) return;
@@ -156,7 +166,7 @@
   document.querySelectorAll("[data-i]").forEach(function (el) { var k = el.getAttribute("data-i"); if (T[k] != null) el.textContent = T[k]; });
   document.title = "Host & Go — " + ({ fr: "Devenir hôte", en: "Become a host", ar: "كن مضيفاً" }[lang]);
   if (lang === "fr") { var hi = $("hero-img"), hr = $("hero"); if (hi && hr) { hi.hidden = false; hr.classList.add("hgh-hero--img"); } }
-  var EB = { st2: T.eb_st2, ac: T.eb_ac, ty: T.eb_ty, pl: T.eb_pl, av: T.eb_av, st3: T.eb_st3, cx: T.eb_cx, lg: T.eb_lg, st4: T.eb_st4, am: T.eb_am, ad: T.eb_ad, oi: T.eb_oi, st5: T.eyebrow2 };
+  var EB = { st2: T.eb_st2, ac: T.eb_ac, ty: T.eb_ty, pl: T.eb_pl, av: T.eb_av, st3: T.eb_st3, cx: T.eb_cx, lg: T.eb_lg, st4: T.eb_st4, am: T.eb_am, ad: T.eb_ad, oi: T.eb_oi, ph: T.eb_ph, st5: T.eyebrow2 };
   Object.keys(EB).forEach(function (id) {
     var e = $(id).querySelector(".hgh-eyebrow"); if (e) e.textContent = T.stepOf.replace("{n}", IDS.indexOf(id) + 1).replace("{t}", IDS.length) + " · " + EB[id];
   });
@@ -240,6 +250,34 @@
     var out = [].slice.call(langsBox.children).map(function (r) { var sl = r.querySelectorAll("select"); return LANGS_FR[+sl[0].value] + " (" + LEVELS_FR[+sl[1].value] + ")"; });
     return out.join(", ");
   }
+
+  /* Photos : aperçus et catégories sur l'appareil (l'envoi réel viendra avec le serveur de fichiers) */
+  var phList = $("ph-list"), phFiles = [], PH_MAX = 10, PH_SIZE = 10 * 1024 * 1024;
+  T.tips.ph.forEach(function (x) { var li = document.createElement("li"); li.textContent = x; $("tl-ph").appendChild(li); });
+  function phCount() { $("ph-count").textContent = T.phCount.replace("{n}", phFiles.length); }
+  function phAddFiles(list) {
+    var bad = false;
+    [].slice.call(list).forEach(function (f) {
+      if (!/^image\/(jpeg|png|webp)$/.test(f.type) || f.size > PH_SIZE || phFiles.length >= PH_MAX) { bad = true; return; }
+      var url = URL.createObjectURL(f), li = document.createElement("li"), img = new Image(), sel = document.createElement("select"), rm = document.createElement("button"), lab = document.createElement("label"), sid = "ph-c" + Date.now() + phFiles.length;
+      img.src = url; img.alt = f.name; img.width = 96; img.height = 96; li.className = "hgh-photo";
+      sel.id = sid; T.phCats.forEach(function (c, i) { var o = document.createElement("option"); o.value = String(i); o.textContent = c; sel.appendChild(o); });
+      lab.htmlFor = sid; lab.className = "hgh-label"; lab.textContent = T.phCat;
+      rm.type = "button"; rm.className = "hgh-rm"; rm.textContent = "✕"; rm.setAttribute("aria-label", T.phRemove);
+      var entry = { file: f, url: url, sel: sel };
+      rm.addEventListener("click", function () { URL.revokeObjectURL(url); phFiles.splice(phFiles.indexOf(entry), 1); li.remove(); phCount(); $("ph-add").focus(); });
+      var box = document.createElement("div"); box.className = "hgh-pbody"; box.appendChild(lab); box.appendChild(sel);
+      li.appendChild(img); li.appendChild(box); li.appendChild(rm); phList.appendChild(li); phFiles.push(entry);
+    });
+    $("err-ph").textContent = bad ? T.phErr : ""; phCount();
+  }
+  $("ph-add").addEventListener("click", function () { $("ph-file").click(); });
+  $("ph-file").addEventListener("change", function () { phAddFiles(this.files); this.value = ""; });
+  var drop = $("ph-drop");
+  ["dragenter", "dragover"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add("over"); }); });
+  ["dragleave", "drop"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove("over"); }); });
+  drop.addEventListener("drop", function (e) { if (e.dataTransfer && e.dataTransfer.files) phAddFiles(e.dataTransfer.files); });
+  phCount();
   function sum() { var o = country.options[country.selectedIndex]; $("countrySummary").textContent = country.value ? o.textContent : T.none; }
   country.addEventListener("change", sum); sum();
 
@@ -302,6 +340,7 @@
       "ÉQUIPEMENTS : " + (picked("amen", AMEN_FR) || "aucun"), "VOYAGEURS ACCEPTÉS : " + (picked("trav", TRAV_FR) || "non précisé"), "ADRESSE : " + $("addr").value.trim() + ($("zip").value.trim() ? ", " + $("zip").value.trim() : ""), "",
       "LIEU D'ACCUEIL :", $("ta-st2").value.trim(), "", "HÉBERGEMENT :", $("ta-ac").value.trim(), "", "AIDE SOUHAITÉE :", $("ta-st3").value.trim(), "", "ÉCHANGE CULTUREL :", $("ta-cx").value.trim(), "", "PRÉSENTATION :", $("ta-st4").value.trim()];
     if ($("ta-oi").value.trim()) lines.push("", "INFOS UTILES :", $("ta-oi").value.trim());
+    if (phFiles.length) lines.push("", "PHOTOS : " + phFiles.length + " préparée(s) sur l'appareil (non transmises) — catégories : " + phFiles.map(function (e) { return e.sel.value === "0" ? "non précisée" : LABELS_PH[+e.sel.value]; }).join(", "));
     if ($("pv").value.trim()) lines.push("", "NOTE PRIVÉE POUR L'ÉQUIPE :", $("pv").value.trim());
     var msg = lines.join("\n");
     var btn = $("finish"); btn.disabled = true;
