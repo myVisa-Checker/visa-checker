@@ -36,53 +36,52 @@
   </ul>
 </nav>
 
-<main id="aus" lang="fr" dir="ltr" data-no-i18n>
-  <nav class="crumbs" aria-label="Fil d'Ariane"><a href="../?accueil=1">Accueil</a> › <span>Ausbildung</span></nav>
-  <p id="langNote" class="lang-note" role="note" hidden></p>
+<main id="aus" data-no-i18n>
+  <nav class="crumbs" aria-label="Fil d'Ariane" data-ta="aria-label=aria.crumbs"><a href="../?accueil=1" data-t="crumb.home">Accueil</a> <span aria-hidden="true" data-t="crumb.sep">›</span> <span>Ausbildung</span></nav>
   <section class="hero">
-    <p class="eyebrow">VOTRE PROJET · ALLEMAGNE</p>
-    <h1>Trouvez une Ausbildung qui vous correspond.</h1>
-    <p>Quelques questions pour découvrir les métiers de la formation en alternance en Allemagne qui correspondent à vos intérêts, à vos compétences et à votre façon de travailler.</p>
-    <div class="trust"><span>✓ Gratuit</span><span>✓ 3–4 minutes</span><span>✓ Sans document personnel</span></div>
+    <p class="eyebrow" data-t="hero.eyebrow">VOTRE PROJET · ALLEMAGNE</p>
+    <h1 data-t="hero.h1">Trouvez une Ausbildung qui vous correspond.</h1>
+    <p data-t="hero.p">Quelques questions pour découvrir les métiers de la formation en alternance en Allemagne qui correspondent à vos intérêts, à vos compétences et à votre façon de travailler.</p>
+    <div class="trust"><span data-t="trust.free">✓ Gratuit</span><span data-t="trust.time">✓ 3–4 minutes</span><span data-t="trust.nodoc">✓ Sans document personnel</span></div>
   </section>
 
   <noscript><p class="panel">Ce questionnaire nécessite JavaScript. Activez-le dans votre navigateur puis rechargez la page.</p></noscript>
-  <section id="loading" class="panel" role="status" aria-live="polite">Chargement du catalogue…</section>
+  <section id="loading" class="panel" role="status" aria-live="polite" data-t="loading">Chargement du catalogue…</section>
 
-  <section id="quiz" class="panel" aria-label="Questionnaire" hidden>
-    <div class="progress-row"><span id="progress" aria-live="polite">Étape 1 sur 6</span><div class="track" id="progresstrack" role="progressbar" aria-label="Progression" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1"><i id="progressbar"></i></div></div>
+  <section id="quiz" class="panel" aria-label="Questionnaire" data-ta="aria-label=aria.quiz" hidden>
+    <div class="progress-row"><span id="progress" aria-live="polite">Étape 1 sur 6</span><div class="track" id="progresstrack" role="progressbar" aria-label="Progression" data-ta="aria-label=aria.progress" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1"><i id="progressbar"></i></div></div>
     <h2 id="questionTitle" tabindex="-1"></h2>
     <p id="questionHint" class="muted"></p>
     <div id="answers" class="options" role="group"></div>
     <div id="skillArea" hidden></div>
     <div id="mobilityArea" hidden>
-      <h3 id="mobilityTitle">Êtes-vous prêt(e) à déménager en Allemagne ?</h3>
+      <h3 id="mobilityTitle" data-t="mob.title">Êtes-vous prêt(e) à déménager en Allemagne ?</h3>
       <div class="options" role="radiogroup" aria-labelledby="mobilityTitle">
-        <label class="option"><input type="radio" name="mobility" value="yes"><span>Oui</span></label>
-        <label class="option"><input type="radio" name="mobility" value="no"><span>Non</span></label>
-        <label class="option"><input type="radio" name="mobility" value="consider"><span>Je dois encore réfléchir</span></label>
+        <label class="option"><input type="radio" name="mobility" value="yes"><span data-t="mob.yes">Oui</span></label>
+        <label class="option"><input type="radio" name="mobility" value="no"><span data-t="mob.no">Non</span></label>
+        <label class="option"><input type="radio" name="mobility" value="consider"><span data-t="mob.consider">Je dois encore réfléchir</span></label>
       </div>
     </div>
     <p id="error" class="error" role="alert"></p>
-    <div class="actions"><button id="back" class="btn secondary" type="button" disabled>Retour</button><button id="next" class="btn primary" type="button">Continuer</button></div>
+    <div class="actions"><button id="back" class="btn secondary" type="button" data-t="btn.back" disabled>Retour</button><button id="next" class="btn primary" type="button">Continuer</button></div>
   </section>
 
-  <section id="results" class="panel" aria-label="Résultats" hidden>
-    <p class="eyebrow">VOTRE ORIENTATION</p>
-    <h2 id="resultsTitle" tabindex="-1">Les métiers qui vous correspondent</h2>
-    <p class="muted">Ce classement est une première orientation, pas une promesse d'embauche.</p>
+  <section id="results" class="panel" aria-label="Résultats" data-ta="aria-label=aria.results" hidden>
+    <p class="eyebrow" data-t="res.eyebrow">VOTRE ORIENTATION</p>
+    <h2 id="resultsTitle" tabindex="-1" data-t="res.title">Les métiers qui vous correspondent</h2>
+    <p class="muted" data-t="res.sub">Ce classement est une première orientation, pas une promesse d'embauche.</p>
     <div id="resultList"></div>
     <div id="readiness" class="readiness"></div>
     <div class="next-steps">
-      <h3>Et ensuite ?</h3>
-      <p>Une formation en Allemagne suppose aussi un dossier de séjour solide. Préparez vos pièces avec CheckMyVisa, puis vérifiez les règles sur les sites officiels.</p>
-      <a class="btn primary" id="toVisa" href="../?accueil=1">Préparer mon dossier de visa</a>
-      <p class="guide-link"><a href="../guide-ausbildung.html">Lire notre guide Ausbildung</a></p>
+      <h3 data-t="next.title">Et ensuite ?</h3>
+      <p data-t="next.p">Une formation en Allemagne suppose aussi un dossier de séjour solide. Préparez vos pièces avec CheckMyVisa, puis vérifiez les règles sur les sites officiels.</p>
+      <a class="btn primary" id="toVisa" href="../?accueil=1" data-t="next.visa">Préparer mon dossier de visa</a>
+      <p class="guide-link"><a href="../guide-ausbildung.html" data-t="next.guide">Lire notre guide Ausbildung</a></p>
     </div>
-    <div class="actions result-actions"><button id="restart" class="btn secondary" type="button">Recommencer</button><button id="print" class="btn secondary" type="button">Imprimer / enregistrer en PDF</button></div>
+    <div class="actions result-actions"><button id="restart" class="btn secondary" type="button" data-t="btn.restart">Recommencer</button><button id="print" class="btn secondary" type="button" data-t="btn.print">Imprimer / enregistrer en PDF</button></div>
   </section>
 
-  <p class="legal">Les durées et descriptions du catalogue sont des données de travail à vérifier auprès des sources officielles avant publication. Les exigences peuvent varier selon la formation, l'employeur et le lieu. Le résultat ne prédit ni l'obtention d'un contrat ni celle d'un visa. Aucune de vos réponses n'est envoyée ni enregistrée.</p>
+  <p class="legal" data-t="legal">Les durées et descriptions du catalogue sont des données de travail à vérifier auprès des sources officielles avant publication. Les exigences peuvent varier selon la formation, l'employeur et le lieu. Le résultat ne prédit ni l'obtention d'un contrat ni celle d'un visa. Aucune de vos réponses n'est envoyée ni enregistrée.</p>
 </main>
 
 <footer class="site">
@@ -106,6 +105,7 @@
   </div>
 </footer>
 <script src="./career-matcher.js"></script>
+<script src="./i18n.js"></script>
 <script src="./app.js"></script>
 </body>
 </html>

@@ -13,7 +13,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
+for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js", "ausbildung/i18n.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js", "ausbildung/tests/i18n.test.js"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -245,6 +245,12 @@ try {
 } catch (e) {
   ok("ausbildung : moteur, catalogue, schéma et vocabulaire du questionnaire", false, String(e.stderr || e.message).split("\n")[0]);
 }
+try {
+  execFileSync(process.execPath, ["ausbildung/tests/i18n.test.js"], { stdio: "inherit" });
+  ok("ausbildung : traductions FR/EN/AR complètes et alignées (dictionnaire, HTML, catalogue, moteur)", true);
+} catch (e) {
+  ok("ausbildung : traductions FR/EN/AR complètes et alignées (dictionnaire, HTML, catalogue, moteur)", false, String(e.stderr || e.message).split("\n")[0]);
+}
 {
   const ah = read("ausbildung/index.html"), aa = read("ausbildung/app.js"), swa = read("sw.js"), idx = read("index.html"), cmn = read("visa-app.js");
   const csp = (ah.match(/http-equiv="Content-Security-Policy" content="([^"]*)"/) || [])[1] || "";
@@ -257,7 +263,7 @@ try {
   ok("ausbildung : accès visible dans la navigation de l'accueil et des pages de contenu", /<li><a href="\.\/ausbildung\/">Ausbildung<\/a><\/li>/.test(idx) && ["a-propos.html", "contact.html", "faq.html", "guide-visa.html", "partenaires.html"].every((f) => /<li><a href="\.\/ausbildung\/">Ausbildung<\/a><\/li>/.test(read(f))));
   ok("ausbildung : libellés de navigation FR/EN/AR de l'accueil", (cmn.match(/"\.\/ausbildung\/":"Ausbildung"/g) || []).length === 3);
   ok("accueil : carte Ausbildung active (lien en FR, EN et AR, plus de « bientôt »)", (idx.match(/class="aus-cta" href="\.\/ausbildung\/"/g) || []).length === 3 && !/BIENTÔT|COMING SOON|قريباً<\/p>/.test(idx.slice(idx.indexOf('<template id="aus-tpl">'), idx.indexOf("</template>"))));
-  ok("ausbildung : fichiers du module dans le cache hors ligne", ["ausbildung/", "ausbildung/ausbildung.css", "ausbildung/career-matcher.js", "ausbildung/app.js", "ausbildung/data/occupations.json"].every((f) => swa.includes('"' + f + '"')));
+  ok("ausbildung : fichiers du module dans le cache hors ligne", ["ausbildung/", "ausbildung/ausbildung.css", "ausbildung/career-matcher.js", "ausbildung/app.js", "ausbildung/i18n.js", "ausbildung/data/occupations.json"].every((f) => swa.includes('"' + f + '"')));
   ok("service worker : catalogue Ausbildung servi hors ligne (règle JSON dédiée)", /isAusbildungData/.test(swa) && /ausbildung\\\/data/.test(swa));
   ok("ausbildung : passerelle vers le dossier visa et impression du résultat", /id="toVisa" href="\.\.\/\?accueil=1"/.test(ah) && /id="print"/.test(ah) && /window\.print\(\)/.test(aa) && /@media print/.test(read("ausbildung/ausbildung.css")));
   ok("guide Ausbildung : page, carte dans Guide, précache, sitemap, CSP", existsSync("guide-ausbildung.html") && /guide-ausbildung\.html/.test(read("guide-visa.html")) && /"guide-ausbildung\.html"/.test(swa) && /guide-ausbildung\.html/.test(read("sitemap.xml")) && /script-src 'self'/.test(read("guide-ausbildung.html")));

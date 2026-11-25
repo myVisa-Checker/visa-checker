@@ -48,6 +48,14 @@
             "type": "string",
             "minLength": 3
           },
+          "title_en": {
+            "type": "string",
+            "minLength": 3
+          },
+          "title_ar": {
+            "type": "string",
+            "minLength": 3
+          },
           "category": {
             "type": "string"
           },

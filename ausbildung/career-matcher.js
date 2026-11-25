@@ -86,6 +86,18 @@
       visa_note_fr:"Ce classement ne vérifie pas votre éligibilité au visa et ne garantit ni contrat de formation ni décision administrative."
     };
   }
+  // Codes neutres des notes « À préparer » : l'interface s'en sert pour les afficher dans la langue choisie.
+  // Ils restent hors de readiness() : les notes *_fr de readiness() sont les seuls textes qui contiennent des libellés lisibles.
+  function readinessCodes(profile) {
+    const german = typeof profile.german_level === "string" ? profile.german_level.toUpperCase() : "UNKNOWN";
+    const order = ["A0","A1","A2","B1","B2","C1","C2"];
+    return {
+      german: !order.includes(german) ? "unknown" : order.indexOf(german) < order.indexOf("B1") ? "below_b1" : "b1_plus",
+      education: EDUCATION_LABELS_FR[profile.education] ? profile.education : null,
+      availability: AVAILABILITY_LABELS_FR[profile.availability] ? profile.availability : null,
+      mobility: profile.mobility === "yes" ? "yes" : profile.mobility === "no" ? "no" : "other"
+    };
+  }
   function match(profile, catalogue, limit=3) {
     if (!profile || !catalogue || !Array.isArray(catalogue.occupations)) throw new TypeError("Profil et catalogue requis.");
     const ranked = catalogue.occupations.map(o => ({occupation:o, result:scoreOccupation(profile,o)}))
@@ -96,8 +108,9 @@
       scoring_weights:WEIGHTS,
       results:ranked.slice(0,Math.max(1,Math.min(10,limit))).map(x => ({...x.result,occupation:x.occupation})),
       readiness:readiness(profile),
+      readiness_codes:readinessCodes(profile),
       disclaimer_fr:"Orientation indicative uniquement. Le score mesure une correspondance avec les préférences et compétences déclarées, pas une probabilité d'embauche ou de visa."
     };
   }
-  return Object.freeze({ match, scoreOccupation, readiness, WEIGHTS });
+  return Object.freeze({ match, scoreOccupation, readiness, readinessCodes, WEIGHTS });
 });

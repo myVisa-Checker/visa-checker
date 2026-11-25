@@ -1,55 +1,32 @@
-/* Ausbildung Career Matcher : interface du questionnaire (français).
+/* Ausbildung Career Matcher : interface du questionnaire (français, anglais, arabe).
    Script externe : la CSP de la page n'autorise aucun script inline. Aucune donnée n'est envoyée ni enregistrée :
    les réponses restent en mémoire dans cette page et disparaissent à la fermeture ou au clic sur « Recommencer ». */
 (function () {
   "use strict";
   const $ = (id) => document.getElementById(id);
+  const I = window.AusI18n.make((window.SI && window.SI.lang) || "fr"), t = I.t;
+  // Les textes viennent de i18n.js (fr, en, ar) : ici seulement les identifiants de réponses, que le moteur comprend.
   const steps = [
-    {id:"education",title:"Votre parcours scolaire",hint:"Quel est votre niveau d'études le plus élevé ?",options:[
-      ["middle_school","Collège"],["secondary_no_bac","Lycée sans bac"],["baccalaureat","Baccalauréat"],
-      ["vocational","Formation professionnelle"],["bac2","Bac +2"],["licence","Licence"],["master","Master ou plus"]
-    ]},
-    {id:"experience",title:"Votre expérience",hint:"Qu'avez-vous déjà fait ? Plusieurs réponses possibles.",options:[
-      ["professional","Expérience professionnelle"],["internship","Stage"],["personal_projects","Projets personnels"],["none","Aucune expérience"]
-    ]},
-    {id:"german",title:"Vos langues",hint:"Quel est votre niveau actuel en allemand ?",options:[
-      ["A0","Aucun"],["A1","A1 — débutant"],["A2","A2 — élémentaire"],["B1","B1 — intermédiaire"],["B2","B2 — indépendant"],["C1","C1 ou plus"]
-    ]},
-    {id:"interests",title:"Vos centres d'intérêt",hint:"Choisissez un ou plusieurs domaines.",options:[
-      ["health","Santé et aide aux personnes"],["technology","Informatique et technologie"],["automotive","Automobile et mécanique"],
-      ["electronics","Électricité et électronique"],["industry","Industrie et machines"],["logistics","Logistique et transport"],
-      ["hospitality","Hôtellerie et tourisme"],["cooking","Cuisine et gastronomie"],["sales","Commerce et vente"],
-      ["construction","Installation et bâtiment"],["helping_people","Aider les autres"],["problem_solving","Résoudre des problèmes"]
-    ],multi:true},
-    {id:"environment",title:"Votre environnement idéal",hint:"Où vous voyez-vous travailler ?",options:[
-      ["office","Bureau et ordinateur"],["workshop","Atelier et machines"],["hospital","Hôpital et soins"],["hotel","Hôtel et accueil"],
-      ["shop","Magasin et contact client"],["warehouse","Entrepôt et logistique"],["construction_site","Chantier et terrain"],
-      ["factory","Usine et production"],["open","Ouvert à plusieurs environnements"]
-    ]},
-    {id:"project",title:"Votre projet Allemagne",hint:"Quand souhaitez-vous commencer ?",options:[
-      ["soon","Dès que possible"],["3_6","Dans 3 à 6 mois"],["6_12","Dans 6 à 12 mois"],["later","Plus tard"],["exploring","Je découvre encore"]
-    ]}
+    {id:"education",values:["middle_school","secondary_no_bac","baccalaureat","vocational","bac2","licence","master"]},
+    {id:"experience",values:["professional","internship","personal_projects","none"]},
+    {id:"german",values:["A0","A1","A2","B1","B2","C1"]},
+    {id:"interests",values:["health","technology","automotive","electronics","industry","logistics","hospitality","cooking","sales","construction","helping_people","problem_solving"],multi:true},
+    {id:"environment",values:["office","workshop","hospital","hotel","shop","warehouse","construction_site","factory","open"]},
+    {id:"project",values:["soon","3_6","6_12","later","exploring"]}
   ];
-  const skillOptions = [
-    ["logic","Logique"],["analytical_thinking","Analyse"],["programming","Programmation"],["troubleshooting","Diagnostic et résolution de problèmes"],
-    ["mechanical_reasoning","Mécanique"],["manual_precision","Précision manuelle"],["communication","Communication"],["organization","Organisation"],
-    ["teamwork","Travail en équipe"],["empathy","Écoute et empathie"],["planning","Planification"],["creativity","Créativité"],
-    ["numeracy","Calcul"],["reliability","Fiabilité"],["electrical_reasoning","Électricité"],["service_mindset","Sens du service"]
-  ];
-  const domainOptions = [["it","Informatique / web"],["automotive","Automobile / mécanique"],["electrical","Électricité / électronique"],["health","Santé / soins"],["logistics","Logistique / transport"],["hospitality","Hôtellerie / tourisme"],["retail","Commerce / vente"],["cooking","Cuisine / restauration"],["construction","Bâtiment / installation"],["manufacturing","Industrie / fabrication"],["social","Social / bénévolat"]];
-  const CONFIDENCE_FR = {high:"élevée",medium:"moyenne",low:"faible"};
-  const LANG_NOTE = {
-    en:"This pathway is currently available in French only. The result is an orientation, not a promise of a job or a visa.",
-    ar:"هذا المسار متاح حالياً بالفرنسية فقط. النتيجة توجيه أولي وليست وعداً بعقد عمل أو بتأشيرة."
-  };
+  const skillValues = ["logic","analytical_thinking","programming","troubleshooting","mechanical_reasoning","manual_precision","communication","organization","teamwork","empathy","planning","creativity","numeracy","reliability","electrical_reasoning","service_mindset"];
+  const domainValues = ["it","automotive","electrical","health","logistics","hospitality","retail","cooking","construction","manufacturing","social"];
+  const labelled = (prefix, values) => values.map((v) => [v, t(prefix + v)]);
   const emptyAnswers = () => ({education:"",experience:[],experienceDomains:[],german:"",interests:[],environment:"",project:"",mobility:"",skills:[]});
   let step = 0, answers = emptyAnswers(), catalogue = null;
 
   function escapeHtml(s) { return String(s).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
-  function durationFr(months) {
-    const y = Math.floor(months / 12), m = months % 12;
-    const years = y ? y + (y > 1 ? " ans" : " an") : "";
-    return m ? (years ? years + " et " + m + " mois" : m + " mois") : years;
+  // Le HTML est en français ; pour l'anglais et l'arabe, chaque élément marqué data-t / data-ta reçoit son texte traduit.
+  function applyStatic() {
+    document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t(el.getAttribute("data-t")); });
+    document.querySelectorAll("[data-ta]").forEach((el) => {
+      el.getAttribute("data-ta").split(";").forEach((pair) => { const [a, k] = pair.split("="); if (a && k) el.setAttribute(a.trim(), t(k.trim())); });
+    });
   }
   function checkboxes(name, list, selected) {
     return list.map(([v, l]) => `<label class="option"><input type="checkbox" name="${name}" value="${v}" ${selected.includes(v) ? "checked" : ""}><span>${escapeHtml(l)}</span></label>`).join("");
@@ -57,27 +34,27 @@
 
   function render(focusTitle) {
     const item = steps[step];
-    $("progress").textContent = `Étape ${step + 1} sur ${steps.length}`;
+    $("progress").textContent = t("step.n", {n: step + 1, total: steps.length});
     $("progressbar").style.width = `${((step + 1) / steps.length) * 100}%`;
     const track = $("progresstrack");
     track.setAttribute("aria-valuenow", String(step + 1));
-    track.setAttribute("aria-valuetext", `Étape ${step + 1} sur ${steps.length}`);
-    $("questionTitle").textContent = item.title;
-    $("questionHint").textContent = item.hint;
+    track.setAttribute("aria-valuetext", t("step.n", {n: step + 1, total: steps.length}));
+    $("questionTitle").textContent = t("q." + item.id + ".title");
+    $("questionHint").textContent = t("q." + item.id + ".hint");
     const selected = answers[item.id];
     $("answers").setAttribute("aria-labelledby", "questionTitle");
-    $("answers").innerHTML = item.options.map(([value, label]) => {
+    $("answers").innerHTML = labelled("o." + item.id + ".", item.values).map(([value, label]) => {
       const checked = Array.isArray(selected) ? selected.includes(value) : selected === value;
       return `<label class="option"><input type="${item.multi ? "checkbox" : "radio"}" name="${item.id}" value="${value}" ${checked ? "checked" : ""}><span>${escapeHtml(label)}</span></label>`;
     }).join("");
     $("skillArea").hidden = step !== 1;
     if (step === 1) {
-      $("skillArea").innerHTML = `<h3>Quelles compétences possédez-vous ?</h3><p class="muted">Vous pouvez sélectionner des compétences acquises en autodidacte.</p><div class="options" role="group" aria-label="Compétences">${checkboxes("skills", skillOptions, answers.skills)}</div><h3>Dans quel(s) domaine(s) avez-vous de l'expérience ?</h3><p class="muted">Stage, emploi, formation pratique ou projet personnel.</p><div class="options" role="group" aria-label="Domaines d'expérience">${checkboxes("experienceDomains", domainOptions, answers.experienceDomains)}</div>`;
+      $("skillArea").innerHTML = `<h3>${escapeHtml(t("sk.title"))}</h3><p class="muted">${escapeHtml(t("sk.hint"))}</p><div class="options" role="group" aria-label="${escapeHtml(t("sk.aria"))}">${checkboxes("skills", labelled("skill.", skillValues), answers.skills)}</div><h3>${escapeHtml(t("dm.title"))}</h3><p class="muted">${escapeHtml(t("dm.hint"))}</p><div class="options" role="group" aria-label="${escapeHtml(t("dm.aria"))}">${checkboxes("experienceDomains", labelled("dom.", domainValues), answers.experienceDomains)}</div>`;
     }
     $("mobilityArea").hidden = step !== 5;
     if (step === 5) document.querySelectorAll('input[name="mobility"]').forEach((x) => { x.checked = x.value === answers.mobility; });
     $("back").disabled = step === 0;
-    $("next").textContent = step === steps.length - 1 ? "Voir mes résultats" : "Continuer";
+    $("next").textContent = step === steps.length - 1 ? t("btn.finish") : t("btn.next");
     $("error").textContent = "";
     if (focusTitle) { $("questionTitle").focus(); }
   }
@@ -108,12 +85,20 @@
 
   function resultCard(r, i) {
     const o = r.occupation, regulated = o.training_type !== "dual";
-    const reasons = r.reasons.slice(0, 3).map((x) => `<li>${escapeHtml(x.label_fr)}</li>`).join("");
-    return `<article class="result-card"><div class="result-top"><span class="rank">#${i + 1}</span><strong>${escapeHtml(o.title_de)}</strong><span class="score">${r.score}/100</span></div>`
-      + `<small>Fiabilité du classement : ${CONFIDENCE_FR[r.confidence] || "faible"}</small>`
-      + `<p>${escapeHtml(o.title_fr)} · ${durationFr(o.duration_months)} · ${regulated ? "Formation réglementée" : "Formation duale"}</p>`
-      + (regulated ? `<p class="reg-note">Cette formation relève d'un cadre réglementaire distinct de l'Ausbildung duale classique : vérifiez ses conditions auprès des organismes officiels compétents.</p>` : "")
-      + `<ul>${reasons || "<li>Ajoutez des compétences ou des intérêts pour affiner ce résultat.</li>"}</ul></article>`;
+    const title = o["title_" + I.lang] || o.title_fr;
+    const reasons = r.reasons.slice(0, 3).map((x) => `<li>${escapeHtml(t("reason." + x.dimension))}</li>`).join("");
+    return `<article class="result-card"><div class="result-top"><span class="rank">#${i + 1}</span><strong><bdi lang="de">${escapeHtml(o.title_de)}</bdi></strong><span class="score" dir="ltr">${r.score}/100</span></div>`
+      + `<small>${escapeHtml(t("conf.label", {v: t("conf." + (["high","medium","low"].includes(r.confidence) ? r.confidence : "low"))}))}</small>`
+      + `<p>${escapeHtml(title)} · ${escapeHtml(I.duration(o.duration_months))} · ${escapeHtml(regulated ? t("kind.reg") : t("kind.dual"))}</p>`
+      + (regulated ? `<p class="reg-note">${escapeHtml(t("reg.note"))}</p>` : "")
+      + `<ul>${reasons || `<li>${escapeHtml(t("reason.empty"))}</li>`}</ul></article>`;
+  }
+
+  // Notes « À préparer » : composées à partir des codes du moteur, dans la langue de l'interface.
+  function readinessHtml(c) {
+    const school = c.education ? t("ready.school.with", {edu: t("edu." + c.education)}) : t("ready.school.without");
+    const project = c.availability ? t("ready.project.with", {when: t("avail." + c.availability)}) : t("ready.project.without");
+    return `<h3>${escapeHtml(t("ready.title"))}</h3><p>${escapeHtml(t("ready.german." + (c.german || "unknown")))}</p><p>${escapeHtml(school)}</p><p>${escapeHtml(project)}</p><p>${escapeHtml(t("ready.mobility." + (c.mobility || "other")))}</p><p>${escapeHtml(t("ready.visa"))}</p><small>${escapeHtml(t("disclaimer"))}</small>`;
   }
 
   function showResults() {
@@ -122,8 +107,8 @@
     const useful = result.results.filter((r) => r.score > 0);
     $("quiz").hidden = true; $("results").hidden = false;
     $("resultList").innerHTML = useful.map(resultCard).join("")
-      || "<p>Nous n'avons pas assez de réponses concordantes pour proposer un classement utile. Recommencez en sélectionnant au moins un domaine, une compétence ou un environnement.</p>";
-    $("readiness").innerHTML = `<h3>À préparer</h3><p>${escapeHtml(result.readiness.german_note_fr)}</p><p>${escapeHtml(result.readiness.school_note_fr)}</p><p>${escapeHtml(result.readiness.project_note_fr)}</p><p>${escapeHtml(result.readiness.mobility_note_fr)}</p><p>${escapeHtml(result.readiness.visa_note_fr)}</p><small>${escapeHtml(result.disclaimer_fr)}</small>`;
+      || `<p>${escapeHtml(t("res.none"))}</p>`;
+    $("readiness").innerHTML = readinessHtml(result.readiness_codes);
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({top:0,behavior:reduce ? "auto" : "smooth"});
     $("resultsTitle").focus();
@@ -135,13 +120,12 @@
 
   $("print").addEventListener("click", () => window.print());
 
-  const lang = (window.SI && window.SI.lang) || "fr";
-  if (LANG_NOTE[lang]) { const n = $("langNote"); n.textContent = LANG_NOTE[lang]; n.hidden = false; }
+  if (I.lang !== "fr") applyStatic();
 
   fetch("./data/occupations.json").then((r) => { if (!r.ok) throw new Error("catalogue"); return r.json(); }).then((data) => {
     if (!data || !Array.isArray(data.occupations) || !data.occupations.length) throw new Error("catalogue");
     catalogue = data; render(false); $("loading").hidden = true; $("quiz").hidden = false;
   }).catch(() => {
-    $("loading").textContent = "Le catalogue est momentanément indisponible. Vérifiez votre connexion puis réessayez.";
+    $("loading").textContent = t("load.error");
   });
 })();
