@@ -99,3 +99,25 @@
 .hg-tabbar a:focus-visible{outline:3px solid #ffc928;outline-offset:-3px}
 .hg-tabbar svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 #hostgo{padding-bottom:84px}
+
+/* Aperçus d'exemple : cartes d'hôtes et avatars de voyageurs (toujours signalés « Exemple ») */
+.hg-car.trav{--cw:min(46vw,190px)}
+@media(min-width:900px){.hg-car.trav{--cw:190px}}
+.hg-host{flex:0 0 var(--cw);scroll-snap-align:center;scroll-snap-stop:always;overflow:hidden;border:1px solid #dbe5f5;border-radius:18px;background:#fff;box-shadow:0 14px 30px -22px rgba(6,27,59,.55);text-align:start;transform:scale(.92);opacity:.75;transition:transform .25s,opacity .25s}
+.hg-host.on,.hg-avc.on{transform:none;opacity:1}
+.hg-ph{position:relative}.hg-ph img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.hg-badge{position:absolute;inset-block-start:10px;inset-inline-start:10px;padding:4px 10px;border-radius:999px;background:rgba(6,27,59,.85);color:#fff;font-size:.74rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.hg-hbody{padding:12px 14px 16px}
+.hg-country{display:flex;align-items:center;gap:8px;margin:0 0 6px!important;color:#44526b;font-size:.9rem;font-weight:700}
+.hg-country img{border-radius:2px}
+.hg-hbody h3{margin:0;color:var(--hg-ink);font-size:1.05rem;line-height:1.3}
+.hg-avc{flex:0 0 var(--cw);scroll-snap-align:center;scroll-snap-stop:always;text-align:center;transform:scale(.88);opacity:.75;transition:transform .25s,opacity .25s}
+.hg-avatar{position:relative;width:min(100%,170px);aspect-ratio:1/1;margin:0 auto 12px;border-radius:50%;overflow:visible;box-shadow:0 10px 24px -14px rgba(6,27,59,.6)}
+.hg-avatar svg{display:block;width:100%;height:100%;border-radius:50%}
+.hg-flag{position:absolute;inset-inline-end:2px;inset-block-end:2px;border:3px solid #fff;border-radius:50%;width:44px!important;height:44px!important;object-fit:cover;background:#fff}
+.hg-find p.hg-avn,.hg-connect p.hg-avn{margin:0 0 2px;color:#0e7490;font-weight:800}
+.hg-find p.hg-avs,.hg-connect p.hg-avs{margin:0;color:#7b8aa3;font-size:.85rem}
+.hg-find p.hg-demo,.hg-connect p.hg-demo{margin:8px auto 20px;color:#7b8aa3;font-size:.85rem}
+@media(prefers-reduced-motion:reduce){.hg-host,.hg-avc{transition:none}}
+.hg-find .hg-hbody h3{margin:0;color:var(--hg-ink);font-size:1.05rem;line-height:1.3;letter-spacing:0;text-transform:none}
+.hg-ph img{aspect-ratio:1/1}
