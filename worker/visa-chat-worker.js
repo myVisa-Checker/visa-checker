@@ -187,6 +187,7 @@ const CONTACT_SUBJECTS = ["Question sur le fonctionnement de l'assistant IA", "S
 async function handleContact(request, env, out) {
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
   if (partnerLimited("c:" + ip)) return out({ error: "rate" }, 429);
+  if (Number(request.headers.get("Content-Length") || 0) > 20000) return out({ error: "invalid" }, 413);
   const raw = await request.text();
   if (raw.length > 20000) return out({ error: "invalid" }, 413);
   let b; try { b = JSON.parse(raw); } catch { return out({ error: "invalid" }, 400); }

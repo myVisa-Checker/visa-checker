@@ -76,6 +76,7 @@
   function show(n, focus) {
     cur = n; IDS.forEach(function (id, i) { $(id).hidden = i !== n; }); done.hidden = n !== IDS.length;
     [].slice.call(bar.children).forEach(function (b, i) { b.className = i <= Math.min(n, IDS.length - 1) ? "on" : ""; });
+    bar.setAttribute("aria-valuemax", IDS.length); bar.setAttribute("aria-valuenow", Math.min(n, IDS.length - 1) + 1);
     bar.setAttribute("aria-label", T.progress.replace("{n}", Math.min(n, IDS.length - 1) + 1).replace("{t}", IDS.length)); bar.hidden = n === IDS.length;
     if (focus === false) return;
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
