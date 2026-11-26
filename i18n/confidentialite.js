@@ -8,6 +8,10 @@ SI.add({
   "How CheckMyVisa processes your data: AI assistant, ephemeral document processing, cookies, Google AdSense advertising and your rights.",
   "كيف تعالج CheckMyVisa بياناتكم: المساعد الذكي، المعالجة المؤقتة للمستندات، ملفات تعريف الارتباط، إعلانات Google AdSense وحقوقكم."
  ],
+ "Host & Go (inscription hôte) : pendant la saisie, vos réponses non identifiantes sont enregistrées sur votre appareil (stockage local, 14 jours) pour vous permettre de reprendre l'inscription ; vos coordonnées, votre adresse et votre note privée ne sont conservées que pendant la session du navigateur, et vos consentements et vos photos ne sont jamais enregistrés. Vous pouvez effacer ce brouillon à tout moment depuis le formulaire. Une empreinte non réversible de votre e-mail est gardée sur l'appareil pour éviter un double envoi et un double rôle (hôte et voyageur). Ces données ne quittent pas votre appareil avant l'envoi de votre demande.": [
+  "Host & Go (host sign-up): while you fill in the form, your non-identifying answers are saved on your device (local storage, 14 days) so you can resume; your contact details, address and private note are kept only for the browser session, and your consents and photos are never saved. You can delete this draft at any time from the form. A non-reversible fingerprint of your e-mail is kept on the device to prevent a double submission and a double role (host and traveller). This data does not leave your device before you submit your request.",
+  "Host & Go (التسجيل كمضيف): أثناء تعبئة النموذج تُحفظ إجاباتكم غير المعرِّفة على جهازكم (تخزين محلي لمدة 14 يوماً) لتتمكنوا من استئناف التسجيل؛ أما بيانات الاتصال والعنوان والملاحظة الخاصة فلا تُحفظ إلا خلال جلسة المتصفح، ولا تُحفظ موافقاتكم ولا صوركم أبداً. يمكنكم حذف هذه المسودة في أي وقت من النموذج. تُحفظ على الجهاز بصمة غير قابلة للعكس لبريدكم الإلكتروني لمنع الإرسال المزدوج والدور المزدوج (مضيف ومسافر). لا تغادر هذه البيانات جهازكم قبل إرسال طلبكم."
+ ],
  "Accueil › Politique de confidentialité": [
   "Home › Privacy Policy",
   "الرئيسية ‹ سياسة الخصوصية"

@@ -213,18 +213,18 @@
   drawCal();
 
   /* Langues : lignes ajoutables (langue + niveau) */
-  var langsBox = $("langs");
-  function addLang() {
-    var row = document.createElement("div"), n = langsBox.children.length + 1; row.className = "hgh-lrow";
+  var langsBox = $("langs"), langSeq = 0;
+  function addLang(quiet) {
+    var row = document.createElement("div"), n = ++langSeq; row.className = "hgh-lrow";
     function sel(label, list, idp) {
       var w = document.createElement("div"), l = document.createElement("label"), s = document.createElement("select"); l.className = "hgh-label"; l.textContent = label; l.htmlFor = idp + n; s.id = idp + n;
       list.forEach(function (t, i) { var o = document.createElement("option"); o.value = String(i); o.textContent = t; s.appendChild(o); }); w.appendChild(l); w.appendChild(s); return w;
     }
     row.appendChild(sel(T.langLbl, T.langs, "lg-l")); var lv = sel(T.levelLbl, T.levels, "lg-v"); lv.lastChild.selectedIndex = 2; row.appendChild(lv);
     var rm = document.createElement("button"); rm.type = "button"; rm.className = "hgh-rm"; rm.textContent = "✕"; rm.setAttribute("aria-label", T.rmLang);
-    rm.addEventListener("click", function () { row.remove(); $("add-lang").focus(); }); row.appendChild(rm); langsBox.appendChild(row); row.querySelector("select").focus();
+    rm.addEventListener("click", function () { row.remove(); $("add-lang").focus(); }); row.appendChild(rm); langsBox.appendChild(row); if (!quiet) row.querySelector("select").focus();
   }
-  $("add-lang").addEventListener("click", addLang);
+  $("add-lang").addEventListener("click", function () { addLang(); });
 
   /* Équipements et voyageurs acceptés : cartes à cocher */
   function cards(boxId, list) {
@@ -254,7 +254,8 @@
   /* Photos : aperçus et catégories sur l'appareil (l'envoi réel viendra avec le serveur de fichiers) */
   var phList = $("ph-list"), phFiles = [], PH_MAX = 10, PH_SIZE = 10 * 1024 * 1024;
   T.tips.ph.forEach(function (x) { var li = document.createElement("li"); li.textContent = x; $("tl-ph").appendChild(li); });
-  function phCount() { $("ph-count").textContent = T.phCount.replace("{n}", phFiles.length); }
+  var restoredPh = 0;
+  function phCount() { $("ph-count").textContent = T.phCount.replace("{n}", phFiles.length) + (restoredPh && !phFiles.length && DT ? " " + DT.photos : ""); }
   function phAddFiles(list) {
     var bad = false;
     [].slice.call(list).forEach(function (f) {
@@ -286,7 +287,7 @@
   var bars = [].slice.call(bar.children);
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function show(n, focus) {
-    cur = n;
+    cur = n; persist();
     IDS.forEach(function (id, i) { $(id).hidden = i !== n; });
     done.hidden = n !== IDS.length;
     bars.forEach(function (b, i) { b.className = i <= Math.min(n, LAST) ? "on" : ""; });
@@ -320,22 +321,102 @@
   document.querySelectorAll("[data-go]").forEach(function (b) {
     b.addEventListener("click", function () {
       if (b.getAttribute("data-go") === "prev") { if (cur > 0) show(cur - 1); return; }
+      if (pending) return err("error1", DT.choose);
       var v = validators[IDS[cur]];
       if (cur < LAST && (!v || v())) show(cur + 1);
     });
   });
+
+  /* ---- Brouillon : sauvegarde progressive, reprise, anti-doublon (module hostgo-draft.js) ----
+     Champs personnels : sessionStorage seulement ; réponses non identifiantes : localStorage 14 jours ; consentements et photos : jamais. */
+  var DR = {
+    fr: { title: "Reprendre votre inscription ?", text: "Une inscription est en cours sur cet appareil (étape {n} sur {t}). Par sécurité, vos coordonnées et votre adresse ne sont conservées que pendant la session de ce navigateur : après sa fermeture, vous les saisirez de nouveau.", resume: "Reprendre", restart: "Recommencer", saved: "Brouillon enregistré sur cet appareil.", clear: "Effacer mon brouillon", fail: "Sauvegarde automatique impossible sur cet appareil : ne fermez pas cette page avant l’envoi.", photos: "Vos photos ne sont pas enregistrées : ajoutez-les de nouveau.", choose: "Choisissez « Reprendre » ou « Recommencer » pour continuer.", dup: "Une demande avec cet e-mail a déjà été envoyée depuis cet appareil. Cliquez de nouveau sur « Envoyer » pour la renvoyer quand même.", photosBanner: "{n} photo(s) étaient prévues : elles ne sont pas enregistrées et devront être ajoutées de nouveau." },
+    en: { title: "Resume your application?", text: "An application is in progress on this device (step {n} of {t}). For your security, your contact details and address are only kept for this browser session: after it is closed, you will enter them again.", resume: "Resume", restart: "Start over", saved: "Draft saved on this device.", clear: "Delete my draft", fail: "Automatic saving is not possible on this device: do not close this page before sending.", photos: "Your photos are not saved: please add them again.", choose: "Choose “Resume” or “Start over” to continue.", dup: "A request with this e-mail was already sent from this device. Click “Send” again to send it anyway.", photosBanner: "{n} photo(s) were planned: they are not saved and will need to be added again." },
+    ar: { title: "هل تريد استئناف تسجيلك؟", text: "يوجد تسجيل قيد الإنجاز على هذا الجهاز (الخطوة {n} من {t}). حفاظاً على أمانك، لا تُحفظ بيانات الاتصال والعنوان إلا خلال جلسة هذا المتصفح: بعد إغلاقه ستُدخلها من جديد.", resume: "استئناف", restart: "البدء من جديد", saved: "تم حفظ المسودة على هذا الجهاز.", clear: "حذف مسودتي", fail: "الحفظ التلقائي غير ممكن على هذا الجهاز: لا تغلق هذه الصفحة قبل الإرسال.", photos: "لم تُحفظ صورك: يرجى إضافتها من جديد.", choose: "اختر «استئناف» أو «البدء من جديد» للمتابعة.", dup: "سبق إرسال طلب بهذا البريد الإلكتروني من هذا الجهاز. اضغط «إرسال» مرة أخرى لإرساله على أي حال.", photosBanner: "كان مخططاً لـ {n} صورة: لم تُحفظ وستحتاج إلى إضافتها من جديد." }
+  }, DT = DR[lang], H = window.HGDraft || null, store = null;
+  try { store = H ? H.create({ local: window.localStorage, session: window.sessionStorage, steps: IDS.length }) : null; } catch (e) { store = null; }
+  var sid = "", sentHashes = [], pending = false, restoring = false, discarded = false, sending = false, dupAck = false, saveTimer = null;
+  var banner = $("draft-banner"), statusEl = $("draft-status");
+  function idx(box) { return [].slice.call(box.querySelectorAll("input")).filter(function (c) { return c.checked; }).map(function (c) { return +c.value; }); }
+  function collect() {
+    var d = {
+      country: country.value, decls: [].slice.call(document.querySelectorAll(".required-check")).map(function (c) { return c.checked; }), types: idx(typesBox),
+      hours: +$("pl-hours").value, days: +$("pl-days").value, stay: +$("pl-stay").value, cal: JSON.parse(JSON.stringify(cal)),
+      langs: [].slice.call(langsBox.children).map(function (r) { var sl = r.querySelectorAll("select"); return [+sl[0].value, +sl[1].value]; }),
+      lxOn: $("lx-on").checked, lxNote: $("lx-note").value, amen: idx($("amen")), trav: idx($("trav")),
+      addr: $("addr").value, zip: $("zip").value, firstName: $("firstName").value, email: $("email").value, city: $("city").value, pv: $("pv").value, photos: phFiles.length
+    };
+    TXT.forEach(function (id) { d["ta_" + id] = $("ta-" + id).value; });
+    return d;
+  }
+  function setChecks(box, list) { [].slice.call(box.querySelectorAll("input")).forEach(function (c) { var on = list.indexOf(+c.value) >= 0; c.checked = on; c.parentNode.classList.toggle("on", on); }); }
+  function setSel(el, n) { if (typeof n === "number" && n >= 0 && n < el.options.length) el.selectedIndex = n; }
+  function apply(d) {
+    if (d.country && [].slice.call(country.options).some(function (o) { return o.value === d.country; })) country.value = d.country;
+    sum();
+    if (d.decls) [].slice.call(document.querySelectorAll(".required-check")).forEach(function (c, i) { c.checked = d.decls[i] === true; });
+    if (d.types) setChecks(typesBox, d.types);
+    setSel($("pl-hours"), d.hours); setSel($("pl-days"), d.days); setSel($("pl-stay"), d.stay);
+    if (d.cal) { cal = {}; [Y0, Y0 + 1].forEach(function (y) { if (d.cal[y]) cal[y] = d.cal[y]; }); drawCal(); }
+    TXT.forEach(function (id) { var v = d["ta_" + id]; if (typeof v === "string") { var ta = $("ta-" + id); ta.value = v; ta.dispatchEvent(new Event("input")); } });
+    if (d.langs) { langsBox.innerHTML = ""; d.langs.forEach(function (r) { addLang(true); var sl = langsBox.lastChild.querySelectorAll("select"); setSel(sl[0], r[0]); setSel(sl[1], r[1]); }); }
+    if (typeof d.lxOn === "boolean") $("lx-on").checked = d.lxOn;
+    if (typeof d.lxNote === "string") $("lx-note").value = d.lxNote;
+    if (d.amen) setChecks($("amen"), d.amen);
+    if (d.trav) setChecks($("trav"), d.trav);
+    ["addr", "zip", "firstName", "email", "city", "pv"].forEach(function (k) { if (typeof d[k] === "string") $(k).value = d[k]; });
+    restoredPh = d.photos || 0; phCount();
+  }
+  function setStatus(ok) {
+    statusEl.textContent = "";
+    var s = document.createElement("span"); s.textContent = ok ? DT.saved : DT.fail; statusEl.appendChild(s);
+    if (ok) { var b = document.createElement("button"); b.type = "button"; b.textContent = DT.clear; b.addEventListener("click", discard); statusEl.appendChild(b); }
+  }
+  function persist() {
+    if (!store || pending || restoring || discarded || cur >= IDS.length) return;
+    if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+    var data = collect();
+    if (!H.isMeaningful({ step: cur, data: data }) && !sentHashes.length) { store.clear(); statusEl.textContent = ""; return; }
+    if (!sid) sid = H.newSid();
+    var r = store.save({ step: cur, sid: sid, sent: sentHashes, data: data }); sid = r.sid; setStatus(r.ok);
+  }
+  function sched() { if (!store || pending || restoring || discarded) return; if (saveTimer) clearTimeout(saveTimer); saveTimer = setTimeout(persist, 500); }
+  function discard() { discarded = true; if (saveTimer) clearTimeout(saveTimer); if (store) store.clear(); window.location.reload(); }
+  if (store) {
+    ["input", "change", "click"].forEach(function (ev) { document.querySelector(".hgh-wrap").addEventListener(ev, sched); });
+    window.addEventListener("pagehide", function () { if (saveTimer) persist(); });
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden" && saveTimer) persist(); });
+    $("email").addEventListener("input", function () { dupAck = false; });
+    var saved = store.load();
+    if (saved && H.isMeaningful(saved)) {
+      pending = true; sid = saved.sid; sentHashes = saved.sent;
+      $("draft-title").textContent = DT.title;
+      $("draft-text").textContent = DT.text.replace("{n}", saved.step + 1).replace("{t}", IDS.length);
+      if (saved.data.photos) { var pn = $("draft-photos"); pn.textContent = DT.photosBanner.replace("{n}", saved.data.photos); pn.hidden = false; }
+      $("draft-resume").textContent = DT.resume; $("draft-restart").textContent = DT.restart;
+      $("draft-resume").addEventListener("click", function () {
+        restoring = true; try { apply(saved.data); } finally { restoring = false; }
+        pending = false; banner.hidden = true; show(saved.step); persist();
+      });
+      $("draft-restart").addEventListener("click", function () { store.clear(); sid = ""; sentHashes = []; pending = false; banner.hidden = true; $("error1").textContent = ""; });
+      banner.hidden = false;
+    }
+  }
 
   function fallback(msg, name, mail) {
     $("doneMsg").textContent = T.doneFb + TO + "."; show(IDS.length);
     window.location.href = "mailto:" + TO + "?subject=" + encodeURIComponent("[Host & Go] Inscription hôte") + "&body=" + encodeURIComponent(msg + "\n\n--\n" + name + "\n" + mail);
   }
   $("finish").addEventListener("click", function () {
+    if (sending) return;
     var name = $("firstName").value.trim(), mail = $("email").value.trim(), city = $("city").value.trim(), okMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
     if (!name || !city || !okMail) return err("error2", T.eFields, !name ? $("firstName") : !okMail ? $("email") : $("city"));
     if (!$("terms").checked) return err("error2", T.eTerms, $("terms"));
+    if (store && store.wasSent(mail) && !dupAck) { dupAck = true; return err("error2", DT.dup); }
     $("error2").textContent = "";
+    if (!sid) sid = H ? H.newSid() : "";
     var types = [].slice.call(typesBox.querySelectorAll("input:checked")).map(function (c) { return TYPES_FR[+c.value]; }).join(", ");
-    var lines = ["[Host & Go — inscription hôte]", "Pays d'accueil : " + country.value, "Ville : " + city, "Déclarations : 6/6 confirmées", "E-mails d'information : " + ($("marketing").checked ? "oui" : "non"), "Langue de la page : " + lang, "",
+    var lines = ["[Host & Go — inscription hôte]", "Pays d'accueil : " + country.value, "Ville : " + city, "Déclarations : 6/6 confirmées", "E-mails d'information : " + ($("marketing").checked ? "oui" : "non"), "Langue de la page : " + lang, "Réf. demande : " + (sid || "n/a"), "",
       "TYPES D'AIDE : " + types, "HEURES : " + HOURS_FR[+$("pl-hours").value], "JOURS : " + DAYS_FR[+$("pl-days").value], "SÉJOUR MINIMUM : " + STAYS_FR[+$("pl-stay").value],
       "DISPONIBILITÉS : " + (calText() || "non précisées"), "LANGUES : " + (langText() || "non précisées") + " | Échange linguistique : " + ($("lx-on").checked ? "oui" : "non") + ($("lx-note").value.trim() ? " | " + $("lx-note").value.trim() : ""),
       "ÉQUIPEMENTS : " + (picked("amen", AMEN_FR) || "aucun"), "VOYAGEURS ACCEPTÉS : " + (picked("trav", TRAV_FR) || "non précisé"), "ADRESSE : " + $("addr").value.trim() + ($("zip").value.trim() ? ", " + $("zip").value.trim() : ""), "",
@@ -344,12 +425,12 @@
     if (phFiles.length) lines.push("", "PHOTOS : " + phFiles.length + " préparée(s) sur l'appareil (non transmises) — catégories : " + phFiles.map(function (e) { return e.sel.value === "0" ? "non précisée" : LABELS_PH[+e.sel.value]; }).join(", "));
     if ($("pv").value.trim()) lines.push("", "NOTE PRIVÉE POUR L'ÉQUIPE :", $("pv").value.trim());
     var msg = lines.join("\n");
-    var btn = $("finish"); btn.disabled = true;
+    var btn = $("finish"); btn.disabled = true; sending = true;
     /* Le Worker garde 3000 caractères par message : au-delà, la demande part en plusieurs messages (suite 2/2…). */
     var parts = [], cur2 = [], size = 0;
     lines.forEach(function (ln) { if (size + ln.length + 1 > 2800 && cur2.length) { parts.push(cur2); cur2 = []; size = 0; } cur2.push(ln); size += ln.length + 1; });
     parts.push(cur2);
-    var texts = parts.map(function (p, i) { return (i ? "[Host & Go — suite " + (i + 1) + "/" + parts.length + " — " + mail + "]\n" : "") + p.join("\n"); });
+    var texts = parts.map(function (p, i) { return (i ? "[Host & Go — suite " + (i + 1) + "/" + parts.length + " — " + mail + " — " + (sid || "n/a") + "]\n" : "") + p.join("\n"); });
     function post(text) {
       var ctl = typeof AbortController === "function" ? new AbortController() : null, timer = ctl ? setTimeout(function () { ctl.abort(); }, 12000) : null;
       return (window.CMV_TS?window.CMV_TS.fetch:function(u,o){return fetch(u,o)})(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name, email: mail, subject: SUBJECT, message: text, consent: true, hp: $("hp").value || "" }), signal: ctl ? ctl.signal : undefined, credentials: "omit" })
@@ -357,10 +438,13 @@
         .catch(function () { return false; })
         .then(function (ok) { if (timer) clearTimeout(timer); return ok; });
     }
-    texts.reduce(function (chain, t) { return chain.then(function (ok) { return ok ? post(t) : false; }); }, Promise.resolve(true))
+    /* Nouvel essai : les parties déjà acceptées par le serveur (même texte) ne sont pas renvoyées. */
+    var todo = H ? H.planParts(texts, sentHashes) : texts.map(function (t, i) { return i; });
+    todo.reduce(function (chain, i) { return chain.then(function (ok) { return ok ? post(texts[i]).then(function (r) { if (r && H) { sentHashes[i] = H.hash(texts[i]); persist(); } return r; }) : false; }); }, Promise.resolve(true))
       .then(function (sent) {
-        btn.disabled = false;
-        var other = false; try { var rl = JSON.parse(localStorage.getItem("hg_roles") || "{}"); other = rl[mail.toLowerCase()] === "traveler"; if (sent && !other) { rl[mail.toLowerCase()] = "host"; localStorage.setItem("hg_roles", JSON.stringify(rl)); } } catch (e) { /* stockage indisponible */ }
+        btn.disabled = false; sending = false;
+        if (sent && store) { store.rememberSent(mail); store.clear(); discarded = true; sentHashes = []; statusEl.textContent = ""; }
+        var other = false; try { other = !!H && H.getRole(localStorage, mail) === "traveler"; if (sent && !other && H) H.setRole(localStorage, mail, "host"); } catch (e) { /* stockage indisponible */ }
         $("roleNotice").textContent = other ? T.roleNotice : "";
         if (sent) { $("doneMsg").textContent = T.doneOk; show(IDS.length); } else fallback(msg, name, mail);
       });

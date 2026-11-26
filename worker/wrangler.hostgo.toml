@@ -1,0 +1,10 @@
+name = "visa-hostgo"
+main = "hostgo-worker.js"
+compatibility_date = "2026-11-11"
+
+[vars]
+ALLOWED_ORIGIN = "https://checkmyvisa.org,https://www.checkmyvisa.org"
+
+# NON DÉPLOYÉ. Worker des offres Host & Go (publication, consultation, signalement, modération, accès).
+# Avant tout déploiement : créer un espace KV dédié et le lier sous le nom « KV » ; définir les secrets SECRET et ADMIN_KEY.
+# Aucune page du site n'appelle encore ce Worker. Ne pas utiliser « wrangler deploy » sans avoir déclaré la liaison KV.

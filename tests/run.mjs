@@ -13,7 +13,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js","hostgo.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
+for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js","hostgo.js", "hostgo-hote.js", "hostgo-draft.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -285,6 +285,27 @@ try {
   ok("ausbildung : passerelle vers le dossier visa et impression du résultat", /id="toVisa" href="\.\.\/\?accueil=1"/.test(ah) && /id="print"/.test(ah) && /window\.print\(\)/.test(aa) && /@media print/.test(read("ausbildung/ausbildung.css")));
   ok("guide Ausbildung : page, carte dans Guide, précache, sitemap, CSP", existsSync("guide-ausbildung.html") && /guide-ausbildung\.html/.test(read("guide-visa.html")) && /"guide-ausbildung\.html"/.test(swa) && /guide-ausbildung\.html/.test(read("sitemap.xml")) && /script-src 'self'/.test(read("guide-ausbildung.html")));
   ok("ausbildung : page dans le sitemap", /checkmyvisa\.org\/ausbildung\//.test(read("sitemap.xml")));
+}
+
+try {
+  execFileSync(process.execPath, ["tests/hostgo-worker.test.mjs"], { stdio: "inherit" });
+  ok("hostgo-worker : offres, filtres, signalement, modération, accès gratuit et déblocage", true);
+} catch (e) {
+  ok("hostgo-worker : offres, filtres, signalement, modération, accès gratuit et déblocage", false, String(e.stderr || e.message).split("\n")[0]);
+}
+try {
+  execFileSync(process.execPath, ["tests/hostgo-draft.test.mjs"], { stdio: "inherit" });
+  ok("hostgo-draft : sauvegarde progressive, reprise, protection des données, anti-doublon", true);
+} catch (e) {
+  ok("hostgo-draft : sauvegarde progressive, reprise, protection des données, anti-doublon", false, String(e.stderr || e.message).split("\n")[0]);
+}
+{
+  const hh = read("hostgo-hote.html"), hj = read("hostgo-hote.js");
+  ok("Host & Go hôte : module de brouillon chargé avant le formulaire, en script externe, et mis en cache hors ligne", hh.indexOf("hostgo-draft.js") > 0 && hh.indexOf("hostgo-draft.js") < hh.indexOf("hostgo-hote.js") && read("sw.js").includes('"hostgo-draft.js"'));
+  ok("Host & Go hôte : bandeau de reprise et état de sauvegarde présents", /id="draft-banner"/.test(hh) && /id="draft-status"[^>]*aria-live="polite"/.test(hh) && /id="draft-resume"/.test(hh) && /id="draft-restart"/.test(hh));
+  ok("Host & Go hôte : textes du brouillon en FR, EN et AR", ["fr", "en", "ar"].every((l) => new RegExp("\\b" + l + ": \\{ title:").test(hj)));
+  ok("Host & Go hôte : envoi sans doublon (verrou, identifiant de demande, parties déjà envoyées ignorées)", /if \(sending\) return/.test(hj) && /Réf\. demande/.test(hj) && /planParts/.test(hj) && /rememberSent/.test(hj));
+  ok("Host & Go hôte : aucun consentement ni photo écrit dans le stockage", !/localStorage\.setItem\([^)]*(terms|marketing)/.test(hj) && !/hg_host_draft[^;]*(terms|marketing)/.test(hj));
 }
 
 console.log("\n" + pass + " réussis, " + fail + " échoués");
