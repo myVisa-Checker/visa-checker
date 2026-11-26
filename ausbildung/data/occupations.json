@@ -1,405 +1,1301 @@
 {
-  "schema_version": 1,
-  "catalogue_status": "development_draft",
-  "occupations": [
-    {
-      "id": "pflegefachkraft",
-      "title_de": "Pflegefachfrau / Pflegefachmann",
-      "title_fr": "Professionnel(le) infirmier(ère)",
-      "category": "health",
-      "training_type": "regulated_school_based",
-      "duration_months": 36,
-      "interests": [
-        "health",
-        "helping_people",
-        "care"
-      ],
-      "skills": [
-        "empathy",
-        "communication",
-        "organization",
-        "responsibility",
-        "observation"
-      ],
-      "environments": [
-        "hospital",
-        "clinic",
-        "care_home",
-        "people_facing"
-      ],
-      "experience_domains": [
-        "health",
-        "care",
-        "volunteering",
-        "social"
-      ],
-      "specializations": [],
-      "language_guidance": {
-        "level": null,
-        "status": "verify_by_training_provider"
-      },
-      "notes_fr": "Formation réglementée avec enseignement et pratique clinique. Ne pas la présenter comme une Ausbildung duale classique."
+ "schema_version": 2,
+ "catalogue_status": "development_draft",
+ "occupations": [
+  {
+   "id": "pflegefachkraft",
+   "title_de": "Pflegefachfrau / Pflegefachmann",
+   "title_fr": "Professionnel(le) infirmier(ère)",
+   "category": "health",
+   "training_type": "regulated_school_based",
+   "duration_months": 36,
+   "interests": [
+    "health",
+    "helping_people",
+    "care"
+   ],
+   "skills": [
+    "empathy",
+    "communication",
+    "organization",
+    "responsibility",
+    "observation"
+   ],
+   "environments": [
+    "hospital",
+    "clinic",
+    "care_home",
+    "people_facing"
+   ],
+   "experience_domains": [
+    "health",
+    "care",
+    "volunteering",
+    "social"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Formation réglementée avec enseignement et pratique clinique. Ne pas la présenter comme une Ausbildung duale classique.",
+   "sector": "health",
+   "fiche": {
+    "summary": {
+     "fr": "Soigner et accompagner des personnes malades ou âgées. Formation réglementée, avec cours en école de soins et stages pratiques.",
+     "en": "Care for and support sick or elderly people. A regulated training with nursing-school classes and practical placements.",
+     "ar": "رعاية المرضى وكبار السن ومرافقتهم. تكوين منظَّم فيه دروس في مدرسة التمريض وتدريب عملي."
     },
-    {
-      "id": "fachinformatiker",
-      "title_de": "Fachinformatiker/in",
-      "title_fr": "Spécialiste en informatique",
-      "category": "it",
-      "training_type": "dual",
-      "duration_months": 36,
-      "interests": [
-        "technology",
-        "programming",
-        "computers",
-        "problem_solving"
-      ],
-      "skills": [
-        "logic",
-        "analytical_thinking",
-        "programming",
-        "troubleshooting",
-        "attention_to_detail"
-      ],
-      "environments": [
-        "office",
-        "computer",
-        "hybrid",
-        "technical_team"
-      ],
-      "experience_domains": [
-        "it",
-        "software",
-        "web",
-        "networking",
-        "data",
-        "personal_projects"
-      ],
-      "specializations": [
-        "Anwendungsentwicklung",
-        "Systemintegration",
-        "Daten- und Prozessanalyse",
-        "Digitale Vernetzung"
-      ],
-      "language_guidance": {
-        "level": null,
-        "status": "verify_by_training_provider"
-      },
-      "notes_fr": "Quatre spécialisations sont proposées ; elles sont conservées comme spécialisations d'un même métier."
+    "source": "bmg_pflege",
+    "body": null,
+    "ordinance": null,
+    "tasks": {
+     "fr": [
+      "Planifier et assurer les soins de personnes de tous âges, à l'hôpital, en établissement ou à domicile",
+      "Évaluer les besoins de soins de chaque personne et organiser le suivi",
+      "Réaliser les actes réservés au personnel soignant formé"
+     ],
+     "en": [
+      "Plan and deliver care for people of all ages in hospitals, care homes or at home",
+      "Assess each person's care needs and organise follow-up",
+      "Carry out tasks reserved to trained nursing staff"
+     ],
+     "ar": [
+      "التخطيط للرعاية وتقديمها لأشخاص من كل الأعمار في المستشفى أو دار الرعاية أو المنزل",
+      "تقييم حاجة كل شخص للرعاية وتنظيم المتابعة",
+      "القيام بالمهام التي لا يقوم بها إلا الطاقم التمريضي المؤهل"
+     ]
     },
-    {
-      "id": "kfz_mechatroniker",
-      "title_de": "Kraftfahrzeugmechatroniker/in",
-      "title_fr": "Mécatronicien(ne) automobile",
-      "category": "automotive",
-      "training_type": "dual",
-      "duration_months": 42,
-      "interests": [
-        "automotive",
-        "mechanics",
-        "technology",
-        "vehicles"
-      ],
-      "skills": [
-        "mechanical_reasoning",
-        "diagnostics",
-        "manual_precision",
-        "troubleshooting",
-        "attention_to_detail"
-      ],
-      "environments": [
-        "workshop",
-        "garage",
-        "hands_on",
-        "technical_team"
-      ],
-      "experience_domains": [
-        "automotive",
-        "mechanics",
-        "maintenance",
-        "repair"
-      ],
-      "specializations": [],
-      "language_guidance": {
-        "level": null,
-        "status": "verify_by_training_provider"
-      },
-      "notes_fr": "Intitulé officiel utilisé dans le registre des formations."
+    "admission": {
+     "fr": "Diplôme de niveau intermédiaire (mittlerer Schulabschluss) ou équivalent ; ou diplôme de base (Hauptschulabschluss) avec une formation complémentaire listée ; connaissances d'allemand suffisantes (niveau exact : non confirmé) ; aptitude de santé et fiabilité exigées.",
+     "en": "Intermediate school certificate (mittlerer Schulabschluss) or equivalent, or a lower certificate plus a listed qualification; sufficient German (exact level: not confirmed); health suitability and reliability required.",
+     "ar": "شهادة مدرسية متوسطة (mittlerer Schulabschluss) أو ما يعادلها، أو شهادة أدنى مع تكوين إضافي محدد؛ لغة ألمانية كافية (المستوى بالتحديد: غير مؤكد)؛ مع اشتراط اللياقة الصحية والسلوك الموثوق."
     },
-    {
-      "id": "elektroniker_betrieb",
-      "title_de": "Elektroniker/in für Betriebstechnik",
-      "title_fr": "Électronicien(ne) en systèmes industriels",
-      "category": "electrical_industry",
-      "training_type": "dual",
-      "duration_months": 42,
-      "interests": [
-        "electronics",
-        "electricity",
-        "energy",
-        "technology",
-        "industrial_systems"
-      ],
-      "skills": [
-        "logic",
-        "electrical_reasoning",
-        "troubleshooting",
-        "precision",
-        "safety_awareness"
-      ],
-      "environments": [
-        "industrial_site",
-        "factory",
-        "field_work",
-        "technical_team"
-      ],
-      "experience_domains": [
-        "electrical",
-        "electronics",
-        "industrial_maintenance",
-        "automation"
-      ],
-      "specializations": [],
-      "language_guidance": {
-        "level": null,
-        "status": "verify_by_training_provider"
-      },
-      "notes_fr": "Les exigences de sécurité et les tâches concrètes dépendent du poste et de l'entreprise."
+    "structure": {
+     "fr": "3 ans à temps plein ; années 1 et 2 communes, spécialisation possible en année 3 ; cours en école de soins, pratique à l'hôpital, en établissement et en soins à domicile ; se termine par un examen d'État. Formation gratuite, matériel fourni.",
+     "en": "3 years full-time; years 1–2 shared, specialisation possible in year 3; classes at a nursing school, practice in hospitals, care homes and home care; ends with a state exam. Tuition free, materials provided.",
+     "ar": "3 سنوات بدوام كامل؛ السنتان الأولى والثانية مشتركتان ويمكن التخصص في الثالثة؛ دروس في مدرسة التمريض وتدريب في المستشفى ودار الرعاية والرعاية المنزلية؛ وتنتهي بامتحان الدولة. التكوين مجاني والمواد مقدَّمة."
     },
-    {
-      "id": "industriemechaniker",
-      "title_de": "Industriemechaniker/in",
-      "title_fr": "Mécanicien(ne) industriel(le)",
-      "category": "industry",
-      "training_type": "dual",
-      "duration_months": 42,
-      "interests": [
-        "industry",
-        "machines",
-        "mechanics",
-        "manufacturing"
-      ],
-      "skills": [
-        "mechanical_reasoning",
-        "manual_precision",
-        "technical_drawing",
-        "troubleshooting",
-        "attention_to_detail"
-      ],
-      "environments": [
-        "factory",
-        "workshop",
-        "production",
-        "hands_on"
-      ],
-      "experience_domains": [
-        "mechanics",
-        "manufacturing",
-        "maintenance",
-        "metalwork"
-      ],
-      "specializations": [],
-      "language_guidance": {
-        "level": null,
-        "status": "verify_by_training_provider"
-      },
-      "notes_fr": "Métier orienté fabrication, montage, maintenance et systèmes mécaniques."
+    "outlook": {
+     "fr": "Année 3 : parcours généraliste, ou spécialisation en soins aux personnes âgées ou en soins pédiatriques. Un cursus universitaire en soins infirmiers existe aussi (au moins 3 ans).",
+     "en": "Year 3: generalist track, or specialisation in elderly care or paediatric nursing. A university nursing degree also exists (at least 3 years).",
+     "ar": "في السنة الثالثة: مسار عام، أو تخصص في رعاية كبار السن أو رعاية الأطفال. وتوجد أيضاً دراسة جامعية في التمريض (3 سنوات على الأقل)."
     },
-    {
-      "id": "lagerlogistik",
-      "title_de": "Fachkraft für Lagerlogistik",
-      "title_fr": "Spécialiste en logistique d'entrepôt",
-      "category": "logistics",
-      "training_type": "dual",
-      "duration_months": 36,
-      "interests": [
-        "logistics",
-        "transport",
-        "organization",
-        "supply_chain"
-      ],
-      "skills": [
-        "organization",
-        "planning",
-        "reliability",
-        "numeracy",
-        "teamwork"
-      ],
-      "environments": [
-        "warehouse",
-        "logistics_center",
-        "active_work",
-        "team"
-      ],
-      "experience_domains": [
-        "logistics",
-        "warehouse",
-        "transport",
-        "stock_management"
-      ],
-      "specializations": [],
-      "language_guidance": {
-        "level": null,
-        "status": "verify_by_training_provider"
-      },
-      "notes_fr": "Les tâches peuvent combiner réception, stockage, préparation et coordination des flux."
+    "pay_text": {
+     "fr": "« Rémunération appropriée » selon la source ; montant : non confirmé.",
+     "en": "“Appropriate pay” according to the source; amount: not confirmed.",
+     "ar": "«أجر مناسب» حسب المصدر؛ المبلغ: غير مؤكد."
     },
-    {
-      "id": "hotelfach",
-      "title_de": "Hotelfachmann / Hotelfachfrau",
-      "title_fr": "Employé(e) polyvalent(e) d'hôtel",
-      "category": "hospitality",
-      "training_type": "dual",
-      "duration_months": 36,
-      "interests": [
-        "hospitality",
-        "tourism",
-        "languages",
-        "customer_service"
-      ],
-      "skills": [
-        "communication",
-        "organization",
-        "service_mindset",
-        "multitasking",
-        "teamwork"
-      ],
-      "environments": [
-        "hotel",
-        "reception",
-        "people_facing",
-        "shift_work"
-      ],
-      "experience_domains": [
-        "hospitality",
-        "tourism",
-        "customer_service",
-        "events"
-      ],
-      "specializations": [],
-      "language_guidance": {
-        "level": null,
-        "status": "verify_by_training_provider"
-      },
-      "notes_fr": "Formation polyvalente dans les différents services d'un établissement hôtelier."
+    "pay": null
+   },
+   "title_en": "Nursing professional",
+   "title_ar": "ممرّض/ة مؤهَّل/ة"
+  },
+  {
+   "id": "medizinische_fachangestellte",
+   "title_de": "Medizinische/r Fachangestellte/r",
+   "title_fr": "Assistant(e) médical(e)",
+   "title_en": "Medical assistant",
+   "title_ar": "مساعد / مساعدة طبّية (في العيادة)",
+   "category": "health",
+   "training_type": "dual",
+   "duration_months": 36,
+   "interests": [
+    "health",
+    "helping_people",
+    "care",
+    "organization"
+   ],
+   "skills": [
+    "communication",
+    "organization",
+    "empathy",
+    "reliability",
+    "attention_to_detail"
+   ],
+   "environments": [
+    "clinic",
+    "people_facing",
+    "office"
+   ],
+   "experience_domains": [
+    "health",
+    "care",
+    "social",
+    "customer_service"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Fiche ajoutée en refonte ; formation duale (cabinet médical et école professionnelle), distincte de la formation infirmière.",
+   "sector": "health",
+   "fiche": {
+    "summary": {
+     "fr": "Travailler en cabinet médical : accueil des patients, assistance au médecin, rendez-vous et dossiers.",
+     "en": "Work in a medical practice: patient reception, assisting the doctor, appointments and records.",
+     "ar": "العمل في عيادة طبية: استقبال المرضى ومساعدة الطبيب والمواعيد والملفات."
     },
-    {
-      "id": "koch",
-      "title_de": "Koch / Köchin",
-      "title_fr": "Cuisinier / Cuisinière",
-      "category": "gastronomy",
-      "training_type": "dual",
-      "duration_months": 36,
-      "interests": [
-        "cooking",
-        "gastronomy",
-        "food",
-        "creativity"
-      ],
-      "skills": [
-        "discipline",
-        "manual_precision",
-        "time_management",
-        "teamwork",
-        "creativity"
-      ],
-      "environments": [
-        "professional_kitchen",
-        "restaurant",
-        "hands_on",
-        "shift_work"
-      ],
-      "experience_domains": [
-        "cooking",
-        "food_service",
-        "restaurant",
-        "bakery"
-      ],
-      "specializations": [],
-      "language_guidance": {
-        "level": null,
-        "status": "verify_by_training_provider"
-      },
-      "notes_fr": "Le rythme, les horaires et l'organisation varient selon l'établissement."
+    "source": "bibb_mfa",
+    "body": "FB",
+    "ordinance": "Verordnung MFA (26.04.2006)",
+    "tasks": {
+     "fr": [
+      "Assister lors des examens et des soins, aider en cas d'urgence",
+      "Accueillir, conseiller et suivre les patients",
+      "Gérer les rendez-vous, les dossiers et la facturation des actes ; hygiène et travaux de laboratoire"
+     ],
+     "en": [
+      "Assist with examinations and treatments, help in emergencies",
+      "Receive, advise and follow up patients",
+      "Manage appointments, records and billing; hygiene and lab work"
+     ],
+     "ar": [
+      "المساعدة في الفحوص والعلاجات والإسعافات",
+      "استقبال المرضى ونصحهم ومتابعتهم",
+      "تنظيم المواعيد والملفات والفوترة، والنظافة وأعمال المخبر"
+     ]
     },
-    {
-      "id": "verkaeufer",
-      "title_de": "Verkäufer / Verkäuferin",
-      "title_fr": "Vendeur / Vendeuse",
-      "category": "retail",
-      "training_type": "dual",
-      "duration_months": 24,
-      "interests": [
-        "sales",
-        "commerce",
-        "customer_service",
-        "products"
+    "pay": [
+     {
+      "scope": "FB",
+      "years": [
+       1023,
+       1115,
+       1209
       ],
-      "skills": [
-        "communication",
-        "listening",
-        "reliability",
-        "numeracy",
-        "persuasion"
-      ],
-      "environments": [
-        "shop",
-        "retail_store",
-        "people_facing",
-        "team"
-      ],
-      "experience_domains": [
-        "retail",
-        "sales",
-        "cashier",
-        "customer_service"
-      ],
-      "specializations": [],
-      "language_guidance": {
-        "level": null,
-        "status": "verify_by_training_provider"
-      },
-      "notes_fr": "Formation de deux ans ; des possibilités de poursuite de formation peuvent exister."
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   }
+  },
+  {
+   "id": "fachinformatiker",
+   "title_de": "Fachinformatiker/in",
+   "title_fr": "Spécialiste en informatique",
+   "category": "it",
+   "training_type": "dual",
+   "duration_months": 36,
+   "interests": [
+    "technology",
+    "programming",
+    "computers",
+    "problem_solving"
+   ],
+   "skills": [
+    "logic",
+    "analytical_thinking",
+    "programming",
+    "troubleshooting",
+    "attention_to_detail"
+   ],
+   "environments": [
+    "office",
+    "computer",
+    "hybrid",
+    "technical_team"
+   ],
+   "experience_domains": [
+    "it",
+    "software",
+    "web",
+    "networking",
+    "data",
+    "personal_projects"
+   ],
+   "specializations": [
+    "Anwendungsentwicklung",
+    "Systemintegration",
+    "Daten- und Prozessanalyse",
+    "Digitale Vernetzung"
+   ],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Quatre spécialisations sont proposées ; elles sont conservées comme spécialisations d'un même métier.",
+   "sector": "it",
+   "fiche": {
+    "summary": {
+     "fr": "Métier de l'informatique. La spécialité du BIBB consultée est le développement d'applications ; d'autres spécialités existent.",
+     "en": "An IT occupation. The BIBB profile consulted covers application development; other specialisations exist.",
+     "ar": "مهنة في المعلوماتية. الاختصاص المعروض هو تطوير التطبيقات، وهناك اختصاصات أخرى."
     },
-    {
-      "id": "anlagenmechaniker_shk",
-      "title_de": "Anlagenmechaniker/in für Sanitär-, Heizungs- und Klimatechnik",
-      "title_fr": "Installateur(trice) en sanitaire, chauffage et climatisation",
-      "category": "building_services",
-      "training_type": "dual",
-      "duration_months": 42,
-      "interests": [
-        "construction",
-        "installation",
-        "heating",
-        "water",
-        "climate_technology"
+    "source": "bibb_fachinformatiker",
+    "body": "IH",
+    "ordinance": "FIAusbV (28.02.2020)",
+    "tasks": null,
+    "pay": [
+     {
+      "scope": "IH",
+      "years": [
+       1211,
+       1279,
+       1356
       ],
-      "skills": [
-        "mechanical_reasoning",
-        "manual_precision",
-        "troubleshooting",
-        "spatial_reasoning",
-        "safety_awareness"
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   },
+   "title_en": "IT specialist",
+   "title_ar": "أخصائي/ة في تكنولوجيا المعلومات"
+  },
+  {
+   "id": "kfz_mechatroniker",
+   "title_de": "Kraftfahrzeugmechatroniker/in",
+   "title_fr": "Mécatronicien(ne) automobile",
+   "category": "automotive",
+   "training_type": "dual",
+   "duration_months": 42,
+   "interests": [
+    "automotive",
+    "mechanics",
+    "technology",
+    "vehicles"
+   ],
+   "skills": [
+    "mechanical_reasoning",
+    "diagnostics",
+    "manual_precision",
+    "troubleshooting",
+    "attention_to_detail"
+   ],
+   "environments": [
+    "workshop",
+    "garage",
+    "hands_on",
+    "technical_team"
+   ],
+   "experience_domains": [
+    "automotive",
+    "mechanics",
+    "maintenance",
+    "repair"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Intitulé officiel utilisé dans le registre des formations.",
+   "sector": "tech",
+   "fiche": {
+    "summary": {
+     "fr": "Diagnostiquer, entretenir et réparer les voitures et leurs systèmes électroniques.",
+     "en": "Diagnose, service and repair cars and their electronic systems.",
+     "ar": "تشخيص السيارات وصيانتها وإصلاحها مع أنظمتها الإلكترونية."
+    },
+    "source": "bibb_kfz",
+    "body": "Hw / IH",
+    "ordinance": "Kfz-Mechatroniker-Ausbildungsverordnung (14.06.2013)",
+    "tasks": {
+     "fr": [
+      "Diagnostiquer les pannes des véhicules",
+      "Faire l'entretien et réparer ou remplacer des pièces et des systèmes",
+      "Effectuer les contrôles de véhicules prévus par la loi et mesurer et tester les systèmes"
+     ],
+     "en": [
+      "Diagnose vehicle faults",
+      "Service, repair and replace components and systems",
+      "Carry out legally required vehicle inspections and measure and test systems"
+     ],
+     "ar": [
+      "تشخيص أعطال السيارات",
+      "صيانة السيارة وإصلاح القطع والأنظمة أو تغييرها",
+      "إجراء الفحوص التي يفرضها القانون وقياس الأنظمة واختبارها"
+     ]
+    },
+    "pay": [
+     {
+      "scope": "Hw",
+      "years": [
+       1090,
+       1148,
+       1222,
+       1285
       ],
-      "environments": [
-        "construction_site",
-        "workshop",
-        "field_work",
-        "hands_on"
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     },
+     {
+      "scope": "IH",
+      "years": [
+       1202,
+       1276,
+       1384,
+       1463
       ],
-      "experience_domains": [
-        "plumbing",
-        "heating",
-        "construction",
-        "maintenance",
-        "installation"
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   },
+   "title_en": "Automotive mechatronics technician",
+   "title_ar": "فنّي/ة ميكاترونيك السيارات"
+  },
+  {
+   "id": "elektroniker_betrieb",
+   "title_de": "Elektroniker/in für Betriebstechnik",
+   "title_fr": "Électronicien(ne) en systèmes industriels",
+   "category": "electrical_industry",
+   "training_type": "dual",
+   "duration_months": 42,
+   "interests": [
+    "electronics",
+    "electricity",
+    "energy",
+    "technology",
+    "industrial_systems"
+   ],
+   "skills": [
+    "logic",
+    "electrical_reasoning",
+    "troubleshooting",
+    "precision",
+    "safety_awareness"
+   ],
+   "environments": [
+    "industrial_site",
+    "factory",
+    "field_work",
+    "technical_team"
+   ],
+   "experience_domains": [
+    "electrical",
+    "electronics",
+    "industrial_maintenance",
+    "automation"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Les exigences de sécurité et les tâches concrètes dépendent du poste et de l'entreprise.",
+   "sector": "tech",
+   "fiche": {
+    "summary": {
+     "fr": "Installer et entretenir les installations électriques et les automatismes dans l'industrie.",
+     "en": "Install and maintain electrical systems and automation in industry.",
+     "ar": "تركيب المنشآت الكهربائية والتشغيل الآلي في المصانع وصيانتها."
+    },
+    "source": "bibb_elektroniker_betrieb",
+    "body": "IH",
+    "ordinance": "Industrielle Elektroberufe (Neufassung 28.06.2018)",
+    "tasks": {
+     "fr": [
+      "Prendre en charge, entretenir et faire évoluer des installations électriques",
+      "Installer câblage, machines et systèmes d'entraînement, monter et programmer des automatismes",
+      "Contrôler le fonctionnement et la sécurité, diagnostiquer et réparer les pannes"
+     ],
+     "en": [
+      "Take over, maintain and extend electrical systems",
+      "Install cabling, machines and drive systems; assemble and program automation",
+      "Test function and safety, diagnose and repair faults"
+     ],
+     "ar": [
+      "تسلّم المنشآت الكهربائية وصيانتها وتطويرها",
+      "تركيب الأسلاك والآلات وأنظمة التحريك، وتركيب أنظمة التشغيل الآلي وبرمجتها",
+      "فحص التشغيل والسلامة وتشخيص الأعطال وإصلاحها"
+     ]
+    },
+    "pay": null
+   },
+   "title_en": "Electronics technician for industrial systems",
+   "title_ar": "فنّي/ة إلكترونيات للأنظمة الصناعية"
+  },
+  {
+   "id": "elektroniker_energie_gebaeude",
+   "title_de": "Elektroniker/in – Fachrichtung Energie- und Gebäudetechnik",
+   "title_fr": "Électronicien(ne) – énergie et technique du bâtiment",
+   "title_en": "Electronics technician – energy and building technology",
+   "title_ar": "فني كهرباء – الطاقة وتقنيات المباني",
+   "category": "electrical_building",
+   "training_type": "dual",
+   "duration_months": 42,
+   "interests": [
+    "electronics",
+    "electricity",
+    "energy",
+    "construction",
+    "technology"
+   ],
+   "skills": [
+    "logic",
+    "electrical_reasoning",
+    "troubleshooting",
+    "precision",
+    "safety_awareness"
+   ],
+   "environments": [
+    "construction_site",
+    "field_work",
+    "workshop",
+    "hands_on"
+   ],
+   "experience_domains": [
+    "electrical",
+    "electronics",
+    "installation",
+    "maintenance"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Fiche ajoutée en refonte ; données sourcées BIBB.",
+   "sector": "tech",
+   "fiche": {
+    "summary": {
+     "fr": "Installer et entretenir l'électricité, l'énergie et les systèmes techniques des bâtiments.",
+     "en": "Install and maintain electricity, energy and technical systems in buildings.",
+     "ar": "تركيب الكهرباء والطاقة والأنظمة التقنية في المباني وصيانتها."
+    },
+    "source": "bibb_elektroniker_egt",
+    "body": "Hw",
+    "ordinance": "ElekAusbV (30.03.2021)",
+    "tasks": {
+     "fr": [
+      "Mesurer, analyser et réparer des pannes sur des installations et appareils électriques",
+      "Monter et installer composants, appareils et réseaux ; installer des systèmes d'énergie",
+      "Installer et configurer la domotique du bâtiment et effectuer les contrôles périodiques"
+     ],
+     "en": [
+      "Measure, analyse and repair faults on electrical systems and devices",
+      "Mount and install components, devices and networks; install energy systems",
+      "Install and configure building automation and carry out recurring tests"
+     ],
+     "ar": [
+      "قياس الأعطال في المنشآت والأجهزة الكهربائية وتحليلها وإصلاحها",
+      "تركيب القطع والأجهزة والشبكات وأنظمة الطاقة",
+      "تركيب أنظمة المباني الذكية وضبطها وإجراء الفحوص الدورية"
+     ]
+    },
+    "pay": [
+     {
+      "scope": "Hw",
+      "years": [
+       979,
+       1050,
+       1125,
+       1201
       ],
-      "specializations": [],
-      "language_guidance": {
-        "level": null,
-        "status": "verify_by_training_provider"
-      },
-      "notes_fr": "Métier technique exercé en atelier et sur chantier selon les missions."
-    }
-  ]
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   }
+  },
+  {
+   "id": "industriemechaniker",
+   "title_de": "Industriemechaniker/in",
+   "title_fr": "Mécanicien(ne) industriel(le)",
+   "category": "industry",
+   "training_type": "dual",
+   "duration_months": 42,
+   "interests": [
+    "industry",
+    "machines",
+    "mechanics",
+    "manufacturing"
+   ],
+   "skills": [
+    "mechanical_reasoning",
+    "manual_precision",
+    "technical_drawing",
+    "troubleshooting",
+    "attention_to_detail"
+   ],
+   "environments": [
+    "factory",
+    "workshop",
+    "production",
+    "hands_on"
+   ],
+   "experience_domains": [
+    "mechanics",
+    "manufacturing",
+    "maintenance",
+    "metalwork"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Métier orienté fabrication, montage, maintenance et systèmes mécaniques.",
+   "sector": "tech",
+   "fiche": {
+    "summary": {
+     "fr": "Fabriquer, régler et réparer des machines et des pièces métalliques dans l'industrie.",
+     "en": "Manufacture, set up and repair machines and metal parts in industry.",
+     "ar": "تصنيع الآلات والقطع المعدنية وضبطها وإصلاحها في المصانع."
+    },
+    "source": "bibb_industriemechaniker",
+    "body": "IH",
+    "ordinance": "Industrielle Metallberufe (Neufassung 28.06.2018)",
+    "tasks": {
+     "fr": [
+      "Organiser et surveiller des processus de production, fabriquer et assembler des pièces",
+      "Trouver et réparer les pannes, faire la maintenance et les contrôles",
+      "Régler les machines, choisir les méthodes de contrôle et mettre en service les installations"
+     ],
+     "en": [
+      "Organise and monitor production, manufacture and assemble components",
+      "Find and repair faults, perform maintenance and inspections",
+      "Convert machines, select test methods and commission systems"
+     ],
+     "ar": [
+      "تنظيم الإنتاج ومراقبته وتصنيع القطع وتجميعها",
+      "اكتشاف الأعطال وإصلاحها والقيام بالصيانة والفحص",
+      "ضبط الآلات واختيار طرق الاختبار وتشغيل المنشآت"
+     ]
+    },
+    "pay": [
+     {
+      "scope": "IH",
+      "years": [
+       1221,
+       1287,
+       1375,
+       1452
+      ],
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   },
+   "title_en": "Industrial mechanic",
+   "title_ar": "ميكانيكي/ة صناعي/ة"
+  },
+  {
+   "id": "anlagenmechaniker_shk",
+   "title_de": "Anlagenmechaniker/in für Sanitär-, Heizungs- und Klimatechnik",
+   "title_fr": "Installateur(trice) en sanitaire, chauffage et climatisation",
+   "category": "building_services",
+   "training_type": "dual",
+   "duration_months": 42,
+   "interests": [
+    "construction",
+    "installation",
+    "heating",
+    "water",
+    "climate_technology"
+   ],
+   "skills": [
+    "mechanical_reasoning",
+    "manual_precision",
+    "troubleshooting",
+    "spatial_reasoning",
+    "safety_awareness"
+   ],
+   "environments": [
+    "construction_site",
+    "workshop",
+    "field_work",
+    "hands_on"
+   ],
+   "experience_domains": [
+    "plumbing",
+    "heating",
+    "construction",
+    "maintenance",
+    "installation"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Métier technique exercé en atelier et sur chantier selon les missions.",
+   "sector": "tech",
+   "fiche": {
+    "summary": {
+     "fr": "Installer et entretenir plomberie, chauffage et climatisation dans les bâtiments.",
+     "en": "Install and maintain plumbing, heating and air conditioning in buildings.",
+     "ar": "تركيب وصيانة السباكة والتدفئة والتكييف في المباني."
+    },
+    "source": "bibb_shk",
+    "body": "Hw / IH",
+    "ordinance": "SHKAMAusbV (28.04.2016)",
+    "tasks": {
+     "fr": [
+      "Monter, mettre en service et remettre au client des installations d'eau, de chauffage et de climatisation",
+      "Faire les raccordements électriques et installer et régler les éléments de commande et de sécurité",
+      "Contrôler, entretenir, réparer et optimiser ces installations ; conseiller les clients"
+     ],
+     "en": [
+      "Assemble, commission and hand over water, heating and air-conditioning systems",
+      "Make electrical connections; install and calibrate control and safety components",
+      "Inspect, maintain, repair and optimise the systems; advise customers"
+     ],
+     "ar": [
+      "تركيب منشآت الماء والتدفئة والتكييف وتشغيلها وتسليمها للزبون",
+      "الربط الكهربائي وتركيب عناصر التحكم والسلامة وضبطها",
+      "فحص المنشآت وصيانتها وإصلاحها وتحسينها، ونصح الزبائن"
+     ]
+    },
+    "pay": [
+     {
+      "scope": "Hw",
+      "years": [
+       927,
+       986,
+       1071,
+       1140
+      ],
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   },
+   "title_en": "Plumbing, heating and air-conditioning technician",
+   "title_ar": "فنّي/ة تركيبات الصحي والتدفئة والتكييف"
+  },
+  {
+   "id": "lagerlogistik",
+   "title_de": "Fachkraft für Lagerlogistik",
+   "title_fr": "Spécialiste en logistique d'entrepôt",
+   "category": "logistics",
+   "training_type": "dual",
+   "duration_months": 36,
+   "interests": [
+    "logistics",
+    "transport",
+    "organization",
+    "supply_chain"
+   ],
+   "skills": [
+    "organization",
+    "planning",
+    "reliability",
+    "numeracy",
+    "teamwork"
+   ],
+   "environments": [
+    "warehouse",
+    "logistics_center",
+    "active_work",
+    "team"
+   ],
+   "experience_domains": [
+    "logistics",
+    "warehouse",
+    "transport",
+    "stock_management"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Les tâches peuvent combiner réception, stockage, préparation et coordination des flux.",
+   "sector": "logistics",
+   "fiche": {
+    "summary": {
+     "fr": "Gérer la réception, le stockage et l'expédition des marchandises dans un entrepôt.",
+     "en": "Manage receiving, storage and dispatch of goods in a warehouse.",
+     "ar": "إدارة استلام البضائع وتخزينها وإرسالها في المستودع."
+    },
+    "source": "bibb_lager",
+    "body": "IH",
+    "ordinance": "Verordnung Lagerberufe (26.07.2004)",
+    "tasks": {
+     "fr": [
+      "Réceptionner les marchandises et vérifier les livraisons avec les documents",
+      "Stocker, trier, faire l'inventaire, préparer les commandes et emballer",
+      "Préparer et sécuriser les chargements et traiter les documents d'expédition"
+     ],
+     "en": [
+      "Receive goods and check deliveries against documents",
+      "Store, sort, take stock, pick orders and pack",
+      "Prepare and secure loads and process shipping documents"
+     ],
+     "ar": [
+      "استلام البضائع ومطابقة التسليمات مع الوثائق",
+      "التخزين والفرز والجرد وتحضير الطلبات والتغليف",
+      "تجهيز الشحنات وتأمينها وإنجاز وثائق الشحن"
+     ]
+    },
+    "pay": [
+     {
+      "scope": "IH",
+      "years": [
+       1171,
+       1247,
+       1330
+      ],
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   },
+   "title_en": "Warehouse logistics specialist",
+   "title_ar": "أخصائي/ة لوجستيك المستودعات"
+  },
+  {
+   "id": "berufskraftfahrer",
+   "title_de": "Berufskraftfahrer/in",
+   "title_fr": "Chauffeur(se) professionnel(le)",
+   "title_en": "Professional driver",
+   "title_ar": "سائق محترف",
+   "category": "logistics",
+   "training_type": "dual",
+   "duration_months": 36,
+   "interests": [
+    "logistics",
+    "transport",
+    "vehicles"
+   ],
+   "skills": [
+    "reliability",
+    "responsibility",
+    "planning",
+    "organization",
+    "safety_awareness"
+   ],
+   "environments": [
+    "active_work",
+    "logistics_center",
+    "field_work"
+   ],
+   "experience_domains": [
+    "logistics",
+    "transport",
+    "driving"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Fiche ajoutée en refonte ; les conditions liées au permis de conduire sont à vérifier auprès de l'employeur : non confirmé.",
+   "sector": "logistics",
+   "fiche": {
+    "summary": {
+     "fr": "Conduire camions ou autocars en sécurité et s'occuper du véhicule et de la cargaison.",
+     "en": "Drive trucks or coaches safely and look after the vehicle and cargo.",
+     "ar": "قيادة الشاحنات أو الحافلات بأمان والعناية بالمركبة والحمولة."
+    },
+    "source": "bibb_bkf",
+    "body": "IH",
+    "ordinance": "BKV (19.04.2001, modifiée 16.10.2017)",
+    "tasks": {
+     "fr": [
+      "Conduire en sécurité pour le transport de marchandises ou de personnes en respectant les règles de circulation",
+      "Vérifier et préparer le véhicule, prendre en charge et arrimer la cargaison",
+      "Contrôler les documents, réagir en cas de panne ou d'accident, planifier les trajets"
+     ],
+     "en": [
+      "Drive safely for freight or passenger transport, following traffic rules",
+      "Check and prepare the vehicle, take over and secure cargo",
+      "Check documents, react to breakdowns or accidents, plan trips"
+     ],
+     "ar": [
+      "القيادة بأمان لنقل البضائع أو الأشخاص مع احترام قواعد المرور",
+      "فحص المركبة وتجهيزها واستلام الحمولة وتثبيتها",
+      "مراجعة الوثائق والتصرف عند العطل أو الحادث وتخطيط الرحلات"
+     ]
+    },
+    "pay": [
+     {
+      "scope": "IH",
+      "years": [
+       1114,
+       1200,
+       1290
+      ],
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   }
+  },
+  {
+   "id": "hotelfach",
+   "title_de": "Hotelfachmann / Hotelfachfrau",
+   "title_fr": "Employé(e) polyvalent(e) d'hôtel",
+   "category": "hospitality",
+   "training_type": "dual",
+   "duration_months": 36,
+   "interests": [
+    "hospitality",
+    "tourism",
+    "languages",
+    "customer_service"
+   ],
+   "skills": [
+    "communication",
+    "organization",
+    "service_mindset",
+    "multitasking",
+    "teamwork"
+   ],
+   "environments": [
+    "hotel",
+    "reception",
+    "people_facing",
+    "shift_work"
+   ],
+   "experience_domains": [
+    "hospitality",
+    "tourism",
+    "customer_service",
+    "events"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Formation polyvalente dans les différents services d'un établissement hôtelier.",
+   "sector": "hospitality",
+   "fiche": {
+    "summary": {
+     "fr": "Accueillir les clients à l'hôtel, gérer les réservations, les étages et la restauration.",
+     "en": "Welcome hotel guests, handle bookings, housekeeping and food service.",
+     "ar": "استقبال ضيوف الفندق وإدارة الحجوزات والغرف والمطعم."
+    },
+    "source": "bibb_hotel",
+    "body": "IH",
+    "ordinance": "HotelAusbV (09.03.2022)",
+    "tasks": {
+     "fr": [
+      "Gérer les réservations et l'accueil, vendre les nuitées et les services",
+      "Accueillir et conseiller les clients, traiter leurs réclamations",
+      "Organiser le service des étages, la restauration et des événements"
+     ],
+     "en": [
+      "Handle reservations and reception, sell stays and services",
+      "Welcome and advise guests, handle complaints",
+      "Organise housekeeping, food and beverage service and events"
+     ],
+     "ar": [
+      "إدارة الحجوزات والاستقبال وبيع الإقامات والخدمات",
+      "استقبال الضيوف ونصحهم ومعالجة شكاواهم",
+      "تنظيم خدمة الغرف والمطعم والمناسبات"
+     ]
+    },
+    "pay": [
+     {
+      "scope": "IH",
+      "years": [
+       1112,
+       1231,
+       1347
+      ],
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   },
+   "title_en": "Hotel specialist",
+   "title_ar": "مختص/ة في العمل الفندقي"
+  },
+  {
+   "id": "koch",
+   "title_de": "Koch / Köchin",
+   "title_fr": "Cuisinier / Cuisinière",
+   "category": "gastronomy",
+   "training_type": "dual",
+   "duration_months": 36,
+   "interests": [
+    "cooking",
+    "gastronomy",
+    "food",
+    "creativity"
+   ],
+   "skills": [
+    "discipline",
+    "manual_precision",
+    "time_management",
+    "teamwork",
+    "creativity"
+   ],
+   "environments": [
+    "professional_kitchen",
+    "restaurant",
+    "hands_on",
+    "shift_work"
+   ],
+   "experience_domains": [
+    "cooking",
+    "food_service",
+    "restaurant",
+    "bakery"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Le rythme, les horaires et l'organisation varient selon l'établissement.",
+   "sector": "hospitality",
+   "fiche": {
+    "summary": {
+     "fr": "Préparer des repas en cuisine professionnelle, en respectant l'hygiène et le travail d'équipe.",
+     "en": "Prepare meals in a professional kitchen, following hygiene rules and teamwork.",
+     "ar": "تحضير الوجبات في مطبخ احترافي مع احترام النظافة والعمل الجماعي."
+    },
+    "source": "bibb_koch",
+    "body": "IH",
+    "ordinance": "KochAusbV (09.03.2022)",
+    "tasks": {
+     "fr": [
+      "Préparer des plats : soupes, sauces, légumes, desserts, salades",
+      "Préparer poissons, viandes, volailles et gibier",
+      "Planifier le travail en cuisine, réceptionner et stocker les marchandises, respecter l'hygiène"
+     ],
+     "en": [
+      "Prepare dishes: soups, sauces, vegetables, desserts, salads",
+      "Prepare fish, meat, poultry and game",
+      "Plan kitchen workflow, receive and store goods, follow hygiene rules"
+     ],
+     "ar": [
+      "إعداد الأطباق: الشوربات والصلصات والخضر والحلويات والسلطات",
+      "تحضير الأسماك واللحوم والدواجن",
+      "تنظيم العمل في المطبخ واستلام البضائع وتخزينها واحترام قواعد النظافة"
+     ]
+    },
+    "pay": [
+     {
+      "scope": "IH",
+      "years": [
+       1120,
+       1233,
+       1346
+      ],
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   },
+   "title_en": "Cook",
+   "title_ar": "طبّاخ/ة"
+  },
+  {
+   "id": "baecker",
+   "title_de": "Bäcker/in",
+   "title_fr": "Boulanger(ère)",
+   "title_en": "Baker",
+   "title_ar": "خبّاز / خبّازة",
+   "category": "gastronomy",
+   "training_type": "dual",
+   "duration_months": 36,
+   "interests": [
+    "cooking",
+    "food",
+    "gastronomy",
+    "creativity"
+   ],
+   "skills": [
+    "manual_precision",
+    "discipline",
+    "time_management",
+    "teamwork",
+    "reliability"
+   ],
+   "environments": [
+    "workshop",
+    "production",
+    "hands_on",
+    "shift_work",
+    "team"
+   ],
+   "experience_domains": [
+    "cooking",
+    "bakery",
+    "food_service"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Fiche ajoutée en refonte. Le BIBB indique une réforme de la formation en cours : vérifier la version en vigueur.",
+   "sector": "hospitality",
+   "fiche": {
+    "summary": {
+     "fr": "Métier de la boulangerie artisanale. Le BIBB signale une réforme de la formation en cours.",
+     "en": "A craft bakery occupation. BIBB notes that the training is being reformed.",
+     "ar": "مهنة الخبز الحِرَفي. يشير المعهد الفدرالي (BIBB) إلى أن إصلاح هذا التكوين جارٍ."
+    },
+    "source": "bibb_baecker",
+    "body": "Hw",
+    "ordinance": null,
+    "tasks": null,
+    "pay": [
+     {
+      "scope": "Hw",
+      "years": [
+       1021,
+       1091,
+       1232
+      ],
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   }
+  },
+  {
+   "id": "verkaeufer",
+   "title_de": "Verkäufer / Verkäuferin",
+   "title_fr": "Vendeur / Vendeuse",
+   "category": "retail",
+   "training_type": "dual",
+   "duration_months": 24,
+   "interests": [
+    "sales",
+    "commerce",
+    "customer_service",
+    "products"
+   ],
+   "skills": [
+    "communication",
+    "listening",
+    "reliability",
+    "numeracy",
+    "persuasion"
+   ],
+   "environments": [
+    "shop",
+    "retail_store",
+    "people_facing",
+    "team"
+   ],
+   "experience_domains": [
+    "retail",
+    "sales",
+    "cashier",
+    "customer_service"
+   ],
+   "specializations": [],
+   "language_guidance": {
+    "level": null,
+    "status": "verify_by_training_provider"
+   },
+   "notes_fr": "Formation de deux ans ; des possibilités de poursuite de formation peuvent exister.",
+   "sector": "retail",
+   "fiche": {
+    "summary": {
+     "fr": "Vendre et conseiller en magasin. Formation courte de 2 ans, poursuivable en commerce de détail selon l'ordonnance commune.",
+     "en": "Sell and advise in a shop. A short 2-year training; the same ordinance also covers the retail clerk occupation.",
+     "ar": "البيع ونصح الزبائن في المحل. تكوين قصير مدته سنتان، ويشمل المرسوم نفسه مهنة موظف التجزئة."
+    },
+    "source": "bibb_verkaeufer",
+    "body": "IH",
+    "ordinance": "VerkEHKflAusbV (13.03.2017)",
+    "tasks": {
+     "fr": [
+      "Vendre des produits et conseiller les clients, y compris dans une langue étrangère",
+      "Présenter et ranger la marchandise, tenir la caisse",
+      "Contrôler les stocks, réceptionner les livraisons et étiqueter les prix"
+     ],
+     "en": [
+      "Sell goods and advise customers, including in a foreign language",
+      "Present and stock merchandise, operate the till",
+      "Check stock, receive deliveries and price goods"
+     ],
+     "ar": [
+      "بيع المنتجات ونصح الزبائن، ولو بلغة أجنبية",
+      "عرض البضائع وترتيبها والعمل على الصندوق",
+      "مراقبة المخزون واستلام التسليمات ووضع الأسعار"
+     ]
+    },
+    "pay": [
+     {
+      "scope": "IH",
+      "years": [
+       1084,
+       1195
+      ],
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut"
+     }
+    ]
+   },
+   "title_en": "Sales assistant",
+   "title_ar": "بائع/ة"
+  }
+ ],
+ "verified_on": "2026-11-26",
+ "sources": {
+  "bibb_pay_2025": {
+   "title": "BIBB – Vergütungen tarifliche Ausbildung 2025 (tableau récapitulatif, état au 1er oct. 2025)",
+   "url": "https://www.bibb.de/dokumente/pdf/2025_Dav-Gesamt%c3%bcbersicht_Ausbildungsverg%c3%bctungen_Bundesgebiet.pdf",
+   "checked": "2026-11-26"
+  },
+  "bmg_pflege": {
+   "title": "Ministère fédéral de la Santé – Pflegefachfrau / Pflegefachmann",
+   "url": "https://www.bundesgesundheitsministerium.de/themen/gesundheitswesen/gesundheitsberufe/pflegefachmann-pflegefachfrau.html",
+   "checked": "2026-11-26"
+  },
+  "mig_visa": {
+   "title": "Make it in Germany – Visa pour formation professionnelle",
+   "url": "https://www.make-it-in-germany.com/fr/visa-reconnaissance/types-visas/formation-professionnelle",
+   "checked": "2026-11-26"
+  },
+  "mig_prereq": {
+   "title": "Make it in Germany – Conditions préalables pour une formation",
+   "url": "https://www.make-it-in-germany.com/fr/etudes-formations/formation-en-allemagne/conditions-prealables",
+   "checked": "2026-11-26"
+  },
+  "deutschland_apply": {
+   "title": "deutschland.de – Formation en alternance : visa et candidature",
+   "url": "https://www.deutschland.de/fr/topic/economie/formation-en-alternance-en-allemagne-visa-candidature",
+   "checked": "2026-11-26"
+  },
+  "bibb_fachinformatiker": {
+   "title": "BIBB – Fachinformatiker/-in Anwendungsentwicklung",
+   "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/80000",
+   "checked": "2026-11-26"
+  },
+  "bibb_kfz": {
+   "title": "BIBB – Kraftfahrzeugmechatroniker/-in",
+   "url": "https://www.bibb.de/dienst/berufesuche/de/index_berufesuche.php/profile/apprenticeship/nh324578",
+   "checked": "2026-11-26"
+  },
+  "bibb_elektroniker_betrieb": {
+   "title": "BIBB – Elektroniker/-in für Betriebstechnik",
+   "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/544554",
+   "checked": "2026-11-26"
+  },
+  "bibb_elektroniker_egt": {
+   "title": "BIBB – Elektroniker/-in Energie- und Gebäudetechnik",
+   "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/xsw478",
+   "checked": "2026-11-26"
+  },
+  "bibb_industriemechaniker": {
+   "title": "BIBB – Industriemechaniker/-in",
+   "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/658658",
+   "checked": "2026-11-26"
+  },
+  "bibb_lager": {
+   "title": "BIBB – Fachkraft für Lagerlogistik",
+   "url": "https://www.bibb.de/de/berufeinfo.php/profile/apprenticeship/89787i6u",
+   "checked": "2026-11-26"
+  },
+  "bibb_hotel": {
+   "title": "BIBB – Hotelfachmann/-frau",
+   "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/hofa22",
+   "checked": "2026-11-26"
+  },
+  "bibb_koch": {
+   "title": "BIBB – Koch/Köchin",
+   "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/koch22",
+   "checked": "2026-11-26"
+  },
+  "bibb_verkaeufer": {
+   "title": "BIBB – Verkäufer/-in",
+   "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/110815",
+   "checked": "2026-11-26"
+  },
+  "bibb_shk": {
+   "title": "BIBB – Anlagenmechaniker/-in SHK",
+   "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/210715",
+   "checked": "2026-11-26"
+  },
+  "bibb_baecker": {
+   "title": "BIBB – Bäcker/-in",
+   "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/baeck28",
+   "checked": "2026-11-26"
+  },
+  "bibb_mfa": {
+   "title": "BIBB – Medizinische/-r Fachangestellte/-r",
+   "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/n233444",
+   "checked": "2026-11-26"
+  },
+  "bibb_bkf": {
+   "title": "BIBB – Berufskraftfahrer/-in",
+   "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/67589062",
+   "checked": "2026-11-26"
+  }
+ },
+ "general": {
+  "visa_contract": {
+   "text": {
+    "fr": "Il faut une place de formation concrète. Pour une formation en entreprise, l'Agence fédérale pour l'emploi doit approuver le contrat.",
+    "en": "A concrete training place is required. For in-company training, the Federal Employment Agency must approve the contract.",
+    "ar": "يجب أن يكون لديك مقعد تكوين محدد. وفي التكوين داخل الشركة يجب أن توافق وكالة العمل الفدرالية على العقد."
+   },
+   "source": "mig_visa"
+  },
+  "visa_language": {
+   "text": {
+    "fr": "En général, niveau B1 exigé. Pas exigé si l'établissement a déjà évalué votre niveau ou si vous suivez un cours d'allemand préparatoire.",
+    "en": "B1 is generally required. Not required if the school has already assessed your level or you take a preparatory German course.",
+    "ar": "في الغالب يُطلب المستوى B1. لا يُطلب إذا قيّمت المؤسسة مستواك أو إذا تتابع دورة ألمانية تحضيرية."
+   },
+   "source": "mig_visa"
+  },
+  "visa_funds": {
+   "text": {
+    "fr": "Formation en entreprise : une rémunération d'au moins 1 048 € bruts (ou 822 € nets) par mois (chiffres 2026) suffit ; sinon compte bloqué ou déclaration de prise en charge. Formation en école : au moins 959 € nets par mois.",
+    "en": "In-company training: pay of at least €1,048 gross (or €822 net) per month (2026 figures) is enough; otherwise a blocked account or sponsorship declaration. School-based training: at least €959 net per month.",
+    "ar": "التكوين داخل الشركة: يكفي أجر لا يقل عن 1048 يورو إجمالي (أو 822 يورو صافي) شهرياً (أرقام 2026)، وإلا فحساب مجمَّد أو تصريح تكفّل. التكوين في مدرسة: 959 يورو صافي شهرياً على الأقل."
+   },
+   "source": "mig_visa"
+  },
+  "visa_after": {
+   "text": {
+    "fr": "Le titre de séjour couvre la durée de la formation. Après la formation, vous pouvez rester jusqu'à 18 mois pour chercher un emploi.",
+    "en": "The residence permit covers the length of the training. After training you can stay up to 18 months to look for a job.",
+    "ar": "تغطي الإقامة مدة التكوين. وبعد التكوين يمكنك البقاء حتى 18 شهراً للبحث عن عمل."
+   },
+   "source": "mig_visa"
+  },
+  "visa_search": {
+   "text": {
+    "fr": "Visa de recherche d'une place de formation : diplôme secondaire donnant accès à l'enseignement supérieur, niveau B1, moins de 35 ans, compte bloqué d'au moins 1 091 € par mois (2026), séjour de 9 mois maximum. Équivalence du diplôme tunisien : non confirmé.",
+    "en": "Training-place search visa: secondary diploma giving access to higher education, B1, under 35, blocked account of at least €1,091 per month (2026), stay of up to 9 months. Equivalence of the Tunisian diploma: not confirmed.",
+    "ar": "تأشيرة البحث عن مقعد تكوين: شهادة ثانوية تتيح دخول الجامعة، والمستوى B1، والسن أقل من 35، وحساب مجمَّد لا يقل عن 1091 يورو شهرياً (2026)، والإقامة 9 أشهر كحد أقصى. معادلة الشهادة التونسية: غير مؤكد."
+   },
+   "source": "mig_visa"
+  },
+  "diploma": {
+   "text": {
+    "fr": "Formation en entreprise : la loi n'exige aucun diplôme précis, chaque entreprise fixe ses critères (souvent un niveau intermédiaire). Formation en école : secondaire terminé et reconnu.",
+    "en": "In-company training: the law requires no specific diploma; each company sets its own criteria (often an intermediate level). School-based: completed and recognised secondary education.",
+    "ar": "التكوين داخل الشركة: لا يشترط القانون شهادة محددة، وتضع كل شركة معاييرها (غالباً مستوى متوسط). التكوين في مدرسة: تعليم ثانوي مكتمل ومعترف به."
+   },
+   "source": "mig_prereq"
+  },
+  "recognition": {
+   "text": {
+    "fr": "La reconnaissance du diplôme scolaire relève des autorités des 16 Länder (base anabin). Il faut une adresse en Allemagne ou une promesse concrète de place.",
+    "en": "Recognition of the school diploma is handled by the 16 Länder authorities (anabin database). You need an address in Germany or a concrete training offer.",
+    "ar": "الاعتراف بالشهادة المدرسية من اختصاص سلطات الولايات الـ16 (قاعدة anabin). يلزم عنوان في ألمانيا أو وعد مؤكد بمقعد تكوين."
+   },
+   "source": "mig_prereq"
+  },
+  "age": {
+   "text": {
+    "fr": "Pas de limite d'âge fixe. Après 45 ans, vérifier les seuils de revenu ou de prévoyance retraite pour le visa.",
+    "en": "No fixed age limit. After 45, check the income or pension-provision thresholds for the visa.",
+    "ar": "لا يوجد حد أقصى ثابت للسن. بعد 45 سنة تحقق من شروط الدخل أو التأمين التقاعدي الخاصة بالتأشيرة."
+   },
+   "source": "mig_prereq"
+  },
+  "apply": {
+   "text": {
+    "fr": "Les grandes entreprises ont un portail en ligne ; les petites acceptent un e-mail. Joindre CV et lettre de motivation. La plupart des formations commencent en août ou septembre et les places sont souvent attribuées un an à l'avance.",
+    "en": "Large companies have an online portal; small ones accept email. Include a CV and cover letter. Most trainings start in August or September and places are often filled a year in advance.",
+    "ar": "للشركات الكبيرة بوابة على الإنترنت، والصغيرة تقبل البريد الإلكتروني. أرفق السيرة الذاتية ورسالة التحفيز. تبدأ أغلب التكوينات في أغسطس أو سبتمبر وتُحجز المقاعد غالباً قبل سنة."
+   },
+   "source": "deutschland_apply"
+  },
+  "where": {
+   "text": {
+    "fr": "Pour chercher : recherche en ligne de l'Agence fédérale pour l'emploi, radar des places de la Chambre des métiers (artisanat), IHK (services). La demande de visa se dépose à l'ambassade d'Allemagne.",
+    "en": "Where to search: Federal Employment Agency online search, the Chamber of Crafts apprenticeship radar (crafts), IHK (services). The visa application is filed at the German embassy.",
+    "ar": "للبحث: محرك البحث الإلكتروني لوكالة العمل الفدرالية، ورادار مقاعد غرفة الحِرَف (للحرف)، وغرفة التجارة والصناعة IHK (للخدمات). وتُقدَّم طلب التأشيرة في السفارة الألمانية."
+   },
+   "source": "deutschland_apply"
+  }
+ }
 }

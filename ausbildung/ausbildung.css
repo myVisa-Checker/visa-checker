@@ -114,3 +114,34 @@
 @media(max-width:560px){#aus .stages small{display:none}}
 @media print{#introwrap,#pick,#pickmore,#chosenWrap .muted{display:none!important}}
 @media(max-width:519px){#aus .pick-grid{grid-template-columns:1fr}}
+
+/* Refonte : secteurs, bouton fiche, fiche détaillée, annuaire */
+#aus .sectors{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px;margin:0 0 6px;scrollbar-width:thin}
+#aus .chip{flex:none;min-height:40px;padding:0 14px;border:1px solid var(--line,#d6e2f7);border-radius:999px;background:var(--surface,#fff);color:var(--ink,#0b1f4b);font:inherit;font-size:.85rem;cursor:pointer}
+#aus .chip.on{background:var(--accent,#1d4ed8);border-color:var(--accent,#1d4ed8);color:#fff}
+#aus .chip:focus-visible,#aus .fiche-btn:focus-visible{outline:3px solid var(--royal-400,#3b82f6);outline-offset:2px}
+#aus .pick-item{display:grid;gap:6px}
+#aus .fiche-btn{min-height:40px;border:1px dashed var(--line,#d6e2f7);border-radius:10px;background:transparent;color:var(--accent,#1d4ed8);font:inherit;font-size:.82rem;cursor:pointer}
+#aus .fiche{margin-top:10px}
+#aus .fiche-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+#aus .fiche h2{margin:0 0 2px;font-size:clamp(1.4rem,5vw,1.9rem);letter-spacing:-.02em}
+#aus .fiche .de{margin:0 0 14px;color:var(--muted,#4a5f86);font-weight:600}
+#aus .fiche h3{margin:22px 0 8px;padding-top:12px;border-top:1px solid var(--line,#d6e2f7);font-size:1.1rem}
+#aus .fiche h4{margin:12px 0 6px;font-size:.95rem}
+#aus .fl{margin:0;display:grid;gap:8px}
+#aus .frow{display:grid;gap:2px;padding:10px 12px;border:1px solid var(--line,#d6e2f7);border-radius:12px;background:var(--surface,#fff)}
+#aus .frow dt{font-size:.78rem;color:var(--muted,#4a5f86);font-weight:700}
+#aus .frow dd{margin:0;overflow-wrap:anywhere}
+@media(min-width:700px){#aus .frow{grid-template-columns:230px 1fr;gap:14px}}
+#aus .nc{display:inline-block;padding:1px 10px;border-radius:999px;background:#fff4d6;color:#7a4b00;font-size:.82rem;font-weight:700}
+#aus .paytab{border-collapse:collapse;margin:4px 0 6px;font-size:.88rem}
+#aus .paytab caption{text-align:start;font-weight:700;margin-bottom:4px}
+#aus .paytab th,#aus .paytab td{border:1px solid var(--line,#d6e2f7);padding:6px 10px;text-align:center}
+#aus .warn{padding:10px 12px;border-radius:12px;background:#fff4d6;color:#5c3b00}
+#aus .reform{color:#7a4b00}
+#aus .co{padding:12px;border:1px solid var(--line,#d6e2f7);border-radius:12px;margin-bottom:10px;background:var(--surface,#fff)}
+#aus .co h4{margin:0 0 4px}
+#aus .costat{margin:6px 0;padding-inline-start:18px;font-size:.88rem}
+#aus .colinks{display:flex;gap:8px;flex-wrap:wrap}
+#aus .srcs{padding-inline-start:18px;overflow-wrap:anywhere}
+@media print{#fiche{display:block!important}}

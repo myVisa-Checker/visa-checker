@@ -35,95 +35,98 @@
   </ul>
 </nav>
 
-<main id="aus" lang="fr" dir="ltr" data-no-i18n>
-  <nav class="crumbs" aria-label="Fil d'Ariane"><a href="../?accueil=1">Accueil</a> › <span>Ausbildung</span></nav>
+<main id="aus" data-no-i18n>
+  <nav class="crumbs" aria-label="Fil d'Ariane" data-ta="aria-label=aria.crumbs"><a href="../?accueil=1" data-t="crumb.home">Accueil</a> <span aria-hidden="true" data-t="crumb.sep">›</span> <span>Ausbildung</span></nav>
   <p id="langNote" class="lang-note" role="note" hidden></p>
   <div id="introwrap">
   <section id="pickhero" class="pickhero" aria-labelledby="pickTitle">
-    <p class="eyebrow">VOTRE PROJET · ALLEMAGNE</p>
-    <h1 id="pickTitle"><span id="pickCount">10</span> métiers disponibles&nbsp;!</h1>
-    <p>Choisissez votre profession pour une orientation plus précise. Vous pouvez en choisir plusieurs.</p>
+    <p class="eyebrow" data-t="hero.eyebrow">VOTRE PROJET · ALLEMAGNE</p>
+    <h1 id="pickTitle"><span id="pickCount">14</span> métiers disponibles&nbsp;!</h1>
+    <p data-t="pick.intro">Choisissez votre profession pour une orientation plus précise. Vous pouvez en choisir plusieurs.</p>
     <span class="pickline" aria-hidden="true"></span>
   </section>
-  <ol id="stages" class="stages" aria-label="Étapes du parcours">
-    <li class="done"><span class="n" aria-hidden="true">✓</span><span>Pays</span><small>Allemagne</small></li>
-    <li class="cur" aria-current="step"><span class="n" aria-hidden="true">2</span><span>Métier</span></li>
-    <li><span class="n" aria-hidden="true">3</span><span>Profil</span></li>
-    <li><span class="n" aria-hidden="true">4</span><span>Résultat</span></li>
+  <ol id="stages" class="stages" aria-label="Étapes du parcours" data-ta="aria-label=aria.stages">
+    <li class="done"><span class="n" aria-hidden="true">✓</span><span data-t="stage.country">Pays</span><small data-t="stage.germany">Allemagne</small></li>
+    <li class="cur" aria-current="step"><span class="n" aria-hidden="true">2</span><span data-t="stage.job">Métier</span></li>
+    <li><span class="n" aria-hidden="true">3</span><span data-t="stage.profile">Profil</span></li>
+    <li><span class="n" aria-hidden="true">4</span><span data-t="stage.result">Résultat</span></li>
   </ol>
   </div>
   <section id="pick" class="panel pick" aria-labelledby="pickH" hidden>
     <div class="pick-head">
-      <div><h2 id="pickH" tabindex="-1">Votre profession</h2><p class="muted">Sélectionnez un ou plusieurs métiers, ou continuez sans choisir : le questionnaire vous aidera.</p></div>
-      <p class="pick-info" role="note">Vous pouvez choisir plusieurs métiers</p>
+      <div><h2 id="pickH" tabindex="-1" data-t="pick.h">Votre profession</h2><p class="muted" data-t="pick.sub">Sélectionnez un ou plusieurs métiers, ou continuez sans choisir : le questionnaire vous aidera.</p></div>
+      <p class="pick-info" role="note" data-t="pick.info">Vous pouvez choisir plusieurs métiers</p>
     </div>
-    <label class="pick-search"><span class="sr">Rechercher un métier</span><input id="pickSearch" type="search" placeholder="Rechercher un métier…" autocomplete="off" maxlength="60"></label>
+    <label class="pick-search"><span class="sr" data-t="pick.search">Rechercher un métier</span><input id="pickSearch" type="search" placeholder="Rechercher un métier…" data-ta="placeholder=pick.ph" autocomplete="off" maxlength="60"></label>
+    <div id="sectors" class="sectors" role="group" aria-label="Filtrer par secteur" data-ta="aria-label=aria.sectors"></div>
     <div id="pickGrid" class="pick-grid" role="group" aria-labelledby="pickH"></div>
-    <p id="pickNone" class="muted" hidden>Aucun métier ne correspond à cette recherche.</p>
-    <div class="pick-sum" id="pickSum" aria-live="polite"><span class="chk" aria-hidden="true">✓</span><div><strong id="pickSumT">Aucun métier sélectionné</strong><span id="pickSumL"></span></div><button type="button" id="pickClear" class="btn secondary small" hidden>Tout effacer</button></div>
-    <div class="actions"><a class="btn secondary" id="pickBack" href="../?accueil=1">← Retour</a><button id="pickNext" class="btn primary" type="button">Suivant →</button></div>
+    <p id="pickNone" class="muted" hidden data-t="pick.none">Aucun métier ne correspond à cette recherche.</p>
+    <div class="pick-sum" id="pickSum" aria-live="polite"><span class="chk" aria-hidden="true">✓</span><div><strong id="pickSumT">Aucun métier sélectionné</strong><span id="pickSumL"></span></div><button type="button" id="pickClear" class="btn secondary small" hidden data-t="pick.clear">Tout effacer</button></div>
+    <div class="actions"><a class="btn secondary" id="pickBack" href="../?accueil=1" data-t="pick.back">← Retour</a><button id="pickNext" class="btn primary" type="button" data-t="pick.next">Suivant →</button></div>
   </section>
 
+  <section id="fiche" class="panel fiche" aria-live="polite" hidden></section>
+
   <section id="pickmore" class="pickmore" aria-label="Pourquoi l'Ausbildung" hidden>
-    <h2>L'Ausbildung, en bref</h2>
+    <h2 data-t="more.h">L'Ausbildung, en bref</h2>
     <ul class="why">
-      <li><b>Apprendre en travaillant</b><span>Une formation en alternance : des cours en école professionnelle et de la pratique en entreprise.</span></li>
-      <li><b>Un métier concret</b><span>Chaque formation débouche sur un métier reconnu, avec une durée de 2 à 3,5 ans selon le cas.</span></li>
-      <li><b>Un parcours guidé</b><span>Quelques questions, un classement explicable, puis les points à préparer pour votre projet.</span></li>
+      <li><b data-t="more.1.b">Apprendre en travaillant</b><span data-t="more.1.s">Une formation en alternance : des cours en école professionnelle et de la pratique en entreprise.</span></li>
+      <li><b data-t="more.2.b">Un métier concret</b><span data-t="more.2.s">Chaque formation débouche sur un métier reconnu. La durée est fixée par le texte officiel de chaque métier : voir la fiche.</span></li>
+      <li><b data-t="more.3.b">Un parcours guidé</b><span data-t="more.3.s">Des fiches détaillées, un classement explicable, puis les points à préparer pour votre projet.</span></li>
     </ul>
     <ol class="how">
-      <li><b>1. Choisissez</b><span>un ou plusieurs métiers qui vous attirent.</span></li>
-      <li><b>2. Répondez</b><span>à 6 questions courtes sur votre profil (3 à 4 minutes).</span></li>
-      <li><b>3. Découvrez</b><span>vos pistes, ce qu'il faut préparer, puis votre dossier de visa.</span></li>
+      <li><b data-t="how.1.b">1. Choisissez</b><span data-t="how.1.s">un ou plusieurs métiers qui vous attirent.</span></li>
+      <li><b data-t="how.2.b">2. Répondez</b><span data-t="how.2.s">à 6 questions courtes sur votre profil (3 à 4 minutes).</span></li>
+      <li><b data-t="how.3.b">3. Découvrez</b><span data-t="how.3.s">vos pistes, ce qu'il faut préparer, puis votre dossier de visa.</span></li>
     </ol>
-    <p class="guide-link"><a href="../guide-ausbildung.html">Lire notre guide Ausbildung</a></p>
+    <p class="guide-link"><a href="../guide-ausbildung.html" data-t="guide.link">Lire notre guide Ausbildung</a></p>
   </section>
 
   <section class="hero" id="quizhero" hidden>
-    <p class="eyebrow">VOTRE PROJET · ALLEMAGNE</p>
-    <h1>Trouvez une Ausbildung qui vous correspond.</h1>
-    <p>Quelques questions pour découvrir les métiers de la formation en alternance en Allemagne qui correspondent à vos intérêts, à vos compétences et à votre façon de travailler.</p>
-    <div class="trust"><span>✓ Gratuit</span><span>✓ 3–4 minutes</span><span>✓ Sans document personnel</span></div>
+    <p class="eyebrow" data-t="hero.eyebrow">VOTRE PROJET · ALLEMAGNE</p>
+    <h1 data-t="hero.h1">Trouvez une Ausbildung qui vous correspond.</h1>
+    <p data-t="hero.p">Quelques questions pour découvrir les métiers de la formation en alternance en Allemagne qui correspondent à vos intérêts, à vos compétences et à votre façon de travailler.</p>
+    <div class="trust"><span data-t="trust.free">✓ Gratuit</span><span data-t="trust.time">✓ 3–4 minutes</span><span data-t="trust.nodoc">✓ Sans document personnel</span></div>
   </section>
 
   <noscript><p class="panel">Ce questionnaire nécessite JavaScript. Activez-le dans votre navigateur puis rechargez la page.</p></noscript>
-  <section id="loading" class="panel" role="status" aria-live="polite">Chargement du catalogue…</section>
+  <section id="loading" class="panel" role="status" aria-live="polite" data-t="loading">Chargement du catalogue…</section>
 
-  <section id="quiz" class="panel" aria-label="Questionnaire" hidden>
-    <div class="progress-row"><span id="progress" aria-live="polite">Étape 1 sur 6</span><div class="track" id="progresstrack" role="progressbar" aria-label="Progression" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1"><i id="progressbar"></i></div></div>
+  <section id="quiz" class="panel" aria-label="Questionnaire" data-ta="aria-label=aria.quiz" hidden>
+    <div class="progress-row"><span id="progress" aria-live="polite">Étape 1 sur 6</span><div class="track" id="progresstrack" role="progressbar" aria-label="Progression" data-ta="aria-label=aria.progress" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1"><i id="progressbar"></i></div></div>
     <h2 id="questionTitle" tabindex="-1"></h2>
     <p id="questionHint" class="muted"></p>
     <div id="answers" class="options" role="group"></div>
     <div id="skillArea" hidden></div>
     <div id="mobilityArea" hidden>
-      <h3 id="mobilityTitle">Êtes-vous prêt(e) à déménager en Allemagne ?</h3>
+      <h3 id="mobilityTitle" data-t="mob.title">Êtes-vous prêt(e) à déménager en Allemagne ?</h3>
       <div class="options" role="radiogroup" aria-labelledby="mobilityTitle">
-        <label class="option"><input type="radio" name="mobility" value="yes"><span>Oui</span></label>
-        <label class="option"><input type="radio" name="mobility" value="no"><span>Non</span></label>
-        <label class="option"><input type="radio" name="mobility" value="consider"><span>Je dois encore réfléchir</span></label>
+        <label class="option"><input type="radio" name="mobility" value="yes"><span data-t="mob.yes">Oui</span></label>
+        <label class="option"><input type="radio" name="mobility" value="no"><span data-t="mob.no">Non</span></label>
+        <label class="option"><input type="radio" name="mobility" value="consider"><span data-t="mob.consider">Je dois encore réfléchir</span></label>
       </div>
     </div>
     <p id="error" class="error" role="alert"></p>
-    <div class="actions"><button id="back" class="btn secondary" type="button" disabled>Retour</button><button id="next" class="btn primary" type="button">Continuer</button></div>
+    <div class="actions"><button id="back" class="btn secondary" type="button" data-t="btn.back" disabled>Retour</button><button id="next" class="btn primary" type="button">Continuer</button></div>
   </section>
 
-  <section id="results" class="panel" aria-label="Résultats" hidden>
-    <p class="eyebrow">VOTRE ORIENTATION</p>
-    <h2 id="resultsTitle" tabindex="-1">Les métiers qui vous correspondent</h2>
-    <p class="muted">Ce classement est une première orientation, pas une promesse d'embauche.</p>
+  <section id="results" class="panel" aria-label="Résultats" data-ta="aria-label=aria.results" hidden>
+    <p class="eyebrow" data-t="res.eyebrow">VOTRE ORIENTATION</p>
+    <h2 id="resultsTitle" tabindex="-1" data-t="res.title">Les métiers qui vous correspondent</h2>
+    <p class="muted" data-t="res.sub">Ce classement est une première orientation, pas une promesse d'embauche.</p>
     <div id="resultList"></div>
     <div id="chosenWrap" hidden><h3>Les métiers que vous avez choisis</h3><p class="muted">Voici leur compatibilité avec vos réponses. Ce n'est pas un critère d'admission.</p><div id="chosenList"></div></div>
     <div id="readiness" class="readiness"></div>
     <div class="next-steps">
-      <h3>Et ensuite ?</h3>
-      <p>Une formation en Allemagne suppose aussi un dossier de séjour solide. Préparez vos pièces avec CheckMyVisa, puis vérifiez les règles sur les sites officiels.</p>
-      <a class="btn primary" id="toVisa" href="../?accueil=1">Préparer mon dossier de visa</a>
-      <p class="guide-link"><a href="../guide-ausbildung.html">Lire notre guide Ausbildung</a></p>
+      <h3 data-t="next.title">Et ensuite ?</h3>
+      <p data-t="next.p">Une formation en Allemagne suppose aussi un dossier de séjour solide. Préparez vos pièces avec CheckMyVisa, puis vérifiez les règles sur les sites officiels.</p>
+      <a class="btn primary" id="toVisa" href="../?accueil=1" data-t="next.visa">Préparer mon dossier de visa</a>
+      <p class="guide-link"><a href="../guide-ausbildung.html" data-t="next.guide">Lire notre guide Ausbildung</a></p>
     </div>
-    <div class="actions result-actions"><button id="restart" class="btn secondary" type="button">Recommencer</button><button id="print" class="btn secondary" type="button">Imprimer / enregistrer en PDF</button></div>
+    <div class="actions result-actions"><button id="restart" class="btn secondary" type="button" data-t="btn.restart">Recommencer</button><button id="print" class="btn secondary" type="button" data-t="btn.print">Imprimer / enregistrer en PDF</button></div>
   </section>
 
-  <p class="legal">Les durées et descriptions du catalogue sont des données de travail à vérifier auprès des sources officielles avant publication. Les exigences peuvent varier selon la formation, l'employeur et le lieu. Le résultat ne prédit ni l'obtention d'un contrat ni celle d'un visa. Aucune de vos réponses n'est envoyée ni enregistrée.</p>
+  <p class="legal" data-t="legal">Les durées et descriptions du catalogue sont des données de travail à vérifier auprès des sources officielles avant publication. Les exigences peuvent varier selon la formation, l'employeur et le lieu. Le résultat ne prédit ni l'obtention d'un contrat ni celle d'un visa. Aucune de vos réponses n'est envoyée ni enregistrée.</p>
 </main>
 
 <footer class="site">
@@ -145,6 +148,8 @@
   </div>
 </footer>
 <script src="./career-matcher.js"></script>
+<script src="./i18n.js"></script>
+<script src="./fiche.js"></script>
 <script src="./app.js"></script>
 </body>
 </html>

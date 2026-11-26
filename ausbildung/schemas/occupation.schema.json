@@ -5,11 +5,13 @@
   "required": [
     "schema_version",
     "catalogue_status",
-    "occupations"
+    "occupations",
+    "sources",
+    "general"
   ],
   "properties": {
     "schema_version": {
-      "const": 1
+      "const": 2
     },
     "catalogue_status": {
       "enum": [
@@ -19,7 +21,7 @@
     },
     "occupations": {
       "type": "array",
-      "minItems": 10,
+      "minItems": 14,
       "items": {
         "type": "object",
         "required": [
@@ -33,7 +35,11 @@
           "skills",
           "environments",
           "experience_domains",
-          "language_guidance"
+          "language_guidance",
+          "title_en",
+          "title_ar",
+          "sector",
+          "fiche"
         ],
         "properties": {
           "id": {
@@ -105,10 +111,69 @@
                 "type": "string"
               }
             }
+          },
+          "title_en": {
+            "type": "string",
+            "minLength": 3
+          },
+          "title_ar": {
+            "type": "string",
+            "minLength": 3
+          },
+          "sector": {
+            "enum": [
+              "health",
+              "it",
+              "tech",
+              "logistics",
+              "hospitality",
+              "retail"
+            ]
+          },
+          "fiche": {
+            "type": "object",
+            "required": [
+              "summary",
+              "source"
+            ],
+            "description": "Toute donnée chiffrée ou réglementaire porte un id de source ; une donnée absente vaut null et s'affiche « Non confirmé »."
           }
         },
         "additionalProperties": true
       }
+    },
+    "verified_on": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "sources": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "title",
+          "url",
+          "checked"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "checked": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        }
+      }
+    },
+    "general": {
+      "type": "object",
+      "description": "Informations communes (candidature depuis la Tunisie) ; chaque entrée = texte FR/EN/AR + id de source."
     }
   },
   "additionalProperties": false

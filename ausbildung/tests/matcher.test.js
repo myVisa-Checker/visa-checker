@@ -5,8 +5,8 @@ const matcher = require("../career-matcher.js");
 const catalogue = JSON.parse(fs.readFileSync(path.join(__dirname,"../data/occupations.json"),"utf8"));
 const byId = id => catalogue.occupations.find(x=>x.id===id);
 
-assert.equal(catalogue.occupations.length,10,"catalogue contient 10 métiers");
-assert.equal(new Set(catalogue.occupations.map(x=>x.id)).size,10,"IDs uniques");
+assert.equal(catalogue.occupations.length,14,"catalogue contient 14 métiers");
+assert.equal(new Set(catalogue.occupations.map(x=>x.id)).size,14,"IDs uniques");
 assert.equal(byId("pflegefachkraft").training_type,"regulated_school_based","soins distingués de la formation duale classique");
 
 let r=matcher.match({skills:["programming","logic","troubleshooting"],interests:["technology","programming","computers"],environments:["office","computer"],experience:["it","web"],german_level:"A2"},catalogue,3);
@@ -101,12 +101,14 @@ for(const o of catalogue.occupations){
 
 // Le questionnaire (app.js) ne propose que des valeurs que le catalogue connaît (sinon un choix n'aurait aucun effet).
 const appSrc=fs.readFileSync(path.join(__dirname,"../app.js"),"utf8");
-const values=(name)=>{const m=appSrc.match(new RegExp("const "+name+" = \\[([\\s\\S]*?)\\];"));assert.ok(m,name+" introuvable");return [...m[1].matchAll(/\["([a-z0-9_]+)"/g)].map(x=>x[1]);};
+const values=(name)=>{const m=appSrc.match(new RegExp("const "+name+" = \\[([\\s\\S]*?)\\];"));assert.ok(m,name+" introuvable");return [...m[1].matchAll(/"([a-z0-9_]+)"/g)].map(x=>x[1]);};
 const tagsOf=(k)=>new Set(catalogue.occupations.flatMap(o=>o[k]));
-for(const v of values("skillOptions")) assert.ok(tagsOf("skills").has(v),"compétence sans métier : "+v);
-for(const v of values("domainOptions")) assert.ok(tagsOf("experience_domains").has(v),"domaine d'expérience sans métier : "+v);
+for(const v of values("skillValues")) assert.ok(tagsOf("skills").has(v),"compétence sans métier : "+v);
+for(const v of values("domainValues")) assert.ok(tagsOf("experience_domains").has(v),"domaine d'expérience sans métier : "+v);
 const interestMap={electronics:"electronics",industry:"industrial_systems",construction:"construction"};
 const stepsSrc=appSrc.slice(appSrc.indexOf('id:"interests"'),appSrc.indexOf('id:"environment"'));
-for(const m of stepsSrc.matchAll(/\["([a-z_]+)","/g)) assert.ok(tagsOf("interests").has(interestMap[m[1]]||m[1]),"intérêt sans métier : "+m[1]);
+const interestValues=[...stepsSrc.match(/values:\[([^\]]*)\]/)[1].matchAll(/"([a-z_]+)"/g)].map(x=>[0,x[1]]);
+assert.ok(interestValues.length>=10,"intérêts du questionnaire lus");
+for(const m of interestValues) assert.ok(tagsOf("interests").has(interestMap[m[1]]||m[1]),"intérêt sans métier : "+m[1]);
 
 console.log("Career Matcher: tous les tests sont passés.");

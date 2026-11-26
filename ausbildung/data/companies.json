@@ -1,0 +1,106 @@
+{
+ "schema_version": 1,
+ "verified_on": "2026-11-26",
+ "note": {
+  "fr": "Annuaire de départ, volontairement court : seules figurent les entreprises dont une page officielle de recrutement a été retrouvée. Le statut des offres n'est pas vérifié en direct.",
+  "en": "Deliberately short starter directory: only companies with an official recruitment page found. Offer status is not checked live.",
+  "ar": "دليل أوّلي قصير عمداً: فيه فقط الشركات التي وُجدت لها صفحة توظيف رسمية. حالة العروض غير محقّقة مباشرةً."
+ },
+ "companies": [
+  {
+   "id": "deutsche_bahn",
+   "name": "Deutsche Bahn AG",
+   "location": "Allemagne (plusieurs sites)",
+   "occupations": [
+    "elektroniker_betrieb"
+   ],
+   "recruitment_url": "https://www.deutschebahn.com/de/ausbildung-6854708",
+   "direct_url": null,
+   "offer_status": "unverified",
+   "intake_year": null,
+   "international": "unconfirmed",
+   "note": {
+    "fr": "Page officielle « Ausbildung » de l'entreprise. Des annonces pour ce métier ont été relevées sur un site tiers ; autres métiers : non confirmé.",
+    "en": "Official company training page. Ads for this occupation were seen on a third-party site; other occupations: not confirmed.",
+    "ar": "الصفحة الرسمية للتكوين لدى الشركة. لوحظت إعلانات لهذه المهنة في موقع طرف ثالث؛ المهن الأخرى: غير مؤكد."
+   }
+  },
+  {
+   "id": "mercedes_benz",
+   "name": "Mercedes-Benz AG",
+   "location": "Stuttgart, Schwäbisch Gmünd, Düsseldorf, Munich (sites relevés)",
+   "occupations": [
+    "kfz_mechatroniker"
+   ],
+   "recruitment_url": "https://group.mercedes-benz.com/karriere/schueler/ausbildung/",
+   "direct_url": "https://group.mercedes-benz.com/karriere/schueler/ausbildung/bewerbung/",
+   "offer_status": "unverified",
+   "intake_year": null,
+   "international": "unconfirmed",
+   "note": {
+    "fr": "Pages officielles de formation et de candidature. Les sites sont issus d'annonces tierces : non confirmé.",
+    "en": "Official training and application pages. Locations come from third-party ads: not confirmed.",
+    "ar": "صفحتا التكوين والترشح الرسميتان. المواقع مأخوذة من إعلانات طرف ثالث: غير مؤكد."
+   }
+  },
+  {
+   "id": "siemens_healthineers",
+   "name": "Siemens Healthineers",
+   "location": "Allemagne (site : non confirmé)",
+   "occupations": [
+    "industriemechaniker"
+   ],
+   "recruitment_url": "https://www.siemens-healthineers.com/de/careers/ausbildung-duales-studium",
+   "direct_url": null,
+   "offer_status": "unverified",
+   "intake_year": null,
+   "international": "unconfirmed",
+   "note": {
+    "fr": "Page officielle Ausbildung et études en alternance ; une fiche métier Industriemechaniker est publiée par l'entreprise.",
+    "en": "Official training and dual-study page; the company publishes an Industriemechaniker profile.",
+    "ar": "الصفحة الرسمية للتكوين والدراسة المزدوجة؛ وتنشر الشركة ملفاً لمهنة Industriemechaniker."
+   }
+  },
+  {
+   "id": "charite",
+   "name": "Charité – Universitätsmedizin Berlin",
+   "location": "Berlin",
+   "occupations": [
+    "pflegefachkraft"
+   ],
+   "recruitment_url": "https://karriere.charite.de/",
+   "direct_url": null,
+   "offer_status": "unverified",
+   "intake_year": null,
+   "international": "unconfirmed",
+   "note": {
+    "fr": "Portail carrières officiel. Une annonce de formation en soins a été relevée sur un site tiers ; l'offre de formation sur le portail officiel : non confirmé.",
+    "en": "Official careers portal. A nursing-training ad was seen on a third-party site; the training offer on the official portal: not confirmed.",
+    "ar": "بوابة الوظائف الرسمية. لوحظ إعلان تكوين تمريضي في موقع طرف ثالث؛ العرض على البوابة الرسمية: غير مؤكد."
+   }
+  },
+  {
+   "id": "marriott",
+   "name": "Marriott International",
+   "location": "Allemagne (ville : non confirmé)",
+   "occupations": [
+    "hotelfach"
+   ],
+   "recruitment_url": "https://careers.marriott.com/",
+   "direct_url": "https://careers.marriott.com/auszubildende-hotelfachmann-hotelfachfrau-m-w-d/job/0C4CC35E8E23DB2E7B7BFB7E928AAEEB",
+   "offer_status": "unverified",
+   "intake_year": null,
+   "international": "unconfirmed",
+   "note": {
+    "fr": "Annonce « Auszubildende Hotelfachmann/-frau » sur le portail officiel ; son état actuel (ouverte ou fermée) n'est pas vérifié.",
+    "en": "“Auszubildende Hotelfachmann/-frau” ad on the official portal; whether it is currently open is not verified.",
+    "ar": "إعلان «Auszubildende Hotelfachmann/-frau» في البوابة الرسمية؛ لم يُتحقق إن كان ما يزال مفتوحاً."
+   }
+  }
+ ],
+ "portals": {
+  "fr": "Pour les autres métiers : consultez la recherche officielle de places de formation (voir le bloc « Candidature depuis la Tunisie »).",
+  "en": "For the other occupations: use the official training-place search (see the “Applying from Tunisia” block).",
+  "ar": "للمهن الأخرى: استعمل محرك البحث الرسمي عن مقاعد التكوين (انظر قسم «التقديم من تونس»)."
+ }
+}

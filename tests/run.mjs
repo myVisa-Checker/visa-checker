@@ -18,7 +18,7 @@ for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "vi
 }
 
 console.log("JSON");
-for (const f of ["manifest.json", "rdv.json", "deals.json", "version.json", "ausbildung/data/occupations.json", "ausbildung/schemas/occupation.schema.json"]) {
+for (const f of ["manifest.json", "rdv.json", "deals.json", "version.json", "ausbildung/data/occupations.json", "ausbildung/data/companies.json", "ausbildung/schemas/occupation.schema.json"]) {
   try { JSON.parse(read(f)); ok(f, true); } catch (e) { ok(f, false, e.message); }
 }
 
@@ -259,6 +259,8 @@ try {
 console.log("Ausbildung Career Matcher (module intégré dans /ausbildung/)");
 try {
   execFileSync(process.execPath, ["ausbildung/tests/matcher.test.js"], { stdio: "inherit" });
+  execFileSync(process.execPath, ["ausbildung/tests/i18n.test.js"], { stdio: "inherit" });
+  execFileSync(process.execPath, ["ausbildung/tests/data.test.js"], { stdio: "inherit" });
   ok("ausbildung : moteur, catalogue, schéma et vocabulaire du questionnaire", true);
 } catch (e) {
   ok("ausbildung : moteur, catalogue, schéma et vocabulaire du questionnaire", false, String(e.stderr || e.message).split("\n")[0]);
@@ -278,7 +280,7 @@ try {
   const tpl = idx.slice(idx.indexOf('<template id="aus-tpl">'), idx.indexOf("</template>"));
   ok("accueil : carte Ausbildung active (carte entière cliquable vers ./ausbildung/ en FR, EN et AR, plus de « bientôt »)", (tpl.match(/<a class="aus-in aus-link" lang="(?:fr|en|ar)"[^>]* href="\.\/ausbildung\/"><img /g) || []).length === 3 && !/BIENTÔT|COMING SOON|قريباً<\/p>/.test(tpl));
   ok("accueil : carte Ausbildung compacte, images présentes, texte alternatif non vide et mises en cache hors ligne", ["images/ausbildung-card-480.webp", "images/ausbildung-card-800.webp"].every((f) => existsSync(f) && swa.includes('"' + f + '"')) && (tpl.match(/ alt="[^"]{20,}"/g) || []).length === 3 && !/aus-cta|aus-steps|aus-word/.test(tpl + read("vc.css")));
-  ok("ausbildung : fichiers du module dans le cache hors ligne", ["ausbildung/", "ausbildung/ausbildung.css", "ausbildung/career-matcher.js", "ausbildung/app.js", "ausbildung/data/occupations.json"].every((f) => swa.includes('"' + f + '"')));
+  ok("ausbildung : fichiers du module dans le cache hors ligne", ["ausbildung/", "ausbildung/ausbildung.css", "ausbildung/career-matcher.js", "ausbildung/app.js", "ausbildung/i18n.js", "ausbildung/fiche.js", "ausbildung/data/occupations.json", "ausbildung/data/companies.json"].every((f) => swa.includes('"' + f + '"')));
   ok("service worker : catalogue Ausbildung servi hors ligne (règle JSON dédiée)", /isAusbildungData/.test(swa) && /ausbildung\\\/data/.test(swa));
   ok("ausbildung : passerelle vers le dossier visa et impression du résultat", /id="toVisa" href="\.\.\/\?accueil=1"/.test(ah) && /id="print"/.test(ah) && /window\.print\(\)/.test(aa) && /@media print/.test(read("ausbildung/ausbildung.css")));
   ok("guide Ausbildung : page, carte dans Guide, précache, sitemap, CSP", existsSync("guide-ausbildung.html") && /guide-ausbildung\.html/.test(read("guide-visa.html")) && /"guide-ausbildung\.html"/.test(swa) && /guide-ausbildung\.html/.test(read("sitemap.xml")) && /script-src 'self'/.test(read("guide-ausbildung.html")));
