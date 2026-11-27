@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://visa-hostgo.rabehfly.workers.dev; font-src 'self' data:; connect-src 'self' https://visa-hostgo.rabehfly.workers.dev; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Host &amp; Go — Offres d’accueil</title>
+<meta name="description" content="Host &amp; Go : consultez les offres d’accueil approuvées, filtrez par pays, catégorie et durée de séjour.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b2257">
+<link rel="canonical" href="https://checkmyvisa.org/hostgo-offres.html">
+<link rel="stylesheet" href="./nav.css">
+<link rel="stylesheet" href="./site.css">
+<link rel="stylesheet" href="./brand.css">
+<link rel="stylesheet" href="./hostgo-hote.css">
+<link rel="stylesheet" href="./hostgo-offres.css">
+<script src="./site-i18n.js"></script>
+<script src="./i18n/common.js"></script>
+</head>
+<body>
+<main id="hgh" data-no-i18n>
+  <header class="hgh-top">
+    <a class="hgh-brand" href="./hostgo.html" aria-label="Host &amp; Go"><span class="hgh-mark" aria-hidden="true">⌂</span><span>Host <em>&amp;</em> Go</span></a>
+    <a class="hgh-back-link" href="./hostgo.html" data-i="backHome">Retour à Host &amp; Go</a>
+  </header>
+  <div class="hgh-wrap">
+    <section id="list-view" aria-labelledby="h-list">
+      <div class="hgh-head"><p class="hgh-eyebrow" data-i="eyebrow"></p><h1 id="h-list" data-i="title"></h1><p data-i="lead"></p></div>
+      <form class="hgh-card hgo-filters" id="filters" aria-label="" novalidate>
+        <label>Pays<select id="f-country"></select></label>
+        <label>Catégorie<select id="f-cat"></select></label>
+        <label>Séjour<select id="f-stay"></select></label>
+        <label>Langue<select id="f-lang"></select></label>
+        <label>Voyageurs<select id="f-trav"></select></label>
+        <button class="hgh-btn ghost" type="button" id="f-reset"></button>
+      </form>
+      <p class="hgo-state" id="state" role="status" aria-live="polite"></p>
+      <ul class="hgo-list" id="results"></ul>
+      <div class="hgh-actions"><button class="hgh-btn" type="button" id="more" hidden></button></div>
+    </section>
+
+    <section id="detail-view" aria-labelledby="h-detail" hidden>
+      <button class="hgh-btn ghost" type="button" id="back-list"></button>
+      <article class="hgh-card hgo-detail" id="detail" tabindex="-1">
+        <h2 id="h-detail"></h2>
+        <p class="hgo-meta" id="d-meta"></p>
+        <div class="hgo-photos" id="d-photos" hidden></div>
+        <div id="d-texts"></div>
+        <h3 id="d-cal-h"></h3><ul class="hgo-cal" id="d-cal"></ul>
+        <div class="hgo-actions">
+          <button class="hgh-btn" type="button" id="d-contact"></button>
+          <button class="hgh-btn ghost" type="button" id="d-report"></button>
+        </div>
+        <div class="hgo-box" id="contact-box" role="status" aria-live="polite" hidden></div>
+        <form class="hgo-box" id="unlock-box" hidden novalidate>
+          <p id="unlock-text"></p>
+          <label><span id="unlock-label"></span><input id="unlock-code" type="text" inputmode="text" autocomplete="off" maxlength="12" spellcheck="false"></label>
+          <button class="hgh-btn" type="submit" id="unlock-go"></button>
+        </form>
+        <form class="hgo-box" id="report-box" hidden novalidate>
+          <label><span id="report-reason-l"></span><select id="report-reason"></select></label>
+          <label><span id="report-note-l"></span><textarea id="report-note" maxlength="300" rows="3"></textarea></label>
+          <button class="hgh-btn" type="submit" id="report-go"></button>
+        </form>
+        <p class="hgh-err" id="d-err" role="alert"></p>
+      </article>
+    </section>
+  </div>
+  <footer class="hgh-foot"><a href="./confidentialite.html" data-i="fPriv">Confidentialité</a> · <a href="./conditions.html" data-i="fTerms">Conditions</a></footer>
+</main>
+<script src="./hostgo-offres.js"></script>
+</body>
+</html>

@@ -131,3 +131,8 @@ a.hgh-btn.ghost{color:var(--ink)}
 .hgh-photo .hgh-rm{width:40px;height:40px;min-width:0;padding:0;border-radius:50%;align-self:start}
 .hgh-photo .hgh-pbody{min-width:0}
 .hgh-photo .hgh-rm{grid-row:auto;grid-column:auto}
+/* Brouillon : bandeau de reprise et état de la sauvegarde */
+.hgh-draft{border-color:#0b3f9e;background:#f4f8ff}
+.hgh-draft h2{margin:0 0 8px}.hgh-draft p{margin:0 0 10px;line-height:1.45}
+.hgh-save{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;min-height:1.4em;margin:0 0 10px;color:var(--muted);font-size:13px}
+.hgh-save button{padding:0;border:0;background:none;color:#0b3f9e;font:inherit;font-weight:700;text-decoration:underline;cursor:pointer}

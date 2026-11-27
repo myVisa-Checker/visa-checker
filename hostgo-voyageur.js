@@ -10,8 +10,8 @@
     fr: {
       backHome: "Retour à Host & Go", back: "← Retour", join: "Rejoindre →", send: "Envoyer ma demande", fPriv: "Confidentialité", fTerms: "Conditions",
       eb_pl: "VOYAGEUR / WORKER", h_pl: "Choisissez votre formule", lead_pl: "Rejoignez la communauté Host & Go pour échanger avec des hôtes du monde entier.", solo: "Solo", couple: "Couple / amis",
-      soloName: "Voyageur solo", coupleName: "Couple / amis", soloFor: "Si vous voyagez seul(e).", coupleFor: "Si vous voyagez à deux.", perYear: "DT par an", featH: "Inclus dans votre abonnement",
-      feats: ["Contactez des hôtes et des projets d’accueil", "Échanges illimités avec les hôtes et les voyageurs", "Profils d’hôtes examinés par notre équipe avant publication", "Pratiquez une nouvelle langue avec les autres membres", "Assistance par une équipe humaine"],
+      soloName: "Voyageur solo", coupleName: "Couple / amis", soloFor: "Si vous voyagez seul(e).", coupleFor: "Si vous voyagez à deux.", perYear: "DT par an", featH: "Prévu à l’ouverture (pas encore disponible)",
+      feats: ["Prendre contact avec des hôtes et des projets d’accueil", "Échanger avec les hôtes et les voyageurs", "Profils d’hôtes relus par notre équipe avant publication", "Pratiquer une nouvelle langue avec les autres membres", "Assistance par e-mail"],
       payLater: "Aperçu : le paiement n’est pas encore ouvert. Les tarifs affichés sont indicatifs.",
       eb_ac: "CRÉER VOTRE COMPTE", h_ac: "Créez votre compte voyageur", lead_ac: "Les comptes ne sont pas encore ouverts : votre place est réservée sur la liste d’attente.", chosen: "Formule choisie : {p} — {n} DT par an (indicatif)",
       firstName: "Votre prénom", email: "Votre adresse e-mail", country: "Votre pays", city: "Votre ville",
@@ -28,8 +28,8 @@
     en: {
       backHome: "Back to Host & Go", back: "← Back", join: "Join →", send: "Send my request", fPriv: "Privacy", fTerms: "Terms",
       eb_pl: "TRAVELLER / WORKER", h_pl: "Choose your plan", lead_pl: "Join the Host & Go community and connect with hosts around the world.", solo: "Solo", couple: "Couple / friends",
-      soloName: "Solo traveller", coupleName: "Couple / friends", soloFor: "If you travel on your own.", coupleFor: "If you travel as a pair.", perYear: "TND per year", featH: "Included in your membership",
-      feats: ["Contact hosts and hosting projects", "Unlimited exchanges with hosts and travellers", "Host profiles reviewed by our team before listing", "Practise a new language with other members", "Support from a human team"],
+      soloName: "Solo traveller", coupleName: "Couple / friends", soloFor: "If you travel on your own.", coupleFor: "If you travel as a pair.", perYear: "TND per year", featH: "Planned for launch (not available yet)",
+      feats: ["Get in touch with hosts and hosting projects", "Exchange with hosts and travellers", "Host profiles reviewed by our team before listing", "Practise a new language with other members", "Support by e-mail"],
       payLater: "Preview: payment is not open yet. The prices shown are indicative.",
       eb_ac: "CREATE YOUR ACCOUNT", h_ac: "Create your traveller account", lead_ac: "Accounts are not open yet: your place is reserved on the waiting list.", chosen: "Chosen plan: {p} — {n} TND per year (indicative)",
       firstName: "Your first name", email: "Your e-mail address", country: "Your country", city: "Your city",
@@ -46,8 +46,8 @@
     ar: {
       backHome: "العودة إلى Host & Go", back: "رجوع →", join: "← انضم", send: "أرسل طلبي", fPriv: "الخصوصية", fTerms: "الشروط",
       eb_pl: "مسافر / عامل", h_pl: "اختر اشتراكك", lead_pl: "انضم إلى مجتمع Host & Go وتواصل مع مضيفين حول العالم.", solo: "فردي", couple: "زوجان / أصدقاء",
-      soloName: "مسافر فردي", coupleName: "زوجان / أصدقاء", soloFor: "إن كنت تسافر وحدك.", coupleFor: "إن كنتما تسافران معاً.", perYear: "دينار في السنة", featH: "ما يشمله اشتراكك",
-      feats: ["تواصل مع المضيفين ومشاريع الاستضافة", "تبادل غير محدود مع المضيفين والمسافرين", "ملفات المضيفين يراجعها فريقنا قبل النشر", "تدرّب على لغة جديدة مع الأعضاء الآخرين", "مساندة من فريق بشري"],
+      soloName: "مسافر فردي", coupleName: "زوجان / أصدقاء", soloFor: "إن كنت تسافر وحدك.", coupleFor: "إن كنتما تسافران معاً.", perYear: "دينار في السنة", featH: "مخطط له عند الافتتاح (غير متاح بعد)",
+      feats: ["التواصل مع المضيفين ومشاريع الاستضافة", "التبادل مع المضيفين والمسافرين", "ملفات المضيفين يراجعها فريقنا قبل النشر", "التدرّب على لغة جديدة مع الأعضاء الآخرين", "المساندة عبر البريد الإلكتروني"],
       payLater: "معاينة: الدفع غير متاح بعد. الأسعار المعروضة تقريبية.",
       eb_ac: "أنشئ حسابك", h_ac: "أنشئ حساب المسافر", lead_ac: "الحسابات لم تُفتح بعد: مكانك محجوز في قائمة الانتظار.", chosen: "الاشتراك المختار: {p} — {n} دينار في السنة (تقريبي)",
       firstName: "اسمك الأول", email: "بريدك الإلكتروني", country: "بلدك", city: "مدينتك",
@@ -107,20 +107,38 @@
   $("dash-bar").setAttribute("aria-label", T.dashDone); $("dash-bar").firstChild.textContent = T.dashDone; $("dash-bar").firstChild.style.width = "20%";
 
   /* Un même e-mail ne sert pas aux deux rôles (contrôle léger sur cet appareil ; le vrai contrôle viendra avec les comptes) */
-  function roles() { try { return JSON.parse(localStorage.getItem("hg_roles") || "{}"); } catch (e) { return {}; } }
-  function saveRole(mail, role) { try { var r = roles(); r[mail.toLowerCase()] = role; localStorage.setItem("hg_roles", JSON.stringify(r)); } catch (e) { /* stockage indisponible */ } }
+  var HG = window.HGDraft || null;
+  function roleOf(mail) { try { return HG ? HG.getRole(localStorage, mail) : null; } catch (e) { return null; } }
+  function saveRole(mail, role) { try { if (HG) HG.setRole(localStorage, mail, role); } catch (e) { /* stockage indisponible */ } }
 
   function err(msg, el) { $("error2").textContent = msg; if (el) el.focus(); return false; }
   function fallback(msg, name, mail) {
     $("doneMsg").textContent = T.doneFb + TO + "."; show(IDS.length);
     window.location.href = "mailto:" + TO + "?subject=" + encodeURIComponent("[Host & Go] Inscription voyageur") + "&body=" + encodeURIComponent(msg + "\n\n--\n" + name + "\n" + mail);
   }
+  var regMail = "";
+  var AM = { fr: { wait: "Vérification…", role: "Cette adresse e-mail est déjà utilisée comme compte Hôte. Utilisez une autre adresse pour le rôle Voyageur.", rate: "Trop de demandes. Patientez un peu.", net: "Connexion impossible. Réessayez.", srv: "Service momentanément indisponible. Réessayez plus tard." },
+    en: { wait: "Checking…", role: "This e-mail address is already used as a Host account. Please use another address for the Traveller role.", rate: "Too many requests. Please wait a little.", net: "Connection failed. Please try again.", srv: "Service temporarily unavailable. Please try again later." },
+    ar: { wait: "جارٍ التحقق…", role: "هذا البريد مستخدم كحساب مضيف. استخدم بريداً آخر لدور المسافر.", rate: "طلبات كثيرة. انتظر قليلاً.", net: "تعذّر الاتصال. أعد المحاولة.", srv: "الخدمة غير متاحة مؤقتاً. حاول لاحقاً." } }[lang] || {};
   $("finish").addEventListener("click", function () {
     var name = $("firstName").value.trim(), mail = $("email").value.trim(), country = $("country").value.trim(), city = $("city").value.trim();
     if (!name || !country || !city || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return err(T.eFields, !name ? $("firstName") : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail) ? $("email") : !country ? $("country") : $("city"));
     if (!$("terms").checked) return err(T.eTerms, $("terms"));
     $("error2").textContent = ""; $("roleNotice").textContent = "";
-    var other = roles()[mail.toLowerCase()] === "host"; if (other) $("roleNotice").textContent = T.roleNotice;
+    var CFG = window.HG_CONFIG || {};
+    if (CFG.apiEnabled && regMail !== mail.toLowerCase()) {      /* le serveur décide : un e-mail hôte ne peut pas devenir voyageur */
+      var b0 = $("finish"); b0.disabled = true; $("error2").textContent = AM.wait;
+      var ctl0 = typeof AbortController === "function" ? new AbortController() : null, t0 = ctl0 ? setTimeout(function () { ctl0.abort(); }, 15000) : null;
+      fetch(String(CFG.api).replace(/\/$/, "") + "/travellers", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: mail, consent: true, hp: $("hp").value || "" }), signal: ctl0 ? ctl0.signal : undefined, credentials: "omit" })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { s: r.status, e: j.error }; }); }).catch(function () { return { s: 0 }; })
+        .then(function (x) {
+          if (t0) clearTimeout(t0); b0.disabled = false;
+          if (x.s === 200) { regMail = mail.toLowerCase(); $("error2").textContent = ""; $("finish").click(); }
+          else $("error2").textContent = x.s === 409 ? AM.role : x.s === 429 ? AM.rate : x.s === 0 ? AM.net : AM.srv;
+        });
+      return;
+    }
+    var other = roleOf(mail) === "host"; if (other) $("roleNotice").textContent = T.roleNotice;
     var msg = ["[Host & Go — inscription voyageur / worker]", "Formule : " + (plan === "solo" ? "Solo" : "Couple / amis") + " (" + PRICES[plan] + " DT par an, indicatif)", "Pays : " + country, "Ville : " + city, "Langue de la page : " + lang, other ? "Remarque : e-mail déjà utilisé comme hôte sur cet appareil" : ""].filter(Boolean).join("\n");
     var btn = $("finish"); btn.disabled = true;
     var ctl = typeof AbortController === "function" ? new AbortController() : null, timer = ctl ? setTimeout(function () { ctl.abort(); }, 12000) : null;

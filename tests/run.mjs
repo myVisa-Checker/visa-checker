@@ -13,7 +13,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js","hostgo.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
+for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js","hostgo.js", "hostgo-hote.js", "hostgo-draft.js", "hostgo-offres.js", "hostgo-config.js", "hostgo-admin.js", "hostgo-voyageur.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -297,6 +297,41 @@ try {
     ok("hub Ausbildung : texte français du HTML identique au dictionnaire (repli sans JavaScript)", [...hh.matchAll(/data-t="([^"]+)"[^>]*>([^<]*)</g)].every((m) => m[2].replace(/&amp;/g, "&").trim() === T.fr[m[1]]));
     ok("hub Ausbildung : précache hors ligne, plan du site, images, lien depuis l'accueil", ["ausbildung-allemagne.html", "ausbildung-allemagne.css", "ausbildung-allemagne.js", "images/ausbildung-candidat-640.webp", "images/ausbildung-candidat-1200.webp", "images/ausbildung-entreprise-640.webp", "images/ausbildung-entreprise-1200.webp"].every((f) => existsSync(f) && swa.includes('"' + f + '"')) && /ausbildung-allemagne\.html/.test(read("sitemap.xml")));
   }
+}
+
+{
+  const oh = read("hostgo-offres.html"), oj = read("hostgo-offres.js");
+  ok("Host & Go offres : page sans script en ligne, noindex tant que l'API n'est pas déployée, CSP limitée au Worker visa-hostgo", !/<script(?![^>]*\bsrc=)/.test(oh) && /name="robots" content="noindex"/.test(oh) && /connect-src 'self' https:\/\/visa-hostgo\.rabehfly\.workers\.dev/.test(oh) && !/unsafe-eval/.test(oh));
+  ok("Host & Go offres : textes d'offres insérés en textContent (pas d'innerHTML ni eval)", !/innerHTML|insertAdjacentHTML|document\.write|eval\(|new Function/.test(oj));
+  ok("Host & Go offres : adresse de l'API identique au Worker et aux routes testées", /workers\.dev\/hg"/.test(oj) && ["/offers", "/session", "/unlock", "/report", "/contact"].every((x) => oj.includes(x)));
+  ok("Host & Go offres : disponible hors ligne (cache) mais absent du sitemap tant qu'il n'est pas ouvert", read("sw.js").includes('"hostgo-offres.js"') && !read("sitemap.xml").includes("hostgo-offres"));
+}
+try {
+  execFileSync(process.execPath, ["tests/hostgo-worker.test.mjs"], { stdio: "inherit" });
+  ok("hostgo-worker : offres, filtres, signalement, modération, accès gratuit et déblocage", true);
+} catch (e) {
+  ok("hostgo-worker : offres, filtres, signalement, modération, accès gratuit et déblocage", false, String(e.stderr || e.message).split("\n")[0]);
+}
+try {
+  execFileSync(process.execPath, ["tests/hostgo-draft.test.mjs"], { stdio: "inherit" });
+  ok("hostgo-draft : sauvegarde progressive, reprise, protection des données, anti-doublon", true);
+} catch (e) {
+  ok("hostgo-draft : sauvegarde progressive, reprise, protection des données, anti-doublon", false, String(e.stderr || e.message).split("\n")[0]);
+}
+{
+  const hh = read("hostgo-hote.html"), hj = read("hostgo-hote.js");
+  ok("Host & Go hôte : module de brouillon chargé avant le formulaire, en script externe, et mis en cache hors ligne", hh.indexOf("hostgo-draft.js") > 0 && hh.indexOf("hostgo-draft.js") < hh.indexOf("hostgo-hote.js") && read("sw.js").includes('"hostgo-draft.js"'));
+  ok("Host & Go hôte : API derrière un drapeau éteint par défaut, configuration chargée avant le formulaire, CSP et cache à jour", /apiEnabled:\s*false/.test(read("hostgo-config.js")) && hh.indexOf("hostgo-config.js") > 0 && hh.indexOf("hostgo-config.js") < hh.indexOf("hostgo-hote.js") && /connect-src[^"]*visa-hostgo\.rabehfly\.workers\.dev/.test(hh) && read("sw.js").includes('"hostgo-config.js"') && /noindex/.test(read("hostgo-offres.html")));
+  ok("Host & Go hôte : envoi API avec identifiant de demande, délai, jeton hors localStorage, photos vérifiées par signature", /CFG\.apiEnabled/.test(hj) && /sid: sid/.test(hj) && /TIMEOUT = 15000/.test(hj) && /AbortController/.test(hj) && /sniff\(/.test(hj) && /PH_TOTAL/.test(hj) && !/localStorage\.setItem\("hg_manage"/.test(hj));
+  const HGF = ["hostgo.html", "hostgo.js", "hostgo-hote.html", "hostgo-hote.js", "hostgo-voyageur.html", "hostgo-voyageur.js", "hostgo-offres.html", "hostgo-offres.js", "hostgo-admin.html", "hostgo-admin.js", "hostgo-config.js", "worker/hostgo-worker.js"];
+  ok("Host & Go : adresse officielle hostandgo@checkmyvisa.org, aucune adresse d'un autre projet dans les fichiers Host & Go", read("hostgo-hote.js").includes("hostandgo@checkmyvisa.org") && read("hostgo-voyageur.js").includes("hostandgo@checkmyvisa.org") && HGF.every((f) => !/(contact|partnership|support)@checkmyvisa\.org/.test(read(f))));
+  const ad = read("hostgo-admin.html"), aj = read("hostgo-admin.js");
+  ok("Host & Go modération : page noindex, CSP stricte, clé jamais stockée, contenu affiché en texte, pas de formulaire", /name="robots" content="noindex, nofollow"/.test(ad) && /script-src 'self';/.test(ad) && !/unsafe-eval/.test(ad) && !/localStorage|sessionStorage|document\.cookie/.test(aj) && !/innerHTML|insertAdjacentHTML|outerHTML/.test(aj) && !read("sw.js").includes("hostgo-admin"));
+  ok("Host & Go consultation : photos publiques servies par le Worker, CSP img-src limitée, alternative textuelle", /img-src 'self' data: https:\/\/visa-hostgo\.rabehfly\.workers\.dev;/.test(read("hostgo-offres.html")) && /\.alt = alt/.test(read("hostgo-offres.js")));
+  ok("Host & Go hôte : bandeau de reprise et état de sauvegarde présents", /id="draft-banner"/.test(hh) && /id="draft-status"[^>]*aria-live="polite"/.test(hh) && /id="draft-resume"/.test(hh) && /id="draft-restart"/.test(hh));
+  ok("Host & Go hôte : textes du brouillon en FR, EN et AR", ["fr", "en", "ar"].every((l) => new RegExp("\\b" + l + ": \\{ title:").test(hj)));
+  ok("Host & Go hôte : envoi sans doublon (verrou, identifiant de demande, parties déjà envoyées ignorées)", /if \(sending\) return/.test(hj) && /Réf\. demande/.test(hj) && /planParts/.test(hj) && /rememberSent/.test(hj));
+  ok("Host & Go hôte : aucun consentement ni photo écrit dans le stockage", !/localStorage\.setItem\([^)]*(terms|marketing)/.test(hj) && !/hg_host_draft[^;]*(terms|marketing)/.test(hj));
 }
 
 console.log("\n" + pass + " réussis, " + fail + " échoués");
