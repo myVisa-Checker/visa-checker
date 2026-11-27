@@ -110,6 +110,7 @@ const PRECACHE = [
   "ausbildung/data/companies.json",
   "ausbildung/i18n.js",
   "ausbildung/fiche.js",
+  "ausbildung/sw-register.js",
   "i18n/guide-ausbildung.js",
   "confidentialite.html",
   "partner-form.css",

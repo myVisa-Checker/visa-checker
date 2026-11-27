@@ -189,11 +189,45 @@
   $("pickNext").addEventListener("click", () => { showQuiz(true); window.scrollTo({top:0,behavior:"auto"}); });
   $("print").addEventListener("click", () => window.print());
 
+  // Changement de langue : le sélecteur du site recharge la page. Pour ne pas perdre les réponses, elles sont confiées
+  // à window.name (mémoire de l'onglet, aucun stockage navigateur) au moment précis du clic, puis effacées dès la relecture.
+  const HANDOFF = "aus-handoff:";
+  const strList = (v) => (Array.isArray(v) ? v.filter((x) => typeof x === "string" && x.length < 40).slice(0, 40) : []);
+  const strVal = (v) => (typeof v === "string" && v.length < 40 ? v : "");
+  function currentScreen() { return !$("results").hidden ? "results" : !$("quiz").hidden ? "quiz" : "pick"; }
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest || !e.target.closest(".sn-lang button") || !catalogue) return;
+    try {
+      if (!$("quiz").hidden) collect();
+      window.name = HANDOFF + JSON.stringify({answers, chosen: [...chosen], step, sector, screen: currentScreen()});
+    } catch (err) { window.name = ""; }
+  }, true);
+  function takeHandoff() {
+    if (typeof window.name !== "string" || window.name.indexOf(HANDOFF) !== 0) return null;
+    const raw = window.name.slice(HANDOFF.length); window.name = "";
+    try {
+      const s = JSON.parse(raw), a = s.answers || {}, base = emptyAnswers();
+      const ids = new Set(catalogue.occupations.map((o) => o.id));
+      const out = {};
+      for (const k of Object.keys(base)) out[k] = Array.isArray(base[k]) ? strList(a[k]) : strVal(a[k]);
+      return {answers: out, chosen: strList(s.chosen).filter((x) => ids.has(x)), step: Number.isInteger(s.step) && s.step >= 0 && s.step < steps.length ? s.step : 0,
+        sector: SECTORS.includes(s.sector) ? s.sector : "all", screen: ["pick", "quiz", "results"].includes(s.screen) ? s.screen : "pick"};
+    } catch (err) { return null; }
+  }
+  function restoreHandoff(h) {
+    answers = h.answers; h.chosen.forEach((id) => chosen.add(id)); sector = h.sector;
+    if (h.screen === "quiz") { showQuiz(false); step = h.step; render(false); }
+    else if (h.screen === "results") showResults();
+    else showPick();
+  }
+  $("editAnswers").addEventListener("click", () => { showQuiz(true); window.scrollTo({top:0,behavior:"auto"}); });
+
   if (I.lang !== "fr") applyStatic();
 
   fetch("./data/occupations.json").then((r) => { if (!r.ok) throw new Error("catalogue"); return r.json(); }).then((data) => {
     if (!data || !Array.isArray(data.occupations) || !data.occupations.length) throw new Error("catalogue");
-    catalogue = data; $("pickTitle").textContent = t("pick.title", {n: data.occupations.length}); $("loading").hidden = true; showPick();
+    catalogue = data; $("pickTitle").textContent = t("pick.title", {n: data.occupations.length}); $("loading").hidden = true;
+    const h = takeHandoff(); if (h) restoreHandoff(h); else showPick();
     // Annuaire : facultatif, la fiche reste utilisable sans lui.
     fetch("./data/companies.json").then((r) => (r.ok ? r.json() : null)).then((c) => { companies = c; }).catch(() => {});
   }).catch(() => {

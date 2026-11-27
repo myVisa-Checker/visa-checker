@@ -23,7 +23,7 @@
     "aria.quiz": "Questionnaire", "aria.progress": "Progression", "aria.results": "Résultats",
     "step.n": "Étape {n} sur {total}",
     "btn.back": "Retour", "btn.next": "Continuer", "btn.finish": "Voir mes résultats", "btn.start": "Revenir au début du questionnaire", "btn.pick": "Revenir à la sélection des métiers",
-    "btn.restart": "Recommencer", "btn.print": "Imprimer / enregistrer en PDF",
+    "btn.edit": "Modifier mes réponses", "btn.restart": "Recommencer", "btn.print": "Imprimer / enregistrer en PDF",
 
     "q.education.title": "Votre parcours scolaire", "q.education.hint": "Quel est votre niveau d'études le plus élevé ?",
     "o.education.middle_school": "Collège", "o.education.secondary_no_bac": "Lycée sans bac", "o.education.baccalaureat": "Baccalauréat",
@@ -210,7 +210,7 @@
     "aria.quiz": "Questionnaire", "aria.progress": "Progress", "aria.results": "Results",
     "step.n": "Step {n} of {total}",
     "btn.back": "Back", "btn.next": "Continue", "btn.finish": "See my results", "btn.start": "Back to the start of the questionnaire", "btn.pick": "Back to the occupation selection",
-    "btn.restart": "Start over", "btn.print": "Print / save as PDF",
+    "btn.edit": "Edit my answers", "btn.restart": "Start over", "btn.print": "Print / save as PDF",
 
     "q.education.title": "Your education", "q.education.hint": "What is your highest level of education?",
     "o.education.middle_school": "Middle school", "o.education.secondary_no_bac": "High school without the baccalaureate", "o.education.baccalaureat": "Baccalaureate",
@@ -397,7 +397,7 @@
     "aria.quiz": "الاستبيان", "aria.progress": "التقدّم", "aria.results": "النتائج",
     "step.n": "الخطوة {n} من {total}",
     "btn.back": "رجوع", "btn.next": "متابعة", "btn.finish": "عرض نتائجي", "btn.start": "العودة إلى بداية الاستبيان", "btn.pick": "العودة إلى اختيار المهن",
-    "btn.restart": "إعادة البدء", "btn.print": "طباعة / حفظ بصيغة PDF",
+    "btn.edit": "تعديل إجاباتي", "btn.restart": "إعادة البدء", "btn.print": "طباعة / حفظ بصيغة PDF",
 
     "q.education.title": "مسارك الدراسي", "q.education.hint": "ما هو أعلى مستوى دراسي بلغته؟",
     "o.education.middle_school": "التعليم الإعدادي", "o.education.secondary_no_bac": "الثانوي دون شهادة الباكالوريا", "o.education.baccalaureat": "الباكالوريا",

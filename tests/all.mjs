@@ -43,7 +43,7 @@ if (skipE2E) {
   });
   await new Promise((r) => server.listen(0, "127.0.0.1", r));
   const url = `http://127.0.0.1:${server.address().port}`;
-  for (const e of ["flow", "chosen"]) {
+  for (const e of ["flow", "chosen", "nav"]) {
     const t = Date.now();
     const r = await new Promise((resolve) => {
       import("node:child_process").then(({ spawn }) => {
