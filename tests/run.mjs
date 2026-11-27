@@ -274,17 +274,29 @@ try {
   const missingA = [...new Set(aref)].filter((r) => !existsSync(posix.normalize("ausbildung/" + r)));
   ok("ausbildung/index.html : fichiers référencés présents", missingA.length === 0, missingA.join(", "));
   ok("ausbildung/app.js : catalogue chargé en relatif, aucun envoi de données", /fetch\("\.\/data\/occupations\.json"\)/.test(aa) && !/method\s*:\s*["']POST|sendBeacon|XMLHttpRequest|localStorage|sessionStorage|document\.cookie/.test(aa));
-  ok("ausbildung : plus dans la navigation du haut (accueil et pages), accès par la carte d'accueil et le pied de page", !/<li><a href="[^"]*">Ausbildung<\/a><\/li>/.test(idx) && ["a-propos.html", "contact.html", "faq.html", "guide-visa.html", "partenaires.html", "ausbildung/index.html"].every((f) => !/<li><a href="[^"]*">Ausbildung<\/a><\/li>/.test(read(f))) && /<div class="links">[^\n]*href="\.\/ausbildung\/">Ausbildung<\/a>/.test(idx));
+  ok("ausbildung : plus dans la navigation du haut (accueil et pages), accès par la carte d'accueil et le pied de page", !/<li><a href="[^"]*">Ausbildung<\/a><\/li>/.test(idx) && ["a-propos.html", "contact.html", "faq.html", "guide-visa.html", "partenaires.html", "ausbildung/index.html"].every((f) => !/<li><a href="[^"]*">Ausbildung<\/a><\/li>/.test(read(f))) && /<div class="links">[^\n]*href="\.\/ausbildung-allemagne\.html">Ausbildung<\/a>/.test(idx));
   ok("ausbildung : question « expérience » en cases à cocher (réponses multiples, « Aucune expérience » exclusive)", /\{id:"experience",values:\[[^\]]*\],multi:true\}/.test(aa) && /\{id:"education",values:\[[^\]]*\]\}/.test(aa) && /"training"/.test(aa.match(/\{id:"experience",values:\[[^\]]*\]/)[0]) && /t\.value === "none"/.test(aa));
-  ok("ausbildung : libellés de navigation FR/EN/AR de l'accueil", (cmn.match(/"\.\/ausbildung\/":"Ausbildung"/g) || []).length === 3);
+  ok("ausbildung : libellés de navigation FR/EN/AR de l'accueil", (cmn.match(/"\.\/ausbildung-allemagne\.html":"Ausbildung"/g) || []).length === 3);
   const tpl = idx.slice(idx.indexOf('<template id="aus-tpl">'), idx.indexOf("</template>"));
-  ok("accueil : carte Ausbildung active (carte entière cliquable vers ./ausbildung/ en FR, EN et AR, plus de « bientôt »)", (tpl.match(/<a class="aus-in aus-link" lang="(?:fr|en|ar)"[^>]* href="\.\/ausbildung\/"><img /g) || []).length === 3 && !/BIENTÔT|COMING SOON|قريباً<\/p>/.test(tpl));
+  ok("accueil : carte Ausbildung active (carte entière cliquable vers ./ausbildung-allemagne.html en FR, EN et AR, plus de « bientôt »)", (tpl.match(/<a class="aus-in aus-link" lang="(?:fr|en|ar)"[^>]* href="\.\/ausbildung-allemagne\.html"><img /g) || []).length === 3 && !/BIENTÔT|COMING SOON|قريباً<\/p>/.test(tpl));
   ok("accueil : carte Ausbildung compacte, images présentes, texte alternatif non vide et mises en cache hors ligne", ["images/ausbildung-card-480.webp", "images/ausbildung-card-800.webp"].every((f) => existsSync(f) && swa.includes('"' + f + '"')) && (tpl.match(/ alt="[^"]{20,}"/g) || []).length === 3 && !/aus-cta|aus-steps|aus-word/.test(tpl + read("vc.css")));
   ok("ausbildung : fichiers du module dans le cache hors ligne", ["ausbildung/", "ausbildung/ausbildung.css", "ausbildung/career-matcher.js", "ausbildung/app.js", "ausbildung/i18n.js", "ausbildung/fiche.js", "ausbildung/data/occupations.json", "ausbildung/data/companies.json"].every((f) => swa.includes('"' + f + '"')));
   ok("service worker : catalogue Ausbildung servi hors ligne (règle JSON dédiée)", /isAusbildungData/.test(swa) && /ausbildung\\\/data/.test(swa));
   ok("ausbildung : passerelle vers le dossier visa et impression du résultat", /id="toVisa" href="\.\.\/\?accueil=1"/.test(ah) && /id="print"/.test(ah) && /window\.print\(\)/.test(aa) && /@media print/.test(read("ausbildung/ausbildung.css")));
   ok("guide Ausbildung : page, carte dans Guide, précache, sitemap, CSP", existsSync("guide-ausbildung.html") && /guide-ausbildung\.html/.test(read("guide-visa.html")) && /"guide-ausbildung\.html"/.test(swa) && /guide-ausbildung\.html/.test(read("sitemap.xml")) && /script-src 'self'/.test(read("guide-ausbildung.html")));
   ok("ausbildung : page dans le sitemap", /checkmyvisa\.org\/ausbildung\//.test(read("sitemap.xml")));
+  // Page d'accueil Ausbildung (deux vignettes + présentation, 4 langues)
+  {
+    const hh = read("ausbildung-allemagne.html"), hj = read("ausbildung-allemagne.js"), hc = read("ausbildung-allemagne.css");
+    ok("hub Ausbildung : deux vignettes (candidat → ./ausbildung/, entreprise → #entreprises), même format, textes en orange", (hh.match(/<a class="tile" href="\.\/ausbildung\/">/g) || []).length === 1 && (hh.match(/<a class="tile" href="#entreprises">/g) || []).length === 1 && /id="entreprises"/.test(hh) && /\.lbl\{[^}]*color:#f97316/.test(hc) && (hh.match(/width="1200" height="547"/g) || []).length === 2);
+    ok("hub Ausbildung : CSP stricte, aucun script inline, scripts et styles locaux", /script-src 'self'/.test(hh) && !/<script(?![^>]*\bsrc=)[^>]*>/.test(hh) && !/(src|href)="https?:\/\/[^"]*\.(js|css)"/.test(hh));
+    const T = new Function("window", hj.replace(/^[\s\S]*?var T = /, "var T = ").replace(/\n  var LANGS[\s\S]*$/, "\nreturn T;"))({});
+    const keys = Object.keys(T.fr);
+    ok("hub Ausbildung : DE, EN, FR et AR complets (mêmes clés, aucun texte vide)", ["de", "en", "ar"].every((l) => JSON.stringify(Object.keys(T[l])) === JSON.stringify(keys) && keys.every((k) => String(T[l][k]).trim())));
+    ok("hub Ausbildung : toutes les clés data-t du HTML existent dans les 4 langues", [...hh.matchAll(/data-t="([^"]+)"/g)].every((m) => ["fr", "de", "en", "ar"].every((l) => T[l][m[1]])));
+    ok("hub Ausbildung : texte français du HTML identique au dictionnaire (repli sans JavaScript)", [...hh.matchAll(/data-t="([^"]+)"[^>]*>([^<]*)</g)].every((m) => m[2].replace(/&amp;/g, "&").trim() === T.fr[m[1]]));
+    ok("hub Ausbildung : précache hors ligne, plan du site, images, lien depuis l'accueil", ["ausbildung-allemagne.html", "ausbildung-allemagne.css", "ausbildung-allemagne.js", "images/ausbildung-candidat-640.webp", "images/ausbildung-candidat-1200.webp", "images/ausbildung-entreprise-640.webp", "images/ausbildung-entreprise-1200.webp"].every((f) => existsSync(f) && swa.includes('"' + f + '"')) && /ausbildung-allemagne\.html/.test(read("sitemap.xml")));
+  }
 }
 
 console.log("\n" + pass + " réussis, " + fail + " échoués");
