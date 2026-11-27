@@ -407,14 +407,85 @@
     $("doneMsg").textContent = T.doneFb + TO + "."; show(IDS.length);
     window.location.href = "mailto:" + TO + "?subject=" + encodeURIComponent("[Host & Go] Inscription hôte") + "&body=" + encodeURIComponent(msg + "\n\n--\n" + name + "\n" + mail);
   }
+
+  /* ---------- Envoi via l'API Host & Go (actif seulement si HG_CONFIG.apiEnabled) ---------- */
+  var CFG = window.HG_CONFIG || {}, CODES = ["tn", "ma", "dz", "fr", "de", "it", "es", "pt", "be", "nl", "ie", "other"], TIMEOUT = 15000, PH_TOTAL = 10 * 1024 * 1024, PH_ONE = 2 * 1024 * 1024;
+  var AM = {
+    fr: { ok: "Votre offre est enregistrée et en attente de vérification. Elle ne sera visible qu’après validation par notre équipe.", net: "Connexion impossible ou interrompue. Vos informations sont conservées : réessayez, aucune offre en double ne sera créée.", slow: "Le serveur met trop de temps à répondre. Réessayez dans un instant : aucune offre en double ne sera créée.", srv: "Le service est momentanément indisponible. Réessayez plus tard.", role: "Cette adresse e-mail est déjà utilisée comme voyageur. Utilisez une autre adresse pour proposer un accueil.", reg: "Cette adresse e-mail a déjà une offre hôte.", rate: "Trop de demandes. Patientez un peu avant de réessayer.", bad: "Le serveur a refusé certaines informations. Vérifiez le formulaire (code : {c}).", ph: "Offre enregistrée, mais {n} photo(s) n’ont pas pu être envoyées : {w}. Vous pouvez réessayer.", phType: "format non reconnu (JPG, PNG ou WebP réels uniquement)", phBig: "photo trop lourde (2 Mo maximum)", phTot: "taille totale dépassée (10 Mo)", phNet: "connexion interrompue", sending: "Envoi en cours…" },
+    en: { ok: "Your offer is saved and awaiting review. It will only be visible after our team validates it.", net: "Connection failed or interrupted. Your details are kept: try again, no duplicate offer will be created.", slow: "The server is taking too long to answer. Try again in a moment: no duplicate offer will be created.", srv: "The service is temporarily unavailable. Please try again later.", role: "This e-mail address is already used as a traveller. Please use another address to offer hosting.", reg: "This e-mail address already has a host offer.", rate: "Too many requests. Please wait a little before trying again.", bad: "The server rejected some information. Please check the form (code: {c}).", ph: "Offer saved, but {n} photo(s) could not be uploaded: {w}. You can try again.", phType: "unrecognised format (real JPG, PNG or WebP only)", phBig: "photo too large (2 MB max)", phTot: "total size exceeded (10 MB)", phNet: "connection interrupted", sending: "Sending…" },
+    ar: { ok: "تم حفظ عرضك وهو بانتظار المراجعة. لن يظهر إلا بعد موافقة فريقنا.", net: "تعذّر الاتصال أو انقطع. معلوماتك محفوظة: أعد المحاولة ولن يُنشأ عرض مكرر.", slow: "الخادم يتأخر في الرد. أعد المحاولة بعد قليل ولن يُنشأ عرض مكرر.", srv: "الخدمة غير متاحة مؤقتاً. حاول لاحقاً.", role: "هذا البريد مستخدم كمسافر. استخدم بريداً آخر لتقديم الاستضافة.", reg: "لهذا البريد عرض استضافة بالفعل.", rate: "طلبات كثيرة. انتظر قليلاً ثم أعد المحاولة.", bad: "رفض الخادم بعض المعلومات. راجع النموذج (الرمز: {c}).", ph: "تم حفظ العرض لكن تعذّر رفع {n} صورة: {w}. يمكنك إعادة المحاولة.", phType: "صيغة غير معروفة (JPG أو PNG أو WebP حقيقية فقط)", phBig: "الصورة كبيرة (2 ميغابايت كحد أقصى)", phTot: "تجاوز الحجم الإجمالي (10 ميغابايت)", phNet: "انقطع الاتصال", sending: "جارٍ الإرسال…" }
+  }[lang] || {};
+  function sniff(u8) {
+    if (u8.length > 3 && u8[0] === 0xFF && u8[1] === 0xD8 && u8[2] === 0xFF) return "image/jpeg";
+    if (u8.length > 7 && u8[0] === 0x89 && u8[1] === 0x50 && u8[2] === 0x4E && u8[3] === 0x47 && u8[4] === 0x0D && u8[5] === 0x0A && u8[6] === 0x1A && u8[7] === 0x0A) return "image/png";
+    if (u8.length > 11 && String.fromCharCode(u8[0], u8[1], u8[2], u8[3]) === "RIFF" && String.fromCharCode(u8[8], u8[9], u8[10], u8[11]) === "WEBP") return "image/webp";
+    return "";
+  }
+  function api(path, opt) {
+    var ctl = typeof AbortController === "function" ? new AbortController() : null, to = false, timer = ctl ? setTimeout(function () { to = true; ctl.abort(); }, TIMEOUT) : null;
+    opt = opt || {}; opt.signal = ctl ? ctl.signal : undefined; opt.credentials = "omit";
+    return fetch(String(CFG.api).replace(/\/$/, "") + path, opt)
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { status: r.status, body: j || {} }; }); })
+      .catch(function () { return { status: 0, timeout: to, body: {} }; })
+      .then(function (x) { if (timer) clearTimeout(timer); return x; });
+  }
+  function apiMsg(x) {
+    var e = x.body && x.body.error;
+    if (x.status === 0) return x.timeout ? AM.slow : AM.net;
+    if (x.status === 409 && e === "role_conflict") return AM.role;
+    if (x.status === 409) return AM.reg;
+    if (x.status === 429) return AM.rate;
+    if (x.status >= 500 || x.status === 404 || x.status === 403) return AM.srv;
+    return AM.bad.replace("{c}", String(e || x.status).slice(0, 40));
+  }
+  function readHead(f) { return new Promise(function (ok) { try { var r = new FileReader(); r.onload = function () { ok(new Uint8Array(r.result)); }; r.onerror = function () { ok(null); }; r.readAsArrayBuffer(f.slice(0, 16)); } catch (e) { ok(null); } }); }
+  function uploadPhotos(id, token) {
+    var failed = 0, why = "", total = 0;
+    var todo = phFiles.filter(function (e) { return !e.up; });
+    return todo.reduce(function (chain, e) {
+      return chain.then(function () {
+        if (e.file.size > PH_ONE) { failed++; why = why || AM.phBig; return; }
+        total += e.file.size; if (total > PH_TOTAL) { failed++; why = why || AM.phTot; return; }
+        return readHead(e.file).then(function (h) {
+          var mime = h ? sniff(h) : ""; if (!mime) { failed++; why = why || AM.phType; return; }
+          return api("/offers/" + id + "/photos?cat=" + (+e.sel.value || 0), { method: "POST", headers: { "Content-Type": mime, "X-Edit-Token": token }, body: e.file }).then(function (x) {
+            if (x.status === 201 || (x.status === 200 && x.body.ok)) e.up = true;
+            else { failed++; why = why || (x.status === 0 ? AM.phNet : x.status === 415 || x.status === 400 ? AM.phType : x.status === 413 ? AM.phBig : apiMsg(x)); }
+          });
+        });
+      });
+    }, Promise.resolve()).then(function () { return { failed: failed, why: why }; });
+  }
+  function apiSubmit(name, mail, city, btn) {
+    var tx = function (id) { return $("ta-" + id).value.trim(); }, ci = CODES[COUNTRIES_FR.indexOf(country.value)];
+    var body = { sid: sid, consent: true, hp: $("hp").value || "", lang: lang, email: mail, firstName: name, city: city, country: ci, addr: $("addr").value.trim(), zip: $("zip").value.trim(), pv: $("pv").value.trim(),
+      types: idx(typesBox), hours: +$("pl-hours").value, days: +$("pl-days").value, stay: +$("pl-stay").value, cal: cal,
+      langs: [].slice.call(langsBox.children).map(function (r) { var sl = r.querySelectorAll("select"); return [+sl[0].value, +sl[1].value]; }), lxOn: $("lx-on").checked, amen: idx($("amen")), trav: idx($("trav")),
+      texts: { place: tx("st2"), stay: tx("ac"), help: tx("st3"), culture: tx("cx"), intro: tx("st4"), info: tx("oi") } };
+    $("error2").textContent = AM.sending;
+    function end() { btn.disabled = false; sending = false; }
+    return api("/offers", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then(function (x) {
+      if (!(x.status === 200 || x.status === 201) || !x.body.ok || !x.body.id || !x.body.editToken) { end(); $("error2").textContent = apiMsg(x); return; }
+      /* Le serveur a validé et enregistré l'offre (statut « en attente ») : on mémorise le jeton de gestion pour cette session seulement. */
+      try { sessionStorage.setItem("hg_manage", JSON.stringify({ id: x.body.id, token: x.body.editToken })); } catch (e) { /* ignoré */ }
+      try { if (H) H.setRole(localStorage, mail, "host"); } catch (e) { /* ignoré */ }
+      return uploadPhotos(x.body.id, x.body.editToken).then(function (p) {
+        end();
+        if (p.failed) { $("error2").textContent = AM.ph.replace("{n}", p.failed).replace("{w}", p.why); return; }
+        if (store) { store.rememberSent(mail); store.clear(); discarded = true; sentHashes = []; statusEl.textContent = ""; }
+        $("error2").textContent = ""; $("roleNotice").textContent = ""; $("doneMsg").textContent = AM.ok; show(IDS.length);
+      });
+    });
+  }
   $("finish").addEventListener("click", function () {
     if (sending) return;
     var name = $("firstName").value.trim(), mail = $("email").value.trim(), city = $("city").value.trim(), okMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
     if (!name || !city || !okMail) return err("error2", T.eFields, !name ? $("firstName") : !okMail ? $("email") : $("city"));
     if (!$("terms").checked) return err("error2", T.eTerms, $("terms"));
-    if (store && store.wasSent(mail) && !dupAck) { dupAck = true; return err("error2", DT.dup); }
+    if (!CFG.apiEnabled && store && store.wasSent(mail) && !dupAck) { dupAck = true; return err("error2", DT.dup); }
     $("error2").textContent = "";
     if (!sid) sid = H ? H.newSid() : "";
+    if (CFG.apiEnabled && H) { var b0 = $("finish"); b0.disabled = true; sending = true; persist(); return apiSubmit(name, mail, city, b0); }
     var types = [].slice.call(typesBox.querySelectorAll("input:checked")).map(function (c) { return TYPES_FR[+c.value]; }).join(", ");
     var lines = ["[Host & Go — inscription hôte]", "Pays d'accueil : " + country.value, "Ville : " + city, "Déclarations : 6/6 confirmées", "E-mails d'information : " + ($("marketing").checked ? "oui" : "non"), "Langue de la page : " + lang, "Réf. demande : " + (sid || "n/a"), "",
       "TYPES D'AIDE : " + types, "HEURES : " + HOURS_FR[+$("pl-hours").value], "JOURS : " + DAYS_FR[+$("pl-days").value], "SÉJOUR MINIMUM : " + STAYS_FR[+$("pl-stay").value],

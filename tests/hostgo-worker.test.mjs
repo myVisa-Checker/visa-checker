@@ -9,15 +9,15 @@ const ORIGIN = "https://checkmyvisa.org";
 function fakeKV() {
   const m = new Map();
   return { m,
-    async get(k) { return m.has(k) ? m.get(k).v : null; },
-    async put(k, v, o = {}) { m.set(k, { v: String(v), metadata: o.metadata, ttl: o.expirationTtl }); },
+    async get(k, type) { if (!m.has(k)) return null; const v = m.get(k).v; return type === "arrayBuffer" ? (v instanceof Uint8Array ? v.slice().buffer : new TextEncoder().encode(v).buffer) : (v instanceof Uint8Array ? new TextDecoder().decode(v) : v); },
+    async put(k, v, o = {}) { m.set(k, { v: v instanceof Uint8Array ? v.slice() : String(v), metadata: o.metadata, ttl: o.expirationTtl }); },
     async delete(k) { m.delete(k); },
     async list({ prefix = "", limit = 1000 } = {}) { const keys = [...m.entries()].filter(([k]) => k.startsWith(prefix)).slice(0, limit).map(([name, e]) => ({ name, metadata: e.metadata })); return { keys, list_complete: true }; } };
 }
 const mkEnv = () => ({ KV: fakeKV(), SECRET: "secret-test-phrase", ADMIN_KEY: "admin-test-key" });
 let ipN = 0;
-async function call(env, path, { method = "GET", body, headers = {}, ip } = {}) {
-  const res = await worker.fetch(new Request("https://hg.test" + path, { method, headers: { Origin: ORIGIN, "CF-Connecting-IP": ip || "198.51.100." + ((ipN++ % 250) + 1), ...headers, ...(body === undefined ? {} : { "Content-Type": "application/json" }) }, body: body === undefined ? undefined : JSON.stringify(body) }), env);
+async function call(env, path, { method = "GET", body, headers = {}, ip, rawBody } = {}) {
+  const res = await worker.fetch(new Request("https://hg.test" + path, { method, headers: { Origin: ORIGIN, "CF-Connecting-IP": ip || "198.51.100." + ((ipN++ % 250) + 1), ...headers, ...(body === undefined || rawBody ? {} : { "Content-Type": "application/json" }), ...headers }, body: rawBody ? rawBody : body === undefined ? undefined : JSON.stringify(body) }), env);
   let data = null; try { data = await res.json(); } catch (e) { /* corps vide */ }
   return { status: res.status, data, headers: res.headers };
 }
@@ -47,13 +47,34 @@ await t("publication : le type d'aide du formulaire donne la catégorie", async 
   const d = (await call(env, "/hg/offers/" + r.data.id)).data.offer; assert.deepEqual(d.cats.sort(), ["garden", "pets"]);
 });
 
-await t("anti-doublon : même identifiant de demande = même offre ; même e-mail = refus", async () => {
+await t("anti-doublon : même identifiant de demande = même offre et même jeton (réponse perdue) ; même e-mail ailleurs = refus", async () => {
   const env = mkEnv(); const a = await publish(env, 3);
   const again = await call(env, "/hg/offers", { method: "POST", body: offer(3) });
-  assert.equal(again.status, 200); assert.equal(again.data.id, a.id); assert.equal(again.data.duplicate, true); assert.equal(again.data.editToken, undefined);
+  assert.equal(again.status, 200); assert.equal(again.data.id, a.id); assert.equal(again.data.duplicate, true); assert.equal(again.data.editToken, a.editToken);
   const other = await call(env, "/hg/offers", { method: "POST", body: offer(4, { email: "HOTE3@example.com" }) });
   assert.equal(other.status, 409); assert.equal(other.data.error, "already_registered");
   assert.equal([...env.KV.m.keys()].filter((k) => k.startsWith("o:")).length, 1);
+});
+
+await t("anti-doublon : le même identifiant avec un autre e-mail ne révèle pas le jeton", async () => {
+  const env = mkEnv(); await publish(env, 3);
+  const r = await call(env, "/hg/offers", { method: "POST", body: offer(3, { email: "intrus@example.com" }) });
+  assert.equal(r.status, 409); assert.equal(r.data.error, "sid_used"); assert.equal(r.data.editToken, undefined);
+  const r2 = await call(env, "/hg/offers", { method: "POST", body: { ...offer(3), email: undefined } }); assert.equal(r2.status, 409); assert.equal(r2.data.editToken, undefined);
+});
+
+await t("anti-doublon : 8 envois simultanés du même identifiant ne créent qu'une offre, jamais écrasée après approbation", async () => {
+  const env = mkEnv(); const rs = await Promise.all(Array.from({ length: 8 }, (_, i) => call(env, "/hg/offers", { method: "POST", ip: "198.51.100." + (100 + i), body: offer(200) })));
+  assert.ok(rs.every((r) => r.status === 201 || r.status === 200)); assert.equal(new Set(rs.map((r) => r.data.id)).size, 1);
+  assert.equal([...env.KV.m.keys()].filter((k) => k.startsWith("o:")).length, 1);
+  await approve(env, rs[0].data.id); const late = await call(env, "/hg/offers", { method: "POST", body: offer(200) });
+  assert.equal(late.data.status, "approved"); assert.equal(late.data.duplicate, true);
+  assert.equal((await call(env, "/hg/offers")).data.items.length, 1);
+});
+
+await t("anti-doublon : un identifiant d'offre retirée ne peut pas être réutilisé", async () => {
+  const env = mkEnv(); const a = await publish(env, 3); await call(env, "/hg/offers/" + a.id, { method: "DELETE", headers: { "X-Edit-Token": a.editToken } });
+  const r = await call(env, "/hg/offers", { method: "POST", body: offer(3) }); assert.equal(r.status, 409); assert.equal(r.data.error, "sid_used");
 });
 
 await t("validation : champs obligatoires, consentement, pays, textes, bornes", async () => {
@@ -195,5 +216,134 @@ await t("aucune route de lecture publique ne renvoie d'offre non approuvée ni d
   for (const x of [a.id, b.id]) assert.equal((await call(env, "/hg/offers/" + x)).status, 404);
   assert.equal((await call(env, "/hg/offers")).data.items.length, 0);
 });
+
+/* ---------- Images synthétiques (structure réelle, contenu minimal) ---------- */
+const enc = new TextEncoder(), cat = (...a) => { const o = new Uint8Array(a.reduce((n, x) => n + x.length, 0)); let i = 0; for (const x of a) { o.set(x, i); i += x.length; } return o; };
+const be16 = (n) => Uint8Array.of(n >> 8, n & 255), be32 = (n) => Uint8Array.of(n >>> 24, (n >> 16) & 255, (n >> 8) & 255, n & 255), le32 = (n) => Uint8Array.of(n & 255, (n >> 8) & 255, (n >> 16) & 255, (n >>> 24) & 255);
+const seg = (mk, body) => cat(Uint8Array.of(0xFF, mk), be16(body.length + 2), body);
+const jpeg = ({ w = 640, h = 480, exif = true, fill = 8, seed = 1 } = {}) => cat(Uint8Array.of(0xFF, 0xD8), seg(0xE0, enc.encode("JFIF\0\x01\x01\0\0\x01\0\x01\0\0")), exif ? seg(0xE1, enc.encode("Exif\0\0GPS 36.8065N 10.1815E")) : new Uint8Array(0), seg(0xFE, enc.encode("commentaire privé")), seg(0xC0, cat(Uint8Array.of(8), be16(h), be16(w), Uint8Array.of(1, 1, 0x11, 0))), seg(0xDA, Uint8Array.of(1, 1, 0, 0, 0x3F, 0)), Uint8Array.from({ length: fill }, (_, i) => (i * 7 + seed) % 200), Uint8Array.of(0xFF, 0xD9));
+const chunk = (type, data) => cat(be32(data.length), enc.encode(type), data, new Uint8Array(4));
+const png = ({ w = 8, h = 8, text = true, iend = true, seed = 1 } = {}) => cat(Uint8Array.of(0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A), chunk("IHDR", cat(be32(w), be32(h), Uint8Array.of(8, 2, 0, 0, 0))), text ? chunk("tEXt", enc.encode("Location\0Tunis rue des Oliviers")) : new Uint8Array(0), chunk("IDAT", Uint8Array.of(1, 2, 3, seed)), iend ? chunk("IEND", new Uint8Array(0)) : new Uint8Array(0));
+const wchunk = (t, d) => cat(enc.encode(t), le32(d.length), d, d.length & 1 ? Uint8Array.of(0) : new Uint8Array(0));
+const webp = ({ exif = true, seed = 1 } = {}) => { const vp8x = wchunk("VP8X", cat(Uint8Array.of(exif ? 0x08 : 0, 0, 0, 0), Uint8Array.of(63, 0, 0), Uint8Array.of(63, 0, 0))), img = wchunk("VP8 ", cat(Uint8Array.of(0, 0, 0, 0x9D, 0x01, 0x2A, 64, 0, 64, 0), Uint8Array.of(seed, 2))), ex = exif ? wchunk("EXIF", enc.encode("GPS 36.8N")) : new Uint8Array(0); const body = cat(enc.encode("WEBP"), vp8x, img, ex); return cat(enc.encode("RIFF"), le32(body.length), body); };
+const has = (b, s) => Buffer.from(b).includes(s);
+async function upload(env, id, token, bytes, { type = "image/jpeg", cat: c, headers = {}, len = true } = {}) {
+  return call(env, `/hg/offers/${id}/photos${c !== undefined ? "?cat=" + c : ""}`, { method: "POST", headers: { "X-Edit-Token": token || "", "Content-Type": type, ...(len ? { "Content-Length": String(bytes.length) } : {}), ...headers }, rawBody: bytes });
+}
+const rawOf = (env, id, n) => env.KV.m.get(`p:${id}:${n}`).v;
+
+await t("photos : JPEG, PNG et WebP acceptés ; EXIF/GPS, commentaires et métadonnées retirés avant stockage", async () => {
+  const env = mkEnv(); const a = await publish(env, 300);
+  const j = await upload(env, a.id, a.editToken, jpeg(), { cat: 2 }); assert.equal(j.status, 201); assert.equal(j.data.n, 0);
+  const p = await upload(env, a.id, a.editToken, png(), { type: "image/png" }); assert.equal(p.status, 201);
+  const w = await upload(env, a.id, a.editToken, webp(), { type: "image/webp" }); assert.equal(w.status, 201); assert.equal(w.data.photos, 3);
+  const J = rawOf(env, a.id, 0), P = rawOf(env, a.id, 1), W = rawOf(env, a.id, 2);
+  assert.ok(has(J, "JFIF") && !has(J, "Exif") && !has(J, "GPS") && !has(J, "privé"), "JPEG : métadonnées restantes");
+  assert.ok(!has(P, "tEXt") && !has(P, "Oliviers") && has(P, "IDAT") && has(P, "IEND"), "PNG : métadonnées restantes");
+  assert.ok(!has(W, "EXIF") && !has(W, "GPS") && has(W, "VP8 "), "WebP : métadonnées restantes");
+  assert.equal(W[20] & 0x0C, 0, "drapeaux EXIF/XMP du VP8X remis à zéro"); assert.equal(W[4] | (W[5] << 8) | (W[6] << 16), W.length - 8, "taille RIFF cohérente");
+  assert.equal(J[0], 0xFF); assert.equal(J[J.length - 1], 0xD9);
+});
+
+await t("photos : le type réel prime sur le nom, l'en-tête et l'extension (texte, HTML, SVG, GIF, PDF, exécutable refusés)", async () => {
+  const env = mkEnv(); const a = await publish(env, 301);
+  const bad = [["texte", enc.encode("ceci n'est pas une image du tout"), "image/jpeg"], ["html", enc.encode("<html><script>alert(1)</script></html>"), "image/png"], ["svg", enc.encode('<svg xmlns="http://www.w3.org/2000/svg" onload="alert(1)"/>'), "image/webp"],
+    ["gif", enc.encode("GIF89a\x01\0\x01\0\x80\0\0\0\0\0\xFF\xFF\xFF!\xF9\x04\x01\0\0\0\0,\0\0\0\0\x01\0\x01\0\0\x02\x02D\x01\0;"), "image/jpeg"], ["pdf", enc.encode("%PDF-1.4 ..."), "image/jpeg"], ["exe", cat(enc.encode("MZ"), new Uint8Array(200)), "image/png"]];
+  for (const [name, bytes, type] of bad) { const r = await upload(env, a.id, a.editToken, bytes, { type }); assert.equal(r.status, 415, name); assert.equal(r.data.error, "unsupported_type", name); }
+  assert.equal((await upload(env, a.id, a.editToken, png(), { type: "image/jpeg" })).data.error, "type_mismatch");
+  assert.equal((await upload(env, a.id, a.editToken, jpeg(), { type: "text/html" })).data.error, "type_mismatch");
+  assert.equal((await upload(env, a.id, a.editToken, jpeg(), { type: "application/octet-stream" })).data.error, "type_mismatch");
+  assert.equal(JSON.parse(await (await call(env, "/hg/admin/queue", { headers: ADMIN })).data.items[0].photos.length), 0);
+});
+
+await t("photos : fichiers corrompus, tronqués ou polyglottes refusés", async () => {
+  const env = mkEnv(); const a = await publish(env, 302); const bad = async (bytes, type, err, st = 400) => { const r = await upload(env, a.id, a.editToken, bytes, { type }); assert.equal(r.status, st, err); assert.equal(r.data.error, err); };
+  const J = jpeg();
+  await bad(cat(J, enc.encode("<?php system($_GET[0]); ?>")), "image/jpeg", "corrupt_image");              /* données après la fin d'image */
+  await bad(J.subarray(0, J.length - 6), "image/jpeg", "corrupt_image");                                   /* tronqué */
+  await bad(cat(Uint8Array.of(0xFF, 0xD8, 0xFF, 0xD9)), "image/jpeg", "corrupt_image");
+  await bad(png({ iend: false }), "image/png", "corrupt_image"); await bad(cat(png(), enc.encode("x")), "image/png", "corrupt_image"); await bad(png().subarray(0, 30), "image/png", "corrupt_image");
+  const W = webp(); await bad(W.subarray(0, W.length - 3), "image/webp", "corrupt_image"); await bad(cat(enc.encode("RIFF"), le32(4), enc.encode("WEBP")), "image/webp", "corrupt_image");
+  await bad(jpeg({ w: 30000, h: 30000 }), "image/jpeg", "image_too_large", 413); await bad(png({ w: 20000, h: 20000 }), "image/png", "image_too_large", 413);
+  assert.equal((await upload(env, a.id, a.editToken, new Uint8Array(0), {})).status, 400);
+});
+
+await t("photos : taille d'un fichier, taille totale, nombre maximum, longueur obligatoire", async () => {
+  const env = mkEnv(); const a = await publish(env, 303);
+  assert.equal((await upload(env, a.id, a.editToken, jpeg({ fill: 2 * 1024 * 1024 }))).status, 413);
+  assert.equal((await upload(env, a.id, a.editToken, jpeg(), { len: false })).status, 411);
+  assert.equal((await upload(env, a.id, a.editToken, jpeg(), { headers: { "Content-Length": String(3 * 1024 * 1024) } })).status, 413, "longueur annoncée trop grande refusée avant lecture");
+  for (let i = 0; i < 5; i++) assert.equal((await upload(env, a.id, a.editToken, jpeg({ fill: 1_900_000, seed: i + 1 }))).status, 201, "photo " + i);
+  const big = await upload(env, a.id, a.editToken, jpeg({ fill: 1_900_000, seed: 77 })); assert.equal(big.status, 413); assert.equal(big.data.error, "photos_total_too_large");
+  const env2 = mkEnv(); const b = await publish(env2, 304);
+  for (let i = 0; i < 10; i++) assert.equal((await upload(env2, b.id, b.editToken, jpeg({ seed: i + 1, fill: 20 + i }))).status, 201, "photo " + i);
+  const eleventh = await upload(env2, b.id, b.editToken, jpeg({ seed: 99, fill: 99 })); assert.equal(eleventh.status, 409); assert.equal(eleventh.data.error, "too_many_photos");
+});
+
+await t("photos : même photo envoyée deux fois = une seule (nouvel essai sans doublon) ; suppression libère la place", async () => {
+  const env = mkEnv(); const a = await publish(env, 305);
+  const r1 = await upload(env, a.id, a.editToken, jpeg()), r2 = await upload(env, a.id, a.editToken, jpeg({ exif: false }));
+  assert.equal(r1.status, 201); assert.equal(r2.status, 200); assert.equal(r2.data.duplicate, true); assert.equal(r2.data.photos, 1);
+  assert.equal([...env.KV.m.keys()].filter((k) => k.startsWith("p:")).length, 1);
+  assert.equal((await call(env, `/hg/offers/${a.id}/photos/0`, { method: "DELETE", headers: { "X-Edit-Token": a.editToken } })).data.photos, 0);
+  assert.equal([...env.KV.m.keys()].filter((k) => k.startsWith("p:")).length, 0);
+  assert.equal((await call(env, `/hg/offers/${a.id}/photos/0`, { method: "DELETE", headers: { "X-Edit-Token": a.editToken } })).status, 404);
+});
+
+await t("photos : invisibles tant que l'offre n'est pas approuvée ; servies en sécurité ensuite ; modération voit tout", async () => {
+  const env = mkEnv(); const a = await publish(env, 306); await upload(env, a.id, a.editToken, jpeg(), { cat: 1 });
+  assert.equal((await call(env, `/hg/offers/${a.id}/photos/0`)).status, 404, "offre en attente : photo non publique");
+  assert.equal((await call(env, `/hg/admin/offers/${a.id}/photos/0`)).status, 401);
+  const adm = await worker.fetch(new Request(`https://hg.test/hg/admin/offers/${a.id}/photos/0`, { headers: { Origin: ORIGIN, ...ADMIN, "CF-Connecting-IP": "1.2.3.4" } }), env); assert.equal(adm.status, 200); assert.equal(adm.headers.get("Content-Type"), "image/jpeg");
+  await approve(env, a.id);
+  const pub = await worker.fetch(new Request(`https://hg.test/hg/offers/${a.id}/photos/0`, { headers: { "CF-Connecting-IP": "1.2.3.5" } }), env);
+  assert.equal(pub.status, 200); assert.equal(pub.headers.get("Content-Type"), "image/jpeg"); assert.equal(pub.headers.get("X-Content-Type-Options"), "nosniff"); assert.match(pub.headers.get("Content-Security-Policy"), /sandbox/); assert.equal((await pub.arrayBuffer()).byteLength, rawOf(env, a.id, 0).length);
+  const d = (await call(env, "/hg/offers/" + a.id)).data.offer; assert.deepEqual(d.photos, [{ n: 0, c: 1 }]); assert.equal((await call(env, "/hg/offers")).data.items[0].cover, 0);
+  assert.equal((await call(env, `/hg/offers/${a.id}/photos/5`)).status, 404); assert.equal((await call(env, `/hg/offers/${a.id}/photos/x`)).status, 404);
+  const raw = JSON.stringify([d, (await call(env, "/hg/offers")).data]); assert.ok(!raw.includes('"h":') && !raw.includes('"s":'), "pas d'empreinte ni de taille interne");
+});
+
+await t("photos : modifier les photos d'une offre approuvée la renvoie en modération ; retrait de l'offre efface les photos", async () => {
+  const env = mkEnv(); const a = await publish(env, 307); await upload(env, a.id, a.editToken, jpeg()); await approve(env, a.id);
+  assert.equal((await call(env, "/hg/offers")).data.items.length, 1);
+  await upload(env, a.id, a.editToken, jpeg({ seed: 9, fill: 30 })); assert.equal((await call(env, "/hg/offers")).data.items.length, 0, "nouvelle photo => modération");
+  await approve(env, a.id); await call(env, `/hg/admin/offers/${a.id}/remove`, { method: "POST", headers: ADMIN, body: {} });
+  assert.equal([...env.KV.m.keys()].filter((k) => k.startsWith("p:")).length, 0); assert.equal((await upload(env, a.id, a.editToken, jpeg())).status, 404);
+});
+
+await t("accès non autorisés : photos, gestion et administration refusées sans le bon jeton, y compris entre offres et entre rôles", async () => {
+  const env = mkEnv(); const a = await publish(env, 308), b = await publish(env, 309); await approve(env, a.id); await approve(env, b.id);
+  const sess = (await call(env, "/hg/session", { method: "POST" })).data.token;
+  for (const tok of [undefined, "", "0".repeat(48), sess, b.editToken, "x"]) { assert.equal((await upload(env, a.id, tok, jpeg())).status, 404, "upload " + tok); assert.equal((await call(env, "/hg/offers/" + a.id, { method: "PATCH", headers: { "X-Edit-Token": tok || "" }, body: { city: "X" } })).status, 404); assert.equal((await call(env, "/hg/offers/" + a.id, { method: "DELETE", headers: { "X-Edit-Token": tok || "" } })).status, 404); }
+  assert.equal((await call(env, `/hg/offers/${a.id}/contact`, { method: "POST", headers: { Authorization: "Bearer " + a.editToken } })).status, 401, "jeton d'hôte inutilisable comme jeton visiteur");
+  assert.equal((await call(env, "/hg/admin/queue", { headers: { "X-Admin-Key": a.editToken } })).status, 401); assert.equal((await call(env, "/hg/admin/queue", { headers: { "X-Admin-Key": sess } })).status, 401);
+  assert.equal((await call(env, "/hg/unlock", { method: "POST", headers: { Authorization: "Bearer " + a.editToken }, body: { code: "ABCDEF123456" } })).status, 401);
+  assert.equal((await call(env, `/hg/admin/offers/${a.id}/approve`, { method: "POST", headers: { "X-Edit-Token": a.editToken }, body: {} })).status, 401, "un hôte ne peut pas approuver");
+  assert.equal((await call(env, "/hg/admin/codes", { method: "POST", headers: { Authorization: "Bearer " + sess }, body: { n: 1, days: 1 } })).status, 401);
+  const raw = JSON.stringify([...env.KV.m.entries()]); assert.ok(!raw.includes(a.editToken) && !raw.includes(sess), "aucun jeton en clair dans le KV");
+});
+
+await t("publication : seul le serveur décide ; ni le client ni l'hôte ne peuvent s'approuver", async () => {
+  const env = mkEnv(); const a = await publish(env, 310, { status: "approved", approved: true, role: "admin", photos: [{ n: 0 }], reports: [1, 2, 3], tk: "x" });
+  assert.equal((await call(env, "/hg/offers/" + a.id)).status, 404); const q = (await call(env, "/hg/admin/queue", { headers: ADMIN })).data.items[0];
+  assert.equal(q.status, "pending"); assert.deepEqual(q.photos, []); assert.deepEqual(q.reports, []);
+  const p = await call(env, "/hg/offers/" + a.id, { method: "PATCH", headers: { "X-Edit-Token": a.editToken }, body: { status: "approved", city: "Tunis" } }); assert.equal(p.data.status, "pending");
+  assert.equal((await call(env, "/hg/offers/" + a.id)).status, 404); await approve(env, a.id); assert.equal((await call(env, "/hg/offers/" + a.id)).status, 200);
+});
+
+await t("séparation hôtes / voyageurs : un e-mail est l'un ou l'autre, dans les deux sens, côté serveur", async () => {
+  const env = mkEnv(); const reg = (email, extra = {}) => call(env, "/hg/travellers", { method: "POST", body: { email, consent: true, ...extra } });
+  assert.equal((await reg("Voyageur@Example.com")).status, 200); assert.equal((await reg("voyageur@example.com")).status, 200, "idempotent");
+  const h = await call(env, "/hg/offers", { method: "POST", body: offer(320, { email: "VOYAGEUR@example.com" }) }); assert.equal(h.status, 409); assert.equal(h.data.error, "role_conflict");
+  assert.equal([...env.KV.m.keys()].filter((k) => k.startsWith("o:")).length, 0);
+  const host = await publish(env, 321); assert.equal((await reg("hote321@example.com")).data.error, "role_conflict");
+  assert.equal((await call(env, `/hg/offers/${host.id}`, { method: "DELETE", headers: { "X-Edit-Token": host.editToken } })).status, 200);
+  assert.equal((await reg("hote321@example.com")).status, 200, "après retrait de l'offre, l'e-mail est libre");
+  assert.equal((await reg("pas-un-mail")).data.error, "bad_email"); assert.equal((await call(env, "/hg/travellers", { method: "POST", body: { email: "a@b.fr" } })).data.error, "consent_required");
+  assert.equal((await reg("robot@example.com", { hp: "x" })).status, 200); assert.ok(![...env.KV.m.keys()].some((k) => k.startsWith("t:") && false));
+  const raw = JSON.stringify([...env.KV.m.keys()]); assert.ok(!raw.toLowerCase().includes("example.com"), "pas d'e-mail dans les clés");
+  const e2 = mkEnv(); let last; for (let i = 0; i < 11; i++) last = await call(e2, "/hg/travellers", { method: "POST", ip: "192.0.2.50", body: { email: `v${i}@example.com`, consent: true } }); assert.equal(last.status, 429);
+});
+
 
 console.log("\n" + n + " tests du Worker Host & Go réussis");

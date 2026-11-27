@@ -13,7 +13,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js","hostgo.js", "hostgo-hote.js", "hostgo-draft.js", "hostgo-offres.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
+for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js","hostgo.js", "hostgo-hote.js", "hostgo-draft.js", "hostgo-offres.js", "hostgo-config.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -309,6 +309,8 @@ try {
 {
   const hh = read("hostgo-hote.html"), hj = read("hostgo-hote.js");
   ok("Host & Go hôte : module de brouillon chargé avant le formulaire, en script externe, et mis en cache hors ligne", hh.indexOf("hostgo-draft.js") > 0 && hh.indexOf("hostgo-draft.js") < hh.indexOf("hostgo-hote.js") && read("sw.js").includes('"hostgo-draft.js"'));
+  ok("Host & Go hôte : API derrière un drapeau éteint par défaut, configuration chargée avant le formulaire, CSP et cache à jour", /apiEnabled:\s*false/.test(read("hostgo-config.js")) && hh.indexOf("hostgo-config.js") > 0 && hh.indexOf("hostgo-config.js") < hh.indexOf("hostgo-hote.js") && /connect-src[^"]*visa-hostgo\.rabehfly\.workers\.dev/.test(hh) && read("sw.js").includes('"hostgo-config.js"') && /noindex/.test(read("hostgo-offres.html")));
+  ok("Host & Go hôte : envoi API avec identifiant de demande, délai, jeton hors localStorage, photos vérifiées par signature", /CFG\.apiEnabled/.test(hj) && /sid: sid/.test(hj) && /TIMEOUT = 15000/.test(hj) && /AbortController/.test(hj) && /sniff\(/.test(hj) && /PH_TOTAL/.test(hj) && !/localStorage\.setItem\("hg_manage"/.test(hj));
   ok("Host & Go hôte : bandeau de reprise et état de sauvegarde présents", /id="draft-banner"/.test(hh) && /id="draft-status"[^>]*aria-live="polite"/.test(hh) && /id="draft-resume"/.test(hh) && /id="draft-restart"/.test(hh));
   ok("Host & Go hôte : textes du brouillon en FR, EN et AR", ["fr", "en", "ar"].every((l) => new RegExp("\\b" + l + ": \\{ title:").test(hj)));
   ok("Host & Go hôte : envoi sans doublon (verrou, identifiant de demande, parties déjà envoyées ignorées)", /if \(sending\) return/.test(hj) && /Réf\. demande/.test(hj) && /planParts/.test(hj) && /rememberSent/.test(hj));

@@ -81,6 +81,7 @@ const PRECACHE = [
   "hostgo-hote.html",
   "hostgo-hote.css",
   "hostgo-hote.js",
+  "hostgo-config.js",
   "hostgo-draft.js",
   "hostgo-voyageur.html",
   "hostgo-offres.html",
