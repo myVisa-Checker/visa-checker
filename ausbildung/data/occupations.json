@@ -1,6 +1,6 @@
 {
  "schema_version": 2,
- "catalogue_status": "development_draft",
+ "catalogue_status": "verified_for_publication",
  "occupations": [
   {
    "id": "pflegefachkraft",
@@ -159,7 +159,8 @@
        1209
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Medizinische/-r Fachangestellte/-r"
      }
     ]
    }
@@ -221,7 +222,8 @@
        1356
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Fachinformatiker/-in (alle Fachrichtungen)"
      }
     ]
    },
@@ -297,7 +299,8 @@
        1285
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Kraftfahrzeugmechatroniker/-in (alle Schwerpunkte)"
      },
      {
       "scope": "IH",
@@ -308,7 +311,8 @@
        1463
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Kraftfahrzeugmechatroniker/-in (alle Schwerpunkte)"
      }
     ]
    },
@@ -376,7 +380,20 @@
       "فحص التشغيل والسلامة وتشخيص الأعطال وإصلاحها"
      ]
     },
-    "pay": null
+    "pay": [
+     {
+      "scope": "IH",
+      "years": [
+       1227,
+       1310,
+       1401,
+       1498
+      ],
+      "source": "bibb_pay_2025",
+      "unit": "EUR/mois brut",
+      "row": "Elektroniker/-in für Betriebstechnik"
+     }
+    ]
    },
    "title_en": "Electronics technician for industrial systems",
    "title_ar": "فنّي/ة إلكترونيات للأنظمة الصناعية"
@@ -454,7 +471,8 @@
        1201
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Elektroniker/-in (alle Fachrichtungen)"
      }
     ]
    }
@@ -527,7 +545,8 @@
        1452
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Industriemechaniker/-in"
      }
     ]
    },
@@ -602,7 +621,8 @@
        1140
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Anlagenmechaniker/-in für Sanitär-, Heizungs- und Klimatechnik"
      }
     ]
    },
@@ -677,7 +697,8 @@
        1330
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Fachkraft für Lagerlogistik"
      }
     ]
    },
@@ -753,7 +774,8 @@
        1290
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Berufskraftfahrer/-in"
      }
     ]
    }
@@ -826,7 +848,8 @@
        1347
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Hotelfachmann/-frau"
      }
     ]
    },
@@ -903,7 +926,8 @@
        1346
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Koch/Köchin"
      }
     ]
    },
@@ -964,7 +988,8 @@
        1232
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Bäcker/-in"
      }
     ]
    }
@@ -1003,9 +1028,9 @@
    "sector": "retail",
    "fiche": {
     "summary": {
-     "fr": "Vendre et conseiller en magasin. Formation courte de 2 ans, poursuivable en commerce de détail selon l'ordonnance commune.",
-     "en": "Sell and advise in a shop. A short 2-year training; the same ordinance also covers the retail clerk occupation.",
-     "ar": "البيع ونصح الزبائن في المحل. تكوين قصير مدته سنتان، ويشمل المرسوم نفسه مهنة موظف التجزئة."
+     "fr": "Vendre et conseiller en magasin. Formation courte de 2 ans ; la même ordonnance couvre aussi le métier de Kaufmann/Kauffrau im Einzelhandel (employé de commerce de détail).",
+     "en": "Sell and advise in a shop. A short 2-year training; the same ordinance also covers the Kaufmann/Kauffrau im Einzelhandel (retail clerk) occupation.",
+     "ar": "البيع ونصح الزبائن في المحل. تكوين قصير مدته سنتان، ويشمل المرسوم نفسه أيضاً مهنة Kaufmann/Kauffrau im Einzelhandel (موظف التجزئة)."
     },
     "source": "bibb_verkaeufer",
     "body": "IH",
@@ -1035,7 +1060,8 @@
        1195
       ],
       "source": "bibb_pay_2025",
-      "unit": "EUR/mois brut"
+      "unit": "EUR/mois brut",
+      "row": "Verkäufer/-in"
      }
     ]
    },
@@ -1043,17 +1069,17 @@
    "title_ar": "بائع/ة"
   }
  ],
- "verified_on": "2026-11-26",
+ "verified_on": "2026-11-27",
  "sources": {
   "bibb_pay_2025": {
    "title": "BIBB – Vergütungen tarifliche Ausbildung 2025 (tableau récapitulatif, état au 1er oct. 2025)",
    "url": "https://www.bibb.de/dokumente/pdf/2025_Dav-Gesamt%c3%bcbersicht_Ausbildungsverg%c3%bctungen_Bundesgebiet.pdf",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bmg_pflege": {
    "title": "Ministère fédéral de la Santé – Pflegefachfrau / Pflegefachmann",
    "url": "https://www.bundesgesundheitsministerium.de/themen/gesundheitswesen/gesundheitsberufe/pflegefachmann-pflegefachfrau.html",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "mig_visa": {
    "title": "Make it in Germany – Visa pour formation professionnelle",
@@ -1073,67 +1099,67 @@
   "bibb_fachinformatiker": {
    "title": "BIBB – Fachinformatiker/-in Anwendungsentwicklung",
    "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/80000",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_kfz": {
    "title": "BIBB – Kraftfahrzeugmechatroniker/-in",
    "url": "https://www.bibb.de/dienst/berufesuche/de/index_berufesuche.php/profile/apprenticeship/nh324578",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_elektroniker_betrieb": {
    "title": "BIBB – Elektroniker/-in für Betriebstechnik",
    "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/544554",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_elektroniker_egt": {
    "title": "BIBB – Elektroniker/-in Energie- und Gebäudetechnik",
    "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/xsw478",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_industriemechaniker": {
    "title": "BIBB – Industriemechaniker/-in",
    "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/658658",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_lager": {
    "title": "BIBB – Fachkraft für Lagerlogistik",
    "url": "https://www.bibb.de/de/berufeinfo.php/profile/apprenticeship/89787i6u",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_hotel": {
    "title": "BIBB – Hotelfachmann/-frau",
    "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/hofa22",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_koch": {
    "title": "BIBB – Koch/Köchin",
    "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/koch22",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_verkaeufer": {
    "title": "BIBB – Verkäufer/-in",
    "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/110815",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_shk": {
    "title": "BIBB – Anlagenmechaniker/-in SHK",
    "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/210715",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_baecker": {
    "title": "BIBB – Bäcker/-in",
    "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/baeck28",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_mfa": {
    "title": "BIBB – Medizinische/-r Fachangestellte/-r",
    "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/n233444",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   },
   "bibb_bkf": {
    "title": "BIBB – Berufskraftfahrer/-in",
    "url": "https://www.bibb.de/dienst/berufesuche/en/index_berufesuche.php/profile/apprenticeship/67589062",
-   "checked": "2026-11-26"
+   "checked": "2026-11-27"
   }
  },
  "general": {

@@ -43,4 +43,20 @@ for (const c of co.companies) {
   assert.equal(c.international, "unconfirmed", c.id + " : candidature internationale non confirmée");
   trilingual(c.note, c.id + ".note");
 }
+// P2 données : traçabilité des rémunérations, alignement des mentions, distinction entreprise référencée / offre confirmée.
+{
+  const fs = require("node:fs"), path = require("node:path");
+  for (const o of cat.occupations) if (o.fiche.pay) for (const p of o.fiche.pay) assert.ok(p.row && p.source === "bibb_pay_2025", o.id + " : ligne source BIBB obligatoire pour la rémunération");
+  const v = cat.occupations.find((o) => o.id === "verkaeufer");
+  for (const l of ["fr", "en", "ar"]) assert.doesNotMatch(v.fiche.summary[l], /poursuiv|continue|continu|الاستمرار|متابعة/i, "Verkäufer : aucune nuance non sourcée (" + l + ")");
+  assert.equal(cat.catalogue_status, "verified_for_publication", "statut du catalogue aligné sur la vérification des sources");
+  const I18Nf = require("../i18n.js");
+  for (const l of ["fr", "en", "ar"]) assert.doesNotMatch(I18Nf.make(l).t("legal"), /données de travail|working data|بيانات عمل/, "mention « données de travail » obsolète (" + l + ")");
+  assert.doesNotMatch(fs.readFileSync(path.join(__dirname, "../index.html"), "utf8"), /données de travail/, "index.html aligné");
+  for (const c of co.companies.filter((x) => x.offer_status !== "open")) {
+    const html = F.render({o: cat.occupations.find((o) => o.id === c.occupations[0]), data: cat, companies: co, I: I18N.make("fr"), chosen: new Set()});
+    assert.match(html, /Entreprise référencée/, c.id + " : affichée comme entreprise référencée");
+    assert.doesNotMatch(html, /Offre : confirmée/, c.id + " : jamais « offre confirmée » sans vérification");
+  }
+}
 console.log("Ausbildung données et fiches : toutes les vérifications sont passées.");

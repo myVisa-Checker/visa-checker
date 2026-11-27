@@ -20,15 +20,15 @@
    "intake_year": null,
    "international": "unconfirmed",
    "note": {
-    "fr": "Page officielle « Ausbildung » de l'entreprise. Des annonces pour ce métier ont été relevées sur un site tiers ; autres métiers : non confirmé.",
-    "en": "Official company training page. Ads for this occupation were seen on a third-party site; other occupations: not confirmed.",
-    "ar": "الصفحة الرسمية للتكوين لدى الشركة. لوحظت إعلانات لهذه المهنة في موقع طرف ثالث؛ المهن الأخرى: غير مؤكد."
+    "fr": "Page officielle « Ausbildung » de l'entreprise (Elektroniker für Betriebstechnik cité parmi les formations ; rentrée annuelle ; offres sur la bourse d'emploi DB, non vérifiées). Candidature depuis l'étranger : non confirmé.",
+    "en": "Official company training page (Elektroniker für Betriebstechnik is named among its trainings; annual intake; offers are on the DB job board, not verified). Applying from abroad: not confirmed.",
+    "ar": "الصفحة الرسمية للتكوين لدى الشركة (ذُكرت مهنة Elektroniker für Betriebstechnik ضمن التكوينات؛ دفعة سنوية؛ العروض في بوابة وظائف DB ولم يُتحقق منها). التقديم من الخارج: غير مؤكد."
    }
   },
   {
    "id": "mercedes_benz",
    "name": "Mercedes-Benz AG",
-   "location": "Stuttgart, Schwäbisch Gmünd, Düsseldorf, Munich (sites relevés)",
+   "location": "Allemagne (sites : non confirmé)",
    "occupations": [
     "kfz_mechatroniker"
    ],
@@ -38,15 +38,15 @@
    "intake_year": null,
    "international": "unconfirmed",
    "note": {
-    "fr": "Pages officielles de formation et de candidature. Les sites sont issus d'annonces tierces : non confirmé.",
-    "en": "Official training and application pages. Locations come from third-party ads: not confirmed.",
-    "ar": "صفحتا التكوين والترشح الرسميتان. المواقع مأخوذة من إعلانات طرف ثالث: غير مؤكد."
+    "fr": "Pages officielles de formation et de candidature. La page consultée ne cite pas le métier Kfz-Mechatroniker (elle renvoie vers la section « Technische Berufsausbildung ») : métier et sites non confirmés.",
+    "en": "Official training and application pages. The page consulted does not name the Kfz-Mechatroniker occupation (it links to a “technical training” section): occupation and locations not confirmed.",
+    "ar": "صفحتا التكوين والترشح الرسميتان. لا تذكر الصفحة المُطّلَع عليها مهنة Kfz-Mechatroniker (وتحيل إلى قسم «التكوين التقني»): المهنة والمواقع غير مؤكدة."
    }
   },
   {
    "id": "siemens_healthineers",
    "name": "Siemens Healthineers",
-   "location": "Allemagne (site : non confirmé)",
+   "location": "Erlangen / Forchheim et Rudolstadt (sites cités par la page officielle)",
    "occupations": [
     "industriemechaniker"
    ],
@@ -56,9 +56,9 @@
    "intake_year": null,
    "international": "unconfirmed",
    "note": {
-    "fr": "Page officielle Ausbildung et études en alternance ; une fiche métier Industriemechaniker est publiée par l'entreprise.",
-    "en": "Official training and dual-study page; the company publishes an Industriemechaniker profile.",
-    "ar": "الصفحة الرسمية للتكوين والدراسة المزدوجة؛ وتنشر الشركة ملفاً لمهنة Industriemechaniker."
+    "fr": "Page officielle Ausbildung et études en alternance : Industriemechaniker listé (Erlangen/Forchheim, Rudolstadt), rubrique « places disponibles, début 2027 ». Aucune offre précise vérifiée. La page demande des certificats traduits et certifiés et indique un niveau d'allemand B2 pour les formations ; candidature depuis l'étranger : non confirmé.",
+    "en": "Official training and dual-study page: Industriemechaniker listed (Erlangen/Forchheim, Rudolstadt), with an “available places, start 2027” section. No specific offer verified. The page asks for translated and certified certificates and states German level B2 for apprenticeships; applying from abroad: not confirmed.",
+    "ar": "الصفحة الرسمية للتكوين والدراسة المزدوجة: مهنة Industriemechaniker مدرجة (إرلانغن/فورشهايم ورودولشتات) مع قسم «الأماكن المتاحة، بداية 2027». لم يُتحقق من أي عرض محدد. تطلب الصفحة شهادات مترجمة ومصدَّقة وتذكر مستوى ألمانية B2 للتكوين؛ التقديم من الخارج: غير مؤكد."
    }
   },
   {

@@ -54,7 +54,7 @@
     let payHtml;
     if (Array.isArray(f.pay) && f.pay.length) {
       used.add("bibb_pay_2025");
-      payHtml = f.pay.map((p) => `<table class="paytab"><caption>${esc(t("f.pay.scope", {s: p.scope}))}</caption><thead><tr>${p.years.map((_, i) => `<th scope="col">${esc(t("f.pay.year", {n: i + 1}))}</th>`).join("")}</tr></thead><tbody><tr>${p.years.map((v) => `<td>${num(v)}&nbsp;€</td>`).join("")}</tr></tbody></table>`).join("") + `<p class="muted">${esc(t("f.pay.note"))}</p>`;
+      payHtml = f.pay.map((p) => `<table class="paytab"><caption>${esc(t("f.pay.scope", {s: p.scope}))}${p.row ? ` · <bdi lang="de">${esc(p.row)}</bdi>` : ""}</caption><thead><tr>${p.years.map((_, i) => `<th scope="col">${esc(t("f.pay.year", {n: i + 1}))}</th>`).join("")}</tr></thead><tbody><tr>${p.years.map((v) => `<td>${num(v)}&nbsp;€</td>`).join("")}</tr></tbody></table>`).join("") + `<p class="muted">${esc(t("f.pay.note"))}</p>`;
     } else payHtml = f.pay_text ? `<p>${txt(f.pay_text)}</p>` : nc();
     const secC = `<h3>${esc(t("f.secC"))}</h3><dl class="fl">${row(t("f.pay"), payHtml)}${row(t("f.after"), nc())}${row(t("f.costs"), pflege ? esc(pick({fr: "Formation gratuite, matériel fourni (source ministère de la Santé).", en: "Tuition free, materials provided (Ministry of Health).", ar: "التكوين مجاني والمواد مقدَّمة (وزارة الصحة)."}, lang)) : nc())}${row(t("f.gross"), Array.isArray(f.pay) && f.pay.length ? esc(t("f.gross.t")) : nc())}</dl>`;
 
@@ -70,7 +70,7 @@
     const list = (companies && companies.companies || []).filter((c) => (c.occupations || []).includes(o.id));
     const co = list.length ? list.map((c) => {
       const site = safeUrl(c.recruitment_url), direct = safeUrl(c.direct_url);
-      return `<article class="co"><h4>${esc(c.name)}</h4><p class="muted">${esc(c.location || "")}</p><p>${txt(c.note)}</p><ul class="costat"><li>${esc(t("f.co.status", {x: t("f.co.unverified")}))}</li><li>${esc(t("f.co.intake", {x: c.intake_year || t("nc")}))}</li><li>${esc(t("f.intl", {x: t("nc")}))}</li></ul><p class="colinks">${site ? `<a class="btn secondary small" href="${esc(site)}" target="_blank" rel="noopener noreferrer">${esc(t("f.co.site"))}</a>` : ""}${direct ? ` <a class="btn secondary small" href="${esc(direct)}" target="_blank" rel="noopener noreferrer">${esc(t("f.co.apply"))}</a>` : ""}</p><p class="muted">${esc(t("f.co.verified", {d: fmtDate(companies.verified_on, lang)}))}</p></article>`;
+      return `<article class="co"><h4>${esc(c.name)}</h4><p class="muted">${esc(c.location || "")}</p><p>${txt(c.note)}</p><ul class="costat"><li><strong>${esc(t("f.co.listed"))}</strong></li><li>${esc(t("f.co.status", {x: c.offer_status === "open" ? t("f.co.confirmed") : t("f.co.unverified")}))}</li><li>${esc(t("f.co.intake", {x: c.intake_year || t("nc")}))}</li><li>${esc(t("f.intl", {x: t("nc")}))}</li></ul><p class="colinks">${site ? `<a class="btn secondary small" href="${esc(site)}" target="_blank" rel="noopener noreferrer">${esc(t("f.co.site"))}</a>` : ""}${direct ? ` <a class="btn secondary small" href="${esc(direct)}" target="_blank" rel="noopener noreferrer">${esc(t("f.co.apply"))}</a>` : ""}</p><p class="muted">${esc(t("f.co.verified", {d: fmtDate(companies.verified_on, lang)}))}</p></article>`;
     }).join("") : `<p>${esc(t("f.co.none"))}</p>`;
     const secF = `<h3>${esc(t("f.secF"))}</h3>${co}`;
 
