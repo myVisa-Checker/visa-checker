@@ -5,7 +5,9 @@ import { readFile } from "node:fs/promises";
 const src = await readFile(new URL("../../worker/hostgo-worker.js", import.meta.url), "utf8");
 const { default: worker } = await import("data:text/javascript;base64," + Buffer.from(src).toString("base64"));
 const m = new Map();
-const KV = { async get(k) { return m.has(k) ? m.get(k).v : null; }, async put(k, v, o = {}) { m.set(k, { v: String(v), metadata: o.metadata }); }, async delete(k) { m.delete(k); }, async list({ prefix = "" } = {}) { return { keys: [...m.entries()].filter(([k]) => k.startsWith(prefix)).map(([name, e]) => ({ name, metadata: e.metadata })), list_complete: true }; } };
+const KV = { async get(k, type) { if (!m.has(k)) return null; const v = m.get(k).v; return type === "arrayBuffer" ? (v instanceof Uint8Array ? v.slice().buffer : new TextEncoder().encode(v).buffer) : (v instanceof Uint8Array ? new TextDecoder().decode(v) : v); },
+  async put(k, v, o = {}) { m.set(k, { v: v instanceof Uint8Array ? v.slice() : v instanceof ArrayBuffer ? new Uint8Array(v) : String(v), metadata: o.metadata }); }, async delete(k) { m.delete(k); },
+  async list({ prefix = "" } = {}) { return { keys: [...m.entries()].filter(([k]) => k.startsWith(prefix)).map(([name, e]) => ({ name, metadata: e.metadata })), list_complete: true }; } };
 const env = { KV, SECRET: "e2e-secret", ADMIN_KEY: "e2e-admin" };
 const ORIGIN = "https://checkmyvisa.org";
 const call = (path, method = "GET", body, headers = {}, ip = "198.51.100.77") => worker.fetch(new Request("https://hg.test" + path, { method, headers: { Origin: ORIGIN, "CF-Connecting-IP": ip, "Content-Type": "application/json", ...headers }, body: body ? JSON.stringify(body) : undefined }), env);

@@ -7,4 +7,9 @@ ALLOWED_ORIGIN = "https://checkmyvisa.org,https://www.checkmyvisa.org"
 
 # NON DÉPLOYÉ. Worker des offres Host & Go (publication, consultation, signalement, modération, accès).
 # Avant tout déploiement : créer un espace KV dédié et le lier sous le nom « KV » ; définir les secrets SECRET et ADMIN_KEY.
-# Aucune page du site n'appelle encore ce Worker. Ne pas utiliser « wrangler deploy » sans avoir déclaré la liaison KV.
+# Le formulaire Hôte, le formulaire Voyageur et les pages offres/modération ne l'appellent que si window.HG_CONFIG.apiEnabled est vrai (hostgo-config.js : faux par défaut). Ne pas utiliser « wrangler deploy » sans avoir déclaré la liaison KV.
+
+# Facultatif (recommandé) : photos dans R2 plutôt que dans KV.
+# [[r2_buckets]]
+# binding = "PHOTOS"
+# bucket_name = "hostgo-photos"

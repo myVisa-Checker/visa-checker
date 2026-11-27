@@ -116,11 +116,28 @@
     $("doneMsg").textContent = T.doneFb + TO + "."; show(IDS.length);
     window.location.href = "mailto:" + TO + "?subject=" + encodeURIComponent("[Host & Go] Inscription voyageur") + "&body=" + encodeURIComponent(msg + "\n\n--\n" + name + "\n" + mail);
   }
+  var regMail = "";
+  var AM = { fr: { wait: "Vérification…", role: "Cette adresse e-mail est déjà utilisée comme compte Hôte. Utilisez une autre adresse pour le rôle Voyageur.", rate: "Trop de demandes. Patientez un peu.", net: "Connexion impossible. Réessayez.", srv: "Service momentanément indisponible. Réessayez plus tard." },
+    en: { wait: "Checking…", role: "This e-mail address is already used as a Host account. Please use another address for the Traveller role.", rate: "Too many requests. Please wait a little.", net: "Connection failed. Please try again.", srv: "Service temporarily unavailable. Please try again later." },
+    ar: { wait: "جارٍ التحقق…", role: "هذا البريد مستخدم كحساب مضيف. استخدم بريداً آخر لدور المسافر.", rate: "طلبات كثيرة. انتظر قليلاً.", net: "تعذّر الاتصال. أعد المحاولة.", srv: "الخدمة غير متاحة مؤقتاً. حاول لاحقاً." } }[lang] || {};
   $("finish").addEventListener("click", function () {
     var name = $("firstName").value.trim(), mail = $("email").value.trim(), country = $("country").value.trim(), city = $("city").value.trim();
     if (!name || !country || !city || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return err(T.eFields, !name ? $("firstName") : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail) ? $("email") : !country ? $("country") : $("city"));
     if (!$("terms").checked) return err(T.eTerms, $("terms"));
     $("error2").textContent = ""; $("roleNotice").textContent = "";
+    var CFG = window.HG_CONFIG || {};
+    if (CFG.apiEnabled && regMail !== mail.toLowerCase()) {      /* le serveur décide : un e-mail hôte ne peut pas devenir voyageur */
+      var b0 = $("finish"); b0.disabled = true; $("error2").textContent = AM.wait;
+      var ctl0 = typeof AbortController === "function" ? new AbortController() : null, t0 = ctl0 ? setTimeout(function () { ctl0.abort(); }, 15000) : null;
+      fetch(String(CFG.api).replace(/\/$/, "") + "/travellers", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: mail, consent: true, hp: $("hp").value || "" }), signal: ctl0 ? ctl0.signal : undefined, credentials: "omit" })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { s: r.status, e: j.error }; }); }).catch(function () { return { s: 0 }; })
+        .then(function (x) {
+          if (t0) clearTimeout(t0); b0.disabled = false;
+          if (x.s === 200) { regMail = mail.toLowerCase(); $("error2").textContent = ""; $("finish").click(); }
+          else $("error2").textContent = x.s === 409 ? AM.role : x.s === 429 ? AM.rate : x.s === 0 ? AM.net : AM.srv;
+        });
+      return;
+    }
     var other = roleOf(mail) === "host"; if (other) $("roleNotice").textContent = T.roleNotice;
     var msg = ["[Host & Go — inscription voyageur / worker]", "Formule : " + (plan === "solo" ? "Solo" : "Couple / amis") + " (" + PRICES[plan] + " DT par an, indicatif)", "Pays : " + country, "Ville : " + city, "Langue de la page : " + lang, other ? "Remarque : e-mail déjà utilisé comme hôte sur cet appareil" : ""].filter(Boolean).join("\n");
     var btn = $("finish"); btn.disabled = true;

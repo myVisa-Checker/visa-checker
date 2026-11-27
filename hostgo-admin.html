@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://visa-hostgo.rabehfly.workers.dev; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Host &amp; Go — Modération</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="./site.css">
+<link rel="stylesheet" href="./brand.css">
+<link rel="stylesheet" href="./hostgo-hote.css">
+<link rel="stylesheet" href="./hostgo-admin.css">
+<script src="./hostgo-config.js"></script>
+</head>
+<body>
+<main id="hgh" data-no-i18n>
+  <header class="hgh-top"><span class="hgh-brand"><span class="hgh-mark" aria-hidden="true">⌂</span><span>Host <em>&amp;</em> Go — Modération</span></span></header>
+  <div class="hgh-wrap">
+    <section id="login" class="hgh-card" aria-labelledby="t-login">
+      <h1 id="t-login">Accès modération</h1>
+      <p>Réservé à l’équipe Host &amp; Go. La clé n’est jamais enregistrée : elle reste en mémoire tant que cet onglet est ouvert.</p>
+      <label for="key">Clé d’administration</label>
+      <input id="key" type="password" autocomplete="off" spellcheck="false">
+      <button class="hgh-btn" id="go" type="button">Se connecter</button>
+      <p id="login-err" class="hgh-err" role="alert"></p>
+    </section>
+    <section id="app" hidden>
+      <div class="hga-bar"><div id="tabs" role="tablist" aria-label="Statut des offres"></div><button class="hgh-btn ghost" id="out" type="button">Se déconnecter</button></div>
+      <p id="state" class="hgo-state" role="status" aria-live="polite"></p>
+      <ul id="items" class="hgo-list"></ul>
+      <article id="detail" class="hgh-card" hidden tabindex="-1"></article>
+    </section>
+  </div>
+</main>
+<script src="./hostgo-admin.js"></script>
+</body>
+</html>

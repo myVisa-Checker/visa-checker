@@ -346,4 +346,53 @@ await t("séparation hôtes / voyageurs : un e-mail est l'un ou l'autre, dans le
 });
 
 
+await t("jeton de gestion : valable 30 jours, refusé ensuite (photos et gestion) ; une relance après expiration ne le redonne pas", async () => {
+  const env = mkEnv(); const a = await publish(env, 400);
+  const k = "o:" + a.id, off = JSON.parse(env.KV.m.get(k).v); off.createdAt -= 31 * 86400000; env.KV.m.set(k, { v: JSON.stringify(off), metadata: env.KV.m.get(k).metadata });
+  assert.equal((await upload(env, a.id, a.editToken, jpeg())).status, 404);
+  assert.equal((await call(env, "/hg/offers/" + a.id, { method: "PATCH", headers: { "X-Edit-Token": a.editToken }, body: { city: "Tunis" } })).status, 404);
+  const again = await call(env, "/hg/offers", { method: "POST", body: offer(400) }); assert.equal(again.status, 200); assert.equal(again.data.editToken, undefined);
+});
+
+await t("administration : verrouillage après 10 clés fausses, même avec la bonne clé ensuite", async () => {
+  const env = mkEnv(); const ip = "203.0.113.200";
+  for (let i = 0; i < 10; i++) assert.equal((await call(env, "/hg/admin/queue", { headers: { "X-Admin-Key": "faux" + i }, ip })).status, 401);
+  assert.equal((await call(env, "/hg/admin/queue", { headers: ADMIN, ip })).status, 429);
+  assert.equal((await call(env, "/hg/admin/queue", { headers: ADMIN, ip: "203.0.113.201" })).status, 200);
+});
+
+await t("administration : toutes les routes refusent sans clé ; liste « signalées » et compteurs ; un retrait est définitif", async () => {
+  const env = mkEnv(); const a = await publish(env, 410), b = await publish(env, 411); await approve(env, a.id); await approve(env, b.id);
+  for (const [m, pth] of [["GET", "/hg/admin/queue"], ["GET", `/hg/admin/offers/${a.id}/photos/0`], ["POST", `/hg/admin/offers/${a.id}/approve`], ["POST", `/hg/admin/offers/${a.id}/remove`], ["POST", "/hg/admin/codes"]]) assert.equal((await call(env, pth, { method: m, body: m === "POST" ? {} : undefined })).status, 401, pth);
+  await call(env, `/hg/offers/${a.id}/report`, { method: "POST", body: { reason: "spam", note: "x" }, ip: "192.0.2.1" });
+  const rep = await call(env, "/hg/admin/queue?status=reported", { headers: ADMIN }); assert.equal(rep.data.items.length, 1); assert.equal(rep.data.items[0].id, a.id); assert.equal(rep.data.items[0].reports[0].reason, "spam");
+  assert.equal(rep.data.counts.approved, 2); assert.equal(rep.data.counts.reported, 1); assert.ok(!JSON.stringify(rep.data).includes('"tk"') && !JSON.stringify(rep.data).includes("emailHash"));
+  assert.equal((await call(env, `/hg/admin/offers/${a.id}/remove`, { method: "POST", headers: ADMIN, body: {} })).status, 200);
+  assert.equal((await call(env, `/hg/admin/offers/${a.id}/approve`, { method: "POST", headers: ADMIN, body: {} })).data.error, "already_removed");
+  assert.equal((await call(env, "/hg/offers/" + a.id)).status, 404);
+});
+
+await t("photos : R2 utilisé quand le binding PHOTOS existe (rien dans KV), lecture publique après approbation, effacement au retrait", async () => {
+  const env = mkEnv(), store = new Map();
+  env.PHOTOS = { async put(k, v) { store.set(k, new Uint8Array(v)); }, async get(k) { const v = store.get(k); return v ? { arrayBuffer: async () => v.slice().buffer } : null; }, async delete(k) { store.delete(k); } };
+  const a = await publish(env, 420); const u = await upload(env, a.id, a.editToken, jpeg()); assert.equal(u.status, 201);
+  assert.equal(store.size, 1); assert.ok(![...env.KV.m.keys()].some((k) => k.startsWith("p:")));
+  assert.equal((await call(env, `/hg/offers/${a.id}/photos/0`)).status, 404);
+  await approve(env, a.id); const g = await call(env, `/hg/offers/${a.id}/photos/0`); assert.equal(g.status, 200); assert.equal(g.headers.get("content-type"), "image/jpeg"); assert.equal(g.headers.get("x-content-type-options"), "nosniff");
+  await call(env, `/hg/admin/offers/${a.id}/remove`, { method: "POST", headers: ADMIN, body: {} }); assert.equal(store.size, 0);
+});
+
+await t("parcours complet côté serveur : publier → en attente → approuver → visible → détail avec photo → coordonnées protégées → signalements → masquage", async () => {
+  const env = mkEnv(); const a = await publish(env, 430); await upload(env, a.id, a.editToken, jpeg());
+  assert.equal((await call(env, "/hg/offers")).data.total, 0);
+  await approve(env, a.id); const list = await call(env, "/hg/offers"); assert.equal(list.data.items.length, 1); assert.equal(list.data.items[0].cover, 0);
+  const det = await call(env, "/hg/offers/" + a.id); assert.equal(det.data.offer.photos.length, 1); assert.ok(!JSON.stringify(det.data).includes("hote430@example.com") && !JSON.stringify(det.data).includes("Oliviers"));
+  assert.equal((await call(env, `/hg/offers/${a.id}/contact`, { method: "POST", body: {} })).status, 401);
+  const ses = await call(env, "/hg/session", { method: "POST", body: {} }); const ct = await call(env, `/hg/offers/${a.id}/contact`, { method: "POST", headers: { Authorization: "Bearer " + ses.data.token }, body: {} });
+  assert.equal(ct.data.contact.email, "hote430@example.com");
+  for (let i = 0; i < 3; i++) await call(env, `/hg/offers/${a.id}/report`, { method: "POST", body: { reason: "fake" }, ip: "192.0.2." + (10 + i) });
+  assert.equal((await call(env, "/hg/offers")).data.items.length, 0);
+  assert.equal((await call(env, "/hg/admin/queue?status=hidden", { headers: ADMIN })).data.items.length, 1);
+});
+
 console.log("\n" + n + " tests du Worker Host & Go réussis");

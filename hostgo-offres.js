@@ -12,7 +12,7 @@
       backHome: "Retour à Host & Go", fPriv: "Confidentialité", fTerms: "Conditions", eyebrow: "OFFRES D’ACCUEIL", title: "Trouver une offre d’accueil", lead: "Seules les offres relues par notre équipe sont affichées.",
       any: "Tous", reset: "Réinitialiser les filtres", more: "Voir plus d’offres", back: "← Retour aux offres", country: "Pays", cat: "Catégorie", stay: "Séjour", lang: "Langue", trav: "Voyageurs", filters: "Filtres",
       loading: "Chargement…", none: "Aucune offre ne correspond à ces filtres.", count: "{n} offre(s)", closed: "Les offres ne sont pas encore ouvertes. Revenez bientôt : aucune offre n’est publiée pour le moment.", err: "Chargement impossible. Réessayez dans un instant.",
-      view: "Voir l’offre", contact: "Voir les coordonnées", report: "Signaler cette offre", from: "Proposé par {n}", notFound: "Cette offre n’est plus disponible.",
+      photoAlt: "Photo du lieu d’accueil", view: "Voir l’offre", contact: "Voir les coordonnées", report: "Signaler cette offre", from: "Proposé par {n}", notFound: "Cette offre n’est plus disponible.",
       sec: { place: "Le lieu", stay: "L’hébergement", help: "L’aide attendue", culture: "Culture et échanges", intro: "Présentation", info: "Autres informations" }, cal: "Disponibilités",
       free: "Il vous reste {n} contact(s) gratuit(s).", contactIs: "Contact de {n} :", unlockText: "Vous avez utilisé vos contacts gratuits. Le paiement en ligne n’est pas encore ouvert : si l’équipe Host & Go vous a remis un code d’accès, saisissez-le ici.", unlockLabel: "Code d’accès", unlockGo: "Débloquer",
       badCode: "Code invalide ou déjà utilisé.", unlocked: "Accès illimité activé jusqu’au {d}.", reasonL: "Motif du signalement", noteL: "Précisions (facultatif)", reportGo: "Envoyer le signalement", reported: "Merci. Votre signalement a été transmis à l’équipe.", rate: "Trop de demandes. Réessayez plus tard.",
@@ -27,7 +27,7 @@
       backHome: "Back to Host & Go", fPriv: "Privacy", fTerms: "Terms", eyebrow: "HOSTING OFFERS", title: "Find a hosting offer", lead: "Only offers reviewed by our team are shown.",
       any: "All", reset: "Reset filters", more: "Show more offers", back: "← Back to offers", country: "Country", cat: "Category", stay: "Stay", lang: "Language", trav: "Travellers", filters: "Filters",
       loading: "Loading…", none: "No offer matches these filters.", count: "{n} offer(s)", closed: "Offers are not open yet. Please come back soon: no offer is published at the moment.", err: "Could not load. Please try again in a moment.",
-      view: "View offer", contact: "Show contact details", report: "Report this offer", from: "Offered by {n}", notFound: "This offer is no longer available.",
+      photoAlt: "Photo of the hosting place", view: "View offer", contact: "Show contact details", report: "Report this offer", from: "Offered by {n}", notFound: "This offer is no longer available.",
       sec: { place: "The place", stay: "The accommodation", help: "Help expected", culture: "Culture and exchange", intro: "Introduction", info: "Other information" }, cal: "Availability",
       free: "You have {n} free contact(s) left.", contactIs: "Contact for {n}:", unlockText: "You have used your free contacts. Online payment is not open yet: if the Host & Go team gave you an access code, enter it here.", unlockLabel: "Access code", unlockGo: "Unlock",
       badCode: "Invalid or already used code.", unlocked: "Unlimited access enabled until {d}.", reasonL: "Reason for the report", noteL: "Details (optional)", reportGo: "Send report", reported: "Thank you. Your report has been sent to the team.", rate: "Too many requests. Please try later.",
@@ -42,7 +42,7 @@
       backHome: "العودة إلى Host & Go", fPriv: "الخصوصية", fTerms: "الشروط", eyebrow: "عروض الاستضافة", title: "ابحث عن عرض استضافة", lead: "تُعرض فقط العروض التي راجعها فريقنا.",
       any: "الكل", reset: "إعادة ضبط المرشحات", more: "عرض المزيد", back: "← العودة إلى العروض", country: "البلد", cat: "الفئة", stay: "مدة الإقامة", lang: "اللغة", trav: "المسافرون", filters: "المرشحات",
       loading: "جارٍ التحميل…", none: "لا يوجد عرض يطابق هذه المرشحات.", count: "{n} عرض", closed: "العروض غير مفتوحة بعد. عد قريباً: لا يوجد أي عرض منشور حالياً.", err: "تعذّر التحميل. حاول مجدداً بعد قليل.",
-      view: "عرض التفاصيل", contact: "إظهار بيانات الاتصال", report: "الإبلاغ عن هذا العرض", from: "مقدَّم من {n}", notFound: "هذا العرض لم يعد متاحاً.",
+      photoAlt: "صورة مكان الاستضافة", view: "عرض التفاصيل", contact: "إظهار بيانات الاتصال", report: "الإبلاغ عن هذا العرض", from: "مقدَّم من {n}", notFound: "هذا العرض لم يعد متاحاً.",
       sec: { place: "المكان", stay: "الإقامة", help: "المساعدة المنتظرة", culture: "الثقافة والتبادل", intro: "تعريف", info: "معلومات أخرى" }, cal: "فترات التوفر",
       free: "بقي لديك {n} اتصال مجاني.", contactIs: "بيانات اتصال {n}:", unlockText: "استنفدت الاتصالات المجانية. الدفع عبر الإنترنت غير متاح بعد: إذا أعطاك فريق Host & Go رمز دخول فأدخله هنا.", unlockLabel: "رمز الدخول", unlockGo: "فتح الوصول",
       badCode: "الرمز غير صالح أو سبق استخدامه.", unlocked: "تم تفعيل الوصول غير المحدود حتى {d}.", reasonL: "سبب الإبلاغ", noteL: "تفاصيل (اختياري)", reportGo: "إرسال البلاغ", reported: "شكراً. تم إرسال بلاغك إلى الفريق.", rate: "طلبات كثيرة. حاول لاحقاً.",
@@ -90,12 +90,14 @@
   }
 
   /* ----- liste ----- */
+  function photoUrl(id, n) { return API + "/offers/" + id + "/photos/" + n; }
+  function pic(id, n, alt, cls) { var im = new Image(); im.className = cls; im.alt = alt; im.loading = "lazy"; im.decoding = "async"; im.referrerPolicy = "no-referrer"; im.addEventListener("error", function () { im.remove(); }); im.src = photoUrl(id, n); return im; }
   function card(o) {
     var li = el("li", "hgo-item"), h = el("h2", "", (o.cats || []).map(function (c) { return L.cats[c] || ""; }).filter(Boolean).join(" · ") + " — " + o.city);
     var chips = el("ul", "hgo-chips"); chips.appendChild(el("li", "", L.countries[COUNTRIES.indexOf(o.country)] || ""));
     chips.appendChild(el("li", "", L.stays[o.stay] || "")); (o.langs || []).forEach(function (r) { chips.appendChild(el("li", "", (L.langs[r[0]] || "") )); }); (o.trav || []).forEach(function (t) { chips.appendChild(el("li", "", L.travs[t] || "")); });
     var b = el("button", "hgh-btn ghost", L.view); b.type = "button"; b.addEventListener("click", function () { openDetail(o.id, o.firstName); });
-    li.appendChild(h); li.appendChild(el("p", "hgo-meta", fmt(L.from, { n: o.firstName }))); if (o.excerpt) li.appendChild(el("p", "", o.excerpt)); li.appendChild(chips); li.appendChild(b); return li;
+    if (typeof o.cover === "number") li.appendChild(pic(o.id, o.cover, L.photoAlt, "hgo-cover")); li.appendChild(h); li.appendChild(el("p", "hgo-meta", fmt(L.from, { n: o.firstName }))); if (o.excerpt) li.appendChild(el("p", "", o.excerpt)); li.appendChild(chips); li.appendChild(b); return li;
   }
   function load(reset) {
     if (busy) return; busy = true; if (reset) { page = 0; $("results").textContent = ""; }
@@ -122,6 +124,7 @@
       $("h-detail").textContent = (o.cats || []).map(function (c) { return L.cats[c] || ""; }).filter(Boolean).join(" · ") + " — " + o.city;
       $("d-meta").textContent = fmt(L.from, { n: o.firstName }) + " · " + (L.countries[COUNTRIES.indexOf(o.country)] || "") + " · " + (L.stays[o.stay] || "");
       var box = $("d-texts"); box.textContent = ""; ["place", "stay", "help", "culture", "intro", "info"].forEach(function (k) { if (o.texts && o.texts[k]) { var d = el("div", "hgo-text"); d.appendChild(el("strong", "", L.sec[k])); d.appendChild(el("p", "", o.texts[k])); box.appendChild(d); } });
+      var gal = $("d-photos"); gal.textContent = ""; (o.photos || []).forEach(function (p) { gal.appendChild(pic(o.id, p.n, L.photoAlt + " " + (p.n + 1), "hgo-photo")); }); gal.hidden = !(o.photos || []).length;
       $("d-cal-h").textContent = L.cal; var cal = $("d-cal"); cal.textContent = "";
       Object.keys(o.cal || {}).sort().forEach(function (y) { Object.keys(o.cal[y]).map(Number).sort(function (a, b) { return a - b; }).forEach(function (m) { var s = o.cal[y][m]; cal.appendChild(el("li", "s" + s, L.months[m] + " " + y + " : " + L.states[s])); }); });
       $("d-cal-h").hidden = !cal.children.length;

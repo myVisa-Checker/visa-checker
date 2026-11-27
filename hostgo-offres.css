@@ -25,3 +25,5 @@
 .hgo-box input,.hgo-box select,.hgo-box textarea{min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
 .hgo-box p{margin:0;line-height:1.45}
 @media (min-width:720px){.hgo-filters{grid-template-columns:repeat(5,1fr)}.hgo-filters button{grid-column:auto}.hgo-list{grid-template-columns:1fr 1fr}}
+.hgo-cover{width:100%;height:160px;object-fit:cover;border-radius:10px;background:#eef3fb}
+.hgo-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:12px 0}.hgo-photo{width:100%;height:150px;object-fit:cover;border-radius:10px;background:#eef3fb}

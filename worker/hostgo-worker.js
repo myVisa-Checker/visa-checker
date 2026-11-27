@@ -6,6 +6,12 @@
      ADMIN_KEY       (Secret)  clé de modération et de fabrication des codes de déblocage
      ALLOWED_ORIGIN  (Texte, optionnel)  adresses autorisées séparées par des virgules ; défaut : checkmyvisa.org et www
    Liaison KV : nom de variable  KV
+   Liaison R2 (facultative, recommandée pour les photos) : nom de variable  PHOTOS ; sans elle, les photos restent dans KV (2 Mo max chacune).
+
+   Limites réelles de KV (à connaître) : pas d'écriture atomique ni de « créer si absent », cohérence à terme (jusqu'à ~60 s entre sites).
+   L'idempotence repose donc sur des identifiants déterministes (même demande => même offre, aucun doublon même en cas de relance ou de double clic)
+   et sur un verrou d'e-mail relu après écriture : deux demandes DIFFÉRENTES du même e-mail déposées à la même seconde depuis deux sites peuvent,
+   très rarement, coexister ; la modération les voit (même e-mail) et peut en retirer une. Le jeton de gestion expire 30 jours après la création.
 
    Routes (préfixe /hg) :
      GET  /hg/health
@@ -21,7 +27,7 @@
      POST /hg/session                    jeton visiteur (3 coordonnées gratuites)
      POST /hg/offers/:id/contact         (Bearer) coordonnées de l'hôte : gratuites dans le quota, sinon 402 « unlock_required »
      POST /hg/unlock {code}              (Bearer) active l'accès illimité avec un code à usage unique
-     GET  /hg/admin/queue?status=        (X-Admin-Key) file de modération
+     GET  /hg/admin/queue?status=        (X-Admin-Key) file de modération (pending|approved|hidden|rejected|removed|reported) + compteurs ; 10 clés fausses => blocage 15 min
      POST /hg/admin/offers/:id/(approve|reject|hide|remove)   (X-Admin-Key) {note}
      POST /hg/admin/codes {n, days}      (X-Admin-Key) fabrique des codes de déblocage (affichés une seule fois)
    Le paiement en ligne (Konnect / Flouci) n'est PAS branché : un futur paiement créera simplement des codes ou activera l'accès. */
@@ -33,7 +39,7 @@ const CATS = ["family", "farm", "garden", "guesthouse", "exchange", "pets"];
 const TYPE_TO_CAT = ["garden", "farm", "pets", "family", "family", "exchange", "guesthouse", "family", "exchange", "family", "family", "pets"];
 const REASONS = ["spam", "fake", "unsafe", "inappropriate", "scam", "other"];
 const STATUSES = ["pending", "approved", "rejected", "hidden", "removed"];
-const MAX_PHOTO = 2 * 1024 * 1024, MAX_PHOTOS = 10, MAX_PHOTOS_TOTAL = 10 * 1024 * 1024, MAX_PIXELS = 40e6, MAX_BODY = 20000, PAGE_SIZE = 20, SCAN_MAX = 5, REPORT_HIDE_AT = 3, FREE_CONTACTS = 3;
+const MAX_PHOTO = 2 * 1024 * 1024, MAX_PHOTOS = 10, MAX_PHOTOS_TOTAL = 10 * 1024 * 1024, MAX_PIXELS = 40e6, MAX_BODY = 20000, PAGE_SIZE = 20, SCAN_MAX = 5, REPORT_HIDE_AT = 3, FREE_CONTACTS = 3, TOKEN_DAYS = 30;
 const LIM = { sid: /^hg-[0-9a-f]{16}$/, name: 60, city: 80, addr: 160, zip: 12, pv: 300, email: 254, long: 700, mid: 500, note: 300 };
 const enc = new TextEncoder();
 const hex = (buf) => [...new Uint8Array(buf)].map((x) => x.toString(16).padStart(2, "0")).join("");
@@ -163,7 +169,13 @@ function publicView(o, full) {
   if (full) { v.cal = o.cal || {}; v.texts = o.texts; v.photos = ph.map((p) => ({ n: p.n, c: p.c })); } else { v.excerpt = (o.texts && o.texts.place || "").slice(0, 140); v.cover = ph.length ? ph[0].n : null; }
   return v;
 }
-const meta = (o) => ({ s: o.status, c: o.country, k: o.cats, st: o.stay, l: (o.langs || []).map((r) => r[0]), tv: o.trav || [], ts: o.createdAt });
+const meta = (o) => ({ s: o.status, r: (o.reports || []).length, c: o.country, k: o.cats, st: o.stay, l: (o.langs || []).map((r) => r[0]), tv: o.trav || [], ts: o.createdAt });
+/* Photos : R2 si le binding PHOTOS existe (recommandé en production : pas de limite de métadonnées, moins cher), sinon KV. */
+const phPut = (env, key, bytes, md) => env.PHOTOS ? env.PHOTOS.put(key, bytes) : env.KV.put(key, bytes, { metadata: md });
+const phGet = async (env, key) => { if (env.PHOTOS) { const x = await env.PHOTOS.get(key); return x ? x.arrayBuffer() : null; } return env.KV.get(key, "arrayBuffer"); };
+const phDel = (env, key) => env.PHOTOS ? env.PHOTOS.delete(key) : env.KV.delete(key);
+/* Jeton de gestion : valable TOKEN_DAYS jours après la création de l'offre (sert à envoyer les photos juste après la publication). */
+const tokenOk = async (env, off, tok) => !!off && /^[0-9a-f]{48}$/.test(tok) && now() - off.createdAt < TOKEN_DAYS * 86400000 && (await sha256(tok + (env.SECRET || ""))) === off.tk;
 const saveOffer = (env, o) => env.KV.put("o:" + o.id, JSON.stringify(o), { metadata: meta(o) });
 async function loadOffer(env, id) { if (!/^[0-9a-f]{20}$/.test(id)) return null; const raw = await env.KV.get("o:" + id); try { return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
 
@@ -198,12 +210,14 @@ async function handle(req, env) {
   /* ----- Administration ----- */
   if (path.startsWith("/hg/admin/")) {
     if (!(await limit(env, "adm:" + ip, 60, 900))) return fail(req, env, 429, "rate");
-    if (!(await isAdmin(req, env))) { await limit(env, "admbad:" + ip, 10, 900) ; return fail(req, env, 401, "admin"); }
+    if ((parseInt((await env.KV.get("rl:admbad:" + ip)) || "0", 10) || 0) >= 10) return fail(req, env, 429, "locked");
+    if (!(await isAdmin(req, env))) { await limit(env, "admbad:" + ip, 10, 900); return fail(req, env, 401, "admin"); }
     if (path === "/hg/admin/queue" && m === "GET") {
-      const st = url.searchParams.get("status") || "pending"; if (!STATUSES.includes(st)) return fail(req, env, 400, "bad_status");
-      const all = await scan(env), ids = all.filter((k) => k.metadata && k.metadata.s === st).sort((a, b) => a.metadata.ts - b.metadata.ts).slice(0, 50);
+      const st = url.searchParams.get("status") || "pending"; if (!STATUSES.includes(st) && st !== "reported") return fail(req, env, 400, "bad_status");
+      const all = await scan(env), ids = all.filter((k) => k.metadata && (st === "reported" ? k.metadata.r > 0 && k.metadata.s !== "removed" && k.metadata.s !== "rejected" : k.metadata.s === st)).sort((a, b) => a.metadata.ts - b.metadata.ts).slice(0, 50);
       const items = []; for (const k of ids) { const x = await loadOffer(env, k.name.slice(2)); if (x) { const { tk, emailHash, ...rest } = x; items.push(rest); } }
-      return json(req, env, { ok: true, items });
+      const counts = {}; for (const k of all) { const d = k.metadata; if (!d) continue; counts[d.s] = (counts[d.s] || 0) + 1; if (d.r > 0 && d.s !== "removed" && d.s !== "rejected") counts.reported = (counts.reported || 0) + 1; }
+      return json(req, env, { ok: true, items, counts });
     }
     if (path === "/hg/admin/codes" && m === "POST") {
       r = await readJson(req); if (!r.body) return fail(req, env, 400, "bad_body");
@@ -216,6 +230,7 @@ async function handle(req, env) {
     const a = /^\/hg\/admin\/offers\/([0-9a-f]{20})\/(approve|reject|hide|remove)$/.exec(path);
     if (a && m === "POST") {
       const off = await loadOffer(env, a[1]); if (!off) return fail(req, env, 404, "not_found");
+      if (off.status === "removed") return fail(req, env, 409, "already_removed");
       r = await readJson(req); const note = str(r.body && r.body.note, LIM.note);
       off.status = { approve: "approved", reject: "rejected", hide: "hidden", remove: "removed" }[a[2]]; off.updatedAt = now();
       (off.notes = off.notes || []).push({ ts: now(), action: a[2], note }); off.notes = off.notes.slice(-20);
@@ -240,7 +255,7 @@ async function handle(req, env) {
       if (ex.status === "removed") return fail(req, env, 409, "sid_used");
       const em = str(b.email, LIM.email).toLowerCase();
       if (!em || (await emailHashOf(env, em)) !== ex.emailHash) return fail(req, env, 409, "sid_used");
-      return json(req, env, { ok: true, id, editToken: token, status: ex.status, duplicate: true });
+      return json(req, env, { ok: true, id, editToken: now() - ex.createdAt < TOKEN_DAYS * 86400000 ? token : undefined, status: ex.status, duplicate: true });
     }
     const parsed = readOffer(b, false); if (parsed.error) return fail(req, env, 400, parsed.error);
     const emailHash = await emailHashOf(env, parsed.offer.email);
@@ -248,7 +263,10 @@ async function handle(req, env) {
     const taken = await env.KV.get("e:" + emailHash); if (taken && taken !== id) return fail(req, env, 409, "already_registered");
     const off = { ...parsed.offer, id, sid: b.sid, emailHash, tk: await sha256(token + (env.SECRET || "")), status: "pending", createdAt: now(), updatedAt: now(), reports: [], photos: [], lang: ["fr", "en", "ar"].includes(b.lang) ? b.lang : "fr" };
     off.hours = off.hours || 0; off.days = off.days || 0; off.stay = off.stay || 0;
-    await env.KV.put("e:" + emailHash, id); await saveOffer(env, off);
+    await env.KV.put("e:" + emailHash, id);
+    /* KV n'offre pas d'écriture atomique : si une autre demande du même e-mail a écrit le verrou entre-temps, on relit et le perdant s'efface (meilleur effort, voir en-tête). */
+    if ((await env.KV.get("e:" + emailHash)) !== id) return fail(req, env, 409, "already_registered");
+    await saveOffer(env, off);
     return json(req, env, { ok: true, id, editToken: token, status: "pending" }, 201);
   }
 
@@ -289,11 +307,11 @@ async function handle(req, env) {
   if (pa && (m === "POST" || m === "DELETE")) {
     if (!(await limit(env, "ph:" + ip, 120, 3600))) return fail(req, env, 429, "rate");
     const off = await loadOffer(env, pa[1]), tok = req.headers.get("X-Edit-Token") || "";
-    if (!off || off.status === "removed" || off.status === "rejected" || !/^[0-9a-f]{48}$/.test(tok) || (await sha256(tok + (env.SECRET || ""))) !== off.tk) return fail(req, env, 404, "not_found");
+    if (!off || off.status === "removed" || off.status === "rejected" || !(await tokenOk(env, off, tok))) return fail(req, env, 404, "not_found");
     off.photos = off.photos || [];
     if (m === "DELETE") {
       if (pa[2] === undefined) return fail(req, env, 400, "bad_photo"); const n = +pa[2], k = off.photos.findIndex((p) => p.n === n); if (k < 0) return fail(req, env, 404, "not_found");
-      off.photos.splice(k, 1); await env.KV.delete("p:" + off.id + ":" + n); if (off.status !== "pending") off.status = "pending"; off.updatedAt = now(); await saveOffer(env, off); return json(req, env, { ok: true, photos: off.photos.length });
+      off.photos.splice(k, 1); await phDel(env, "p:" + off.id + ":" + n); if (off.status !== "pending") off.status = "pending"; off.updatedAt = now(); await saveOffer(env, off); return json(req, env, { ok: true, photos: off.photos.length });
     }
     if (pa[2] !== undefined) return fail(req, env, 404, "not_found");
     const len = parseInt(req.headers.get("Content-Length") || "", 10);
@@ -307,7 +325,7 @@ async function handle(req, env) {
     if (off.photos.reduce((t, p) => t + p.s, 0) + info.bytes.length > MAX_PHOTOS_TOTAL) return fail(req, env, 413, "photos_total_too_large");
     let n = 0; while (off.photos.some((p) => p.n === n)) n++;
     const c = Math.max(0, Math.min(9, parseInt(url.searchParams.get("cat") || "0", 10) || 0));
-    await env.KV.put("p:" + off.id + ":" + n, info.bytes, { metadata: { t: info.type, s: info.bytes.length } });
+    await phPut(env, "p:" + off.id + ":" + n, info.bytes, { t: info.type, s: info.bytes.length });
     off.photos.push({ n, t: info.type, s: info.bytes.length, c, h: hash }); off.photos.sort((x, y) => x.n - y.n);
     if (off.status !== "pending") off.status = "pending"; off.updatedAt = now(); await saveOffer(env, off);
     return json(req, env, { ok: true, n, photos: off.photos.length }, 201);
@@ -317,7 +335,7 @@ async function handle(req, env) {
   if (a && (m === "PATCH" || m === "DELETE")) {
     if (!(await limit(env, "own:" + ip, 30, 3600))) return fail(req, env, 429, "rate");
     const off = await loadOffer(env, a[1]), tok = req.headers.get("X-Edit-Token") || "";
-    if (!off || off.status === "removed" || !/^[0-9a-f]{48}$/.test(tok) || (await sha256(tok + (env.SECRET || ""))) !== off.tk) return fail(req, env, 404, "not_found");
+    if (!off || off.status === "removed" || !(await tokenOk(env, off, tok))) return fail(req, env, 404, "not_found");
     if (m === "DELETE") { off.status = "removed"; off.updatedAt = now(); await purgePhotos(env, off); scrub(off); await saveOffer(env, off); await env.KV.delete("e:" + off.emailHash); return json(req, env, { ok: true, status: "removed" }); }
     r = await readJson(req); if (r.tooBig) return fail(req, env, 413, "too_big"); if (!r.body) return fail(req, env, 400, "bad_body");
     if (r.body.email !== undefined || r.body.sid !== undefined) return fail(req, env, 400, "immutable_field");
@@ -375,7 +393,7 @@ async function handle(req, env) {
 
 async function photoResponse(req, env, off, n, cache) {
   const p = (off.photos || []).find((x) => x.n === n); if (!p) return fail(req, env, 404, "not_found");
-  const data = await env.KV.get("p:" + off.id + ":" + n, "arrayBuffer"); if (!data) return fail(req, env, 404, "not_found");
+  const data = await phGet(env, "p:" + off.id + ":" + n); if (!data) return fail(req, env, 404, "not_found");
   return new Response(data, { status: 200, headers: { ...cors(req, env), "Content-Type": "image/" + p.t, "Cache-Control": cache, "Content-Disposition": "inline", "Content-Security-Policy": "default-src 'none'; sandbox", "Cross-Origin-Resource-Policy": "cross-origin" } });
 }
 
@@ -387,7 +405,7 @@ async function scan(env) {
 }
 /* Retrait : les données personnelles sont effacées, seule la trace de modération reste. */
 function scrub(o) { for (const k of ["email", "addr", "zip", "pv"]) delete o[k]; o.firstName = ""; o.texts = {}; o.photos = []; }
-async function purgePhotos(env, o) { for (const p of o.photos || []) await env.KV.delete("p:" + o.id + ":" + p.n); }
+async function purgePhotos(env, o) { for (const p of o.photos || []) await phDel(env, "p:" + o.id + ":" + p.n); }
 
 export default {
   async fetch(req, env) {
