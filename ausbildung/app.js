@@ -9,14 +9,14 @@
   { const m = document.getElementById("aus"); if (m) { m.setAttribute("lang", I.lang); m.setAttribute("dir", I.dir); } document.documentElement.setAttribute("lang", I.lang); }
   const steps = [
     {id:"education",values:["middle_school","secondary_no_bac","baccalaureat","vocational","bac2","licence","master"]},
-    {id:"experience",values:["professional","internship","personal_projects","none"]},
+    {id:"experience",values:["professional","internship","personal_projects","training","none"],multi:true},
     {id:"german",values:["A0","A1","A2","B1","B2","C1"]},
     {id:"interests",values:["health","technology","automotive","electronics","industry","logistics","hospitality","cooking","sales","construction","helping_people","problem_solving"],multi:true},
-    {id:"environment",values:["office","workshop","hospital","hotel","shop","warehouse","construction_site","factory","open"]},
+    {id:"environment",values:["office","workshop","hospital","hotel","shop","warehouse","kitchen","construction_site","factory","open"]},
     {id:"project",values:["soon","3_6","6_12","later","exploring"]}
   ];
-  const skillValues = ["logic","analytical_thinking","programming","troubleshooting","mechanical_reasoning","manual_precision","communication","organization","teamwork","empathy","planning","creativity","numeracy","reliability","electrical_reasoning","service_mindset"];
-  const domainValues = ["it","automotive","electrical","health","logistics","hospitality","retail","cooking","construction","manufacturing","social"];
+  const skillValues = window.AusbildungMatcher.VOCABULARY.skills.slice();
+  const domainValues = window.AusbildungMatcher.VOCABULARY.domains.slice();
   const labelled = (prefix, values) => values.map((v) => [v, t(prefix + v)]);
   const emptyAnswers = () => ({education:"",experience:[],experienceDomains:[],german:"",interests:[],environment:"",project:"",mobility:"",skills:[]});
   let step = 0, answers = emptyAnswers(), catalogue = null, companies = null, sector = "all";
@@ -101,7 +101,7 @@
     }
     $("mobilityArea").hidden = step !== 5;
     if (step === 5) document.querySelectorAll('input[name="mobility"]').forEach((x) => { x.checked = x.value === answers.mobility; });
-    $("back").disabled = false;
+    $("back").disabled = false; $("toStart").disabled = step === 0;
     $("next").textContent = step === steps.length - 1 ? t("btn.finish") : t("btn.next");
     $("error").textContent = "";
     if (focusTitle) { $("questionTitle").focus(); }
@@ -120,14 +120,8 @@
   }
 
   function profile() {
-    const interests = answers.interests.map((v) => ({electronics:"electronics",industry:"industrial_systems",construction:"construction"}[v] || v));
-    const environments = answers.environment === "open"
-      ? ["office","computer","hybrid","technical_team","workshop","garage","hands_on","hospital","clinic","care_home","people_facing","industrial_site","factory","field_work","warehouse","logistics_center","hotel","reception","shop","retail_store","construction_site","professional_kitchen","restaurant","production","team"]
-      : ({
-        office:["office","computer"],workshop:["workshop","garage","hands_on"],hospital:["hospital","clinic","care_home","people_facing"],
-        hotel:["hotel","reception","people_facing"],shop:["shop","retail_store","people_facing"],warehouse:["warehouse","logistics_center","active_work","team"],
-        construction_site:["construction_site","field_work","hands_on"],factory:["factory","industrial_site","production","technical_team"]
-      })[answers.environment] || [];
+    const interests = answers.interests.slice();
+    const environments = window.AusbildungMatcher.environmentTags(answers.environment);
     return {skills:answers.skills,interests,environments,experience:answers.experience.includes("none") ? [] : answers.experienceDomains,german_level:answers.german,education:answers.education,availability:answers.project,mobility:answers.mobility};
   }
 
@@ -155,7 +149,9 @@
     // Un score de 0 signifie « aucune correspondance » : on ne le présente pas comme une piste.
     const useful = result.results.filter((r) => r.score > 0);
     $("quiz").hidden = true; $("results").hidden = false; setStage(3);
-    const mine = full.results.map((r, i) => [r, i]).filter(([r]) => chosen.has(r.occupation.id));
+    // Tout métier choisi reste affiché : classé par le moteur, sinon (profil trop pauvre pour être classé) avec la mention « pas assez de réponses ».
+    const ranked = new Map(full.results.map((r, i) => [r.occupation.id, [r, i]]));
+    const mine = catalogue.occupations.filter((o) => chosen.has(o.id)).map((o) => ranked.get(o.id) || [{occupation: o, score: 0}, Infinity]).sort((x, y) => x[1] - y[1]);
     $("chosenWrap").hidden = !mine.length;
     $("chosenList").innerHTML = mine.map(([r, i]) => r.score > 0 ? resultCard(r, i) : `<article class="result-card"><strong>${escapeHtml(r.occupation.title_de)}</strong><p>${escapeHtml(t("res.noenough", {title: titleOf(r.occupation)}))}</p></article>`).join("");
     $("resultList").innerHTML = useful.map(resultCard).join("")
@@ -174,6 +170,9 @@
     if (t.checked && t.value === "none") boxes.forEach((x) => { if (x !== t) x.checked = false; });
     else if (t.checked) boxes.forEach((x) => { if (x.value === "none") x.checked = false; });
   });
+  // Accès directs : début du questionnaire et sélection des métiers ; les réponses restent en mémoire (aucun stockage navigateur).
+  $("toStart").addEventListener("click", () => { collect(); step = 0; render(true); window.scrollTo({top:0,behavior:"auto"}); });
+  $("toPick").addEventListener("click", () => { collect(); showPick(); $("pickH").focus(); });
   $("back").addEventListener("click", () => { collect(); if (step === 0) { showPick(); $("pickH").focus(); return; } step = Math.max(0, step - 1); render(true); });
   $("next").addEventListener("click", () => { collect(); if (step < steps.length - 1) { step++; render(true); } else showResults(); });
   $("restart").addEventListener("click", () => { step = 0; answers = emptyAnswers(); chosen.clear(); $("pickSearch").value = ""; showPick(); $("pickH").focus(); });

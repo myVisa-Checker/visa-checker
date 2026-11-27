@@ -145,3 +145,8 @@
 #aus .colinks{display:flex;gap:8px;flex-wrap:wrap}
 #aus .srcs{padding-inline-start:18px;overflow-wrap:anywhere}
 @media print{#fiche{display:block!important}}
+#aus .subnav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px}
+#aus .linkbtn{min-height:44px;padding:0;border:0;background:none;color:var(--accent,#1d4ed8);font:inherit;font-size:.88rem;text-decoration:underline;cursor:pointer}
+#aus .linkbtn:disabled{color:var(--muted,#4a5f86);text-decoration:none;opacity:.6;cursor:default}
+#aus .linkbtn:focus-visible{outline:3px solid var(--royal-400,#3b82f6);outline-offset:2px}
+@media print{#aus .subnav{display:none!important}}

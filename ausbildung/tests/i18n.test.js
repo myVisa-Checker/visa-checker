@@ -34,8 +34,9 @@ const arr = (name) => JSON.parse(app.match(new RegExp(name + " = (\\[[^\\]]*\\])
 const stepRe = /\{id:"(\w+)",values:(\[[^\]]*\])/g; let m, nSteps = 0;
 while ((m = stepRe.exec(app))) { nSteps++; for (const v of JSON.parse(m[2])) for (const d of [fr, en, ar]) assert.ok(d[`o.${m[1]}.${v}`], `réponse manquante ${m[1]}.${v}`); for (const d of [fr, en, ar]) { assert.ok(d[`q.${m[1]}.title`]); assert.ok(d[`q.${m[1]}.hint`]); } }
 assert.equal(nSteps, 6, "6 étapes");
-for (const v of arr("skillValues")) for (const d of [fr, en, ar]) assert.ok(d["skill." + v], "compétence " + v);
-for (const v of arr("domainValues")) for (const d of [fr, en, ar]) assert.ok(d["dom." + v], "domaine " + v);
+const VOC = require("../career-matcher.js").VOCABULARY;
+for (const v of VOC.skills) for (const d of [fr, en, ar]) assert.ok(d["skill." + v], "compétence " + v);
+for (const v of VOC.domains) for (const d of [fr, en, ar]) assert.ok(d["dom." + v], "domaine " + v);
 for (const k of ["skills", "interests", "environments", "experience"]) assert.ok(fr["reason." + k], "raison " + k);
 for (const c of ["middle_school", "secondary_no_bac", "baccalaureat", "vocational", "bac2", "licence", "master"]) assert.ok(fr["edu." + c] && ar["edu." + c]);
 for (const c of ["soon", "3_6", "6_12", "later", "exploring"]) assert.ok(fr["avail." + c] && ar["avail." + c]);
@@ -49,7 +50,11 @@ assert.equal(rc({german_level: "B2"}).german, "b1_plus");
 assert.equal(rc({}).german, "unknown");
 assert.equal(rc({education: "licence", availability: "3_6", mobility: "yes"}).education, "licence");
 assert.equal(rc({mobility: "no"}).mobility, "no");
-assert.equal(rc({mobility: "consider"}).mobility, "other");
+assert.equal(rc({mobility: "consider"}).mobility, "consider");
+assert.equal(rc({mobility: "visa_pending"}).mobility, "visa_pending", "visa en cours : code distinct");
+assert.notEqual(rc({mobility: "visa_pending"}).mobility, "no", "un visa en cours n'est pas un refus de mobilité");
+assert.equal(rc({mobility: "other"}).mobility, "other");
+assert.equal(rc({}).mobility, "unknown");
 assert.equal(rd({german_level: "A1"}).german_note_fr, fr["ready.german.below_b1"], "note allemand alignée");
 assert.equal(rd({german_level: "B2"}).german_note_fr, fr["ready.german.b1_plus"], "note allemand B1+ alignée");
 assert.equal(rd({}).german_note_fr, fr["ready.german.unknown"], "note allemand inconnu alignée");
@@ -59,7 +64,9 @@ assert.equal(rd({availability: "3_6"}).project_note_fr, i18n.make("fr").t("ready
 assert.equal(rd({}).project_note_fr, fr["ready.project.without"]);
 assert.equal(rd({mobility: "yes"}).mobility_note_fr, fr["ready.mobility.yes"]);
 assert.equal(rd({mobility: "no"}).mobility_note_fr, fr["ready.mobility.no"]);
-assert.equal(rd({}).mobility_note_fr, fr["ready.mobility.other"]);
+assert.equal(rd({}).mobility_note_fr, fr["ready.mobility.unknown"]);
+for (const m of ["consider", "visa_pending", "other"]) assert.equal(rd({mobility: m}).mobility_note_fr, fr["ready.mobility." + m], "note mobilité alignée : " + m);
+for (const l of ["fr", "en", "ar"]) for (const m of ["yes", "no", "consider", "visa_pending", "other", "unknown"]) assert.ok(i18n.dict[l]["ready.mobility." + m], l + " : note mobilité " + m);
 assert.equal(rd({}).visa_note_fr, fr["ready.visa"]);
 const res = matcher.match({skills: ["logic"], interests: ["technology"], environments: ["office"], experience: [], german_level: "A2"}, catalogue, 3);
 assert.deepEqual(res.readiness_codes, rc({german_level: "A2"}), "match() expose les codes des notes");

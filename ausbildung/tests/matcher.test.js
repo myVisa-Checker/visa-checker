@@ -9,15 +9,15 @@ assert.equal(catalogue.occupations.length,14,"catalogue contient 14 métiers");
 assert.equal(new Set(catalogue.occupations.map(x=>x.id)).size,14,"IDs uniques");
 assert.equal(byId("pflegefachkraft").training_type,"regulated_school_based","soins distingués de la formation duale classique");
 
-let r=matcher.match({skills:["programming","logic","troubleshooting"],interests:["technology","programming","computers"],environments:["office","computer"],experience:["it","web"],german_level:"A2"},catalogue,3);
+let r=matcher.match({skills:["programming","logic","troubleshooting"],interests:["technology","problem_solving"],environments:["office","computer"],experience:["it"],german_level:"A2"},catalogue,3);
 assert.equal(r.results[0].occupation_id,"fachinformatiker","profil informatique classé en premier");
-assert.equal(r.results[0].score,58,"score pondéré calculé sur les tags correspondants");
+assert.equal(r.results[0].score,79,"score pondéré calculé sur les tags correspondants");
 
-r=matcher.match({skills:["mechanical_reasoning","manual_precision"],interests:["automotive","mechanics"],environments:["workshop","garage"],experience:["automotive","repair"],german_level:"A1"},catalogue,3);
+r=matcher.match({skills:["mechanical_reasoning","manual_precision"],interests:["automotive"],environments:["workshop","garage"],experience:["automotive"],german_level:"A1"},catalogue,3);
 assert.equal(r.results[0].occupation_id,"kfz_mechatroniker","profil mécanique classé en premier");
 assert.match(r.readiness.german_note_fr,/progression en allemand/i,"niveau de langue traité dans readiness");
 
-r=matcher.match({skills:["empathy","communication","organization"],interests:["health","helping_people","care"],environments:["hospital","clinic","people_facing"],experience:["health","care"],german_level:"B1"},catalogue,3);
+r=matcher.match({skills:["empathy","communication","organization"],interests:["health","helping_people"],environments:["hospital","clinic","people_facing"],experience:["health"],german_level:"B1"},catalogue,3);
 assert.equal(r.results[0].occupation_id,"pflegefachkraft","profil soins classé en premier");
 
 r=matcher.match({skills:["programming"],interests:["technology"],environments:[],experience:[],german_level:"A1"},catalogue,10);
@@ -99,16 +99,86 @@ for(const o of catalogue.occupations){
   assert.equal(o.language_guidance.level,null,o.id+" : aucune exigence linguistique fixe codée");
 }
 
-// Le questionnaire (app.js) ne propose que des valeurs que le catalogue connaît (sinon un choix n'aurait aucun effet).
+// P1-1 — vocabulaire commun questionnaire ↔ catalogue, vérifié dans les DEUX sens.
+const VOC=matcher.VOCABULARY;
 const appSrc=fs.readFileSync(path.join(__dirname,"../app.js"),"utf8");
-const values=(name)=>{const m=appSrc.match(new RegExp("const "+name+" = \\[([\\s\\S]*?)\\];"));assert.ok(m,name+" introuvable");return [...m[1].matchAll(/"([a-z0-9_]+)"/g)].map(x=>x[1]);};
+const stepValues=(id)=>{const m=appSrc.match(new RegExp('\\{id:"'+id+'",values:\\[([^\\]]*)\\]'));assert.ok(m,"étape "+id+" introuvable");return [...m[1].matchAll(/"([a-z0-9_]+)"/g)].map(x=>x[1]);};
 const tagsOf=(k)=>new Set(catalogue.occupations.flatMap(o=>o[k]));
-for(const v of values("skillValues")) assert.ok(tagsOf("skills").has(v),"compétence sans métier : "+v);
-for(const v of values("domainValues")) assert.ok(tagsOf("experience_domains").has(v),"domaine d'expérience sans métier : "+v);
-const interestMap={electronics:"electronics",industry:"industrial_systems",construction:"construction"};
-const stepsSrc=appSrc.slice(appSrc.indexOf('id:"interests"'),appSrc.indexOf('id:"environment"'));
-const interestValues=[...stepsSrc.match(/values:\[([^\]]*)\]/)[1].matchAll(/"([a-z_]+)"/g)].map(x=>[0,x[1]]);
-assert.ok(interestValues.length>=10,"intérêts du questionnaire lus");
-for(const m of interestValues) assert.ok(tagsOf("interests").has(interestMap[m[1]]||m[1]),"intérêt sans métier : "+m[1]);
+const interestAnswers=stepValues("interests"), envAnswers=stepValues("environment").filter(v=>v!=="open");
+assert.deepEqual(interestAnswers,[...VOC.interests],"intérêts du questionnaire = vocabulaire du moteur");
+assert.deepEqual([...envAnswers].sort(),Object.keys(VOC.environments).sort(),"lieux du questionnaire = vocabulaire du moteur");
+assert.match(appSrc,/skillValues = window\.AusbildungMatcher\.VOCABULARY\.skills/,"app.js lit les compétences du vocabulaire commun");
+assert.match(appSrc,/domainValues = window\.AusbildungMatcher\.VOCABULARY\.domains/,"app.js lit les domaines du vocabulaire commun");
+assert.match(appSrc,/environmentTags\(answers\.environment\)/,"app.js construit les lieux via le vocabulaire commun");
+const envUnion=new Set(Object.values(VOC.environments).flat());
+const reach={skills:new Set(VOC.skills),interests:new Set(VOC.interests),environments:envUnion,experience_domains:new Set(VOC.domains)};
+// (a) catalogue → questionnaire : aucun tag du catalogue n'est impossible à sélectionner.
+for(const o of catalogue.occupations) for(const k of Object.keys(reach)) for(const tag of o[k]) assert.ok(reach[k].has(tag),o.id+" : tag "+k+" inatteignable depuis le questionnaire : "+tag);
+// (b) questionnaire → catalogue : aucune réponse sans effet.
+for(const v of VOC.skills) assert.ok(tagsOf("skills").has(v),"compétence sans métier : "+v);
+for(const v of VOC.domains) assert.ok(tagsOf("experience_domains").has(v),"domaine sans métier : "+v);
+for(const v of VOC.interests) assert.ok(tagsOf("interests").has(v)||v==="helping_people"&&tagsOf("interests").has(v),"intérêt sans métier : "+v);
+for(const [env,tags] of Object.entries(VOC.environments)) assert.ok(tags.some(x=>tagsOf("environments").has(x)),"lieu sans métier : "+env);
+// pas de doublon de tags dans un métier, pas de tag hors vocabulaire déclaré
+for(const o of catalogue.occupations) for(const k of Object.keys(reach)) assert.equal(new Set(o[k]).size,o[k].length,o.id+" : doublon dans "+k);
+assert.deepEqual(matcher.environmentTags("open").slice().sort(),[...envUnion].sort(),"« ouvert » = union des lieux");
+assert.deepEqual(matcher.environmentTags("inconnu"),[],"lieu inconnu = aucune réponse");
+
+// (c) profil idéal de chaque métier (tout ce qui le décrit est cochable) : score élevé ET rang 1 ou à égalité de score avec rang 1.
+const ceiling={};
+for(const o of catalogue.occupations){
+  const env=Object.entries(VOC.environments).map(([k,tags])=>[k,o.environments.filter(x=>tags.includes(x)).length]).sort((a,b)=>b[1]-a[1])[0][0];
+  const prof={skills:o.skills,interests:o.interests,environments:matcher.environmentTags(env),experience:o.experience_domains};
+  const res=matcher.match(prof,catalogue,14).results;
+  const me=res.find(r=>r.occupation_id===o.id);
+  ceiling[o.id]=me.score;
+  assert.ok(me.score>=85,o.id+" : un profil qui lui correspond doit dépasser 85 (obtenu "+me.score+")");
+  assert.equal(me.score,res[0].score,o.id+" : son profil idéal ne doit pas être battu par un autre métier");
+}
+// aucun métier n'a un plafond structurellement plus bas que les autres (écart max 15 points)
+const cv=Object.values(ceiling);
+assert.ok(Math.max(...cv)-Math.min(...cv)<=15,"plafonds homogènes : "+JSON.stringify(ceiling));
+
+// (d) pas de favoritisme par construction : sur des profils aléatoires reproductibles, aucun métier ne rafle > 25 % des premières places et chacun gagne au moins une fois.
+{
+  let seed=12345;const rnd=()=>(seed=(seed*1103515245+12345)%2147483648)/2147483648;
+  const pick=(arr,p)=>arr.filter(()=>rnd()<p);
+  const wins={};catalogue.occupations.forEach(o=>wins[o.id]=0);let n=0;
+  for(let i=0;i<4000;i++){
+    const envs=Object.keys(VOC.environments).concat("open");
+    const prof={skills:pick(VOC.skills,.3),interests:pick(VOC.interests,.3),environments:matcher.environmentTags(envs[Math.floor(rnd()*envs.length)]),experience:pick(VOC.domains,.25)};
+    const r=matcher.match(prof,catalogue,14).results;if(!r.length)continue;n++;
+    const top=r.filter(x=>x.score===r[0].score);wins[top[Math.floor(rnd()*top.length)].occupation_id]++;
+  }
+  for(const [id,w] of Object.entries(wins)){assert.ok(w>0,id+" ne gagne jamais");assert.ok(w/n<=0.25,id+" favorisé : "+(100*w/n).toFixed(1)+" %");}
+  console.log("Part de 1res places (profils aléatoires) :",Object.entries(wins).map(([k,v])=>k+" "+(100*v/n).toFixed(1)+"%").join(", "));
+  console.log("Plafonds (profil idéal) :",JSON.stringify(ceiling));
+}
+
+// Mobilité : la situation administrative (visa en cours) ne modifie pas le classement et n'est jamais lue comme un refus.
+const mbase={skills:["logic"],interests:["technology"],environments:["office"],experience:[],german_level:"B1"};
+const scoreOf=(mob)=>JSON.stringify(matcher.match(Object.assign({},mbase,{mobility:mob}),catalogue,14).results.map(r=>[r.occupation_id,r.score]));
+assert.equal(scoreOf("visa_pending"),scoreOf("yes"),"la mobilité n'entre pas dans le score");
+assert.match(matcher.readiness(Object.assign({},mbase,{mobility:"visa_pending"})).mobility_note_fr,/visa est en cours/);
+assert.doesNotMatch(matcher.readiness(Object.assign({},mbase,{mobility:"visa_pending"})).mobility_note_fr,/ne souhaitez pas/);
+
+// P1-2 : aucune limite artificielle. Le moteur doit pouvoir classer tout le catalogue (14 métiers),
+// sinon un métier choisi mais classé au-delà du 10e rang disparaîtrait des résultats.
+{
+  const N=catalogue.occupations.length;
+  assert.equal(N,14,"catalogue de 14 métiers");
+  const prof={skills:["empathy","communication"],interests:["health"],environments:["hospital"],experience:[]};
+  const all=matcher.match(prof,catalogue,N);
+  assert.equal(all.results.length,N,"match(…, N) renvoie les "+N+" métiers classés");
+  assert.equal(new Set(all.results.map(r=>r.occupation_id)).size,N,"aucun doublon, aucun oubli");
+  assert.equal(matcher.match(prof,catalogue,500).results.length,N,"une limite supérieure au catalogue est ramenée à N");
+  assert.equal(matcher.match(prof,catalogue,3).results.length,3,"le top 3 reste disponible");
+  assert.equal(matcher.match(prof,catalogue,0).results.length,1,"limite minimale : 1 résultat");
+  // Un échantillon de 5 métiers choisis, y compris les derniers du classement, est entièrement retrouvé.
+  const lastFive=all.results.slice(-5).map(r=>r.occupation_id);
+  const found=all.results.filter(r=>lastFive.includes(r.occupation_id));
+  assert.equal(found.length,5,"5 métiers choisis parmi les derniers du classement : 5 retrouvés");
+  assert.ok(all.results.slice(-5).every((r,i)=>all.results.indexOf(r)>=N-5),"ils sont bien au-delà du 9e rang");
+}
 
 console.log("Career Matcher: tous les tests sont passés.");

@@ -65,6 +65,36 @@
   const AVAILABILITY_LABELS_FR = Object.freeze({
     soon:"dès que possible", "3_6":"dans 3 à 6 mois", "6_12":"dans 6 à 12 mois", later:"plus tard", exploring:"vous découvrez encore le projet"
   });
+  // Volonté de mobilité (yes, no, consider) distincte de la situation administrative (visa_pending) : un visa en cours n'est jamais lu comme un refus.
+  /* Vocabulaire commun questionnaire ↔ catalogue (P1-1).
+     Chaque tag du catalogue (data/occupations.json) doit être atteignable par au moins une réponse ci-dessous,
+     et chaque réponse doit atteindre au moins un métier : ces deux sens sont verrouillés par tests/matcher.test.js.
+     Les compétences et domaines sont 1 réponse = 1 tag. Les intérêts sont 1 réponse = 1 tag (même nom).
+     Un lieu de travail (réponse unique) active l'ensemble de tags listé ; le score divise par le nombre de tags
+     du métier lui-même, donc élargir un ensemble ne favorise aucun métier par construction. */
+  const VOCABULARY = Object.freeze({
+    skills: Object.freeze(["logic","analytical_thinking","programming","troubleshooting","mechanical_reasoning","manual_precision","attention_to_detail","safety_awareness","communication","organization","teamwork","empathy","planning","creativity","numeracy","reliability","electrical_reasoning","service_mindset"]),
+    domains: Object.freeze(["it","automotive","electrical","health","logistics","hospitality","retail","cooking","construction","manufacturing","social"]),
+    interests: Object.freeze(["health","technology","automotive","electronics","industry","logistics","hospitality","cooking","sales","construction","helping_people","problem_solving"]),
+    environments: Object.freeze({
+      office: Object.freeze(["office","computer","technical_team"]),
+      workshop: Object.freeze(["workshop","garage","hands_on","technical_team"]),
+      hospital: Object.freeze(["hospital","clinic","care_home","medical_practice","people_facing"]),
+      hotel: Object.freeze(["hotel","reception","people_facing","shift_work"]),
+      shop: Object.freeze(["shop","retail_store","people_facing","team"]),
+      warehouse: Object.freeze(["warehouse","logistics_center","active_work","team","transport"]),
+      construction_site: Object.freeze(["construction_site","field_work","hands_on"]),
+      factory: Object.freeze(["factory","industrial_site","production","technical_team"]),
+      kitchen: Object.freeze(["professional_kitchen","restaurant","bakery","production","hands_on","shift_work","team"])
+    })
+  });
+  // « Ouvert à plusieurs environnements » = union de tous les lieux.
+  const OPEN_ENVIRONMENTS = Object.freeze([...new Set(Object.values(VOCABULARY.environments).flat())]);
+  function environmentTags(choice) {
+    if (choice === "open") return OPEN_ENVIRONMENTS.slice();
+    return Object.prototype.hasOwnProperty.call(VOCABULARY.environments, choice) ? VOCABULARY.environments[choice].slice() : [];
+  }
+  const MOBILITY_CODES = Object.freeze(["yes", "no", "consider", "visa_pending", "other"]);
   function readiness(profile) {
     const german = typeof profile.german_level === "string" ? profile.german_level.toUpperCase() : "UNKNOWN";
     const order = ["A0","A1","A2","B1","B2","C1","C2"];
@@ -82,7 +112,7 @@
         ? "Niveau d'études déclaré : " + education + ". Les conditions scolaires varient selon le métier, le Land et l'entreprise ; vérifiez-les auprès de l'établissement ou de l'employeur."
         : "Les conditions scolaires varient selon le métier, le Land et l'entreprise. Vérifiez-les auprès de l'établissement ou de l'employeur.",
       project_note_fr:availability ? "Votre horizon de départ déclaré : " + availability + "." : "Votre calendrier de départ reste à préciser.",
-      mobility_note_fr:profile.mobility === "yes" ? "Vous vous déclarez prêt(e) à déménager en Allemagne." : profile.mobility === "no" ? "Vous ne souhaitez pas déménager pour le moment." : "Votre mobilité reste à discuter.",
+      mobility_note_fr:({yes:"Vous vous déclarez prêt(e) à déménager en Allemagne.",no:"Vous ne souhaitez pas déménager pour le moment.",consider:"Vous hésitez encore à déménager en Allemagne.",visa_pending:"Votre visa est en cours de traitement : cela ne remet pas en cause votre souhait de déménager.",other:"Votre situation est différente ; elle reste à préciser."})[profile.mobility] || "Votre mobilité reste à discuter.",
       visa_note_fr:"Ce classement ne vérifie pas votre éligibilité au visa et ne garantit ni contrat de formation ni décision administrative."
     };
   }
@@ -95,7 +125,7 @@
       german: !order.includes(german) ? "unknown" : order.indexOf(german) < order.indexOf("B1") ? "below_b1" : "b1_plus",
       education: EDUCATION_LABELS_FR[profile.education] ? profile.education : null,
       availability: AVAILABILITY_LABELS_FR[profile.availability] ? profile.availability : null,
-      mobility: profile.mobility === "yes" ? "yes" : profile.mobility === "no" ? "no" : "other"
+      mobility: MOBILITY_CODES.includes(profile.mobility) ? profile.mobility : "unknown"
     };
   }
   function match(profile, catalogue, limit=3) {
@@ -106,11 +136,11 @@
     return {
       engine_version:"0.1.1",
       scoring_weights:WEIGHTS,
-      results:ranked.slice(0,Math.max(1,Math.min(10,limit))).map(x => ({...x.result,occupation:x.occupation})),
+      results:ranked.slice(0,Math.max(1,Math.min(ranked.length||1,Number.isFinite(limit)?Math.floor(limit):3))).map(x => ({...x.result,occupation:x.occupation})),
       readiness:readiness(profile),
       readiness_codes:readinessCodes(profile),
       disclaimer_fr:"Orientation indicative uniquement. Le score mesure une correspondance avec les préférences et compétences déclarées, pas une probabilité d'embauche ou de visa."
     };
   }
-  return Object.freeze({ match, scoreOccupation, readiness, readinessCodes, WEIGHTS });
+  return Object.freeze({ match, scoreOccupation, readiness, readinessCodes, WEIGHTS, VOCABULARY, environmentTags });
 });

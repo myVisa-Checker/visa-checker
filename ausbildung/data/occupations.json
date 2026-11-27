@@ -11,15 +11,14 @@
    "duration_months": 36,
    "interests": [
     "health",
-    "helping_people",
-    "care"
+    "helping_people"
    ],
    "skills": [
     "empathy",
     "communication",
     "organization",
-    "responsibility",
-    "observation"
+    "reliability",
+    "attention_to_detail"
    ],
    "environments": [
     "hospital",
@@ -29,8 +28,6 @@
    ],
    "experience_domains": [
     "health",
-    "care",
-    "volunteering",
     "social"
    ],
    "specializations": [],
@@ -102,9 +99,7 @@
    "duration_months": 36,
    "interests": [
     "health",
-    "helping_people",
-    "care",
-    "organization"
+    "helping_people"
    ],
    "skills": [
     "communication",
@@ -115,14 +110,12 @@
    ],
    "environments": [
     "clinic",
-    "people_facing",
-    "office"
+    "medical_practice",
+    "people_facing"
    ],
    "experience_domains": [
     "health",
-    "care",
-    "social",
-    "customer_service"
+    "social"
    ],
    "specializations": [],
    "language_guidance": {
@@ -180,8 +173,6 @@
    "duration_months": 36,
    "interests": [
     "technology",
-    "programming",
-    "computers",
     "problem_solving"
    ],
    "skills": [
@@ -194,16 +185,10 @@
    "environments": [
     "office",
     "computer",
-    "hybrid",
     "technical_team"
    ],
    "experience_domains": [
-    "it",
-    "software",
-    "web",
-    "networking",
-    "data",
-    "personal_projects"
+    "it"
    ],
    "specializations": [
     "Anwendungsentwicklung",
@@ -252,13 +237,10 @@
    "duration_months": 42,
    "interests": [
     "automotive",
-    "mechanics",
-    "technology",
-    "vehicles"
+    "technology"
    ],
    "skills": [
     "mechanical_reasoning",
-    "diagnostics",
     "manual_precision",
     "troubleshooting",
     "attention_to_detail"
@@ -270,10 +252,7 @@
     "technical_team"
    ],
    "experience_domains": [
-    "automotive",
-    "mechanics",
-    "maintenance",
-    "repair"
+    "automotive"
    ],
    "specializations": [],
    "language_guidance": {
@@ -345,29 +324,24 @@
    "duration_months": 42,
    "interests": [
     "electronics",
-    "electricity",
-    "energy",
-    "technology",
-    "industrial_systems"
+    "industry",
+    "technology"
    ],
    "skills": [
     "logic",
     "electrical_reasoning",
     "troubleshooting",
-    "precision",
+    "manual_precision",
     "safety_awareness"
    ],
    "environments": [
-    "industrial_site",
     "factory",
-    "field_work",
+    "industrial_site",
     "technical_team"
    ],
    "experience_domains": [
     "electrical",
-    "electronics",
-    "industrial_maintenance",
-    "automation"
+    "manufacturing"
    ],
    "specializations": [],
    "language_guidance": {
@@ -418,8 +392,6 @@
    "duration_months": 42,
    "interests": [
     "electronics",
-    "electricity",
-    "energy",
     "construction",
     "technology"
    ],
@@ -427,20 +399,17 @@
     "logic",
     "electrical_reasoning",
     "troubleshooting",
-    "precision",
+    "manual_precision",
     "safety_awareness"
    ],
    "environments": [
     "construction_site",
     "field_work",
-    "workshop",
     "hands_on"
    ],
    "experience_domains": [
     "electrical",
-    "electronics",
-    "installation",
-    "maintenance"
+    "construction"
    ],
    "specializations": [],
    "language_guidance": {
@@ -499,28 +468,21 @@
    "duration_months": 42,
    "interests": [
     "industry",
-    "machines",
-    "mechanics",
-    "manufacturing"
+    "technology"
    ],
    "skills": [
     "mechanical_reasoning",
     "manual_precision",
-    "technical_drawing",
     "troubleshooting",
     "attention_to_detail"
    ],
    "environments": [
     "factory",
-    "workshop",
     "production",
-    "hands_on"
+    "technical_team"
    ],
    "experience_domains": [
-    "mechanics",
-    "manufacturing",
-    "maintenance",
-    "metalwork"
+    "manufacturing"
    ],
    "specializations": [],
    "language_guidance": {
@@ -581,30 +543,21 @@
    "duration_months": 42,
    "interests": [
     "construction",
-    "installation",
-    "heating",
-    "water",
-    "climate_technology"
+    "technology"
    ],
    "skills": [
     "mechanical_reasoning",
     "manual_precision",
     "troubleshooting",
-    "spatial_reasoning",
     "safety_awareness"
    ],
    "environments": [
     "construction_site",
-    "workshop",
     "field_work",
     "hands_on"
    ],
    "experience_domains": [
-    "plumbing",
-    "heating",
-    "construction",
-    "maintenance",
-    "installation"
+    "construction"
    ],
    "specializations": [],
    "language_guidance": {
@@ -664,10 +617,7 @@
    "training_type": "dual",
    "duration_months": 36,
    "interests": [
-    "logistics",
-    "transport",
-    "organization",
-    "supply_chain"
+    "logistics"
    ],
    "skills": [
     "organization",
@@ -683,10 +633,7 @@
     "team"
    ],
    "experience_domains": [
-    "logistics",
-    "warehouse",
-    "transport",
-    "stock_management"
+    "logistics"
    ],
    "specializations": [],
    "language_guidance": {
@@ -748,12 +695,10 @@
    "duration_months": 36,
    "interests": [
     "logistics",
-    "transport",
-    "vehicles"
+    "automotive"
    ],
    "skills": [
     "reliability",
-    "responsibility",
     "planning",
     "organization",
     "safety_awareness"
@@ -761,12 +706,10 @@
    "environments": [
     "active_work",
     "logistics_center",
-    "field_work"
+    "transport"
    ],
    "experience_domains": [
-    "logistics",
-    "transport",
-    "driving"
+    "logistics"
    ],
    "specializations": [],
    "language_guidance": {
@@ -823,16 +766,12 @@
    "training_type": "dual",
    "duration_months": 36,
    "interests": [
-    "hospitality",
-    "tourism",
-    "languages",
-    "customer_service"
+    "hospitality"
    ],
    "skills": [
     "communication",
     "organization",
     "service_mindset",
-    "multitasking",
     "teamwork"
    ],
    "environments": [
@@ -843,9 +782,7 @@
    ],
    "experience_domains": [
     "hospitality",
-    "tourism",
-    "customer_service",
-    "events"
+    "retail"
    ],
    "specializations": [],
    "language_guidance": {
@@ -905,14 +842,12 @@
    "duration_months": 36,
    "interests": [
     "cooking",
-    "gastronomy",
-    "food",
-    "creativity"
+    "hospitality"
    ],
    "skills": [
-    "discipline",
+    "reliability",
     "manual_precision",
-    "time_management",
+    "planning",
     "teamwork",
     "creativity"
    ],
@@ -924,9 +859,7 @@
    ],
    "experience_domains": [
     "cooking",
-    "food_service",
-    "restaurant",
-    "bakery"
+    "hospitality"
    ],
    "specializations": [],
    "language_guidance": {
@@ -987,29 +920,23 @@
    "training_type": "dual",
    "duration_months": 36,
    "interests": [
-    "cooking",
-    "food",
-    "gastronomy",
-    "creativity"
+    "cooking"
    ],
    "skills": [
     "manual_precision",
-    "discipline",
-    "time_management",
-    "teamwork",
-    "reliability"
+    "reliability",
+    "planning",
+    "teamwork"
    ],
    "environments": [
-    "workshop",
+    "bakery",
     "production",
     "hands_on",
     "shift_work",
     "team"
    ],
    "experience_domains": [
-    "cooking",
-    "bakery",
-    "food_service"
+    "cooking"
    ],
    "specializations": [],
    "language_guidance": {
@@ -1050,17 +977,13 @@
    "training_type": "dual",
    "duration_months": 24,
    "interests": [
-    "sales",
-    "commerce",
-    "customer_service",
-    "products"
+    "sales"
    ],
    "skills": [
     "communication",
-    "listening",
+    "empathy",
     "reliability",
-    "numeracy",
-    "persuasion"
+    "numeracy"
    ],
    "environments": [
     "shop",
@@ -1069,10 +992,7 @@
     "team"
    ],
    "experience_domains": [
-    "retail",
-    "sales",
-    "cashier",
-    "customer_service"
+    "retail"
    ],
    "specializations": [],
    "language_guidance": {

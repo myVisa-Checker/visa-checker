@@ -100,14 +100,18 @@
     <div id="skillArea" hidden></div>
     <div id="mobilityArea" hidden>
       <h3 id="mobilityTitle" data-t="mob.title">Êtes-vous prêt(e) à déménager en Allemagne ?</h3>
+      <p class="muted" data-t="mob.hint">Cette question porte sur votre souhait de déménager. Votre situation administrative (visa) se précise à part.</p>
       <div class="options" role="radiogroup" aria-labelledby="mobilityTitle">
-        <label class="option"><input type="radio" name="mobility" value="yes"><span data-t="mob.yes">Oui</span></label>
-        <label class="option"><input type="radio" name="mobility" value="no"><span data-t="mob.no">Non</span></label>
+        <label class="option"><input type="radio" name="mobility" value="yes"><span data-t="mob.yes">Oui, je suis prêt(e)</span></label>
+        <label class="option"><input type="radio" name="mobility" value="no"><span data-t="mob.no">Non, je ne suis pas prêt(e)</span></label>
         <label class="option"><input type="radio" name="mobility" value="consider"><span data-t="mob.consider">Je dois encore réfléchir</span></label>
+        <label class="option"><input type="radio" name="mobility" value="visa_pending"><span data-t="mob.visa">Mon visa est en cours de traitement</span></label>
+        <label class="option"><input type="radio" name="mobility" value="other"><span data-t="mob.other">Ma situation est différente</span></label>
       </div>
     </div>
     <p id="error" class="error" role="alert"></p>
     <div class="actions"><button id="back" class="btn secondary" type="button" data-t="btn.back" disabled>Retour</button><button id="next" class="btn primary" type="button">Continuer</button></div>
+    <div class="subnav"><button id="toStart" class="linkbtn" type="button" data-t="btn.start" disabled>Revenir au début du questionnaire</button><button id="toPick" class="linkbtn" type="button" data-t="btn.pick">Revenir à la sélection des métiers</button></div>
   </section>
 
   <section id="results" class="panel" aria-label="Résultats" data-ta="aria-label=aria.results" hidden>
