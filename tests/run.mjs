@@ -13,7 +13,7 @@ const ok = (name, cond, detail = "") => { if (cond) { pass++; console.log("  ok 
 const read = (f) => readFileSync(f, "utf8");
 
 console.log("Syntaxe JavaScript");
-for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js","hostgo.js", "hostgo-hote.js", "hostgo-draft.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
+for (const f of ["vc-shared.js", "view-dossier-app.js", "view-joury-app.js", "view-entretien-app.js", "i18n/view-common.js", "i18n/view-dossier.js", "i18n/view-joury.js", "i18n/view-entretien.js", "visa-app.js", "flight-hold.js", "vols.js", "hotels.js", "joury.js", "redact.js", "avatar3d.js", "partner-form.js", "visa-pwa.js", "sw.js", "worker/visa-chat-worker.js", "worker/visa-proxy-worker.js", "worker/visa-flight-worker.js", "bump-version.mjs", "ausbildung/app.js","hostgo.js", "hostgo-hote.js", "hostgo-draft.js", "hostgo-offres.js", "ausbildung/career-matcher.js", "ausbildung/tests/matcher.test.js"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); ok(f, true); } catch (e) { ok(f, false, String(e.stderr || e.message).split("\n")[0]); }
 }
 
@@ -287,6 +287,13 @@ try {
   ok("ausbildung : page dans le sitemap", /checkmyvisa\.org\/ausbildung\//.test(read("sitemap.xml")));
 }
 
+{
+  const oh = read("hostgo-offres.html"), oj = read("hostgo-offres.js");
+  ok("Host & Go offres : page sans script en ligne, noindex tant que l'API n'est pas déployée, CSP limitée au Worker visa-hostgo", !/<script(?![^>]*\bsrc=)/.test(oh) && /name="robots" content="noindex"/.test(oh) && /connect-src 'self' https:\/\/visa-hostgo\.rabehfly\.workers\.dev/.test(oh) && !/unsafe-eval/.test(oh));
+  ok("Host & Go offres : textes d'offres insérés en textContent (pas d'innerHTML ni eval)", !/innerHTML|insertAdjacentHTML|document\.write|eval\(|new Function/.test(oj));
+  ok("Host & Go offres : adresse de l'API identique au Worker et aux routes testées", /workers\.dev\/hg"/.test(oj) && ["/offers", "/session", "/unlock", "/report", "/contact"].every((x) => oj.includes(x)));
+  ok("Host & Go offres : disponible hors ligne (cache) mais absent du sitemap tant qu'il n'est pas ouvert", read("sw.js").includes('"hostgo-offres.js"') && !read("sitemap.xml").includes("hostgo-offres"));
+}
 try {
   execFileSync(process.execPath, ["tests/hostgo-worker.test.mjs"], { stdio: "inherit" });
   ok("hostgo-worker : offres, filtres, signalement, modération, accès gratuit et déblocage", true);
