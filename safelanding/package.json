@@ -1,0 +1,3 @@
+{ "name": "safelanding", "version": "2.0.0", "private": true, "type": "module",
+  "description": "SafeLanding — Modules 1 (Before Departure) et 2 (Airport Arrival), application unifiée (livraison autonome, à auditer avant intégration)",
+  "scripts": { "test": "node --test tests/*.test.js", "serve": "node tools/serve.mjs" }, "license": "UNLICENSED" }
