@@ -233,14 +233,13 @@
   }[L];
   var XP = {
     fr: { lab: ["Adulte", "Enfant (2-11 ans)", "Bébé (moins de 2 ans)"], one: ["Adulte", "Enfant", "Bébé"], sum: function (a, c, i) { return a + " Adulte" + (a > 1 ? "s" : "") + ", " + c + " Enfant" + (c > 1 ? "s" : "") + ", " + i + " Bébé" + (i > 1 ? "s" : ""); },
-      svc: function (n, tot) { return "Tarif du service : 15 TND × " + n + " passager" + (n > 1 ? "s" : "") + " = " + tot + " TND"; }, babyMax: "Un bébé par adulte au maximum.", born: "Date de naissance", email: "E-mail (la réservation sera envoyée à cette adresse)" },
+      babyMax: "Un bébé par adulte au maximum.", born: "Date de naissance", email: "E-mail (la réservation sera envoyée à cette adresse)" },
     en: { lab: ["Adult", "Child (2-11 years)", "Infant (under 2)"], one: ["Adult", "Child", "Infant"], sum: function (a, c, i) { return a + " Adult" + (a > 1 ? "s" : "") + ", " + c + " Child" + (c > 1 ? "ren" : "") + ", " + i + " Infant" + (i > 1 ? "s" : ""); },
-      svc: function (n, tot) { return "Service fee: 15 TND × " + n + " passenger" + (n > 1 ? "s" : "") + " = " + tot + " TND"; }, babyMax: "One infant per adult at most.", born: "Date of birth", email: "Email (your booking will be sent here)" },
+      babyMax: "One infant per adult at most.", born: "Date of birth", email: "Email (your booking will be sent here)" },
     ar: { lab: ["بالغ", "طفل (2-11 سنة)", "رضيع (أقل من سنتين)"], one: ["بالغ", "طفل", "رضيع"], sum: function (a, c, i) { return a + " بالغ، " + c + " طفل، " + i + " رضيع"; },
-      svc: function (n, tot) { return "رسوم الخدمة: 15 دينار × " + n + " مسافر = " + tot + " دينار"; }, babyMax: "رضيع واحد لكل بالغ كحد أقصى.", born: "تاريخ الميلاد", email: "البريد الإلكتروني (سيُرسل الحجز إليه)" }
+      babyMax: "رضيع واحد لكل بالغ كحد أقصى.", born: "تاريخ الميلاد", email: "البريد الإلكتروني (سيُرسل الحجز إليه)" }
   }[L];
   var cnt = { a: 1, c: 0, i: 0 }, lastCnt = { a: 1, c: 0, i: 0 };
-  var SVC = 15;
   function nPax(c) { return c.a + c.c + c.i; }
   function paintPax() {
     $("vl-pax").textContent = XP.sum(cnt.a, cnt.c, cnt.i);
@@ -255,7 +254,6 @@
     else { if (n < 0 || n > cnt.a) return; cnt.i = n; }
     paintPax();
   }
-  function svcLine(c) { var n = nPax(c); return XP.svc(n, n * SVC); }
   function hm(iso) { return /T(\d\d:\d\d)/.test(iso || "") ? RegExp.$1 : "—"; }
   function dmy(iso) { try { return new Date(String(iso).slice(0, 10) + "T12:00:00").toLocaleDateString(locale, { dateStyle: "medium" }); } catch (e) { return ""; } }
   function dur(d) { var m = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?$/.exec(d || ""); if (!m) return ""; var h = (+m[1] || 0) * 24 + (+m[2] || 0); return (h ? h + "h" : "") + (m[3] ? String(+m[3]).padStart(h ? 2 : 1, "0") + (h ? "" : "min") : ""); }
@@ -267,7 +265,6 @@
         '<p class="vr-m">' + (d ? esc(d) + " · " : "") + esc(g.length > 1 ? X.stops(g.length - 1) : X.direct) + "</p></div>";
     }).join("");
     return '<div class="vr-card"><div class="vr-air">' + (/^https:\/\//.test(o.owner_logo || "") ? '<img src="' + esc(o.owner_logo) + '" alt="" width="40" height="40" loading="lazy">' : "") + "<b>" + esc(o.owner) + "</b></div>" + sl +
-      '<p class="vr-pr" dir="ltr">' + esc(nPax(lastCnt) * SVC) + " TND</p><p class=\"vr-m\">" + esc(svcLine(lastCnt)) + "</p>" +
       '<button type="button" class="pay wide vr-sel" data-offer="' + esc(o.id) + '">' + esc(X.sel) + '<i class="vl-ic">' + IC.arrow + "</i></button>" +
       '<details class="vr-det"><summary>' + esc(X.det) + "</summary><p class=\"fh-row\"><span>" + esc(t.expires) + " " + fmt(o.payment_required_by) + "</span></p>" + segs(o.slices) + "</details></div>";
   }
@@ -306,7 +303,7 @@
         field("n" + n + "-given", t.given, "text", 'autocomplete="off" style="text-transform:uppercase" required') + field("n" + n + "-family", t.family, "text", 'autocomplete="off" style="text-transform:uppercase" required') +
         field("n" + n + "-born", XP.born, "date", "required") + "</div></fieldset>";
     }).join("");
-    $("vl-results").innerHTML = '<button type="button" class="chip vl-back" data-back="1">' + esc(t.back) + '</button><div class="fh-offer"><div class="fh-row"><b>' + esc(o.owner) + '</b><span dir="ltr">' + esc(nPax(lastCnt) * SVC) + " TND</span></div><p class=\"vr-m\">" + esc(svcLine(lastCnt)) + "</p>" + segs(o.slices) + "</div>" +
+    $("vl-results").innerHTML = '<button type="button" class="chip vl-back" data-back="1">' + esc(t.back) + '</button><div class="fh-offer"><div class="fh-row"><b>' + esc(o.owner) + '</b></div>' + segs(o.slices) + "</div>" +
       '<form id="vp-form" novalidate data-offer="' + esc(id) + '"><h2>' + esc(t.pax2) + "</h2>" + bl + '<div class="fh-grid">' +
       field("email", XP.email, "email", 'autocomplete="email" dir="ltr" required') + field("phone_number", t.phone, "tel", 'autocomplete="tel" dir="ltr" placeholder="+216" required') + field("appointment_date", t.rdv, "date") +
       '</div><p class="fe fh-err" id="vp-err" role="alert" hidden></p><button type="submit" class="pay wide" id="vp-go">' + esc(t.confirm) + "</button></form>";
