@@ -82,7 +82,7 @@
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
   var locale = L === "ar" ? "ar-TN" : L === "en" ? "en-GB" : "fr-FR";
-  var fmt = function (iso) { if (!iso) return "—"; try { return new Date(iso).toLocaleString(locale, { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return iso; } };
+  var fmt = function (iso) { if (!iso) return "—"; try { return new Date(iso).toLocaleString(locale, { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return esc(iso); } };
   var today = function () { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
 
   var trip = "rt", pax = null, offers = [], cur = null, tick = null, appt = "";

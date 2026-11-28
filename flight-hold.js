@@ -56,7 +56,7 @@
 
   function lang() { var l = document.documentElement.lang; return T[l] ? l : "fr"; }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
-  function fmt(iso) { if (!iso) return "—"; try { return new Date(iso).toLocaleString(lang() === "ar" ? "ar-TN" : lang() === "en" ? "en-GB" : "fr-FR", { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return iso; } }
+  function fmt(iso) { if (!iso) return "—"; try { return new Date(iso).toLocaleString(lang() === "ar" ? "ar-TN" : lang() === "en" ? "en-GB" : "fr-FR", { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return esc(iso); } }
   function owner() {
     var q = location.search;
     try {

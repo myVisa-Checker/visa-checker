@@ -91,7 +91,7 @@
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
   var locale = L === "ar" ? "ar-TN" : L === "en" ? "en-GB" : "fr-FR";
-  var dtf = function (iso) { if (!iso) return "—"; try { return new Date(iso).toLocaleString(locale, { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return iso; } };
+  var dtf = function (iso) { if (!iso) return "—"; try { return new Date(iso).toLocaleString(locale, { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return esc(iso); } };
   var dmy = function (iso) { try { return new Date(String(iso).slice(0, 10) + "T12:00:00").toLocaleDateString(locale, { dateStyle: "medium" }); } catch (e) { return ""; } };
   var money = function (a, c) { try { return new Intl.NumberFormat(locale, { style: "currency", currency: c, maximumFractionDigits: 2 }).format(parseFloat(a)); } catch (e) { return a + " " + c; } };
   var ymd = function (d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
