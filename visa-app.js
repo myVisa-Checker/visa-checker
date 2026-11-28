@@ -1141,9 +1141,9 @@ function homeHtml(t){
   h+=evCardHtml();
   h+='</div>';
   h+='<div class="side">'+(S.origin==='tn'?needsHtml(t):'')+photoHtml()+'</div>';
-  /* Rangée « à découvrir » : cartes Ausbildung et Host & Go côte à côte (desktop) ou l'une sous l'autre (mobile), juste sous la zone principale et avant la FAQ. */
-  var aus=document.getElementById("aus-tpl"),hg=document.getElementById("hg-tpl");
-  if(aus||hg)h+='<div class="vc-more">'+(aus?aus.innerHTML:'')+(hg?hg.innerHTML:'')+'</div>';
+  /* Rangée « à découvrir » : quatre vitrines de même taille, en grille 2 × 2 (desktop) ou empilées (mobile), juste sous la zone principale et avant la FAQ. */
+  var more=["aus-tpl","hg-tpl","f90-tpl","sl-tpl"].map(function(id){var x=document.getElementById(id);return x?x.innerHTML:""}).join("");
+  if(more)h+='<div class="vc-more">'+more+'</div>';
   h+=hfaqHtml();
   var whyIcons=["✦","◎","文","↗","✓"];
   h+='<section class="why why-showcase" aria-labelledby="why-title"><div class="why-head"><span class="why-eyebrow">'+(L==="ar"?"لماذا نحن؟":L==="en"?"THE CHECKMYVISA ADVANTAGE":"L’AVANTAGE CHECKMYVISA")+'</span><h2 id="why-title">'+t.whyTitle+'</h2><p class="why-lead">'+(L==="ar"?"مرافقة أوضح لتحضير ملف تأشيرتك بثقة.":L==="en"?"A clearer way to prepare your visa file with confidence.":"Une façon plus claire de préparer votre dossier visa, en toute confiance.")+'</p></div><ul class="why-grid">'+t.why.map(function(x,i){return '<li class="why-card"><span class="why-icon" aria-hidden="true">'+whyIcons[i%whyIcons.length]+'</span><span class="why-copy">'+x+'</span><span class="why-check" aria-hidden="true">✓</span></li>'}).join("")+'</ul><p class="why-note">'+t.whyNote+'</p></section>';

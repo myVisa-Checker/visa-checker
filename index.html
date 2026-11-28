@@ -98,9 +98,9 @@
   <!-- Carte Ausbildung : accueil uniquement. Visuel compact (images/ausbildung-card-*.webp) dont la carte entière est un lien vers ./ausbildung-allemagne.html (page d'accueil Ausbildung : candidat ou entreprise). Gabarit inerte : visa-app.js l'insère dans la rangée .vc-more, sous la zone principale et avant la FAQ. Langue = celle de la page (FR, EN, AR) ; le visuel est en français, seul le texte alternatif change. -->
   <template id="aus-tpl">
   <section class="aus-teaser" id="ausbildung-teaser" aria-label="Ausbildung">
-    <a class="aus-in aus-link" lang="fr" href="./ausbildung-allemagne.html"><img src="./images/ausbildung-card-480.webp" srcset="./images/ausbildung-card-480.webp 480w, ./images/ausbildung-card-800.webp 800w" sizes="(min-width:900px) 640px, 85vw" width="480" height="691" loading="lazy" decoding="async" alt="Ausbildung : plus de 10 métiers disponibles. Choisissez votre métier et commencez votre parcours en Allemagne. Découvrir mon métier."></a>
-    <a class="aus-in aus-link" lang="en" dir="ltr" href="./ausbildung-allemagne.html"><img src="./images/ausbildung-card-480.webp" srcset="./images/ausbildung-card-480.webp 480w, ./images/ausbildung-card-800.webp 800w" sizes="(min-width:900px) 640px, 85vw" width="480" height="691" loading="lazy" decoding="async" alt="Ausbildung: more than 10 trades available. Choose your trade and start your path in Germany. Find my trade (the questionnaire is in French only)."></a>
-    <a class="aus-in aus-link" lang="ar" dir="rtl" href="./ausbildung-allemagne.html"><img src="./images/ausbildung-card-480.webp" srcset="./images/ausbildung-card-480.webp 480w, ./images/ausbildung-card-800.webp 800w" sizes="(min-width:900px) 640px, 85vw" width="480" height="691" loading="lazy" decoding="async" alt="Ausbildung: أكثر من 10 مهن متاحة. اختر مهنتك وابدأ مسارك في ألمانيا. اعثر على مهنتي (الاستبيان بالفرنسية فقط)."></a>
+    <a class="aus-in aus-link" lang="fr" href="./ausbildung-allemagne.html"><img src="./images/ausbildung-wide-600.webp" srcset="./images/ausbildung-wide-600.webp 600w, ./images/ausbildung-wide-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="Ausbildung : plus de 10 métiers disponibles. Choisissez votre métier et commencez votre parcours en Allemagne. Découvrir mon métier."></a>
+    <a class="aus-in aus-link" lang="en" dir="ltr" href="./ausbildung-allemagne.html"><img src="./images/ausbildung-wide-600.webp" srcset="./images/ausbildung-wide-600.webp 600w, ./images/ausbildung-wide-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="Ausbildung: more than 10 trades available. Choose your trade and start your path in Germany. Find my trade (the questionnaire is in French only)."></a>
+    <a class="aus-in aus-link" lang="ar" dir="rtl" href="./ausbildung-allemagne.html"><img src="./images/ausbildung-wide-600.webp" srcset="./images/ausbildung-wide-600.webp 600w, ./images/ausbildung-wide-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="Ausbildung: أكثر من 10 مهن متاحة. اختر مهنتك وابدأ مسارك في ألمانيا. اعثر على مهنتي (الاستبيان بالفرنسية فقط)."></a>
   </section>
   </template>
 
@@ -139,6 +139,23 @@
         <img class="hg-photo" src="./images/hostgo/hero.webp" alt="" width="464" height="312" loading="lazy" decoding="async">
       </div>
     </div>
+  </section>
+  </template>
+
+  <!-- Vitrines First90 et Safe Landing : accueil uniquement, sans lien tant que les pages n'existent pas. visa-app.js les insère dans la 2e rangée de la grille .vc-more. -->
+  <template id="f90-tpl">
+  <section class="soon-teaser" id="first90-teaser" aria-label="First90">
+    <div class="soon-in" lang="fr"><img src="./images/first90-card-600.webp" srcset="./images/first90-card-600.webp 600w, ./images/first90-card-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="First90, bientôt : un compagnon complet pour vos 90 premiers jours à l’étranger (logement, démarches, assurance, budget, communauté)."></div>
+    <div class="soon-in" lang="en" dir="ltr"><img src="./images/first90-card-600.webp" srcset="./images/first90-card-600.webp 600w, ./images/first90-card-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="First90, coming soon: a complete companion for your first 90 days abroad (housing, admin deadlines, insurance, budget, community)."></div>
+    <div class="soon-in" lang="ar" dir="rtl"><img src="./images/first90-card-600.webp" srcset="./images/first90-card-600.webp 600w, ./images/first90-card-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="First90 قريباً: مرافق متكامل لأول 90 يوماً في الخارج (السكن، الإجراءات، التأمين، الميزانية، المجتمع)."></div>
+  </section>
+  </template>
+
+  <template id="sl-tpl">
+  <section class="soon-teaser" id="safelanding-teaser" aria-label="Safe Landing">
+    <div class="soon-in" lang="fr"><img src="./images/safelanding-card-600.webp" srcset="./images/safelanding-card-600.webp 600w, ./images/safelanding-card-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="Safe Landing, bientôt : anticipez votre arrivée, évitez les pièges et profitez de votre voyage."><span class="soon-badge">Bientôt</span></div>
+    <div class="soon-in" lang="en" dir="ltr"><img src="./images/safelanding-card-600.webp" srcset="./images/safelanding-card-600.webp 600w, ./images/safelanding-card-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="Safe Landing, coming soon: prepare your arrival, avoid the pitfalls and enjoy your trip (visual in French)."><span class="soon-badge">Coming soon</span></div>
+    <div class="soon-in" lang="ar" dir="rtl"><img src="./images/safelanding-card-600.webp" srcset="./images/safelanding-card-600.webp 600w, ./images/safelanding-card-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="Safe Landing قريباً: استعد لوصولك، تجنّب المطبّات واستمتع برحلتك (الصورة بالفرنسية)."><span class="soon-badge">قريباً</span></div>
   </section>
   </template>
 

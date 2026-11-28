@@ -3,33 +3,26 @@
 
 /* ---------- Vitrine (accueil) ---------- */
 .hg-teaser .hg-in{display:none}
-html[lang="fr"] .hg-teaser .hg-in[lang="fr"],html[lang="en"] .hg-teaser .hg-in[lang="en"],html[lang="ar"] .hg-teaser .hg-in[lang="ar"]{display:block}
+html[lang="fr"] .hg-teaser .hg-in[lang="fr"],html[lang="en"] .hg-teaser .hg-in[lang="en"],html[lang="ar"] .hg-teaser .hg-in[lang="ar"]{display:grid;grid-template-columns:minmax(0,60fr) minmax(0,40fr);grid-template-rows:minmax(0,1fr);height:100%}
 body[data-step]:not([data-step="0"]) .hg-teaser{display:none}
-.hg-teaser .hg-card{position:relative;overflow:hidden;isolation:isolate;display:grid;grid-template-columns:1fr;border:1px solid rgba(255,255,255,.12);border-radius:24px;color:var(--hg-tx);background:radial-gradient(110% 80% at 0% 0%,rgba(255,201,40,.14),transparent 55%),linear-gradient(160deg,var(--hg-n2) 0%,var(--hg-n1) 50%,var(--hg-n0) 100%);box-shadow:0 28px 60px -34px rgba(6,20,58,.9)}
-.hg-teaser .hg-copy{padding:26px 20px 22px}
+/* Même format 3:2 que les autres vitrines : tailles proportionnelles à la largeur de la carte (cqw). */
+.hg-teaser{container-type:inline-size}
+.hg-teaser .hg-card{position:absolute;inset:0;overflow:hidden;color:var(--hg-tx);background:radial-gradient(110% 80% at 0% 0%,rgba(255,201,40,.14),transparent 55%),linear-gradient(160deg,var(--hg-n2) 0%,var(--hg-n1) 50%,var(--hg-n0) 100%)}
+.hg-teaser .hg-copy{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-width:0;padding:3cqw 3.5cqw}
 .hg-teaser p,.hg-teaser h2,.hg-teaser ul{margin:0}
-.hg-teaser .hg-brand{display:inline-block;font:800 15px/1 var(--f-display,system-ui,sans-serif);letter-spacing:.01em;color:#fff}
+.hg-teaser .hg-brand{font:800 3.4cqw/1 var(--f-display,system-ui,sans-serif);color:#fff}
 .hg-teaser .hg-brand b{color:var(--hg-y);font-weight:800}
-.hg-teaser .hg-h{margin-top:12px;color:#fff;font:800 clamp(1.4rem,6vw,2rem)/1.15 var(--f-display,system-ui,sans-serif);letter-spacing:-.01em;text-wrap:balance}
+.hg-teaser .hg-h{margin-top:2cqw;color:#fff;font:800 5cqw/1.12 var(--f-display,system-ui,sans-serif);letter-spacing:-.01em}
 .hg-teaser .hg-h em{display:block;color:var(--hg-y);font-style:italic}
-.hg-teaser .hg-p{margin-top:10px;max-width:46ch;color:var(--hg-mu);font:400 15px/1.6 var(--f-body,system-ui,sans-serif)}
-.hg-teaser .hg-trust{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;padding:0;list-style:none}
-.hg-teaser .hg-trust li{display:inline-flex;align-items:center;gap:6px;color:#fff;font:600 13px/1.2 var(--f-body,system-ui,sans-serif)}
-.hg-teaser .hg-trust li:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--hg-y)}
+.hg-teaser .hg-p{margin-top:2cqw;color:var(--hg-mu);font:400 2.8cqw/1.45 var(--f-body,system-ui,sans-serif)}
+.hg-teaser .hg-trust{margin-top:2cqw;padding:0;list-style:none}
+.hg-teaser .hg-trust li{display:flex;align-items:center;gap:1.2cqw;color:#fff;font:600 2.6cqw/1.5 var(--f-body,system-ui,sans-serif)}
+.hg-teaser .hg-trust li:before{content:"";width:1.5cqw;height:1.5cqw;border-radius:50%;background:var(--hg-y)}
 .hg-cta{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:48px;padding:0 24px;border-radius:999px;background:var(--hg-y);color:var(--hg-n0);font:800 15px/1 var(--f-body,system-ui,sans-serif);text-decoration:none;box-shadow:0 10px 24px -12px rgba(255,201,40,.6);transition:transform .15s,background .15s}
-.hg-teaser .hg-cta{margin-top:18px}
+.hg-teaser .hg-cta{margin-top:2.6cqw;min-height:8.5cqw;padding:0 4cqw;font-size:3cqw}
 .hg-cta:hover{background:var(--hg-y2);transform:translateY(-1px)}
 .hg-cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
-.hg-teaser .hg-photo{display:block;width:100%;height:190px;object-fit:cover;object-position:center 25%}
+.hg-teaser .hg-photo{display:block;width:100%;height:100%;min-height:0;object-fit:cover;object-position:center 25%}
 html[dir="rtl"] .hg-teaser{font-family:var(--f-ar,system-ui,sans-serif)}
-html[dir="rtl"] .hg-teaser .hg-h,html[dir="rtl"] .hg-teaser .hg-p,html[dir="rtl"] .hg-teaser .hg-trust li,html[dir="rtl"] .hg-cta{font-family:var(--f-ar,system-ui,sans-serif);letter-spacing:0}
+html[dir="rtl"] .hg-teaser .hg-h,html[dir="rtl"] .hg-teaser .hg-p,html[dir="rtl"] .hg-teaser .hg-trust li,html[dir="rtl"] .hg-teaser .hg-cta{font-family:var(--f-ar,system-ui,sans-serif);letter-spacing:0}
 html[dir="rtl"] .hg-teaser .hg-h em{font-style:normal}
-@media(max-width:400px){.hg-teaser .hg-cta{display:flex;width:100%}}
-@media(min-width:760px){
-  .hg-teaser .hg-in{display:none}
-  html[lang="fr"] .hg-teaser .hg-in[lang="fr"],html[lang="en"] .hg-teaser .hg-in[lang="en"],html[lang="ar"] .hg-teaser .hg-in[lang="ar"]{display:grid;grid-template-columns:1.1fr .9fr}
-  .hg-teaser .hg-copy{padding:34px 32px}
-  .hg-teaser .hg-photo{height:100%;min-height:260px}
-}
-
-/* Accueil desktop : la vitrine est sous la carte Ausbildung, même largeur (voir .vc-more dans vc.css). */
