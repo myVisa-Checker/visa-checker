@@ -486,7 +486,9 @@ export default {
     try {
       if (Number(request.headers.get("Content-Length") || 0) > 16 * 1024 * 1024) return out({ error: "too_large" }, 413);
       let body;
-      try { body = await request.json(); } catch { return out({ error: "invalid" }, 400); }
+      let rawBody; try { rawBody = await request.text(); } catch { return out({ error: "invalid" }, 400); }
+      if (rawBody.length > 16 * 1024 * 1024) return out({ error: "too_large" }, 413);
+      try { body = JSON.parse(rawBody); } catch { return out({ error: "invalid" }, 400); }
       if (!body || typeof body !== "object" || Array.isArray(body)) return out({ error: "invalid" }, 400);
       const mode = String(body.mode || "");
       const interview = mode === "interview";

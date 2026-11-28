@@ -95,7 +95,7 @@ export default {
       const length = Number(request.headers.get("Content-Length") || 0);
       if (length > 12000) return json({ error: "payload_too_large" }, 413, cors);
       let body;
-      try { body = await request.json(); } catch { return json({ error: "invalid_json" }, 400, cors); }
+      try { const raw = await request.text(); if (raw.length > 20000) return json({ error: "too_large" }, 413, cors); body = JSON.parse(raw); } catch { return json({ error: "invalid_json" }, 400, cors); }
       if (!body || typeof body !== "object" || Array.isArray(body)) return json({ error: "invalid_payload" }, 400, cors);
       return json(check(body), 200, cors);
     }

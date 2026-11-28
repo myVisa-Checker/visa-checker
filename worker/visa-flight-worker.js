@@ -168,6 +168,15 @@ function holdStatus(expiresAt, paidAt, now = Date.now()) {
   return now >= new Date(expiresAt).getTime() ? "expired" : "hold";
 }
 
+/** Lit un corps JSON en bornant sa taille réelle (l'en-tête Content-Length seul peut être absent ou faux). */
+async function readJson(req, max = 50000) {
+  try {
+    const raw = await req.text();
+    if (raw.length > max) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
 /* ------------------------------ Limite de débit --------------------------- */
 
 /** Best-effort (KV sans incrément atomique). Ne bloque jamais si KV est absente ou en erreur. */
@@ -189,7 +198,7 @@ async function limited(env, req, bucket, max, ttl) {
 
 async function search(req, env) {
   if (await limited(env, req, "search", 12, 600)) throw new HttpError(429, "Trop de recherches. Réessayez dans quelques minutes.", "rate");
-  const q = validateSearch(await req.json().catch(() => null));
+  const q = validateSearch(await readJson(req));
   const slices = [{ origin: q.origin, destination: q.destination, departure_date: q.departure_date }];
   if (q.return_date) slices.push({ origin: q.destination, destination: q.origin, departure_date: q.return_date });
 
@@ -218,7 +227,7 @@ async function search(req, env) {
 
 async function places(req, env) {
   if (await limited(env, req, "places", 120, 600)) throw new HttpError(429, "Trop de recherches. Réessayez dans un instant.", "rate");
-  const b = await req.json().catch(() => null);
+  const b = await readJson(req);
   const query = String(b?.query ?? "").trim().slice(0, 40);
   if (query.length < 2) return { ok: true, places: [] };
   const data = await duffel(env, `/places/suggestions?query=${encodeURIComponent(query)}`);
@@ -282,7 +291,7 @@ async function book(req, env) {
   // Interrupteur d'urgence : BOOK_DISABLED=1 (variable Cloudflare) coupe les nouvelles réservations sans redéployer.
   if (env.BOOK_DISABLED === "1") throw new HttpError(503, "Les réservations sont momentanément suspendues.", "disabled");
   if (await limited(env, req, "book", 4, 3600)) throw new HttpError(429, "Trop de réservations. Réessayez plus tard.", "rate");
-  const body = await req.json().catch(() => null);
+  const body = await readJson(req);
   if (!(await turnstileOk(env, req, body?.turnstile))) throw new HttpError(403, "Vérification anti-robot requise.", "captcha");
   const offerId = String(body?.offer_id ?? "");
   if (!/^off_[A-Za-z0-9]+$/.test(offerId)) throw new HttpError(422, "Offre invalide.", "offer");
@@ -334,7 +343,7 @@ async function book(req, env) {
 
 async function status(req, env) {
   if (await limited(env, req, "status", 30, 600)) throw new HttpError(429, "Trop de demandes. Réessayez plus tard.", "rate");
-  const b = await req.json().catch(() => null);
+  const b = await readJson(req);
   const pnr = String(b?.pnr ?? "").toUpperCase().trim();
   if (!/^[A-Z0-9]{5,8}$/.test(pnr)) throw new HttpError(422, "Référence invalide.", "pnr");
   if (!env.KV) throw new HttpError(503, "Suivi indisponible.", "not_configured");
@@ -392,7 +401,7 @@ const httpsUrl = (u) => (typeof u === "string" && u.startsWith("https://") ? u :
 
 async function hotelPlaces(req, env) {
   if (await limited(env, req, "hplaces", 120, 600)) throw new HttpError(429, "Trop de recherches. Réessayez dans un instant.", "rate");
-  const b = await req.json().catch(() => null);
+  const b = await readJson(req);
   const query = String(b?.query ?? "").trim().slice(0, 40);
   if (query.length < 2) return { ok: true, places: [] };
   const data = await duffel(env, `/places/suggestions?query=${encodeURIComponent(query)}`);
@@ -411,7 +420,7 @@ async function hotelPlaces(req, env) {
 
 async function hotelSearch(req, env) {
   if (await limited(env, req, "hsearch", 12, 600)) throw new HttpError(429, "Trop de recherches. Réessayez dans quelques minutes.", "rate");
-  const q = validateStay(await req.json().catch(() => null));
+  const q = validateStay(await readJson(req));
   const data = await duffel(env, "/stays/search", {
     method: "POST",
     body: {
@@ -452,7 +461,7 @@ async function hotelSearch(req, env) {
 
 async function hotelRates(req, env) {
   if (await limited(env, req, "hrates", 30, 600)) throw new HttpError(429, "Trop de demandes. Réessayez dans quelques minutes.", "rate");
-  const b = await req.json().catch(() => null);
+  const b = await readJson(req);
   const id = String(b?.search_result_id ?? "");
   if (!STAY_ID.test(id)) throw new HttpError(422, "Hôtel invalide.", "hotel");
   const r = await duffel(env, `/stays/search_results/${id}/actions/fetch_all_rates`, { method: "POST" });
@@ -509,7 +518,7 @@ async function hotelBook(req, env) {
   // Réservation réelle : Duffel Stays confirme et débite le solde Duffel. Fermée tant que HOTEL_BOOKING n'est pas « 1 ».
   if (env.HOTEL_BOOKING !== "1") throw new HttpError(503, "La réservation d'hôtel ouvrira bientôt.", "booking_disabled");
   if (await limited(env, req, "hbook", 4, 3600)) throw new HttpError(429, "Trop de réservations. Réessayez plus tard.", "rate");
-  const b = await req.json().catch(() => null);
+  const b = await readJson(req);
   const rateId = String(b?.rate_id ?? "");
   if (!STAY_ID.test(rateId)) throw new HttpError(422, "Chambre invalide.", "rate");
   const raw = Array.isArray(b?.guests) ? b.guests : [];
