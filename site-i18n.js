@@ -100,7 +100,7 @@
   /* Sélecteur FR / EN / عربي en haut de la page. Changer de langue recharge la page dans la nouvelle langue. */
   function switcher() {
     var host = d.querySelector("main");
-    if (!host || host.querySelector(".sn-lang")) return;
+    if (!host || host.hasAttribute("data-no-switcher") || host.querySelector(".sn-lang")) return;  /* data-no-switcher : page sans sélecteur de lettres (première page Ausbildung) */
     var box = d.createElement("div");
     box.className = "sn-lang"; box.setAttribute("role", "group"); box.setAttribute("aria-label", "Langue / Language / اللغة");
     [["fr", "FR"], ["en", "EN"], ["ar", "عربي"]].forEach(function (p) {

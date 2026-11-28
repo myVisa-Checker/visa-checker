@@ -295,14 +295,14 @@ try {
   // Page d'accueil Ausbildung (deux vignettes + présentation, 4 langues)
   {
     const hh = read("ausbildung-allemagne.html"), hj = read("ausbildung-allemagne.js"), hc = read("ausbildung-allemagne.css");
-    ok("hub Ausbildung : deux vignettes (candidat → ./ausbildung/, entreprise → #entreprises), même format, textes en orange", (hh.match(/<a class="tile" href="\.\/ausbildung\/">/g) || []).length === 1 && (hh.match(/<a class="tile" href="#entreprises">/g) || []).length === 1 && /id="entreprises"/.test(hh) && /\.lbl\{[^}]*color:#f97316/.test(hc) && (hh.match(/width="1200" height="547"/g) || []).length === 2);
+    ok("hub Ausbildung : première page sans vignettes « candidat / entreprise » ni lettres de langue ; accès au questionnaire et au guide par la section candidats", !/class="tile"/.test(hh) && !/lang4|sn-lang/.test(hh) && /data-no-switcher/.test(hh) && /data-no-switcher/.test(read("site-i18n.js")) && !/\.tile|\.lang4/.test(hc) && /id="candidats"/.test(hh) && /id="entreprises"/.test(hh) && /<a class="btn" href="\.\/ausbildung\/"/.test(hh));
     ok("hub Ausbildung : CSP stricte, aucun script inline, scripts et styles locaux", /script-src 'self'/.test(hh) && !/<script(?![^>]*\bsrc=)[^>]*>/.test(hh) && !/(src|href)="https?:\/\/[^"]*\.(js|css)"/.test(hh));
     const T = new Function("window", hj.replace(/^[\s\S]*?var T = /, "var T = ").replace(/\n  var LANGS[\s\S]*$/, "\nreturn T;"))({});
     const keys = Object.keys(T.fr);
     ok("hub Ausbildung : DE, EN, FR et AR complets (mêmes clés, aucun texte vide)", ["de", "en", "ar"].every((l) => JSON.stringify(Object.keys(T[l])) === JSON.stringify(keys) && keys.every((k) => String(T[l][k]).trim())));
     ok("hub Ausbildung : toutes les clés data-t du HTML existent dans les 4 langues", [...hh.matchAll(/data-t="([^"]+)"/g)].every((m) => ["fr", "de", "en", "ar"].every((l) => T[l][m[1]])));
     ok("hub Ausbildung : texte français du HTML identique au dictionnaire (repli sans JavaScript)", [...hh.matchAll(/data-t="([^"]+)"[^>]*>([^<]*)</g)].every((m) => m[2].replace(/&amp;/g, "&").trim() === T.fr[m[1]]));
-    ok("hub Ausbildung : précache hors ligne, plan du site, images, lien depuis l'accueil", ["ausbildung-allemagne.html", "ausbildung-allemagne.css", "ausbildung-allemagne.js", "images/ausbildung-candidat-640.webp", "images/ausbildung-candidat-1200.webp", "images/ausbildung-entreprise-640.webp", "images/ausbildung-entreprise-1200.webp"].every((f) => existsSync(f) && swa.includes('"' + f + '"')) && /ausbildung-allemagne\.html/.test(read("sitemap.xml")));
+    ok("hub Ausbildung : précache hors ligne, plan du site, images, lien depuis l'accueil", ["ausbildung-allemagne.html", "ausbildung-allemagne.css", "ausbildung-allemagne.js"].every((f) => existsSync(f) && swa.includes('"' + f + '"')) && /ausbildung-allemagne\.html/.test(read("sitemap.xml")));
   }
 }
 

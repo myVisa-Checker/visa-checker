@@ -8,7 +8,6 @@
       "title": "Ausbildung en Allemagne : la formation en alternance | CheckMyVisa",
       "desc": "L'Ausbildung expliquée simplement : la formation professionnelle en alternance allemande, ses chiffres clés, et deux parcours : candidat ou entreprise.",
       "h1": "Ausbildung en Allemagne",
-      "t.cand": "Je suis candidat", "t.ent": "Je suis entreprise",
       "intro.h": "Qu'est-ce que l'Ausbildung ?",
       "intro.p1": "L'Ausbildung est la formation professionnelle en alternance allemande, appelée aussi « système dual ». Vous apprenez un métier en entreprise et vous suivez des cours dans une école professionnelle (Berufsschule). Vous êtes à la fois salarié de l'entreprise et élève de l'école.",
       "intro.p2": "C'est une voie très répandue : environ la moitié des jeunes qui quittent l'école en Allemagne la choisissent, et le portail officiel deutschland.de la décrit comme reconnue dans le monde entier.",
@@ -42,7 +41,6 @@
       "title": "Ausbildung in Germany: dual vocational training | CheckMyVisa",
       "desc": "Ausbildung explained simply: Germany's dual vocational training, key figures, and two paths: candidate or company.",
       "h1": "Ausbildung in Germany",
-      "t.cand": "I am a candidate", "t.ent": "I am a company",
       "intro.h": "What is Ausbildung?",
       "intro.p1": "Ausbildung is Germany's dual vocational training, also called the “dual system”. You learn a trade at a company and attend classes at a vocational school (Berufsschule). You are both an employee of the company and a student at the school.",
       "intro.p2": "It is a very common path: around half of Germany's school leavers choose it, and the official portal deutschland.de describes it as recognised worldwide.",
@@ -76,7 +74,6 @@
       "title": "Ausbildung in Deutschland: die duale Berufsausbildung | CheckMyVisa",
       "desc": "Die Ausbildung einfach erklärt: die duale Berufsausbildung in Deutschland, wichtige Zahlen und zwei Wege: Bewerber oder Unternehmen.",
       "h1": "Ausbildung in Deutschland",
-      "t.cand": "Ich bin Bewerber/in", "t.ent": "Ich bin ein Unternehmen",
       "intro.h": "Was ist eine Ausbildung?",
       "intro.p1": "Die Ausbildung ist die duale Berufsausbildung in Deutschland. Sie lernen einen Beruf im Betrieb und besuchen den Unterricht in der Berufsschule. Sie sind zugleich Beschäftigte oder Beschäftigter des Betriebs und Schülerin oder Schüler der Berufsschule.",
       "intro.p2": "Es ist ein weit verbreiteter Weg: Rund die Hälfte der Schulabgänger in Deutschland entscheidet sich dafür, und das offizielle Portal deutschland.de beschreibt die Ausbildung als weltweit anerkannt.",
@@ -110,7 +107,6 @@
       "title": "الأوسبيلدونغ في ألمانيا: التكوين المهني بالتناوب | CheckMyVisa",
       "desc": "شرح مبسّط للأوسبيلدونغ: التكوين المهني بالتناوب في ألمانيا وأهم الأرقام ومسارَان: مترشح أو شركة.",
       "h1": "الأوسبيلدونغ في ألمانيا",
-      "t.cand": "أنا مترشّح", "t.ent": "أنا شركة",
       "intro.h": "ما هو الأوسبيلدونغ؟",
       "intro.p1": "الأوسبيلدونغ (Ausbildung) هو التكوين المهني بالتناوب في ألمانيا، ويسمى أيضاً «النظام المزدوج». تتعلم مهنة داخل الشركة وتتابع دروساً في مدرسة مهنية (Berufsschule). فأنت في الوقت نفسه موظف في الشركة وتلميذ في المدرسة.",
       "intro.p2": "وهو مسار شائع جداً: حوالي نصف الشباب الذين يغادرون المدرسة في ألمانيا يختارونه، وتصفه البوابة الرسمية deutschland.de بأنه معترف به في العالم كله.",
@@ -154,16 +150,7 @@
     [].forEach.call(d.querySelectorAll("[data-t]"), function (el) { var v = dict[el.getAttribute("data-t")]; if (v) el.textContent = v; });
     d.title = dict.title;
     var md = d.querySelector('meta[name="description"]'); if (md) md.setAttribute("content", dict.desc);
-    [].forEach.call(d.querySelectorAll(".lang4 button"), function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-l") === lang)); });
   }
-  /* Sélecteur DE / EN / FR / عربي : on recharge avec ?lang= pour que l'en-tête et le pied de page suivent aussi (FR, EN, AR). */
-  [].forEach.call(d.querySelectorAll(".lang4 button"), function (b) {
-    b.addEventListener("click", function () {
-      var l = b.getAttribute("data-l"); if (l === lang) return;
-      if (w.SI && w.SI.remember && l !== "de") w.SI.remember(l);
-      location.replace(location.pathname + "?lang=" + l + location.hash);
-    });
-  });
   w.AusHub = { T: T, lang: lang };
   apply();
 })();
