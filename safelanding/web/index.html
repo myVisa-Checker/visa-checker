@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0b1f4d">
+<title>Before Departure — SafeLanding</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#checklist">Aller à la checklist</a>
+<header class="hero">
+  <svg class="route" viewBox="0 0 360 120" role="img" aria-label="Trajet d’un voyage entre deux villes" focusable="false">
+    <rect width="360" height="120" fill="#0b1f4d"/>
+    <path d="M30 92 C 110 8, 250 8, 330 70" fill="none" stroke="#60a5fa" stroke-width="2" stroke-dasharray="3 6" stroke-linecap="round"/>
+    <circle cx="30" cy="92" r="6" fill="#ffffff"/><circle cx="330" cy="70" r="6" fill="#60a5fa"/>
+    <path d="M176 28 l14 6 -14 6 3 -6z" fill="#ffffff"/>
+  </svg>
+  <div class="hero-text">
+    <p class="brand">CheckMyVisa · SafeLanding</p>
+    <h1 id="title">Before Departure</h1>
+    <p id="intro">Vérifiez vos documents, autorisations et justificatifs avant de partir, selon votre nationalité et votre destination.</p>
+    <button id="open-profile" class="btn primary" type="button">Mon profil voyageur</button>
+  </div>
+</header>
+<nav class="tabs" role="tablist" aria-label="Modules SafeLanding">
+  <button id="tab-m1" class="tab" type="button" role="tab" aria-selected="true" aria-controls="panel-m1">Avant le départ</button>
+  <button id="tab-m2" class="tab" type="button" role="tab" aria-selected="false" aria-controls="panel-m2">Arrivée à l’aéroport</button>
+</nav>
+<main>
+  <p id="net" class="net" role="status"></p>
+<div id="panel-m1" role="tabpanel" aria-labelledby="tab-m1">
+  <section id="progress-section" aria-labelledby="h-progress" hidden>
+    <h2 id="h-progress">Préparation du voyage</h2>
+    <progress id="progress" max="100" value="0" aria-label="Progression de la préparation"></progress>
+    <p id="progress-text"></p>
+  </section>
+  <section id="alerts-section" aria-labelledby="h-alerts" hidden>
+    <h2 id="h-alerts">Alertes</h2>
+    <ul id="alerts"></ul>
+  </section>
+  <section id="empty" class="empty">
+    <h2>Commencez par votre profil</h2>
+    <p>Choisissez votre nationalité, puis votre destination. La checklist se construit ensuite automatiquement.</p>
+    <form id="quickstart" class="quickstart" novalidate>
+      <label>Votre nationalité <select name="qs_nationality"></select></label>
+      <label>Pays de destination <select name="qs_destination"></select></label>
+      <label class="check"><input type="checkbox" name="qs_all"> Afficher aussi les pays qui peuvent exiger un visa</label>
+      <p id="qs-hint" class="notice" role="status"></p>
+      <button class="btn primary" type="submit">Continuer</button>
+    </form>
+  </section>
+  <section id="checklist" aria-labelledby="h-list" hidden>
+    <h2 id="h-list">Checklist</h2>
+    <div id="categories"></div>
+    <p class="notice">SafeLanding ne remplace pas les autorités. Toute règle marquée « non vérifiée » doit être confirmée sur la source officielle avant le départ.</p>
+    <button id="export" class="btn" type="button">Exporter mes données</button>
+    <button id="reset" class="btn danger" type="button">Effacer mes données</button>
+  </section>
+</div>
+<div id="panel-m2" role="tabpanel" aria-labelledby="tab-m2" hidden>
+  <section id="m2-empty" class="empty">
+    <h2>Complétez d’abord votre profil</h2>
+    <p>L’accompagnement d’arrivée réutilise le profil et les documents déjà saisis pour « Avant le départ » : vous ne les saisissez qu’une fois.</p>
+  </section>
+  <section id="m2-body" hidden>
+    <p id="m2-airport" class="meta"></p>
+    <h2 id="h-m2-progress">Progression à l’arrivée</h2>
+    <progress id="m2-progress" max="100" value="0" aria-label="Progression à l’arrivée"></progress>
+    <p id="m2-progress-text"></p>
+    <ul id="m2-alerts" class="alerts"></ul>
+    <section aria-labelledby="h-brief">
+      <h2 id="h-brief">Préparer vos réponses au contrôle</h2>
+      <p id="m2-brief-note" class="notice"></p>
+      <ul id="m2-questions" class="plain"></ul>
+      <h3>Documents à garder à portée</h3>
+      <ul id="m2-docs" class="plain"></ul>
+    </section>
+    <h2>Parcours d’arrivée</h2>
+    <div id="m2-phases"></div>
+    <p class="notice">Les « informations officielles » renvoient à une source à confirmer ; les « conseils pratiques » sont de simples recommandations, pas des obligations.</p>
+  </section>
+</div>
+</main>
+
+<dialog id="profile-dialog" aria-labelledby="h-profile">
+  <form id="profile-form" method="dialog" novalidate>
+    <h2 id="h-profile">Profil voyageur</h2>
+    <ul id="form-errors" class="errors" role="alert"></ul>
+    <fieldset><legend>Voyage</legend>
+      <label>Nationalité <select name="nationality" required></select></label>
+      <label>Pays de destination <select name="destination" required></select></label>
+      <label class="check"><input type="checkbox" name="showAllDestinations"> Afficher aussi les pays qui peuvent exiger un visa</label>
+      <p id="dest-hint" class="notice" role="status"></p>
+      <label>Pays de résidence <select name="residence" required></select></label>
+      <label>Pays de transit (codes séparés par des virgules) <input name="transit" autocomplete="off" placeholder="AE, TR" maxlength="40"></label>
+      <label>Date de départ <input name="departureDate" type="date" required></label>
+      <label>Durée du séjour (jours) <input name="stayDays" type="number" min="1" max="365" inputmode="numeric" required></label>
+      <label>Motif <select name="purpose" required></select></label>
+      <label>Hébergement <select name="accommodation" required></select></label>
+      <label>Date de naissance (facultatif) <input name="birthDate" type="date"></label>
+    </fieldset>
+    <fieldset><legend>Arrivée à l’aéroport (facultatif)</legend>
+      <label>Aéroport d’arrivée (code à 3 lettres, ex. CDG) <input name="arrival_airport" maxlength="3" autocomplete="off" pattern="[A-Za-z]{3}"></label>
+      <label>Budget de transfert <select name="arrival_budget"></select></label>
+      <label>Bagage en soute <select name="arrival_bags"></select></label>
+    </fieldset>
+    <fieldset><legend>Documents (jamais de numéro de passeport)</legend>
+      <label>Passeport : date d’expiration <input name="passport_expiry" type="date"></label>
+      <label>Passeport : date de délivrance <input name="passport_issue" type="date"></label>
+      <label>Pages vierges <input name="passport_blank" type="number" min="0" max="200" inputmode="numeric"></label>
+      <label>Billet aller <input name="ticket_outbound" type="date"></label>
+      <label>Billet retour <input name="ticket_return" type="date"></label>
+      <label class="check"><input name="ticket_onward" type="checkbox"> J’ai un billet de continuation</label>
+      <label>Hébergement : adresse <input name="lodging_address" maxlength="200" autocomplete="off"></label>
+      <label>Hébergement : arrivée <input name="lodging_checkIn" type="date"></label>
+      <label>Hébergement : départ <input name="lodging_checkOut" type="date"></label>
+      <label>Coordonnées de l’hôte <input name="lodging_host" maxlength="200" autocomplete="off"></label>
+      <label>Ressources disponibles <input name="funds_amount" type="number" min="0" inputmode="decimal"></label>
+      <label>Devise (ex. EUR) <input name="funds_currency" maxlength="3" autocomplete="off"></label>
+      <label>Assurance : début <input name="ins_from" type="date"></label>
+      <label>Assurance : fin <input name="ins_to" type="date"></label>
+    </fieldset>
+    <div class="actions">
+      <button class="btn" type="button" id="cancel-profile">Annuler</button>
+      <button class="btn primary" type="submit" id="save-profile">Enregistrer le profil</button>
+    </div>
+  </form>
+</dialog>
+<script type="module" src="app.js"></script>
+</body>
+</html>
