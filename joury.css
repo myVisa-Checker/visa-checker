@@ -108,3 +108,31 @@ body.chat-open footer{display:none}
 @supports(height:100dvh){
  @media(max-width:800px){body.chat-open .content{height:calc(100dvh - 62px)}}
 }
+
+/* ===== Harmonisation typographique (audit d'alignement) =====
+   L'espace Joury / Aïcha descendait à 9–12 px pour le texte courant. On reprend l'échelle commune du site :
+   12 px pour les étiquettes en capitales, 13 px pour les aides, 14–15 px pour le texte, 16 px pour l'introduction.
+   Couleurs, police et disposition inchangées. */
+.brand small{font-size:10px}
+.nav-caption,.eyebrow{font-size:11px}
+.nav{font-size:14px}
+.history-empty,.sidebar-foot>a,.private b{font-size:13px}
+.private small{font-size:12px;line-height:1.45}
+.breadcrumb,.status{font-size:13px}
+.languages button{font-size:12px;min-width:34px;min-height:30px}
+.lead{font-size:16px;line-height:1.65}
+.action b,.joury-mission b,.step b,.upload-info b,.aicha-interview-link b{font-size:15px;line-height:1.35}
+.action small,.joury-mission small,.step small,.upload-info p,.aicha-interview-link p,.joury-missions-lead,.joury-selected-task{font-size:13px;line-height:1.55}
+.assistant-card small{font-size:14px;line-height:1.6}
+.assistant-card em{font-size:13px}
+.upload-button,.primary,.secondary{font-size:14px}
+.upload-hint,.privacy-note,.notice,.disclaimer,.file-item,.progress,.composer small,.chat-title p{font-size:12.5px;line-height:1.55}
+.check{font-size:14px;line-height:1.55}
+.bubble,.composer textarea{font-size:15px;line-height:1.65}
+.back{font-size:13px}
+footer{font-size:12px;line-height:1.5}
+.code-entry label{font-size:13px}
+.code-entry p{font-size:13px}
+/* Le sur-titre et l'introduction suivent la largeur de lecture et s'alignent sur le titre. */
+.page>.lead,.page>p{max-width:68ch}
+@media(max-width:800px){footer{gap:6px}}

@@ -1,0 +1,97 @@
+/* CheckMyVisa — harmonie.css
+   Couche d'harmonisation de la mise en page, chargée EN DERNIER sur toutes les pages.
+   Elle ne touche ni au contenu, ni aux fonctionnalités, ni aux couleurs, ni à l'identité visuelle :
+   seulement l'alignement, les espacements, les largeurs de lecture et l'échelle typographique.
+   Les règles « génériques » sont écrites avec :where() (spécificité nulle) : toute règle d'un module l'emporte,
+   seules les valeurs non définies sont harmonisées. Les corrections ciblées portent sur des classes propres au site. */
+
+/* ===== 1. Repères communs (tokens) ===== */
+:root{
+  --cm-gutter:16px;            /* marge latérale minimale, identique partout */
+  --cm-read:68ch;              /* largeur de lecture confortable d'un paragraphe */
+  --cm-fs-micro:.75rem;        /* 12 px : étiquettes en capitales, sur-titres */
+  --cm-fs-xs:.8125rem;         /* 13 px : aides, mentions, légendes */
+  --cm-fs-sm:.875rem;          /* 14 px : texte secondaire */
+  --cm-lh-text:1.6;            /* interligne des paragraphes */
+  --cm-lh-tight:1.45;          /* interligne des petits textes */
+  --cm-lh-head:1.22;           /* interligne des titres */
+}
+
+/* ===== 2. Base sûre pour toutes les pages ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+:where(img,video){max-width:100%}
+/* Les champs et boutons reprennent la police de la page (sinon police système du navigateur, taille 13 px). */
+:where(button,input,select,textarea){font-family:inherit}
+/* iOS : sous 16 px, la page zoome à la saisie et se décale. */
+@media (max-width:767px){
+  :where(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea){font-size:max(16px,1em)}
+}
+
+/* Titres : jamais de débordement, retours à la ligne équilibrés, interligne commun. */
+:where(h1,h2,h3,h4,h5,h6){overflow-wrap:break-word;text-wrap:balance}
+:where(h2,h3,h4){line-height:var(--cm-lh-head)}
+/* Paragraphes et listes : coupure des mots/URL trop longs, dernière ligne sans orphelin. */
+:where(p,li,dd,dt,td,th,label,figcaption,blockquote,summary,small){overflow-wrap:break-word}
+:where(p,li,dd,blockquote){text-wrap:pretty}
+/* Tableaux : alignement au début de ligne (gauche en FR/EN/DE, droite en AR). */
+:where(th,td){text-align:start}
+
+/* Sens de lecture : en arabe tout le texte courant suit le RTL ; les blocs volontairement LTR (lettres, codes) restent LTR. */
+html[dir="rtl"] :where(p,li,dd,dt,h1,h2,h3,h4,h5,h6,label,td,th,blockquote,figcaption){text-align:start}
+
+/* ===== 3. Pages de contenu (site.css : guides, à propos, FAQ, contact, mentions…) =====
+   Une seule colonne de 760 px partagée par la barre du haut, le texte et le pied de page. */
+.crumbs{line-height:var(--cm-lh-tight)}
+.meta,.disclaimer,footer.site p{line-height:1.55}
+.sn-lang{margin-block-end:12px}
+/* Tableau : en-têtes et cellules alignés de la même façon, chiffres alignés. */
+.table-wrap th,.table-wrap td{text-align:start;vertical-align:top}
+/* Bloc d'appel à l'action : seul élément centré des pages de contenu (titre court + bouton). */
+.cta p{max-width:var(--cm-read);margin-inline:auto}
+/* Formulaire de contact : libellés et aides alignés sur les champs. */
+.cform .cf-row label,.cform .cf-row small{text-align:start}
+.cf-check{align-items:flex-start}
+
+/* ===== 4. Application (index.html, vols, hôtels) ===== */
+/* Textes d'introduction longs : centrés sur grand écran (1 à 2 lignes), alignés au début de ligne sur mobile (4 à 5 lignes). */
+.sp-join,.bpn-sub,.bpn-note,.bpn-hint{line-height:1.55}
+.bpn-sub{margin-inline:auto}
+@media (max-width:599px){
+  .sp-join.c,.bpn-sub,.bpn-note,.bpn-hint{text-align:start}
+}
+/* Carte e-Visa : sur mobile, l'icône, le texte et la flèche se partageaient 240 px ; le texte tenait sur 90 px. */
+@media (max-width:480px){
+  #evbtn{gap:12px;padding:12px;margin-inline:0;width:100%}
+  #evbtn .evico{width:52px;height:52px;border-radius:15px}
+  #evbtn .ev3d{width:42px;height:42px}
+  #evbtn .evtxt span{font-size:14px;line-height:1.4}
+}
+/* Petites légendes des assistants (11 px) portées au minimum lisible. */
+.vc-hero-assistant-copy>small{font-size:var(--cm-fs-micro);line-height:1.4}
+
+/* ===== 5. Espaces IA (view-dossier, view-joury, view-recours, view-entretien) =====
+   Plusieurs aides descendaient à 8,5–11 px. Plancher : 12 px pour les étiquettes en capitales, 13 px pour les aides. */
+.vc-app .vc-eyebrow,.vc-module-kicker,.jy-side-title,.jy-summary-label,.jy-panel-head .vc-eyebrow,
+.jy-issues-table th,.vc-message small,.vc-interview-message small,.vc-joury-workspace .vc-message small,
+.vc-bubble small{font-size:var(--cm-fs-micro)}
+.vc-step small,.vc-disclaimer,.jy-steps small,.jy-card-title p,.jy-drop span,.jy-drop small,.jy-file-row,
+.jy-privacy,.jy-help-card p,.jy-summary small,.jy-panel-head p,.jy-severity small,.jy-severity p,
+.jy-letter-fields label,.jy-facts-label,.jy-status,.jy-disclaimer,.jy-review-metrics small,.jy-review-metrics span,
+.jy-doc-total,.jy-persona small,.jy-empty-block,.jy-progress,.vc-label,.vc-badge,.vc-chip{font-size:var(--cm-fs-xs);line-height:var(--cm-lh-tight)}
+.jy-issues-table{font-size:var(--cm-fs-xs)}
+.jy-head-actions .vc-btn,.vc-btn-sm{font-size:var(--cm-fs-xs)}
+.vc-app .text-xs{font-size:var(--cm-fs-xs);line-height:1.35rem}
+/* Paragraphes d'introduction des espaces IA : largeur de lecture limitée, alignés sur le titre. */
+.vc-app :where(header,section) > p{max-width:var(--cm-read)}
+
+/* ===== 6. Ausbildung ===== */
+#aus .eyebrow,#aus .stages small{font-size:var(--cm-fs-micro)}
+#aus .rank,#aus .readiness small,#aus .legal,#aus .pick-card small,#aus .frow dt{font-size:var(--cm-fs-xs)}
+#aus .lead,#aus p{max-width:var(--cm-read)}
+
+/* ===== 7. Host & Go ===== */
+.hg-trust>div{font-size:var(--cm-fs-micro);line-height:1.35}
+.hg-logo small{font-size:10px}
+
+/* ===== 8. Mouvements réduits ===== */
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
