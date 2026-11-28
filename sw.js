@@ -1,6 +1,6 @@
 /* CheckMyVisa – cache limité au shell et aux assets statiques.
    Aucune API, donnée utilisateur ou requête POST n'est mise en cache. */
-const VERSION = "2026.11.28.1553"; /*@version*/
+const VERSION = "2026.11.28.1606"; /*@version*/
 const SHELL = "vc-shell-" + VERSION;
 const PRECACHE = [
   "./",
@@ -33,6 +33,7 @@ const PRECACHE = [
   "images/ausbildung-wide-600.webp",
   "images/first90-card-600.webp",
   "images/safelanding-card-600.webp",
+  "images/hostgo-card-600.webp",
   "joury.css",
   "joury.js",
   "redact.js",
@@ -159,6 +160,7 @@ const PRECACHE = [
    Elles sont mises en cache automatiquement dès qu'elles sont affichées (staleWhileRevalidate ci-dessous),
    puis restent disponibles hors ligne. Toutes les pages, scripts, styles et traductions restent préchargés. Liste tenue à jour pour référence et pour les tests. */
 const LAZY = [
+  "images/hostgo-card-1200.webp",
   "images/hero-vols.jpg",
   "images/hero-hotels.jpg",
   "images/ausbildung-wide-1200.webp",

@@ -105,41 +105,12 @@
   </section>
   </template>
 
-  <!-- Vitrine Host & Go : accueil uniquement, lien vers ./hostgo.html (page « Join As… », où se trouvent les six profils). Gabarit inerte : visa-app.js l'insère dans la rangée .vc-more, à côté de la carte Ausbildung. Langue = celle de la page (FR, EN, AR). -->
+  <!-- Vitrine Host & Go : accueil uniquement, visuel (images/hostgo-card-*.webp, format 3:2 comme les autres vitrines) dont la carte entière est un lien vers ./hostgo.html (page « Join As… », où se trouvent les six profils). Gabarit inerte : visa-app.js l'insère dans la rangée .vc-more, à côté de la carte Ausbildung. Le visuel est en français, seul le texte alternatif change selon la langue. -->
   <template id="hg-tpl">
   <section class="hg-teaser" id="hostgo-teaser" aria-label="Host &amp; Go">
-    <div class="hg-card">
-      <div class="hg-in" lang="fr">
-        <div class="hg-copy">
-          <span class="hg-brand">Host <b>&amp;</b> Go</span>
-          <h2 class="hg-h">Voyagez autrement,<em>vivez l’échange !</em></h2>
-          <p class="hg-p">Host &amp; Go vous connecte avec des hôtes locaux partout dans le monde pour un séjour authentique, solidaire et enrichissant.</p>
-          <ul class="hg-trust"><li>Connexion sécurisée</li><li>Communauté mondiale</li><li>Échange authentique</li></ul>
-          <a class="hg-cta" href="./hostgo.html">Découvrir Host &amp; Go<span aria-hidden="true"> →</span></a>
-        </div>
-        <img class="hg-photo" src="./images/hostgo/hero.webp" alt="" width="464" height="312" loading="lazy" decoding="async">
-      </div>
-      <div class="hg-in" lang="en" dir="ltr">
-        <div class="hg-copy">
-          <span class="hg-brand">Host <b>&amp;</b> Go</span>
-          <h2 class="hg-h">Travel differently,<em>live the exchange!</em></h2>
-          <p class="hg-p">Host &amp; Go connects you with local hosts around the world for an authentic, supportive and enriching stay.</p>
-          <ul class="hg-trust"><li>Secure connection</li><li>Worldwide community</li><li>Authentic exchange</li></ul>
-          <a class="hg-cta" href="./hostgo.html">Discover Host &amp; Go<span aria-hidden="true"> →</span></a>
-        </div>
-        <img class="hg-photo" src="./images/hostgo/hero.webp" alt="" width="464" height="312" loading="lazy" decoding="async">
-      </div>
-      <div class="hg-in" lang="ar" dir="rtl">
-        <div class="hg-copy">
-          <span class="hg-brand">Host <b>&amp;</b> Go</span>
-          <h2 class="hg-h">سافر بطريقة مختلفة،<em>عِش التبادل!</em></h2>
-          <p class="hg-p">تربطك Host &amp; Go بمضيفين محليين حول العالم لإقامة أصيلة وتضامنية ومُثرية.</p>
-          <ul class="hg-trust"><li>اتصال آمن</li><li>مجتمع عالمي</li><li>تبادل أصيل</li></ul>
-          <a class="hg-cta" href="./hostgo.html">اكتشف Host &amp; Go<span aria-hidden="true"> ←</span></a>
-        </div>
-        <img class="hg-photo" src="./images/hostgo/hero.webp" alt="" width="464" height="312" loading="lazy" decoding="async">
-      </div>
-    </div>
+    <a class="hg-in hg-link" lang="fr" href="./hostgo.html" aria-label="Découvrir Host &amp; Go"><img src="./images/hostgo-card-600.webp" srcset="./images/hostgo-card-600.webp 600w, ./images/hostgo-card-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="HostAndGo : voyagez, échangez, logez autrement. Trouvez un hôte, découvrez de nouvelles cultures, partagez votre voyage. Rejoignez HostAndGo."></a>
+    <a class="hg-in hg-link" lang="en" dir="ltr" href="./hostgo.html" aria-label="Discover Host &amp; Go"><img src="./images/hostgo-card-600.webp" srcset="./images/hostgo-card-600.webp 600w, ./images/hostgo-card-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="HostAndGo: travel, exchange, stay differently. Find a host, discover new cultures, share your journey. Join HostAndGo."></a>
+    <a class="hg-in hg-link" lang="ar" dir="rtl" href="./hostgo.html" aria-label="اكتشف Host &amp; Go"><img src="./images/hostgo-card-600.webp" srcset="./images/hostgo-card-600.webp 600w, ./images/hostgo-card-1200.webp 1200w" sizes="(min-width:760px) 530px, 92vw" width="600" height="400" loading="lazy" decoding="async" alt="HostAndGo: سافر وتبادل وأقم بطريقة مختلفة. اعثر على مضيف، اكتشف ثقافات جديدة، شارك رحلتك. انضم إلى HostAndGo."></a>
   </section>
   </template>
 
