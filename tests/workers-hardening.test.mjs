@@ -128,4 +128,15 @@ assert.equal((await chatCall(cenv(), { mode: "interview", code: "x".repeat(600) 
   assert.equal(good.status, 200);
   assert.equal(good.headers.get("X-Content-Type-Options"), "nosniff");
 }
+// Limites partagées (liaisons Cloudflare Rate Limiting) : refus 429 si la liaison répond « success: false », par visiteur ou global
+{
+  const deny = { limit: async () => ({ success: false }) }, allow = { limit: async () => ({ success: true }) };
+  const msg = { messages: [{ role: "user", text: "Bonjour" }] };
+  assert.equal((await chatCall(cenv({ AI_RATE_LIMITER: deny }), msg, { ip: "6.6.6.1" })).status, 429, "limite partagée par visiteur");
+  assert.equal((await chatCall(cenv({ AI_RATE_LIMITER: allow, AI_GLOBAL_LIMITER: deny }), msg, { ip: "6.6.6.2" })).status, 429, "plafond global");
+  assert.equal((await chatCall(cenv({ AI_RATE_LIMITER: allow, AI_GLOBAL_LIMITER: allow }), msg, { ip: "6.6.6.3" })).status, 200, "liaisons présentes et d'accord");
+  assert.equal((await chatCall(cenv({ AI_RATE_LIMITER: { limit: async () => { throw new Error("panne"); } } }), msg, { ip: "6.6.6.4" })).status, 200, "panne de la liaison : repli sur la limite en mémoire");
+  // Turnstile obligatoire sans secret : POST refusés (oubli de configuration visible) ; sans l'option, comportement inchangé
+  assert.equal((await chatCall(cenv({ TURNSTILE_REQUIRED: "1" }), msg, { ip: "6.6.6.5" })).status, 403, "Turnstile exigé mais non configuré");
+}
 console.log("Workers visa-proxy et visa-chat : durcissements vérifiés.");

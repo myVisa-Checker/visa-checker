@@ -10,6 +10,7 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { createRequire } from "node:module";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const skipE2E = process.argv.includes("--no-e2e");
@@ -27,8 +28,19 @@ const unit = ["matcher", "i18n", "data"];
 for (const u of unit) run(`unitaire ausbildung/${u}`, [`ausbildung/tests/${u}.test.js`]);
 run("intégration tests/run.mjs", ["tests/run.mjs"]);
 
+/* Version de Playwright validée avec ces tests (installation locale, sans package.json à la racine pour ne pas
+   déclencher d'installation lors du déploiement Cloudflare Pages) :
+     npm i --no-save playwright@1.63.0 && npx playwright install chromium
+   ou, si Playwright est installé globalement : NODE_PATH="$(npm root -g)" node tests/all.mjs */
+const PLAYWRIGHT_VERSION = "1.63.0";
+let hasPlaywright = true;
+try { createRequire(path.join(root, "ausbildung/tests/flow.e2e.cjs")).resolve("playwright"); } catch { hasPlaywright = false; }
+
 if (skipE2E) {
   steps.push({ name: "E2E navigateur", ok: false, skipped: true, ms: 0 });
+} else if (!hasPlaywright) {
+  steps.push({ name: `E2E navigateur (Playwright ${PLAYWRIGHT_VERSION} introuvable)`, ok: false, ms: 0 });
+  process.stdout.write(`\n--- E2E impossible : Playwright n'est pas installé ---\nInstaller : npm i --no-save playwright@${PLAYWRIGHT_VERSION} && npx playwright install chromium\nou lancer : NODE_PATH="$(npm root -g)" node tests/all.mjs\n`);
 } else {
   const types = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".webmanifest": "application/manifest+json" };
   const server = createServer(async (req, res) => {

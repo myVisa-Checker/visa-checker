@@ -12,6 +12,10 @@ SI.add({
   "Host & Go (host sign-up): while you fill in the form, your non-identifying answers are saved on your device (local storage, 14 days) so you can resume; your contact details, address and private note are kept only for the browser session, and your consents and photos are never saved. You can delete this draft at any time from the form. A non-reversible fingerprint of your e-mail is kept on the device to prevent a double submission and a double role (host and traveller). This data does not leave your device before you submit your request.",
   "Host & Go (التسجيل كمضيف): أثناء تعبئة النموذج تُحفظ إجاباتكم غير المعرِّفة على جهازكم (تخزين محلي لمدة 14 يوماً) لتتمكنوا من استئناف التسجيل؛ أما بيانات الاتصال والعنوان والملاحظة الخاصة فلا تُحفظ إلا خلال جلسة المتصفح، ولا تُحفظ موافقاتكم ولا صوركم أبداً. يمكنكم حذف هذه المسودة في أي وقت من النموذج. تُحفظ على الجهاز بصمة غير قابلة للعكس لبريدكم الإلكتروني لمنع الإرسال المزدوج والدور المزدوج (مضيف ومسافر). لا تغادر هذه البيانات جهازكم قبل إرسال طلبكم."
  ],
+ "Host & Go (envoi de l'inscription) : votre inscription est transmise par notre outil d'automatisation Make à notre boîte de modération Host & Go (Zoho Mail). Lorsque l'espace d'offres en ligne ouvrira, les offres seront conservées sur Cloudflare avec des durées limitées et effacées automatiquement : demande jamais validée, données personnelles effacées après 180 jours ; offre refusée, après 30 jours ; offre retirée, données personnelles effacées immédiatement et trace de modération supprimée après 12 mois ; inscription voyageur (empreinte non réversible de l'e-mail seulement), 24 mois.": [
+  "Host & Go (submitting your sign-up): your sign-up is passed by our automation tool Make to our Host & Go moderation mailbox (Zoho Mail). When the online listings area opens, listings will be stored on Cloudflare for limited periods and deleted automatically: a request never approved has its personal data erased after 180 days; a rejected listing after 30 days; a withdrawn listing has its personal data erased immediately and its moderation record deleted after 12 months; a traveller sign-up (only a non-reversible fingerprint of the e-mail) after 24 months.",
+  "Host & Go (إرسال التسجيل): يُرسَل تسجيلكم عبر أداة الأتمتة Make إلى صندوق بريد الإشراف الخاص بـ Host & Go (Zoho Mail). عند افتتاح فضاء العروض على الإنترنت، ستُحفظ العروض لدى Cloudflare لمدد محدودة وتُحذف تلقائياً: الطلب الذي لم يُقبل أبداً تُمحى بياناته الشخصية بعد 180 يوماً؛ والعرض المرفوض بعد 30 يوماً؛ والعرض المسحوب تُمحى بياناته الشخصية فوراً ويُحذف سجل الإشراف بعد 12 شهراً؛ وتسجيل المسافر (بصمة غير قابلة للعكس للبريد الإلكتروني فقط) بعد 24 شهراً."
+ ],
  "Accueil › Politique de confidentialité": [
   "Home › Privacy Policy",
   "الرئيسية ‹ سياسة الخصوصية"
@@ -20,9 +24,9 @@ SI.add({
   "Privacy Policy — CheckMyVisa",
   "سياسة الخصوصية — CheckMyVisa"
  ],
- "Dernière mise à jour : Novembre 2026": [
-  "Last updated: November 2026",
-  "آخر تحديث: نوفمبر 2026"
+ "Dernière mise à jour : 28 novembre 2026": [
+  "Last updated: 28 November 2026",
+  "آخر تحديث: 28 نوفمبر 2026"
  ],
  "La présente Politique de Confidentialité décrit la manière dont CheckMyVisa (https://checkmyvisa.org) collecte, utilise, protège et traite les informations des utilisateurs du monde entier lors de l'utilisation de son site web, de son application progressive (PWA) et de ses outils d'assistance par intelligence artificielle.": [
   "This Privacy Policy describes how CheckMyVisa (https://checkmyvisa.org) collects, uses, protects and processes the information of users worldwide when using its website, its progressive web app (PWA) and its artificial intelligence assistance tools.",

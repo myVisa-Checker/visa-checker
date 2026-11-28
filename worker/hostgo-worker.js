@@ -30,6 +30,8 @@
      GET  /hg/admin/queue?status=        (X-Admin-Key) file de modération (pending|approved|hidden|rejected|removed|reported) + compteurs ; 10 clés fausses => blocage 15 min
      POST /hg/admin/offers/:id/(approve|reject|hide|remove)   (X-Admin-Key) {note}
      POST /hg/admin/codes {n, days}      (X-Admin-Key) fabrique des codes de déblocage (affichés une seule fois)
+     POST /hg/admin/purge                (X-Admin-Key) applique tout de suite les durées de conservation (RETAIN) -> {scrubbed, deleted}
+   Tâche planifiée : scheduled() applique RETAIN chaque nuit (cron déclaré dans wrangler.hostgo.toml).
    Le paiement en ligne (Konnect / Flouci) n'est PAS branché : un futur paiement créera simplement des codes ou activera l'accès. */
 
 const DEFAULT_ORIGINS = "https://checkmyvisa.org,https://www.checkmyvisa.org";
@@ -169,7 +171,13 @@ function publicView(o, full) {
   if (full) { v.cal = o.cal || {}; v.texts = o.texts; v.photos = ph.map((p) => ({ n: p.n, c: p.c })); } else { v.excerpt = (o.texts && o.texts.place || "").slice(0, 140); v.cover = ph.length ? ph[0].n : null; }
   return v;
 }
-const meta = (o) => ({ s: o.status, r: (o.reports || []).length, c: o.country, k: o.cats, st: o.stay, l: (o.langs || []).map((r) => r[0]), tv: o.trav || [], ts: o.createdAt });
+const meta = (o) => ({ s: o.status, r: (o.reports || []).length, c: o.country, k: o.cats, st: o.stay, l: (o.langs || []).map((r) => r[0]), tv: o.trav || [], ts: o.createdAt, u: o.updatedAt || o.createdAt, e: String(o.emailHash || "").slice(0, 10) });
+/* Durées de conservation (jours) — appliquées chaque nuit par la tâche planifiée (cron) et à la demande par POST /hg/admin/purge.
+   pending  : demande jamais modérée -> données personnelles effacées, statut « removed »
+   rejected : offre refusée -> données personnelles effacées, statut « removed »
+   removed  : trace de modération (sans données personnelles) supprimée définitivement
+   traveller: inscription voyageur (empreinte de l'e-mail seulement) expirée automatiquement par KV */
+const RETAIN = { pending: 180, rejected: 30, removed: 365, traveller: 730 };
 /* Photos : R2 si le binding PHOTOS existe (recommandé en production : pas de limite de métadonnées, moins cher), sinon KV. */
 const phPut = (env, key, bytes, md) => env.PHOTOS ? env.PHOTOS.put(key, bytes) : env.KV.put(key, bytes, { metadata: md });
 const phGet = async (env, key) => { if (env.PHOTOS) { const x = await env.PHOTOS.get(key); return x ? x.arrayBuffer() : null; } return env.KV.get(key, "arrayBuffer"); };
@@ -216,9 +224,13 @@ async function handle(req, env) {
       const st = url.searchParams.get("status") || "pending"; if (!STATUSES.includes(st) && st !== "reported") return fail(req, env, 400, "bad_status");
       const all = await scan(env), ids = all.filter((k) => k.metadata && (st === "reported" ? k.metadata.r > 0 && k.metadata.s !== "removed" && k.metadata.s !== "rejected" : k.metadata.s === st)).sort((a, b) => a.metadata.ts - b.metadata.ts).slice(0, 50);
       const items = []; for (const k of ids) { const x = await loadOffer(env, k.name.slice(2)); if (x) { const { tk, emailHash, ...rest } = x; items.push(rest); } }
-      const counts = {}; for (const k of all) { const d = k.metadata; if (!d) continue; counts[d.s] = (counts[d.s] || 0) + 1; if (d.r > 0 && d.s !== "removed" && d.s !== "rejected") counts.reported = (counts.reported || 0) + 1; }
-      return json(req, env, { ok: true, items, counts });
+      const counts = {}, byMail = {}; for (const k of all) { const d = k.metadata; if (!d) continue; counts[d.s] = (counts[d.s] || 0) + 1; if (d.r > 0 && d.s !== "removed" && d.s !== "rejected") counts.reported = (counts.reported || 0) + 1; if (d.e && d.s !== "removed") byMail[d.e] = (byMail[d.e] || 0) + 1; }
+      /* Doublons possibles (même e-mail, deux demandes simultanées depuis deux sites : limite connue de KV) : signalés à la modération. */
+      for (const it of items) { const e = String(ids.find((k) => k.name === "o:" + it.id)?.metadata?.e || ""); if (e && byMail[e] > 1) it.dupEmail = true; }
+      counts.duplicates = Object.values(byMail).filter((v) => v > 1).length;
+      return json(req, env, { ok: true, items, counts, truncated: !!all.truncated });
     }
+    if (path === "/hg/admin/purge" && m === "POST") return json(req, env, { ok: true, ...(await purge(env)) });
     if (path === "/hg/admin/codes" && m === "POST") {
       r = await readJson(req); if (!r.body) return fail(req, env, 400, "bad_body");
       const n = int(r.body.n, 1, 50), days = int(r.body.days, 1, 365); if (n === null || days === null) return fail(req, env, 400, "bad_params");
@@ -295,7 +307,7 @@ async function handle(req, env) {
     if (r.body.hp) return json(req, env, { ok: true });
     const em = str(r.body.email, LIM.email).toLowerCase(); if (!emailOk(em)) return fail(req, env, 400, "bad_email"); if (r.body.consent !== true) return fail(req, env, 400, "consent_required");
     const h = await emailHashOf(env, em); if (await env.KV.get("e:" + h)) return fail(req, env, 409, "role_conflict");
-    await env.KV.put("t:" + h, String(now())); return json(req, env, { ok: true });
+    await env.KV.put("t:" + h, String(now()), { expirationTtl: RETAIN.traveller * 86400 }); return json(req, env, { ok: true });
   }
 
   /* ----- Photos ----- */
@@ -400,8 +412,31 @@ async function photoResponse(req, env, off, n, cache) {
 /* Liste toutes les offres (clé + métadonnées) : suffisant pour quelques milliers d'offres ; au-delà, passer à D1. */
 async function scan(env) {
   const out = []; let cursor;
-  for (let i = 0; i < SCAN_MAX; i++) { const r = await env.KV.list({ prefix: "o:", cursor, limit: 1000 }); out.push(...r.keys); if (r.list_complete || !r.cursor) break; cursor = r.cursor; }
+  for (let i = 0; i < SCAN_MAX; i++) {
+    const r = await env.KV.list({ prefix: "o:", cursor, limit: 1000 }); out.push(...r.keys);
+    if (r.list_complete || !r.cursor) return out;
+    cursor = r.cursor;
+  }
+  /* Plus de SCAN_MAX × 1000 offres : la liste est incomplète. Signalé à la modération (truncated) et dans les journaux : passer à D1. */
+  out.truncated = true; console.log("hostgo scan truncated", out.length);
   return out;
+}
+/* Purge selon RETAIN : idempotente, ne touche que les offres dont la dernière modification dépasse la durée. */
+async function purge(env) {
+  const res = { scrubbed: 0, deleted: 0 }, t = now(), day = 86400000;
+  for (const k of await scan(env)) {
+    const d = k.metadata; if (!d) continue;
+    const age = t - (d.u || d.ts || t);
+    if ((d.s === "pending" && age > RETAIN.pending * day) || (d.s === "rejected" && age > RETAIN.rejected * day)) {
+      const off = await loadOffer(env, k.name.slice(2)); if (!off) continue;
+      await purgePhotos(env, off); scrub(off); off.status = "removed"; off.updatedAt = t;
+      (off.notes = off.notes || []).push({ ts: t, action: "auto-purge", note: "" }); off.notes = off.notes.slice(-20);
+      await saveOffer(env, off); await env.KV.delete("e:" + off.emailHash); res.scrubbed++;
+    } else if (d.s === "removed" && age > RETAIN.removed * day) {
+      await env.KV.delete(k.name); res.deleted++;
+    }
+  }
+  return res;
 }
 /* Retrait : les données personnelles sont effacées, seule la trace de modération reste. */
 function scrub(o) { for (const k of ["email", "addr", "zip", "pv"]) delete o[k]; o.firstName = ""; o.texts = {}; o.photos = []; }
@@ -410,6 +445,8 @@ async function purgePhotos(env, o) { for (const p of o.photos || []) await phDel
 export default {
   async fetch(req, env) {
     try { return await handle(req, env); } catch (e) { return new Response(JSON.stringify({ ok: false, error: "server" }), { status: 500, headers: { "Content-Type": "application/json", ...cors(req, env) } }); }
-  }
+  },
+  /* Tâche planifiée (cron, voir wrangler.hostgo.toml) : applique les durées de conservation chaque nuit. */
+  async scheduled(event, env, ctx) { ctx.waitUntil(purge(env).then((r) => console.log("hostgo purge", JSON.stringify(r)))); }
 };
 export { COUNTRIES, CATS, TYPE_TO_CAT, inspectImage };

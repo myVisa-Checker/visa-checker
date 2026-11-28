@@ -3,6 +3,13 @@
 // Variables Cloudflare : GEMINI_API_KEY (secret), INTERVIEW_CODES (secret), PARTNER_WEBHOOK (secret, demandes de partenariat).
 // KV nommé USAGE (Bindings) : codes d'accès existants et quotas d'entraînement.
 // Le quota KV est un contrôle best-effort : KV n'offre pas d'incrément atomique ni de cohérence forte.
+// Protection contre les abus (recommandé en production, facultatif) :
+//   - Liaisons « Rate Limiting » (Settings > Bindings > Rate limiting) :
+//       AI_RATE_LIMITER   : limite partagée par visiteur, ex. 10 requêtes / 60 s
+//       AI_GLOBAL_LIMITER : plafond global de toutes les requêtes IA, ex. 120 requêtes / 60 s (maîtrise du coût Gemini)
+//     Sans elles, seule la limite en mémoire (souple, par instance) s'applique.
+//   - TURNSTILE_SECRET (secret) : active la vérification Turnstile des POST.
+//     TURNSTILE_REQUIRED = "1" (texte) : refuse les POST si le secret manque (évite de tourner sans protection par oubli).
 
 const SYSTEM = `Tu es l'assistant de CheckMyVisa, un site qui aide les voyageurs de toutes nationalités à vérifier leur dossier de visa pour la France.
 Règles :
@@ -87,6 +94,16 @@ function limited(ip) {
   if (!h || now - h.t > RL_WINDOW) { hits.set(ip, { t: now, n: 1 }); return false; }
   h.n++;
   return h.n > RL_MAX;
+}
+
+/** Limite des appels IA : mémoire (souple) + liaisons Cloudflare Rate Limiting si elles existent (partagées entre instances). */
+async function aiLimited(env, ip) {
+  if (limited(ip)) return true;
+  try {
+    if (env.AI_RATE_LIMITER) { const r = await env.AI_RATE_LIMITER.limit({ key: "ip:" + ip }); if (r && r.success === false) return true; }
+    if (env.AI_GLOBAL_LIMITER) { const g = await env.AI_GLOBAL_LIMITER.limit({ key: "all" }); if (g && g.success === false) return true; }
+  } catch (e) { console.log("rate limiter", e && e.message); }
+  return false;
 }
 
 // ----- Demandes de partenariat (route POST /partner) -----
@@ -327,7 +344,7 @@ async function apiGemini(env, system, userText, files, history) {
 async function handleVisaApi(request, env, out, pathname) {
   // La limite de débit passe avant l'analyse du corps : un envoi massif ne coûte plus de CPU ni de mémoire.
   const ip = request.headers.get("CF-Connecting-IP") || "?";
-  if (limited(ip)) return out({ error: "rate", reply: RATE_MSG }, 429);
+  if (await aiLimited(env, ip)) return out({ error: "rate", reply: RATE_MSG }, 429);
   const parsed = await apiReadPayload(request);
   if (parsed.error) return out({ error: parsed.error }, parsed.status);
   const body = parsed.body, files = parsed.files;
@@ -427,7 +444,7 @@ async function handleVisaApi(request, env, out, pathname) {
 
 /** Cloudflare Turnstile : actif seulement si le secret TURNSTILE_SECRET existe. Le jeton arrive dans l'en-tête X-Turnstile. */
 async function turnstileOk(env, request) {
-  if (!env.TURNSTILE_SECRET) return true;
+  if (!env.TURNSTILE_SECRET) return String(env.TURNSTILE_REQUIRED || "") !== "1";
   const token = request.headers.get("X-Turnstile") || "";
   if (!token || token.length > 2048) return false;
   try {
@@ -502,7 +519,7 @@ export default {
       let usageKey = "", used = 0;
       if (interview) {
         // Le débit passe avant la vérification du code : les essais de codes sont comptés, bons ou mauvais.
-        if (limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
+        if (await aiLimited(env, request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
         const codes = String(env.INTERVIEW_CODES || "").split(",").map((s) => s.trim()).filter(Boolean);
         const code = String(body.code || "").trim();
         if (!CODE_RE.test(code)) return out({ error: "code" }, 403);
@@ -549,7 +566,7 @@ export default {
       }
       while (msgs.length && msgs[0].role !== "user") msgs.shift();
       if (!msgs.length) return out({ error: "empty" }, 400);
-      if (!interview && limited(request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
+      if (!interview && await aiLimited(env, request.headers.get("CF-Connecting-IP") || "?")) return out({ error: "rate", reply: RATE_MSG }, 429);
 
       const model = String(env.MODEL || env.GEMINI_MODEL || "gemini-3.5-flash-lite").trim();
       const ctl = new AbortController();

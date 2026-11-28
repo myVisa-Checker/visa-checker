@@ -395,4 +395,38 @@ await t("parcours complet côté serveur : publier → en attente → approuver 
   assert.equal((await call(env, "/hg/admin/queue?status=hidden", { headers: ADMIN })).data.items.length, 1);
 });
 
+await t("conservation : demande non modérée > 180 j et refus > 30 j effacés, trace retirée supprimée après 365 j, offre approuvée intacte", async () => {
+  const env = mkEnv();
+  const a = await publish(env, 901), b = await publish(env, 902), c = await publish(env, 903), d = await publish(env, 904);
+  await call(env, `/hg/admin/offers/${b.id}/reject`, { method: "POST", headers: ADMIN, body: {} });
+  await approve(env, c.id);
+  await call(env, `/hg/admin/offers/${d.id}/remove`, { method: "POST", headers: ADMIN, body: {} });
+  const age = (id, days) => { const e = env.KV.m.get("o:" + id); e.metadata = { ...e.metadata, u: Date.now() - days * 86400000, ts: Date.now() - days * 86400000 }; };
+  age(a.id, 181); age(b.id, 31); age(c.id, 900); age(d.id, 366);
+  const r = await call(env, "/hg/admin/purge", { method: "POST", headers: ADMIN, body: {} });
+  assert.equal(r.status, 200); assert.equal(r.data.scrubbed, 2); assert.equal(r.data.deleted, 1);
+  for (const id of [a.id, b.id]) { const o = JSON.parse(env.KV.m.get("o:" + id).v); assert.equal(o.status, "removed"); assert.ok(!o.email && !o.addr && !o.pv); }
+  assert.ok(!env.KV.m.has("o:" + d.id));
+  assert.equal(JSON.parse(env.KV.m.get("o:" + c.id).v).status, "approved");
+  assert.equal((await call(env, "/hg/admin/purge", { method: "POST", body: {} })).status, 401);
+});
+
+await t("conservation : tâche planifiée (scheduled) et inscription voyageur avec expiration", async () => {
+  const env = mkEnv(); const a = await publish(env, 905);
+  const e = env.KV.m.get("o:" + a.id); e.metadata = { ...e.metadata, u: Date.now() - 200 * 86400000 };
+  const waits = []; await worker.scheduled({}, env, { waitUntil: (p) => waits.push(p) }); await Promise.all(waits);
+  assert.equal(JSON.parse(env.KV.m.get("o:" + a.id).v).status, "removed");
+  assert.equal((await call(env, "/hg/travellers", { method: "POST", body: { email: "voy905@example.com", consent: true } })).status, 200);
+  const tk = [...env.KV.m.entries()].find(([k]) => k.startsWith("t:")); assert.ok(tk && tk[1].ttl >= 700 * 86400);
+});
+
+await t("modération : doublon possible du même e-mail signalé (dupEmail) et liste incomplète signalée (truncated)", async () => {
+  const env = mkEnv(); const a = await publish(env, 906);
+  /* simule la course KV : seconde offre du même e-mail écrite par un autre site */
+  const src = JSON.parse(env.KV.m.get("o:" + a.id).v), id2 = "f".repeat(20);
+  await env.KV.put("o:" + id2, JSON.stringify({ ...src, id: id2 }), { metadata: { ...env.KV.m.get("o:" + a.id).metadata } });
+  const q = await call(env, "/hg/admin/queue?status=pending", { headers: ADMIN });
+  assert.equal(q.data.counts.duplicates, 1); assert.ok(q.data.items.every((x) => x.dupEmail === true)); assert.equal(q.data.truncated, false);
+});
+
 console.log("\n" + n + " tests du Worker Host & Go réussis");

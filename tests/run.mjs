@@ -204,6 +204,12 @@ try {
 } catch (e) {
   ok("visa-rules-worker : API, règles, validation et CORS", false, String(e.stderr || e.message).split("\n")[0]);
 }
+try {
+  execFileSync(process.execPath, ["tools/sync-rules.mjs", "--check"], { stdio: "pipe" });
+  ok("règles d'éligibilité : visa-proxy synchronisé avec la source unique visa-rules-worker.js", true);
+} catch (e) {
+  ok("règles d'éligibilité : visa-proxy synchronisé avec la source unique visa-rules-worker.js", false, "node tools/sync-rules.mjs");
+}
 
 console.log("Workers visa-proxy et visa-chat : durcissements (exécution)");
 try {

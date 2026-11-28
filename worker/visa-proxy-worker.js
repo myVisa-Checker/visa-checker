@@ -89,7 +89,9 @@ function newCode() {
   return s.slice(0, 4) + "-" + s.slice(4, 8) + "-" + s.slice(8, 12);
 }
 
-/* ---- API d'éligibilité : copie de visa-rules-worker.js (contrôle indicatif, aucune donnée de passeport n'est conservée) ---- */
+/* ---- API d'éligibilité : copie de visa-rules-worker.js (contrôle indicatif, aucune donnée de passeport n'est conservée) ----
+   Source unique : worker/visa-rules-worker.js. Ne pas modifier RL_VERSION / RL_COUNTRIES / RL_DESTINATIONS à la main :
+   lancer « node tools/sync-rules.mjs » (les tests échouent si les deux copies divergent). */
 const RL_VERSION = "2026-11-11";
 const RL_COUNTRIES = {
   TN: { name: "Tunisie", passportName: "Tunisian" },

@@ -13,3 +13,7 @@ ALLOWED_ORIGIN = "https://checkmyvisa.org,https://www.checkmyvisa.org"
 # [[r2_buckets]]
 # binding = "PHOTOS"
 # bucket_name = "hostgo-photos"
+
+# Purge automatique des données selon les durées de conservation (RETAIN dans hostgo-worker.js), chaque nuit à 03:17 UTC.
+[triggers]
+crons = ["17 3 * * *"]
