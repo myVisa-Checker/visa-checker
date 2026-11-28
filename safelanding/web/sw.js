@@ -1,4 +1,4 @@
-const CACHE = 'safelanding-v2';
+const CACHE = 'safelanding-v3';
 const PRECACHE = [
   './', 'index.html', 'app.js', 'style.css', 'icon.svg', 'manifest.webmanifest',
   'src/index.js', 'src/core/constants.js', 'src/core/dates.js', 'src/core/profile.js', 'src/core/registry.js',
@@ -12,8 +12,9 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const u = new URL(e.request.url);
   if (e.request.method !== 'GET' || u.origin !== location.origin) return; // jamais d'interception cross-origin
-  e.respondWith(caches.match(e.request, { ignoreSearch: true }).then((hit) => hit || fetch(e.request).then((r) => {
+  // Réseau d'abord (contenu toujours à jour), cache en secours hors ligne.
+  e.respondWith(fetch(e.request).then((r) => {
     if (r.ok) { const copy = r.clone(); caches.open(CACHE).then((c) => c.put(e.request, copy)); }
     return r;
-  }).catch(() => caches.match('index.html'))));
+  }).catch(() => caches.match(e.request, { ignoreSearch: true }).then((hit) => hit || caches.match('index.html'))));
 });

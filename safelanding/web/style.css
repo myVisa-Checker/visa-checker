@@ -55,3 +55,5 @@ label.check{display:flex;gap:8px;align-items:center}label.check input{width:auto
 .fit{color:var(--ok);font-weight:600;font-size:.85rem}
 
 .quickstart{margin-top:8px}
+
+.back-home{display:inline-block;margin:10px 16px 0;padding:6px 2px;color:#0b1f4d;font-weight:700;text-decoration:none}.back-home:hover,.back-home:focus-visible{text-decoration:underline}
